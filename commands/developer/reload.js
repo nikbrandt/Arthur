@@ -5,19 +5,22 @@ exports.run = (message, args, suffix, client) => {
 	if (!args[0]) return message.channel.send('I can\'t reload nothing <:thonk:281211813494915083>');
 	let cmd = args[0].split('/')[args[0].split('/').length - 1];
 	
-	let command;
-	if (client.commands.has(cmd)) command = client.commands.get(cmd);
-	else if (client.aliases.has(cmd)) command = client.commands.get(client.aliases.get(cmd));
-	if (!command) return message.channel.send(`${cmd} is not a command.`);
-	command = undefined;
+	let isAlias = false;
+	let comm = client.commands.get(cmd);
+	if (!comm) {
+		comm = client.commands.get(client.aliases.get(cmd));
+		if (comm) isAlias = true;
+	}
+	if (!comm) return message.channel.send(`${cmd} is not a command.`);
 	
 	fs.readdirSync(`${__dirname}/../`).filter(f => fs.statSync(`${__dirname}/../${f}`).isDirectory()).forEach(d => folders.push(d));
 	
+	let command;
 	try {
 		folders.forEach(fold => {
 			try {
-				delete require.cache[require.resolve(`${__dirname}/../${fold ? `${fold}/` : ''}${args[0]}.js`)];
-				command = require(`${__dirname}/../${fold ? `${fold}/` : ''}${args[0]}.js`);
+				delete require.cache[require.resolve(`${__dirname}/../${fold ? `${fold}/` : ''}${isAlias ? client.aliases.get(args[0]) : args[0]}.js`)];
+				command = require(`${__dirname}/../${fold ? `${fold}/` : ''}${isAlias ? client.aliases.get(args[0]) : args[0]}.js`);
 			} catch (e) {}
 		});
 	} catch (err) {

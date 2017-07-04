@@ -7,7 +7,6 @@ const forEach = function (obj, loop) {
 };
 
 exports.run = (message, args, suffix, client, perms) => {
-	message.channel.send('Check your DM\'s 📬');
 	if (!args[0] || args[0] == 'dev' || args[0] == 'eggs') {
 		let commands = client.commands.filter(c => c.config.permLevel <= perms === 1 ? 2 : perms);
 		let categories = {};
@@ -25,7 +24,7 @@ exports.run = (message, args, suffix, client, perms) => {
 			});
 		});
 		
-		message.author.send({embed: {
+		message.channel.send({embed: {
 			color: 0x00c140,
 			author: {
 				name: 'Arthur Help',
@@ -38,7 +37,7 @@ exports.run = (message, args, suffix, client, perms) => {
 		let command = client.commands.get(args[0]) || client.commands.get(client.aliases.get(args[0]));
 		if (!command) return message.channel.send(`I do not have a \`${args[0]}\` command.`);
 		
-		message.author.send({embed: {
+		message.channel.send({embed: {
 			color: 0x00c140,
 			title: command.help.name,
 			description: `${command.help.help}\n**Usage**: \`${client.config.prefix}${command.help.usage}\`${command.config.aliases && command.config.aliases.length > 1 ? `\n**Aliases**: ${command.config.aliases.join(', ')}` : ''}`,

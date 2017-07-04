@@ -1,9 +1,14 @@
 const config = require('../../media/config.json');
 
 module.exports = message => {
-	const client = message.client;
-	if (!message.content.startsWith(config.prefix) && !message.content.startsWith(`<@${client.user.id}>`) && !message.content.startsWith(`<@!${client.user.id}>`)) return;
 	if (message.author.bot) return;
+	const client = message.client;
+	if (!message.guild.me.permissions.has('SEND_MESSAGES')) return;
+	
+	if (message.author.melon === true) message.react('🍉');
+	client.addXP(message, message.member);
+	
+	if (!message.content.startsWith(config.prefix) && !message.content.startsWith(`<@${client.user.id}>`) && !message.content.startsWith(`<@!${client.user.id}>`)) return;
 	
 	let args = message.content.split(' ');
 	if (!message.content.startsWith(config.prefix)) args = args.slice(1);

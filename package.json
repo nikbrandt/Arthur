@@ -16,6 +16,7 @@
   "author": "Gymnophoria",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^11.1.0"
+    "discord.js": "^11.1.0",
+    "djs-collection-persistent": "^0.1.3"
   }
 }

@@ -27,7 +27,7 @@ module.exports = async client => {
 				loadCmd(f, f, client);
 			}
 		} catch (err) {
-			console.error(`Error loading ${f}:\n${err}`);
+			console.error(`Error loading ${f}:\n${err.stack ? err.stack : err}`);
 		}
 	});
 };

@@ -15,7 +15,9 @@ module.exports = client => {
 			permLevel;
 		}
 		
-		if (message.author.id === message.guild.ownerID) permLevel = 5;
+		if (message.member.permissions.has('MANAGE_GUILD')) permLevel = 5;
+		
+		if (message.author.id === message.guild.ownerID) permLevel = 6;
 		
 		return permLevel;
 		
@@ -25,7 +27,8 @@ module.exports = client => {
 		2 - regular guild member
 		3 - mod
 		4 - admin
-		5 - guild owner
+		5 - manage server perm
+		6 - guild owner
 		10 - bot owner
 		*/
 	};
