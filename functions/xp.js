@@ -141,7 +141,7 @@ module.exports = client => {
 	};
 	
 	client.guildLeaderboard = (guildID, page) => {
-		let entries = xpTable.filter(x => JSON.parse(x)[guildID] !== undefined).array().sort((a, b) => {
+		let entries = xpTable.filter(x => JSON.parse(x).hasOwnProperty(guildID)).array().sort((a, b) => {
 			return JSON.parse(a)[guildID].totalXP < JSON.parse(b)[guildID].totalXP ? 1 : -1;
 		});
 		
@@ -153,7 +153,7 @@ module.exports = client => {
 		};
 		
 		let pageArray = [];
-		entries.slice(page * 5 - 5, page * 5 - 1);
+		entries = entries.slice(page * 5 - 5, page * 5);
 		let startNum = page * 5 - 4;
 		let guild = client.guilds.get(guildID);
 		
@@ -182,7 +182,7 @@ module.exports = client => {
 		};
 		
 		let pageArray = [];
-		entries.slice(page * 5 - 5, page * 5 - 1);
+		entries = entries.slice(page * 5 - 5, page * 5);
 		let startNum = page * 5 - 4;
 		
 		entries.forEach(strEntry => {
