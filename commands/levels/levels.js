@@ -4,11 +4,15 @@ exports.run = (message, args, suffix, client) => {
 		return message.channel.send(`Leveling has been enabled for **${message.guild.name}**.`);
 	}
 	if (client.guildTable.get(message.guild.id).levels === true) {
-		client.guildTable.set(message.guild.id, client.guildTable.get(message.guild.id).levels = false);
+		let updatedTable = client.guildTable.get(message.guild.id);
+		updatedTable.levels = false;
+		client.guildTable.set(message.guild.id, updatedTable);
 		return message.channel.send(`Leveling has been disabled for **${message.guild.name}**.`);
 	}
-	if (!client.guildTable.get(message.guild.id).levels) {
-		client.guildTable.set(message.guild.id, client.guildTable.get(message.guild.id).levels = true);
+	if (client.guildTable.get(message.guild.id).levels === false) {
+		let updatedTable = client.guildTable.get(message.guild.id);
+		updatedTable.levels = true;
+		client.guildTable.set(message.guild.id, updatedTable);
 		return message.channel.send(`Leveling has been enabled for **${message.guild.name}**.`);
 	}
 };

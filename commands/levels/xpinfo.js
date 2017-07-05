@@ -4,7 +4,7 @@ exports.run = (message, ar, sui, client) => {
 		fields: [
 			{
 				name: 'Leveling System',
-				value: `Arthur has a leveling system that will give you XP and eventually level you up while you type messages. This is ${client.guildTable[message.guild.id] ? client.guildTable[message.guild.id].levels ? 'enabled' : 'disabled' : 'disabled'} for this guild, but can be toggled by a server manager with \`${client.config.prefix}leveling\``
+				value: `Arthur has a leveling system that will give you XP and eventually level you up while you type messages. This is ${!!client.guildTable[message.guild.id] ? client.guildTable[message.guild.id].levels ? 'enabled' : 'disabled' : 'disabled'} for this guild, but can be toggled by a server manager with \`${client.config.prefix}leveling\``
 			},
 			{
 				name: 'Current Settings',
