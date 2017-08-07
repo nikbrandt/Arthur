@@ -15,6 +15,10 @@
   ],
   "author": "Gymnophoria",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Gymnophoria/Arthur.git"
+  },
   "dependencies": {
     "discord.js": "^11.1.0",
     "djs-collection-persistent": "^0.1.3"
