@@ -62,13 +62,13 @@ class XP {
 		for (let i = 0; i < 101; i++) {
 			temp += Math.round(config.xp.levelOne * Math.pow(config.xp.mult, i));
 			levels.push(temp);
-			if (temp < row.total) level = i++;
+			if (temp < row.total) level = i + 1;
 		}
 
-		if (row.total + add >= levels[level] && level++ !== row.level) {
-			sql.run(`UPDATE xp SET level = ${level++} WHERE guildID = '${message.guild.id}' AND userID = '${message.author.id}'`);
-			sql.run(`UPDATE xp SET current = ${row.total + add - levels[level]} WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`)
-			message.channel.send(`Nice job, ${message.author.toString()}, you've achieved level **${level++}**!`);
+		if (row.total + add >= levels[level] && level + 1 > row.level) {
+			sql.run(`UPDATE xp SET level = ${level + 1} WHERE guildID = '${message.guild.id}' AND userID = '${message.author.id}'`);
+			sql.run(`UPDATE xp SET current = ${row.total + add - levels[level]} WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`);
+			message.channel.send(`Nice job, ${message.author.toString()}, you've achieved level **${level + 1}**!`);
 		} else sql.run(`UPDATE xp SET current = ${row.current + add} WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`);
 
 		sql.run(`UPDATE xp SET total = ${row.total + add} WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`);
@@ -76,95 +76,98 @@ class XP {
 		sql.run(`UPDATE xp SET lastMessage = ${Date.now()} WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`);
 		sql.run(`UPDATE xp SET global = ${global + add} WHERE userID = '${message.author.id}'`);
 	}
-}
 
-module.exports = XP;
-
-thingy = client => {
-
-	
-	client.checkGlobalRank = id => {
-		let list = xpTable.array().sort((a, b) => {
-			return JSON.parse(a).global < JSON.parse(b).global ? 1 : -1;
+	static async globalRank (user) {
+		let rows = await sql.all('SELECT DISTINCT userID, global FROM xp');
+		rows = rows.sort((a, b) => {
+			return a.global < b.global ? 1 : -1;
 		});
-		
-		let index = list.findIndex(x => JSON.parse(x).id === id);
-		if (typeof(index) !== 'number') return false;
-		
+
+		let index = rows.findIndex(x => x.userID === user.id);
+		if (typeof index !== 'number') return false;
+
 		return {
 			rank: index + 1,
 			page: Math.ceil((index + 1) / 5)
 		};
-	};
-	
-	client.checkGuildRank = (guildID, id) => {
-		let list = xpTable.filter(x => JSON.parse(x)[guildID] !== undefined).array().sort((a, b) => {
-			return JSON.parse(a)[guildID].totalXP < JSON.parse(b)[guildID].totalXP ? 1 : -1;
+	}
+
+	static async guildRank (member) {
+		let rows = await sql.all(`SELECT userID, total FROM xp WHERE guildID = '${member.guild.id}'`);
+		rows = rows.sort((a, b) => {
+			return a.total < b.total ? 1 : -1;
 		});
-		
-		let index = list.findIndex(x => JSON.parse(x).id === id);
-		if (typeof(index) !== 'number') return false;
-		
+
+		let index = rows.findIndex(x => x.userID === member.user.id);
+		if (typeof index !== 'number') return false;
+
 		return {
 			rank: index + 1,
 			page: Math.ceil((index + 1) / 5)
 		};
-	};
-	
-	client.guildLeaderboard = (guildID, page) => {
-		let entries = xpTable.filter(x => JSON.parse(x).hasOwnProperty(guildID)).array().sort((a, b) => {
-			return JSON.parse(a)[guildID].totalXP < JSON.parse(b)[guildID].totalXP ? 1 : -1;
+	}
+
+	static async guildLeaderboard (guildID, page, client) {
+		let entries = await sql.all(`SELECT userID, level, total FROM xp WHERE guildID = '${guildID}'`);
+
+		if (!entries) return {
+			max: 1,
+			array: ['No one in this server has talked yet.']
+		};
+
+		entries = entries.sort((a, b) => {
+			return a.total < b.total ? 1 : -1;
 		});
-		
+
 		let maxPage = Math.ceil(entries.length / 5);
 		if (page > maxPage) return false;
-		if (!JSON.parse(entries[0])[guildID]) return {
-			max: 1,
-			array: ['No one in this server has talked yet..']
-		};
-		
+
 		let pageArray = [];
 		entries = entries.slice(page * 5 - 5, page * 5);
 		let startNum = page * 5 - 4;
-		let guild = client.guilds.get(guildID);
-		
-		entries.forEach(strEntry => {
-			let entry = JSON.parse(strEntry)[guildID];
-			pageArray.push(`${emojiForNumber(startNum)} ${startNum === 1 ? '**' : ''} ${guild.members.get(entry.id).displayName} | Level ${entry.level} | ${entry.totalXP} xp${startNum === 1 ? '**' : ''}`);
+
+		for (let entry of entries) {
+			let user = await client.fetchUser(entry.userID);
+			pageArray.push(`${emojiForNumber(startNum)} ${startNum === 1 ? '**' : ''} ${user.username} | Level ${entry.level} | ${entry.total} xp${startNum === 1 ? '**' : ''}`);
 			startNum++;
-		});
-		
-		return {
-			max: maxPage,
-			array: pageArray,
-		};
-	};
-	
-	client.globalLeaderboard = page => {
-		let entries = xpTable.array().sort((a, b) => {
-			return JSON.parse(a).global < JSON.parse(b).global ? 1 : -1;
-		});
-		
-		let maxPage = Math.ceil(entries.length / 5);
-		if (page > maxPage) return false;
-		if (!JSON.parse(entries[0]).global) return {
-			max: 1,
-			array: ['No one has talked or has levels enabled for this bot.']
-		};
-		
-		let pageArray = [];
-		entries = entries.slice(page * 5 - 5, page * 5);
-		let startNum = page * 5 - 4;
-		
-		entries.forEach(strEntry => {
-			let entry = JSON.parse(strEntry);
-			pageArray.push(`${emojiForNumber(startNum)} ${startNum === 1 ? '**' : ''} ${client.users.get(entry.id).username} | ${entry.global} XP${startNum === 1 ? '**' : ''}`);
-			startNum++;
-		});
-		
+		}
+
 		return {
 			max: maxPage,
 			array: pageArray
+		};
+	}
+
+	static async globalLeaderboard (page, client) {
+		let entries = await sql.all(`SELECT DISTINCT userID, global FROM xp`);
+
+		if (!entries) return {
+			max: 1,
+			array: ['No one, across the entire bot, has ever talked.. how sad.']
+		};
+
+		entries = entries.sort((a, b) => {
+			return a.global < b.global ? 1 : -1;
+		});
+
+		let maxPage = Math.ceil(entries.length / 5);
+		if (page > maxPage) return false;
+
+		let pageArray = [];
+		entries = entries.slice(page * 5 - 5, page * 5);
+		let startNum = page * 5 - 4;
+
+		for (let entry of entries) {
+			let user = await client.fetchUser(entry.userID);
+			pageArray.push(`${emojiForNumber(startNum)} ${startNum === 1 ? '**' : ''} ${user.username} | ${entry.global} xp${startNum === 1 ? '**' : ''}`);
+			startNum++;
 		}
-	};
-};
+
+		return {
+			max: maxPage,
+			array: pageArray
+		};
+	}
+}
+
+module.exports = XP;

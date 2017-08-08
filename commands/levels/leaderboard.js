@@ -1,6 +1,10 @@
-exports.run = (message, args, suffix, client) => {
-	if (!client.guildTable.has(message.guild.id) || client.guildTable.get(message.guild.id).levels === false) return;
-	
+const sql = require('sqlite');
+const XP = require('../../functions/xp.js');
+
+exports.run = async (message, args, suffix, client) => {
+	let guildRow = await sql.get(`SELECT * FROM guildOptions WHERE guildID = '${message.guild.id}'`);
+	if (!guildRow || guildRow.levels === 'false') return;
+
 	if (args[0] === 'server' || args[0] === 'guild' || args[0] === 's' || !args[0] || (args[0].length > 0 && args[0].length < 4 && args[0] !== 'g') || args[0].length === 19) {
 		let guildID = message.guild.id;
 		
@@ -20,10 +24,8 @@ exports.run = (message, args, suffix, client) => {
 			page = Math.floor(tempPage);
 		}
 		
-		console.log(page);
-		
-		let rank = client.checkGuildRank(guildID, message.author.id);
-		let list = client.guildLeaderboard(guildID, page);
+		let rank = await XP.guildRank(message.member);
+		let list = await XP.guildLeaderboard(guildID, page, client);
 		if (!list) return message.channel.send('Not enough people have talked to generate page ' + page + '.');
 		let guild = client.guilds.get(guildID);
 		
@@ -47,8 +49,8 @@ exports.run = (message, args, suffix, client) => {
 			pg = Math.floor(tempPage);
 		}
 		
-		let gRank = client.checkGlobalRank(message.author.id);
-		let gList = client.globalLeaderboard(pg);
+		let gRank = await XP.globalRank(message.author);
+		let gList = await XP.globalLeaderboard(pg, client);
 		if (!gList) return message.channel.send('Not enough people have talked to generate page ' + pg + '.');
 		
 		message.channel.send({embed: {

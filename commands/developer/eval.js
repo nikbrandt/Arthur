@@ -2,13 +2,13 @@ const util = require('util');
 
 exports.run = (message, args, suffix, client) => {
 	if (!client.config.owners.includes(message.author.id)) return;
-	if (!suffix) return message.channel.send('I need something to eval!')
+	if (!suffix) return message.channel.send('I need something to eval!');
 	
 	let evaled;
 	let sliceAm = 0;
 	
 	try {
-		evaled = util.inspect(eval(suffix));
+		evaled = util.inspect(eval(suffix.replace(/(\n)?```(js)?(\n)?/g, '')));
 	} catch (err) {
 		return message.channel.send(`**Input above.**\n\n❗Error:\n\`\`\`js\n${err}\n\`\`\``);
 	}

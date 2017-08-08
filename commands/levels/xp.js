@@ -1,19 +1,22 @@
-exports.run = (message, args, suffix, client) => {
-	if (!client.guildTable.has(message.guild.id) || client.guildTable.get(message.guild.id).levels === false) return;
+const sql = require('sqlite');
+const XP = require('../../functions/xp.js');
+
+exports.run = async (message, args, suffix, client) => {
+	let guildRow = await sql.get(`SELECT * FROM guildOptions WHERE guildID = '${message.guild.id}'`);
+	if (!guildRow || guildRow.levels === 'false') return;
 	
 	let memObj = client.findMember(message, suffix);
 	let mem;
 	if (!memObj) mem = message.member;
 	else mem = memObj.member;
 	
-	let xpObj = client.memberXP(mem);
-	let guildXP = xpObj[message.guild.id];
-	let nextLevel = client.config.xp.levelOne * Math.pow(client.config.xp.eqMult, guildXP.level);
-	let neededXP = Math.floor((nextLevel) - guildXP.currentXP) * 10 / 10; 
-	let percent = Math.round(guildXP.currentXP / nextLevel * 1000) / 10;
+	let xpObj = await XP.memberXP(mem);
+	let nextLevel = client.config.xp.levelOne * Math.pow(client.config.xp.eqMult, xpObj.level);
+	let neededXP = Math.floor((nextLevel) - xpObj.current) * 10 / 10;
+	let percent = Math.round(xpObj.current / nextLevel * 1000) / 10;
 	
-	let gRank = client.checkGlobalRank(mem.user.id);
-	let rank = client.checkGuildRank(message.guild.id, mem.user.id);
+	let gRank = await XP.globalRank(mem.user);
+	let rank = await XP.guildRank(mem);
 	
 	message.channel.send({embed: {
 		author: {
@@ -24,13 +27,13 @@ exports.run = (message, args, suffix, client) => {
 		description: `**${xpObj.global}** global XP${gRank ? ` - Rank **${gRank.rank}**, on page **${gRank.page}**.` : '.'}`,
 		fields: [
 			{
-				name: 'XP',
-				value: `Current: **${guildXP.currentXP}**${guildXP.currentXP === guildXP.totalXP ? '' : `, Total: **${guildXP.totalXP}**`}\nLevel: **${guildXP.level}**${rank ? `\nRank: **${rank.rank}**, Page: **${rank.page}**.` : ''}`,
+				name: 'Guild XP',
+				value: `Current: **${xpObj.current}**${xpObj.current === xpObj.total ? '' : `, Total: **${xpObj.total}**`}\nLevel: **${xpObj.level}**${rank ? `\nRank: **${rank.rank}**, Page: **${rank.page}**.` : ''}`,
 				inline: true
 			},
 			{
 				name: 'Progress',
-				value: `[${':dollar:'.repeat(parseInt(percent.toString().slice(0, 1), 10))}${':yen:'.repeat(10 - parseInt(percent.toString().slice(0, 1), 10))}]\n**${neededXP}** XP to level ${guildXP.level + 1}. (${percent}%)`,
+				value: `[${':dollar:'.repeat(parseInt(percent.toString().slice(0, 1), 10))}${':yen:'.repeat(10 - parseInt(percent.toString().slice(0, 1), 10))}]\n**${neededXP}** XP to level ${xpObj.level + 1}. (${percent}%)`,
 				inline: true
 			}
 		]
