@@ -11,9 +11,7 @@ module.exports = client => {
 			let admin = message.guild.roles.find(r => r.name.toLowerCase().includes('admin'));
 			if (mod && message.member.roles.has(mod)) permLevel = 3;
 			if (admin && message.member.roles.has(admin)) permLevel = 4;
-		} catch (e) {
-			permLevel;
-		}
+		} catch (e) {}
 		
 		if (message.member.permissions.has('MANAGE_GUILD')) permLevel = 5;
 		

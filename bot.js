@@ -16,4 +16,4 @@ require('./util/eventLoader.js')(client);
 require('./functions/permLevel.js')(client);
 require('./functions/findMember.js')(client);
 
-client.login(client.config.token);
+client.login(client.config.token).catch(console.error);

@@ -11,7 +11,7 @@ exports.run = async (message, args, suffix, client) => {
 	else mem = memObj.member;
 	
 	let xpObj = await XP.memberXP(mem);
-	let nextLevel = client.config.xp.levelOne * Math.pow(client.config.xp.eqMult, xpObj.level);
+	let nextLevel = client.config.xp.levelOne * Math.pow(client.config.xp.mult, xpObj.level);
 	let neededXP = Math.floor((nextLevel) - xpObj.current) * 10 / 10;
 	let percent = Math.round(xpObj.current / nextLevel * 1000) / 10;
 	

@@ -22,10 +22,10 @@ exports.run = (message, args, suffix, client) => {
 		.setFooter('Command will be canceled in 10 minutes.');
 	
 	message.channel.send({embed: baseEmbed});
-	message.channel.awaitMessages(m => m.author.id == message.author.id, {max: 1, time: 600000, errors: ['time']}).then(collected => {
+	message.channel.awaitMessages(m => m.author.id === message.author.id, {max: 1, time: 600000, errors: ['time']}).then(collected => {
 		let colMsg = collected.first();
-		if (colMsg.content == 'cancel') return message.channel.send('Canceled.');
-		fs.writeFile(`${__dirname}/../${args[0]}.js`, part1 + colMsg.content + args[1] == 'default' ? pDefault : args[1] == 'dev' ? pDev : args[1] == 'mod' ? pMod : args[1] == 'admin' ? pAdmin : pDefault + args[2] == 'egg' ? egg : '', err => {
+		if (colMsg.content === 'cancel') return message.channel.send('Canceled.');
+		fs.writeFile(`${__dirname}/../${args[0]}.js`, part1 + colMsg.content + args[1] === 'default' ? pDefault : args[1] === 'dev' ? pDev : args[1] === 'mod' ? pMod : args[1] === 'admin' ? pAdmin : pDefault + args[2] === 'egg' ? egg : '', err => {
 			if (err) message.channel.send({embed: baseEmbed.setDescription(`There was an error creating the file: \n${err}`).setColor(0xf45c42).setFooter('').setTitle('')});
 			else {
 				setTimeout(() => {
@@ -39,7 +39,7 @@ exports.run = (message, args, suffix, client) => {
 				}, 500);
 			}
 		});
-	}).catch(col => {
+	}).catch(() => {
 		message.channel.send({embed: baseEmbed.setDescription('Command canceled.').setFooter('')});
 	});
 };

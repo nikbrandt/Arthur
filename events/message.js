@@ -6,8 +6,8 @@ module.exports = message => {
 	const client = message.client;
 	if (message.guild && !message.guild.me.permissions.has('SEND_MESSAGES')) return;
 	
-	if (message.author.melon === true) message.react('🍉');
-	XP.addXP(message).catch(console.error);
+	if (message.author.melon === true) message.react('🍉').catch();
+	if (message.guild) XP.addXP(message).catch(console.error);
 	
 	if (!message.content.startsWith(config.prefix) && !message.content.startsWith(`<@${client.user.id}>`) && !message.content.startsWith(`<@!${client.user.id}>`)) return;
 	

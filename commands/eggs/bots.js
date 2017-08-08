@@ -1,4 +1,4 @@
-exports.run = (message, args, suffix, client, perms) => {
+exports.run = (message) => {
 	message.channel.send({files: ['http://i.imgur.com/gyqGdK5.jpg']});
 };
 

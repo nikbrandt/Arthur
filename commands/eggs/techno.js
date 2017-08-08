@@ -1,4 +1,4 @@
-exports.run = (message, args, suffix, client, perms) => {
+exports.run = (message) => {
 	message.channel.send('*Technocoder#9418 - 4/22/17 at 11:03 PM from <#219218693928910848>*\n```YOU\'VE HIDDEN THE LAMB SAUCE YOU LAZY FUCKING BASTARD\n```');
 };
 
