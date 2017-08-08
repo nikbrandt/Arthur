@@ -7,4 +7,7 @@ module.exports = client => {
 	client.on('debug', bug => reqEvent('console')(bug, 'debug'));
 	client.on('warn', warn => reqEvent('console')(warn, 'warn'));
 	client.on('error', err => reqEvent('console')(err, 'error'));
+
+	process.on('unhandledPromiseRejection', console.error);
+	process.on('unhandledRejection', console.error);
 };

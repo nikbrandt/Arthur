@@ -1,19 +1,19 @@
-exports.run = (message, args, suffix, client) => {
-	if (!client.guildTable.has(message.guild.id)) {
-		client.guildTable.set(message.guild.id, {levels: true});
-		return message.channel.send(`Leveling has been enabled for **${message.guild.name}**.`);
+const sql = require('sqlite');
+
+exports.run = async message => {
+	let row = await sql.get(`SELECT * FROM guildOptions WHERE guildID = '${message.guild.id}'`);
+
+	if (!row) {
+		sql.run(`INSERT INTO guildOptions (guildID, levels) VALUES (?, ?)`, [message.guild.id, 'true']);
+		return message.channel.send('Leveling has been enabled.');
 	}
-	if (client.guildTable.get(message.guild.id).levels === true) {
-		let updatedTable = client.guildTable.get(message.guild.id);
-		updatedTable.levels = false;
-		client.guildTable.set(message.guild.id, updatedTable);
-		return message.channel.send(`Leveling has been disabled for **${message.guild.name}**.`);
-	}
-	if (client.guildTable.get(message.guild.id).levels === false) {
-		let updatedTable = client.guildTable.get(message.guild.id);
-		updatedTable.levels = true;
-		client.guildTable.set(message.guild.id, updatedTable);
-		return message.channel.send(`Leveling has been enabled for **${message.guild.name}**.`);
+
+	if (row.levels === 'true') {
+		sql.run(`UPDATE guildOptions SET levels = 'false' WHERE guildID = '${message.guild.id}'`);
+		message.channel.send('Leveling has been disabled.');
+	} else {
+		sql.run(`UPDATE guildOptions SET levels = 'true' WHERE guildID = '${message.guild.id}'`);
+		message.channel.send('Leveling has been enabled.');
 	}
 };
 

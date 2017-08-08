@@ -28,6 +28,6 @@ exports.help = {
 	name: 'XP Info',
 	description: 'Gives information about Arthur\'s leveling system.',
 	usage: 'xpinfo',
-	help: 'Recieve information on Arthur\'s leveling system, including whether or not it is disabled in the current guild and its current settings.',
+	help: 'Receive information on Arthur\'s leveling system, including whether or not it is disabled in the current guild and its current settings.',
 	category: 'Leveling and Profiles'
 };

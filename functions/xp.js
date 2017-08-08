@@ -1,21 +1,5 @@
-const PersistentCollection = require('djs-collection-persistent');
-let defaultXP = {global: 0};
-
-const noTable = (table, member, needToSet) => {
-	defaultXP[member.guild.id] = {
-		id: member.id,
-		currentXP: 0,
-		totalXP: 0,
-		level: 0,
-		xpMult: 1,
-		lastXP: Date.now(),
-		lastMsg: Date.now()
-	};
-	defaultXP.id = member.user.id;
-	table = defaultXP;
-	needToSet = true;
-	return table;
-};
+const sql = require('sqlite');
+const config = require('../../media/config.json');
 
 const emojiForNumber = num => {
 	let emojiArray = ['👑', ':two:', ':three:', ':four:', ':five:'];
@@ -23,94 +7,81 @@ const emojiForNumber = num => {
 	else return num + '.';
 };
 
-module.exports = client => {
-	const xpTable = new PersistentCollection({name: 'xpTable'});
+class XP {
+	static async memberXP (member) {
+		let row = await sql.get(`SELECT * FROM xp WHERE userID = ${member.user.id} AND guildID = ${member.guild.id}`);
+		if (!row) {
+			sql.run(`INSERT INTO xp (userID, guildID, current, total, level, mult, global, lastXP) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [member.user.id, member.guild.id, 0, 0, 0, 1, 0, 0]);
+			return {
+				current: 0,
+				total: 0,
+				level: 0,
+				mult: 0
+			}
+		}
+		return {
+			current: row.current,
+			total: row.total,
+			level: row.level,
+			mult: row.mult,
+			global: row.global
+		}
+	}
 
-	client.resetXP = () => {
-		xpTable.deleteAll();
-		return 'rude.';
-	};
-	
-	client.memberXP = member => {
-		let needToSet = false;
-		let table = xpTable.get(member.user.id);
-		
-		if (!table) table = noTable(table, member, needToSet);
-		if (!table[member.guild.id]) table[member.guild.id] = {
-			id: member.id,
-			currentXP: 0,
-			totalXP: 0,
-			level: 0,
-			xpMult: 1,
-			lastXP: Date.now(),
-			lastMsg: Date.now()
-		};
-		xpTable.set(member.user.id, table);
-		
-		return table;
-	};
-	
-	client.addXP = (message, member) => {
-		if (message.channel.type != 'text') return;
-		if (message.channel.id == '304429222477299712') return;
-		if (!client.guildTable.has(member.guild.id) || client.guildTable.get(member.guild.id).levels === false) return;
-		
-		let table = xpTable.get(member.user.id);
-		
-		if (!table) table = noTable(table, member);
-		if (!table[member.guild.id]) table[member.guild.id] = {
-			id: member.id,
-			currentXP: 0,
-			totalXP: 0,
-			level: 0,
-			xpMult: 1,
-			lastXP: Date.now(),
-			lastMsg: Date.now()
-		};
-			
-		let gTable = table[member.guild.id];
-		
-		if (Date.now() - gTable.lastXP < client.config.xp.xpAdd) {
-			gTable.lastMsg = Date.now();
-			table[member.guild.id] = gTable;
-			return xpTable.set(member.user.id, table);
-		}
-		
-		let xpM = 1;
-		if (Date.now() - gTable.lastMsg < 15000) xpM = gTable.xpMult * 1.03;
-		else if (Date.now() - gTable.lastMsg < 30000) xpM = gTable.xpMult * 1.015;
-		else if (Date.now() - gTable.lastMsg < 60000) xpM = gTable.xpMult * 1.0075;
-		if (xpM > client.config.xp.maxMult) xpM = client.config.xp.maxMult;
-		gTable.xpMult = xpM;
-		
-		const xpBase = Math.round(xpM * client.config.xp.base);
-		const xpMin = xpBase - client.config.xp.min;
-		const xpMax = xpBase + client.config.xp.max;
-		const xpAdd = Math.round(Math.random() * (xpMax - xpMin) + xpMin);
-		
-		let levelsArray = [];
+	static async addXP (message) {
+		if (message.channel.type !== 'text') return;
+		if (message.channel.id === '304429222477299712') return;
+
+		let guildRow = await sql.get(`SELECT * FROM guildOptions WHERE guildID = '${message.guild.id}'`);
+		if (!guildRow || guildRow.levels === 'false') return;
+
+		let rows = await sql.all(`SELECT * FROM xp WHERE userID = '${message.author.id}'`);
+		let global = Math.max.apply(Math, rows.map(a => a.global));
+
+		let row = await sql.get(`SELECT * FROM xp WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`);
+		if (!row) return sql.run(`INSERT INTO xp (userID, guildID, current, total, level, mult, global, lastXP, lastMessage) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [message.author.id, message.guild.id, 0, 0, 0, 1, 0, 0, Date.now()]);
+
+		if (Date.now() - row.lastXP < config.xp.xpAdd) return sql.run(`UPDATE xp SET lastMessage = ${Date.now()} WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`);
+
+		let mult;
+		if (Date.now() - row.lastMessage < 10000) mult = row.mult * 1.02;
+		else if (Date.now() - row.lastMessage < 25000) mult = row.mult * 1.01;
+		else if (Date.now() - row.lastMessage < 50000) mult = row.mult * 1.005;
+		else mult = 1;
+		if (mult > config.xp.maxMult) mult = config.xp.maxMult;
+		sql.run(`UPDATE xp SET mult = ${mult} WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`);
+
+		let base = Math.round(mult * config.xp.base);
+		let min = base - config.xp.min;
+		let max = base + config.xp.max;
+		let add = Math.round(Math.random() * (max - min) + min);
+		let levels = [];
+		let level = 0;
 		let temp = 0;
-		let xpLevel = 0;
+
 		for (let i = 0; i < 101; i++) {
-			temp += Math.round(client.config.xp.levelOne * Math.pow(client.config.xp.eqMult, i));
-			levelsArray.push(temp);
-			if (temp < gTable.totalXP) xpLevel = i + 1;
+			temp += Math.round(config.xp.levelOne * Math.pow(config.xp.mult, i));
+			levels.push(temp);
+			if (temp < row.total) level = i++;
 		}
-		
-		if (gTable.totalXP + xpAdd >= levelsArray[xpLevel] && xpLevel + 1 !== gTable.level) {
-			gTable.level = xpLevel + 1;
-			gTable.currentXP = gTable.totalXP + xpAdd - levelsArray[xpLevel];
-			message.channel.send(`Nice job, ${member}, you've achieved level **${xpLevel + 1}**`);
-		} else gTable.currentXP += xpAdd;
-		
-		table.global += xpAdd;
-		gTable.totalXP += xpAdd;
-		gTable.lastXP = Date.now();
-		gTable.lastMsg = Date.now();
-		
-		table[member.guild.id] = gTable;
-		xpTable.set(member.user.id, table);
-	};
+
+		if (row.total + add >= levels[level] && level++ !== row.level) {
+			sql.run(`UPDATE xp SET level = ${level++} WHERE guildID = '${message.guild.id}' AND userID = '${message.author.id}'`);
+			sql.run(`UPDATE xp SET current = ${row.total + add - levels[level]} WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`)
+			message.channel.send(`Nice job, ${message.author.toString()}, you've achieved level **${level++}**!`);
+		} else sql.run(`UPDATE xp SET current = ${row.current + add} WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`);
+
+		sql.run(`UPDATE xp SET total = ${row.total + add} WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`);
+		sql.run(`UPDATE xp SET lastXP = ${Date.now()} WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`);
+		sql.run(`UPDATE xp SET lastMessage = ${Date.now()} WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`);
+		sql.run(`UPDATE xp SET global = ${global + add} WHERE userID = '${message.author.id}'`);
+	}
+}
+
+module.exports = XP;
+
+thingy = client => {
+
 	
 	client.checkGlobalRank = id => {
 		let list = xpTable.array().sort((a, b) => {
