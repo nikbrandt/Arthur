@@ -1,5 +1,5 @@
 const config = require('../../media/config.json');
-const XP = require('../functions/xp.js');
+const XP = require('../struct/xp.js');
 
 module.exports = message => {
 	if (message.author.bot) return;

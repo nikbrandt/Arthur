@@ -1,5 +1,5 @@
 const sql = require('sqlite');
-const XP = require('../../functions/xp.js');
+const XP = require('../../struct/xp.js');
 
 exports.run = async (message, args, suffix, client) => {
 	let guildRow = await sql.get(`SELECT * FROM guildOptions WHERE guildID = '${message.guild.id}'`);

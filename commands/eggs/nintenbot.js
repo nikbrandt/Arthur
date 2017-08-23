@@ -1,5 +1,12 @@
 exports.run = (message) => {
-	message.channel.send({files: ['http://i.imgur.com/qKlnz5n.jpg']});
+	const links = [
+		'http://i.imgur.com/qKlnz5n.jpg',
+		'http://i.imgur.com/EWNKZfA.jpg',
+		'http://i.imgur.com/hqHdmel.jpg',
+		'http://i.imgur.com/HOSmQe1.jpg'
+	];
+
+	message.channel.send({files: [links[Math.floor(Math.random() * (links.length))]]});
 };
 
 exports.config = {
@@ -9,9 +16,9 @@ exports.config = {
 };
 
 exports.help = {
-	name: 'eggs/nintenbot',
-	description: 'An easter egg based off eggs/nintenbot',
-	usage: 'eggs/nintenbot',
-	help: 'An easter egg based off eggs/nintenbot',
+	name: 'NintenBot',
+	description: 'An easter egg based off NintenBot',
+	usage: 'nintenbot',
+	help: 'An easter egg based off NintenBot',
 	category: 'Eggs'
 };
