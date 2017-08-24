@@ -1,23 +1,25 @@
 const ytdl = require('ytdl-core');
 
-module.exports = {
-	next: async guild => {
+let Music = {
+	next: guild => {
 		let music = guild.music;
 		music.queue = music.queue.slice(1);
 
+		guild.music = music;
+
 		if (music.queue.length === 0) {
-			guild.music.channel.leave();
+			guild.voiceConnection.disconnect();
 			guild.music = {};
 			return;
 		}
 
-		const stream = ytdl(music.queue[0].id);
+		const stream = ytdl(music.queue[0].id, { filter: 'audioonly' });
 		const dispatcher = guild.voiceConnection.playStream(stream);
 
-		guild.music = music;
-
 		dispatcher.on('end', () => {
-			this.next(guild);
+			Music.next(guild);
 		});
 	}
 };
+
+module.exports = Music;

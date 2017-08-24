@@ -39,6 +39,7 @@ let add = async (message, id) => {
 
 exports.run = (message, args, suffix, client) => {
 	if (!message.member.voiceChannel) return message.channel.send('You\'ve got to be in a voice channel to play music.');
+	if (!args[0]) return message.channel.send('You have to tell me what to play.');
 
 	let id;
 
@@ -108,7 +109,7 @@ exports.run = (message, args, suffix, client) => {
 
 exports.config = {
 	enabled: 'true',
-	permLevel: 10, // change this when out of beta :p
+	permLevel: 2,
 	aliases: []
 };
 
