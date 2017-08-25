@@ -24,7 +24,7 @@ module.exports = async client => {
 					loadCmd(`${f}/${dF}`, dF, client);
 				});
 			} else {
-				loadCmd(f, f, client);
+				if (f !== '.DS_Store') loadCmd(f, f, client);
 			}
 		} catch (err) {
 			console.error(`Error loading ${f}:\n${err.stack ? err.stack : err}`);

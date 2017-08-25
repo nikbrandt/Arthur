@@ -3,7 +3,6 @@ const ytdl = require('ytdl-core');
 let Music = {
 	next: guild => {
 		// if (guild.voiceConnection.dispatcher) guild.voiceConnection.dispatcher.end();
-		console.log(guild.music.queue);
 
 		let music = guild.music;
 		music.queue = music.queue.slice(1);

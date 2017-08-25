@@ -2,7 +2,7 @@ const ytdl = require('ytdl-core');
 const search = require('youtube-search');
 const music = require('../../struct/music.js');
 
-const YTRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/([A-z0-9_-]{11})$/;
+const YTRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([A-z0-9_-]{11})(&.*)?$/;
 
 function secSpread(sec) {
 	let hours = Math.floor(sec / 3600);
@@ -25,7 +25,7 @@ let add = async (message, id) => {
 			icon_url: info.author.avatar
 		},
 		color: 0x427df4,
-		description: `[${info.title}](https://www.youtu.be/${id})\nBy [${info.author.name}](${info.author.channel_url})\nLength: ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`,
+		description: `[${info.title}](https://youtu.be/${id})\nBy [${info.author.name}](${info.author.channel_url})\nLength: ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`,
 		thumbnail: {
 			url: info.iurlhq
 		},
@@ -88,7 +88,7 @@ exports.run = (message, args, suffix, client) => {
 						icon_url: info.author.avatar
 					},
 					color: 0x427df4,
-					description: `[${info.title}](https://www.youtu.be/${id})\nBy [${info.author.name}](${info.author.channel_url})\nLength: ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`,
+					description: `[${info.title}](https://youtu.be/${id})\nBy [${info.author.name}](${info.author.channel_url})\nLength: ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`,
 					thumbnail: {
 						url: info.iurlhq
 					},
