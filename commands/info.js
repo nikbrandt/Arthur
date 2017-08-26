@@ -5,7 +5,7 @@ exports.run = async (message, args, asdf, client) => {
 
 	message.channel.send({embed: {
 		title: 'Arthur - Yet another Discord bot',
-		description: `A rewrite of Marvin, with tons of.. average features.\n [Invite](${invite}) | [GitHub](https://github.com/Gymnophoria/Arthur) | [Guild](${client.config.info.guildlink})`,
+		description: `A rewrite of Marvin, with tons of.. average features.\n [Invite](${invite}) | [GitHub](https://github.com/Gymnophoria/Arthur) | [Guild](${client.config.info.guildlink}) | [Trello](https://trello.com/b/wt7ptHpC/arthur)`,
 		color: 0x00c140,
 		fields: [
 			{

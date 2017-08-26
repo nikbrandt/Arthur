@@ -32,7 +32,7 @@ exports.run = async (message, args, suffix, client, perms) => {
 				name: 'Arthur Help',
 				icon_url: client.user.avatarURL
 			},
-			description: `[Invite](${invite}) | [GitHub](https://github.com/Gymnophoria/Arthur) | [Guild](${client.config.info.guildlink}) | Made by Gymnophoria#8146\nWhen using commands, <> indicates a required argument and [] indicates an optional requirement. (Do not actually type them)`,
+			description: `[Invite](${invite}) | [GitHub](https://github.com/Gymnophoria/Arthur) | [Guild](${client.config.info.guildlink}) | [Trello](https://trello.com/b/wt7ptHpC/arthur)\nMade by Gymnophoria#8146\nWhen using commands, <> indicates a required argument and [] indicates an optional requirement. (Do not actually type them)`,
 			fields
 		}});
 	} else {
