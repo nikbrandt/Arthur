@@ -1,11 +1,11 @@
+const fs = require('fs');
 const ytdl = require('ytdl-core');
+const request = require('request');
 
 let Music = {
-	next: guild => {
-		// if (guild.voiceConnection.dispatcher) guild.voiceConnection.dispatcher.end();
-
+	next: (guild, first) => {
 		let music = guild.music;
-		music.queue = music.queue.slice(1);
+		if (!first) music.queue = music.queue.slice(1);
 
 		guild.music = music;
 
@@ -16,12 +16,31 @@ let Music = {
 		}
 
 		setTimeout(() => {
-			const stream = ytdl(music.queue[0].id, { filter: 'audioonly' });
-			const dispatcher = guild.voiceConnection.playStream(stream);
+			let dispatcher;
 
-			dispatcher.on('end', () => {
-				Music.next(guild);
-			});
+			if (music.queue[0].type === 1) {
+				const stream = ytdl(music.queue[0].id, { filter: 'audioonly' });
+				dispatcher = guild.voiceConnection.playStream(stream);
+
+				dispatcher.on('end', () => {
+					Music.next(guild);
+				});
+			} else if (music.queue[0].type === 2) {
+				let date = Date.now();
+				let rng = Math.floor(Math.random() * 10000);
+
+				const r = request(music.queue[0].id).pipe(fs.createWriteStream(`../media/mp3temp/${rng}-${date}.mp3`));
+
+				r.on('finish', () => {
+					const stream = fs.createReadStream(`../media/mp3temp/${rng}-${date}.mp3`);
+					dispatcher = guild.voiceConnection.playStream(stream);
+
+					dispatcher.on('end', () => {
+						fs.unlinkSync(`../media/mp3temp/${rng}-${date}.mp3`);
+						Music.next(guild);
+					});
+				})
+			}
 		}, 50);
 	}
 };

@@ -29,18 +29,27 @@ exports.run = async (message, args, suffix, client) => {
 	let queue = message.guild.music.queue.slice(i - 1, i + 9);
 	queue.forEach(async obj => {
 		if (i !== 1) {
-			let info = await ytdl.getInfo(obj.id);
-			let secObj = secSpread(info.length_seconds);
-			songArray.push(`${i}. [${info.title}](https://www.youtu.be/${obj.id}) - ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`);
+			if (obj.type === 1) {
+				let info = await ytdl.getInfo(obj.id);
+				let secObj = secSpread(info.length_seconds);
+				songArray.push(`${i}. [${info.title}](https://youtu.be/${obj.id}) - ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`);
+			} else if (obj.type === 2) {
+				songArray.push(`${i}. A [file](${obj.id}) provided by ${obj.person.tag}.`)
+			}
 		}
 		i++;
 	});
 
-	let npInfo = await ytdl.getInfo(message.guild.music.queue[0].id);
-	let npSec = secSpread(npInfo.length_seconds);
+	let npInfo;
+	let npSec;
+
+	if (message.guild.music.queue[0].type === 1) {
+		npInfo = await ytdl.getInfo(message.guild.music.queue[0].id);
+		npSec = secSpread(npInfo.length_seconds);
+	}
 
 	message.channel.send({embed: {
-		title: `Now playing: ${npInfo.title} (${npSec.h ? `${npSec.h}h ` : ''}${npSec.m ? `${npSec.m}m ` : ''}${npSec.s}s)`,
+		title: message.guild.music.queue[0].type === 1 ? `Now playing: ${npInfo.title} (${npSec.h ? `${npSec.h}h ` : ''}${npSec.m ? `${npSec.m}m ` : ''}${npSec.s}s)` : `Now playing: A file provided by ${message.guild.music.queue[0].person.tag}.`,
 		description: songArray.join('\n'),
 		color: 0x427df4,
 		footer: {

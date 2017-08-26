@@ -14,26 +14,38 @@ function secSpread(sec) {
 exports.run = (message) => {
 	if (!message.guild.music || !message.guild.music.queue) return message.channel.send('Now playing: The sound of silence.');
 
-	ytdl.getInfo(message.guild.music.queue[0].id).then(info => {
-		let secObj = secSpread(info.length_seconds);
+	if (message.guild.music.queue[0].type === 1) { // YouTube video
+		ytdl.getInfo(message.guild.music.queue[0].id).then(info => {
+			let secObj = secSpread(info.length_seconds);
 
+			message.channel.send({
+				embed: {
+					author: {
+						name: 'Now Playing',
+						icon_url: info.author.avatar
+					},
+					color: 0x427df4,
+					description: `[${info.title}](https://www.youtu.be/${message.guild.music.queue[0].id})\nBy [${info.author.name}](${info.author.channel_url})\nLength: ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`,
+					thumbnail: {
+						url: info.iurlhq
+					},
+					footer: {
+						text: `Requested by ${message.guild.music.queue[0].person.tag}`
+					}
+				}
+			});
+		});
+	} else if (message.guild.music.queue[0].type === 2) { // User-provided file
 		message.channel.send({
 			embed: {
 				author: {
-					name: 'Now Playing',
-					icon_url: info.author.avatar
+					name: 'Now Playing'
 				},
 				color: 0x427df4,
-				description: `[${info.title}](https://www.youtu.be/${message.guild.music.queue[0].id})\nBy [${info.author.name}](${info.author.channel_url})\nLength: ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`,
-				thumbnail: {
-					url: info.iurlhq
-				},
-				footer: {
-					text: `Requested by ${message.guild.music.queue[0].person.tag}`
-				}
+				description: `A song provided by ${message.guild.music.queue[0].person.tag}`
 			}
 		});
-	});
+	}
 };
 
 exports.config = {
