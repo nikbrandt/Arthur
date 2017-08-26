@@ -20,7 +20,10 @@ module.exports = message => {
 	const perms = client.permLevel(message);
 	const cmdFile = client.commands.get(command) || client.commands.get(client.aliases.get(command));
 
+	if (!cmdFile) return;
+
 	let go = true;
+	let userGo = true;
 
 	if (cmdFile.config.perms && message.guild) {
 		cmdFile.config.perms.forEach(p => {
@@ -28,9 +31,16 @@ module.exports = message => {
 		});
 	}
 
+	if (cmdFile.config.userPerms && message.guild) {
+		cmdFile.config.userPerms.forEach(p => {
+			if (!message.member.hasPermission(p)) userGo = false;
+		})
+	}
+
 	if (!go) return message.channel.send(`I lack the permission(s) ${cmdFile.config.perms.map(p => p.toLowerCase()).join(', ')}`);
+	if (!userGo) return;
 	
-	if (cmdFile && cmdFile.config.enabled && cmdFile.config.permLevel <= perms) {
+	if (cmdFile.config.enabled && cmdFile.config.permLevel <= perms) {
 		try {
 			cmdFile.run(message, args, suffix, client, perms);
 		} catch (err) {

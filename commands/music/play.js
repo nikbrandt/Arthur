@@ -74,8 +74,7 @@ exports.run = (message, args, suffix, client) => {
 		};
 
 		search(suffix, sOpts, (err, results) => {
-			console.error(err);
-			if (err) return message.channel.send('The video you searched for does not exist.. rip');
+			if (err || !results[0]) return message.channel.send('The video you searched for does not exist.. rip');
 
 			id = results[0].id;
 
@@ -87,8 +86,12 @@ exports.run = (message, args, suffix, client) => {
 
 		if (!id.endsWith('.mp3')) return message.channel.send('I only support playback of mp3\'s right now.');
 
-		if (message.guild.music && message.guild.music.queue) add (message, id, 2).catch(console.error);
-	} else id = args[0].match(YTRegex)[4];
+		if (message.guild.music && message.guild.music.queue) add(message, id, 2).catch(console.error);
+	} else {
+		id = args[0].match(YTRegex)[4];
+
+		if (message.guild.music && message.guild.music.queue) add(message, id, 1).catch(console.error);
+	}
 
 	/*
 	music contains:
