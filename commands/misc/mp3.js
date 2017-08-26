@@ -83,7 +83,8 @@ exports.run = async (message, args, suffix, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 10, // change when out of testing
-	aliases: []
+	aliases: [],
+	perms: ['EMBED_LINKS', 'ATTACH_FILES']
 };
 
 exports.help = {

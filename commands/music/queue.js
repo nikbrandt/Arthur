@@ -61,7 +61,8 @@ exports.run = async (message, args, suffix, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: ['queueueue', 'queueue', 'que', 'qu', 'q']
+	aliases: ['queueueue', 'queueue', 'que', 'qu', 'q'],
+	perms: ['EMBED_LINKS']
 };
 
 exports.help = {

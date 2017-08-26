@@ -26,7 +26,8 @@ The maximum XP will be multiplied for activity is **${client.config.xp.maxMult}x
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: ['xi', 'xpi']
+	aliases: ['xi', 'xpi'],
+	perms: ['EMBED_LINKS']
 };
 
 exports.help = {

@@ -19,8 +19,18 @@ module.exports = message => {
 	const suffix = args.join(' ');
 	const perms = client.permLevel(message);
 	const cmdFile = client.commands.get(command) || client.commands.get(client.aliases.get(command));
+
+	let go = true;
+
+	if (cmdFile.config.perms && message.guild) {
+		cmdFile.config.perms.forEach(p => {
+			if (!message.guild.me.hasPermission(p)) go = false;
+		});
+	}
+
+	if (!go) return message.channel.send(`I lack the permission(s) ${cmdFile.config.perms.map(p => p.toLowerCase()).join(', ')}`);
 	
-	if (cmdFile && cmdFile.config.enabled &&cmdFile.config.permLevel <= perms) {
+	if (cmdFile && cmdFile.config.enabled && cmdFile.config.permLevel <= perms) {
 		try {
 			cmdFile.run(message, args, suffix, client, perms);
 		} catch (err) {

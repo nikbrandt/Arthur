@@ -51,7 +51,8 @@ exports.run = (message) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: ['playing', 'np']
+	aliases: ['playing', 'np'],
+	perms: ['EMBED_LINKS']
 };
 
 exports.help = {

@@ -5,7 +5,8 @@ exports.run = (message) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: []
+	aliases: [],
+	perms: ['ATTACH_FILES']
 };
 
 exports.help = {

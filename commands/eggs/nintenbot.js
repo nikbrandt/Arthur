@@ -12,7 +12,8 @@ exports.run = (message) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: ['ninten']
+	aliases: ['ninten'],
+	perms: ['ATTACH_FILES']
 };
 
 exports.help = {

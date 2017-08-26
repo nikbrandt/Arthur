@@ -5,7 +5,7 @@ const forEach = function (obj, loop) {
   }
 };
 
-exports.run = (message, args, suffix, client, perms) => {
+exports.run = async (message, args, suffix, client, perms) => {
 	if (!args[0] || args[0] === 'dev' || args[0] === 'eggs') {
 		let commands = client.commands.filter(c => c.config.permLevel <= perms === 1 ? 2 : perms);
 		let categories = {};
@@ -22,14 +22,17 @@ exports.run = (message, args, suffix, client, perms) => {
 				inline: true
 			});
 		});
-		
-		message.channel.send({embed: {
+
+		const invite = await client.generateInvite(client.config.info.inviteperms);
+
+		message.channel.send('Check your DM\'s :mailbox_with_mail:');
+		message.author.send({embed: {
 			color: 0x00c140,
 			author: {
 				name: 'Arthur Help',
 				icon_url: client.user.avatarURL
 			},
-			description: 'invite link here | github here | guild here | owner here\nWhen using commands, <> indicates a required argument and [] indicates an optional requirement.',
+			description: `[Invite](${invite}) | [GitHub](https://github.com/Gymnophoria/Arthur) | [Guild](${client.config.info.guildlink}) | Made by Gymnophoria#8146\nWhen using commands, <> indicates a required argument and [] indicates an optional requirement. (Do not actually type them)`,
 			fields
 		}});
 	} else {
@@ -40,7 +43,7 @@ exports.run = (message, args, suffix, client, perms) => {
 			color: 0x00c140,
 			title: command.help.name,
 			description: `${command.help.help}\n**Usage**: \`${client.config.prefix}${command.help.usage}\`${command.config.aliases && command.config.aliases.length > 0 ? `\n**Aliases**: ${command.config.aliases.join(', ')}` : ''}`,
-			footer: {text: 'Category: ' + command.help.category}
+			footer: {text: 'Category: ' + command.help.category + ' | <> is required, [] is optional'}
 		}});
 	}
 };

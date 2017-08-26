@@ -1,8 +1,11 @@
-exports.run = (message, args, asdf, client) => {
-	message.channel.send('Check your DM\'s 📬');
-	message.author.send({embed: {
+const Discord = require('discord.js');
+
+exports.run = async (message, args, asdf, client) => {
+	const invite = await client.generateInvite(client.config.info.inviteperms);
+
+	message.channel.send({embed: {
 		title: 'Arthur - Yet another Discord bot',
-		description: `A rewrite of Marvin, with tons of average features.\n invite link here | github here | guild here | trello here`,
+		description: `A rewrite of Marvin, with tons of.. average features.\n [Invite](${invite}) | [GitHub](https://github.com/Gymnophoria/Arthur) | [Guild](${client.config.info.guildlink})`,
 		color: 0x00c140,
 		fields: [
 			{
@@ -17,7 +20,7 @@ exports.run = (message, args, asdf, client) => {
 			},
 			{
 				name: 'Info',
-				value: `Language: Javascript. Node: \`8.1.2\`. Discord.JS: \`11.1\``
+				value: `Language - Javascript\nNode ${process.version}\nDiscord.JS v${Discord.version}`
 			}
 		]
 	}});
@@ -26,7 +29,8 @@ exports.run = (message, args, asdf, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	aliases: ['bot']
+	aliases: ['bot'],
+	perms: ['EMBED_LINKS']
 };
 
 exports.help = {
