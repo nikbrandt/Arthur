@@ -156,7 +156,8 @@ exports.config = {
 	enabled: 'true',
 	permLevel: 2,
 	aliases: [],
-	perms: ['EMBED_LINKS', 'SPEAK', 'CONNECT']
+	perms: ['EMBED_LINKS', 'SPEAK', 'CONNECT'],
+	cooldown: 5000
 };
 
 exports.help = {

@@ -84,7 +84,8 @@ exports.config = {
 	enabled: true,
 	permLevel: 10, // change when out of testing
 	aliases: [],
-	perms: ['EMBED_LINKS', 'ATTACH_FILES']
+	perms: ['EMBED_LINKS', 'ATTACH_FILES'],
+	cooldown: 60000
 };
 
 exports.help = {

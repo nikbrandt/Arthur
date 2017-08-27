@@ -1,6 +1,8 @@
 const config = require('../../media/config.json');
 const XP = require('../struct/xp.js');
 
+let cooldownObj = {};
+
 module.exports = message => {
 	if (message.author.bot) return;
 	const client = message.client;
@@ -24,10 +26,14 @@ module.exports = message => {
 
 	let go = true;
 	let userGo = true;
+	let missingPerms = [];
 
 	if (cmdFile.config.perms && message.guild) {
 		cmdFile.config.perms.forEach(p => {
-			if (!message.guild.me.hasPermission(p)) go = false;
+			if (!message.guild.me.hasPermission(p)) {
+				go = false;
+				missingPerms.push(p.toLowerCase())
+			}
 		});
 	}
 
@@ -37,9 +43,14 @@ module.exports = message => {
 		})
 	}
 
-	if (!go) return message.channel.send(`I lack the permission(s) ${cmdFile.config.perms.map(p => p.toLowerCase()).join(', ')}`);
+	if (!go) return message.channel.send(`I lack the permission(s) needed to run this command: ${missingPerms.join(', ')}`);
 	if (!userGo) return;
-	
+	if (cmdFile.config.cooldown && cooldownObj[message.author.id] && cooldownObj[message.author.id][cmdFile.help.name] && Date.now() - cooldownObj[message.author.id][cmdFile.help.name] < cmdFile.config.cooldown) return message.channel.send(`Whoah there, you\'re being too spicy for me. Could you just chill? Wait another ${Math.round((cooldownObj[message.author.id][cmdFile.help.name] + cmdFile.config.cooldown - Date.now()) / 1000)} seconds, would ya?`);
+	if (cmdFile.config.cooldown) {
+		if (cooldownObj[message.author.id]) cooldownObj[message.author.id][cmdFile.help.name] = Date.now();
+		else cooldownObj[message.author.id] = { [cmdFile.help.name]: Date.now() };
+	}
+
 	if (cmdFile.config.enabled && cmdFile.config.permLevel <= perms) {
 		try {
 			cmdFile.run(message, args, suffix, client, perms);
