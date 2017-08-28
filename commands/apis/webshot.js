@@ -35,7 +35,7 @@ exports.config = {
 	permLevel: 2,
 	aliases: ['screenshot', 'ss'],
 	perms: ['ATTACH_FILES'],
-	cooldown: 20000
+	cooldown: 10000
 };
 
 exports.help = {
