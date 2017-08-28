@@ -21,11 +21,13 @@
   },
   "dependencies": {
     "discord.js": "^11.1.0",
-    "ytdl-core": "^0.16.0",
-    "sqlite": "^2.8.0",
-    "youtube-search": "^1.0.10",
     "fluent-ffmpeg": "^2.1.2",
     "node-opus": "^0.2.6",
-    "request": "^2.81.0"
+    "request": "^2.81.0",
+    "sqlite": "^2.8.0",
+    "sqlite3": "^3.1.8",
+    "webshot": "^0.18.0",
+    "youtube-search": "^1.0.10",
+    "ytdl-core": "^0.16.0"
   }
 }

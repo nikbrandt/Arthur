@@ -14,9 +14,9 @@ exports.config = {
 };
 
 exports.help = {
-	name: ' Invite',
-	description: ' Invite Arthur to your server.',
-	usage: ' invite',
-	help: ' Get an invite link for Arthur.',
-	category: ' Other'
+	name: 'Invite',
+	description: 'Invite Arthur to your server.',
+	usage: 'invite',
+	help: 'Get an invite link for Arthur.',
+	category: 'Other'
 };

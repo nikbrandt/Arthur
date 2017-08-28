@@ -25,7 +25,7 @@ exports.run = async (message, args, suffix, client, perms) => {
 
 		const invite = await client.generateInvite(client.config.info.inviteperms);
 
-		message.channel.send('Check your DM\'s :mailbox_with_mail:');
+		if (message.guild) message.channel.send('Check your DM\'s :mailbox_with_mail:');
 		message.author.send({embed: {
 			color: 0x00c140,
 			author: {

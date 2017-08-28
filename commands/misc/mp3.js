@@ -44,16 +44,16 @@ async function finish(id, message) {
 					}
 				},
 				files: [{
-					attachment: `../media/mp3temp/${id}-${date}.mp3`,
+					attachment: `../media/temp/${id}-${date}.mp3`,
 					name: info.title + '.mp3'
 				}]
 			}).catch(() => {
 				message.channel.send('The file was too big to send (anything longer than ~10 minutes is probably too long).. Sorry!');
 			}).then(() => {
-				fs.unlinkSync(`../media/mp3temp/${id}-${date}.mp3`);
+				fs.unlinkSync(`../media/temp/${id}-${date}.mp3`);
 			});
 		})
-		.save(`${__dirname}/../../../media/mp3temp/${id}-${date}.mp3`);
+		.save(`${__dirname}/../../../media/temp/${id}-${date}.mp3`);
 }
 
 exports.run = async (message, args, suffix, client) => {
