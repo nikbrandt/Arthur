@@ -45,10 +45,17 @@ module.exports = message => {
 
 	if (!go) return message.channel.send(`I lack the permission(s) needed to run this command: ${missingPerms.join(', ')}`);
 	if (!userGo) return;
+
 	if (cmdFile.config.cooldown && cooldownObj[message.author.id] && cooldownObj[message.author.id][cmdFile.help.name] && Date.now() - cooldownObj[message.author.id][cmdFile.help.name] < cmdFile.config.cooldown) return message.channel.send(`Whoah there, you\'re being too spicy for me. Could you just chill? Wait another ${Math.round((cooldownObj[message.author.id][cmdFile.help.name] + cmdFile.config.cooldown - Date.now()) / 1000)} seconds, would ya?`);
 	if (cmdFile.config.cooldown) {
 		if (cooldownObj[message.author.id]) cooldownObj[message.author.id][cmdFile.help.name] = Date.now();
 		else cooldownObj[message.author.id] = { [cmdFile.help.name]: Date.now() };
+	}
+
+	if (cmdFile.config.guildCooldown && cooldownObj[message.guild.id] && cooldownObj[message.guild.id][cmdFile.help.name] && Date.now() - cooldownObj[message.guild.id][cmdFile.help.name] < cmdFile.config.guildCooldown) return message.channel.send(`Dude, this guild is just being way too spicy. Some people need to seriously chill.. Wait another ${Math.round((cooldownObj[message.guild.id][cmdFile.help.name] + cmdFile.config.guildCooldown - Date.now()) / 1000)} seconds, would ya?`);
+	if (cmdFile.config.guildCooldown) {
+		if (cooldownObj[message.guild.id]) cooldownObj[message.guild.id][cmdFile.help.name] = Date.now();
+		else cooldownObj[message.guild.id] = { [cmdFile.help.name]: Date.now() };
 	}
 
 	if (cmdFile.config.enabled && cmdFile.config.permLevel <= perms) {

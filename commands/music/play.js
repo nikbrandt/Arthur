@@ -157,7 +157,7 @@ exports.config = {
 	permLevel: 2,
 	aliases: [],
 	perms: ['EMBED_LINKS', 'SPEAK', 'CONNECT'],
-	cooldown: 5000
+	guildCooldown: 5000
 };
 
 exports.help = {
