@@ -25,7 +25,8 @@ exports.config = {
 	enabled: true,
 	permLevel: 2,
 	aliases: ['calc'],
-	cooldown: 2000
+	cooldown: 2000,
+	perms: ['EMBED_LINKS']
 };
 
 exports.help = {
