@@ -1,4 +1,4 @@
-module.exports = client => {
+exports.pl = client => {
 	client.permLevel = message => {
 		let permLevel = 2;
 		
@@ -9,16 +9,15 @@ module.exports = client => {
 		try {
 			let mod = message.guild.roles.find(r => r.name.toLowerCase().includes('mod'));
 			let admin = message.guild.roles.find(r => r.name.toLowerCase().includes('admin'));
+			if (message.member.permissions.has('MANAGE_GUILD')) permLevel = 4;
 			if (mod && message.member.roles.has(mod)) permLevel = 3;
-			if (admin && message.member.roles.has(admin)) permLevel = 4;
+			if ((admin && message.member.roles.has(admin)) || message.member.hasPermission('ADMIN')) permLevel = 5;
 		} catch (e) {}
-		
-		if (message.member.permissions.has('MANAGE_GUILD')) permLevel = 5;
 		
 		if (message.author.id === message.guild.ownerID) permLevel = 6;
 		
 		return permLevel;
-		
+
 		/*
 		0 - not a person (webhook/pinned message)
 		1 - in a DM
@@ -30,4 +29,15 @@ module.exports = client => {
 		10 - bot owner
 		*/
 	};
+};
+
+exports.numMapping = {
+	0: '**Anyone** can use this command.',
+	1: '**Anyone** can use this command.',
+	2: 'This command can be used by **anyone in a guild**',
+	3: 'Only people with a **Mod role** can use this command.',
+	4: 'Only people with the **Manage Server permission** or higher can use this command.',
+	5: 'Only people with an **Admin role** or with the **Admin permission** can use this command.',
+	6: 'Only the **server owner** can use this command.',
+	10: 'Only **bot developers** can use this command.'
 };

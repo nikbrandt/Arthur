@@ -11,8 +11,8 @@ function secSpread(sec) {
 	}
 }
 
-exports.run = async (message, args, suffix, client) => {
-	if (!message.guild.music || !message.guild.music.queue) return message.channel.send(`There is no music queued. Add some with \`${client.config.prefix}play\`.`);
+exports.run = async (message, args) => {
+	if (!message.guild.music || !message.guild.music.queue) return message.channel.send(`There is no music queued. Add some with the \`play\` command.`);
 
 	let i = 1;
 	if (args[0]) {
@@ -27,7 +27,9 @@ exports.run = async (message, args, suffix, client) => {
 	let pars = i;
 	let songArray = [];
 	let queue = message.guild.music.queue.slice(i - 1, i + 9);
-	queue.forEach(async obj => {
+
+	async function fuckQueue () {
+		let obj = queue[i - 1];
 		if (i !== 1) {
 			if (obj.type === 1) {
 				let info = await ytdl.getInfo(obj.id);
@@ -37,8 +39,9 @@ exports.run = async (message, args, suffix, client) => {
 				songArray.push(`${i}. A [file](${obj.id}) provided by ${obj.person.tag}.`)
 			}
 		}
+		if (i < queue.length) fuckQueue().catch(console.error);
 		i++;
-	});
+	}
 
 	let npInfo;
 	let npSec;
@@ -48,14 +51,16 @@ exports.run = async (message, args, suffix, client) => {
 		npSec = secSpread(npInfo.length_seconds);
 	}
 
-	message.channel.send({embed: {
-		title: message.guild.music.queue[0].type === 1 ? `Now playing: ${npInfo.title} (${npSec.h ? `${npSec.h}h ` : ''}${npSec.m ? `${npSec.m}m ` : ''}${npSec.s}s)` : `Now playing: A file provided by ${message.guild.music.queue[0].person.tag}.`,
-		description: songArray.join('\n'),
-		color: 0x427df4,
-		footer: {
-			text: `Page ${pars} of ${Math.ceil(message.guild.music.queue.length / 10)} | ${message.guild.music.queue.length} Song${message.guild.music.queue.length === 1 ? '' : 's'} Total | Note that queue may load slowly.`
-		}
-	}});
+	setTimeout(() => {
+		message.channel.send({embed: {
+			title: message.guild.music.queue[0].type === 1 ? `Now playing: ${npInfo.title} (${npSec.h ? `${npSec.h}h ` : ''}${npSec.m ? `${npSec.m}m ` : ''}${npSec.s}s)` : `Now playing: A file provided by ${message.guild.music.queue[0].person.tag}.`,
+			description: songArray.join('\n'),
+			color: 0x427df4,
+			footer: {
+				text: `Page ${pars} of ${Math.ceil(message.guild.music.queue.length / 10)} | ${message.guild.music.queue.length} Song${message.guild.music.queue.length === 1 ? '' : 's'} Total | Note that queue may load slowly.`
+			}
+		}});
+	}, 150);
 };
 
 exports.config = {

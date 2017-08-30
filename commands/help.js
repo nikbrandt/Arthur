@@ -1,3 +1,5 @@
+const permLevel = require('../functions/permLevel');
+
 const forEach = function (obj, loop) {
   let a = Object.keys(obj);
   for (let i = 0; i < a.length; i++) {
@@ -41,8 +43,18 @@ exports.run = async (message, args, suffix, client, perms) => {
 		
 		message.channel.send({embed: {
 			color: 0x00c140,
-			title: command.help.name,
-			description: `${command.help.help}\n**Usage**: \`${client.config.prefix}${command.help.usage}\`${command.config.aliases && command.config.aliases.length > 0 ? `\n**Aliases**: ${command.config.aliases.join(', ')}` : ''}`,
+			fields: [
+				{
+					name: command.help.name,
+					value: `${command.help.help}\n**Usage**: \`${client.config.prefix}${command.help.usage}\`${command.config.aliases && command.config.aliases.length > 0 ? `\n**Aliases**: ${command.config.aliases.join(', ')}` : ''}`,
+					inline: true
+				},
+				{
+					name: 'Advanced',
+					value: `${command.config.cooldown ? '**' + Math.round(command.config.cooldown / 1000) + 's** cooldown\n' : ''}${command.config.guildCooldown ? '**' + Math.round(command.config.guildCooldown / 1000) + 's** server cooldown\n' : ''}${permLevel.numMapping[command.config.permLevel]}\n${command.config.perms ? 'Requires **bot perms**: ' + command.config.perms.join(', ').toLowerCase() + '\n' : ''}${command.config.userPerms ? 'Requires additional **member perms**: ' + command.config.userPerms.join(', ').toLowerCase() : ''}`,
+					inline: true
+				}
+			],
 			footer: {text: 'Category: ' + command.help.category + ' | <> is required, [] is optional'}
 		}});
 	}

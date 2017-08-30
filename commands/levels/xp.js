@@ -43,7 +43,7 @@ exports.run = async (message, args, suffix, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: [],
+	aliases: ['rank'],
 	perms: ['EMBED_LINKS']
 };
 
