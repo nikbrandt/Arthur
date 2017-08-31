@@ -23,7 +23,7 @@ exports.run = (message, args) => {
 
 	webshot(args[0], `../media/temp/${date}-${message.author.id}.png`, options, err => {
 		msg.delete();
-		if (err) return message.channel.send('Hey, you gotta provide me with a *valid* url, okay? Your trickery caused you a 20 second cooldown, mister.');
+		if (err) return message.channel.send('Hey, you gotta provide me with a *valid* url, okay? Your trickery caused you a 10 second cooldown, mister.');
 		message.channel.send(`Here's your render of ${args[0]}:`, {files: [`../media/temp/${date}-${message.author.id}.png`]}).then(() => {
 			fs.unlinkSync(`../media/temp/${date}-${message.author.id}.png`);
 		});

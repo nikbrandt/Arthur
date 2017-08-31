@@ -12,10 +12,13 @@ module.exports = async message => {
 	if (message.author.melon === true) message.react('🍉').catch();
 	if (message.guild) XP.addXP(message).catch(console.error);
 
-	let row = await sql.get(`SELECT prefix FROM guildOptions WHERE guildID = '${message.guild.id}'`);
 	let prefix;
-	if (!row) prefix = config.prefix;
-	else prefix = row.prefix;
+
+	if (message.guild) {
+		let row = await sql.get(`SELECT prefix FROM guildOptions WHERE guildID = '${message.guild.id}'`);
+		if (!row) prefix = config.prefix;
+		else prefix = row.prefix;
+	} else prefix = 'a.';
 	
 	if (!message.content.startsWith(prefix) && !message.content.startsWith(`<@${client.user.id}>`) && !message.content.startsWith(`<@!${client.user.id}>`)) return;
 	
