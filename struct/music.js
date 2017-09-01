@@ -41,6 +41,10 @@ let Music = {
 					});
 				})
 			}
+
+			dispatcher.on('start', () => {
+				guild.voiceConnection.player.streamingData.pausedTime = 0;
+			});
 		}, 50);
 	}
 };
