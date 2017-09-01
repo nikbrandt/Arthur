@@ -25,7 +25,7 @@ exports.run = async (message, args, suffix, client, perms) => {
 			});
 		});
 
-		const invite = await client.generateInvite(client.config.info.inviteperms);
+		const invite = await client.generateInvite(client.config.info.invitePerms);
 
 		if (message.guild) message.channel.send('Check your DM\'s :mailbox_with_mail:');
 		message.author.send({embed: {
@@ -34,7 +34,7 @@ exports.run = async (message, args, suffix, client, perms) => {
 				name: 'Arthur Help',
 				icon_url: client.user.avatarURL
 			},
-			description: `[Invite](${invite}) | [GitHub](https://github.com/Gymnophoria/Arthur) | [Guild](${client.config.info.guildlink}) | [Trello](https://trello.com/b/wt7ptHpC/arthur)\nMade by Gymnophoria#8146\nWhen using commands, <> indicates a required argument and [] indicates an optional requirement. (Do not actually type them)`,
+			description: `[Invite](${invite}) | [GitHub](https://github.com/Gymnophoria/Arthur) | [Guild](${client.config.info.guildLink}) | [Trello](https://trello.com/b/wt7ptHpC/arthur)\nMade by Gymnophoria#8146\nWhen using commands, <> indicates a required argument and [] indicates an optional requirement. (Do not actually type them)`,
 			fields
 		}});
 	} else {
