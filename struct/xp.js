@@ -28,11 +28,10 @@ class XP {
 		}
 	}
 
-	static async addXP (message) {
+	static async addXP (message, guildRow) {
 		if (message.channel.type !== 'text') return;
 		if (message.channel.id === '304429222477299712') return;
 
-		let guildRow = await sql.get(`SELECT * FROM guildOptions WHERE guildID = '${message.guild.id}'`);
 		if (!guildRow || guildRow.levels === 'false') return;
 
 		let rows = await sql.all(`SELECT * FROM xp WHERE userID = '${message.author.id}'`);

@@ -10,7 +10,7 @@ exports.run = (message, a, s, d, permLevel) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: ['stfu', 'leave']
+	aliases: ['stfu', 'leave', 'gtfo']
 };
 
 exports.help = {

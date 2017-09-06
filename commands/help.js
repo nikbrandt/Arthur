@@ -36,7 +36,7 @@ exports.run = async (message, args, suffix, client, perms) => {
 			},
 			description: `[Invite](${invite}) | [GitHub](https://github.com/Gymnophoria/Arthur) | [Guild](${client.config.info.guildLink}) | [Trello](https://trello.com/b/wt7ptHpC/arthur)\nMade by Gymnophoria#8146\nWhen using commands, <> indicates a required argument and [] indicates an optional requirement. (Do not actually type them)`,
 			fields
-		}});
+		}}).catch();
 	} else {
 		let command = client.commands.get(args[0]) || client.commands.get(client.aliases.get(args[0]));
 		if (!command) return message.channel.send(`I do not have a \`${args[0]}\` command.`);

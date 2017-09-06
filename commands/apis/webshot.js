@@ -14,7 +14,8 @@ exports.run = (message, args) => {
 			width: 'window',
 			height: 'all'
 		},
-		cookies: []
+		cookies: [],
+		timeout: 30000
 	};
 
 	let msg;
@@ -22,8 +23,14 @@ exports.run = (message, args) => {
 	message.channel.send('Loading..').then(m => msg = m);
 
 	webshot(args[0], `../media/temp/${date}-${message.author.id}.png`, options, err => {
-		msg.delete();
-		if (err) return message.channel.send('Hey, you gotta provide me with a *valid* url, okay? Your trickery caused you a 10 second cooldown, mister.');
+		if (msg) msg.delete();
+
+		if (err) {
+			if (err.toString().includes('value 1')) message.channel.send('Hey, you gotta provide me with a *valid* url, okay? Your trickery caused you a 10 second cooldown, mister.');
+			if (err.toString().includes('timeout setting')) message.channel.send('That website is too powerful! It\'s taken me more than 30 seconds to render, so I\'m canceling. Sorry!')
+			return;
+		}
+
 		message.channel.send(`Here's your render of \`${args[0]}\`:`, {files: [`../media/temp/${date}-${message.author.id}.png`]}).then(() => {
 			fs.unlinkSync(`../media/temp/${date}-${message.author.id}.png`);
 		});
@@ -43,5 +50,5 @@ exports.help = {
 	description: 'Take a picture of a website.',
 	usage: 'webshot <website>',
 	help: 'Take a picture of a website.',
-	category: 'APIs'
+	category: 'Other'
 };

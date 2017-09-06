@@ -20,6 +20,9 @@ function secSpread(sec) {
 let add = async (message, id, type) => {
 	if (type === 1) {
 		let info = await ytdl.getInfo(id);
+
+		if (info.livestream === '1') return message.channel.send('Trying to play a livestream, eh? I can\'t do that, sorry.. ;-;');
+
 		let secObj = secSpread(info.length_seconds);
 
 		message.channel.send({embed: {
@@ -36,6 +39,8 @@ let add = async (message, id, type) => {
 				text: `Requested by ${message.author.tag}`
 			}
 		}});
+
+		message.guild.music.queue.push({ type: type, person: message.author, id: id });
 	} else if (type === 2) {
 		message.channel.send({
 			embed: {
@@ -49,7 +54,7 @@ let add = async (message, id, type) => {
 		});
 	}
 
-	message.guild.music.queue.push({ type: type, person: message.author, id: id });
+	if (type !== 1) message.guild.music.queue.push({ type: type, person: message.author, id: id });
 };
 
 exports.run = (message, args, suffix, client) => {
@@ -115,6 +120,12 @@ exports.run = (message, args, suffix, client) => {
 
 			if (type === 1) { // youtube video
 				let info = await ytdl.getInfo(id);
+
+				if (info.livestream === '1') {
+					message.guild.music = {};
+					return message.channel.send('Trying to play a livestream, eh? I can\'t do that, sorry.. ;-;');
+				}
+
 				let secObj = secSpread(info.length_seconds);
 
 				message.channel.send({

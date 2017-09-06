@@ -7,15 +7,15 @@ let cooldownObj = {};
 module.exports = async message => {
 	if (message.author.bot) return;
 	const client = message.client;
-	if (message.guild && !message.guild.me.permissions.has('SEND_MESSAGES')) return;
+	if (message.guild && !message.channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) return;
 	
 	if (message.author.melon === true) message.react('🍉').catch();
-	if (message.guild) XP.addXP(message).catch(console.error);
 
 	let prefix;
 
 	if (message.guild) {
-		let row = await sql.get(`SELECT prefix FROM guildOptions WHERE guildID = '${message.guild.id}'`);
+		let row = await sql.get(`SELECT prefix, levels FROM guildOptions WHERE guildID = '${message.guild.id}'`);
+		XP.addXP(message, row).catch(console.error);
 		if (!row) prefix = config.prefix;
 		else prefix = row.prefix;
 	} else prefix = 'a.';
@@ -39,7 +39,7 @@ module.exports = async message => {
 
 	if (cmdFile.config.perms && message.guild) {
 		cmdFile.config.perms.forEach(p => {
-			if (!message.guild.me.hasPermission(p)) {
+			if (!message.channel.permissionsFor(message.guild.me).has(p)) {
 				go = false;
 				missingPerms.push(p.toLowerCase())
 			}
@@ -48,7 +48,7 @@ module.exports = async message => {
 
 	if (cmdFile.config.userPerms && message.guild) {
 		cmdFile.config.userPerms.forEach(p => {
-			if (!message.member.hasPermission(p)) userGo = false;
+			if (!message.channel.permissionsFor(message.guild.me).has(p)) userGo = false;
 		})
 	}
 
