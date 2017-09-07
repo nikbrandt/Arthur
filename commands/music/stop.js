@@ -1,6 +1,5 @@
 exports.run = (message, a, s, d, permLevel) => {
-	if (!message.member.roles.find(r => r.name.toLowerCase() === 'dj') && !message.member.roles.find(r => r.name.toLowerCase() === 'music') && permLevel < 3) return message.channel.send('You do not have permission to stop music. To do so, get mod role or higher, or have the DJ or Music role');
-	if (!message.guild.music || !message.guild.music.queue) return message.channel.send('There is no music playing.');
+	if (!message.member.roles.find(r => r.name.toLowerCase() === 'dj') && !message.member.roles.find(r => r.name.toLowerCase() === 'music') && permLevel < 3) return;
 
 	message.channel.send('Music stopped.');
 	message.guild.voiceConnection.disconnect();

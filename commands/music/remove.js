@@ -3,12 +3,12 @@ exports.run = (message, args, suffix, client, permLevel) => {
 
 	if (!args[0]) return message.channel.send('Ya\'ll needs to specify which song to remove (gimme a number)');
 	let num = parseInt(args[0]);
-	if (!num) return message.channel.send('Hey.. that\'s not a number.. (or you chose zero and that\'s also not a song number)');
+	if (!num) return message.channel.send('Hey.. that\'s not a number.. (or you chose zero and that\'s also not a song number dumbo)');
 	if (num < 1) return message.channel.send('there is no negative queue tho');
 	if (num === 1) return message.channel.send('hey use skip don\'t remove the current song that borks things..');
 	if (num > message.guild.music.queue + 1) return message.channel.send('C\'mon, there aren\'t that many songs in the queue.. yet.');
 
-	if (!message.member.roles.find(r => r.name.toLowerCase() === 'dj') && !message.member.roles.find(r => r.name.toLowerCase() === 'music') && permLevel < 3 && message.guild.music.queue[num - 1].person.id !== message.author.id) return message.channel.send('You do not have permission to stop music. To do so, get mod role or higher, or have the DJ or Music role');
+	if (!message.member.roles.find(r => r.name.toLowerCase() === 'dj') && !message.member.roles.find(r => r.name.toLowerCase() === 'music') && permLevel < 3 && message.guild.music.queue[num - 1].person.id !== message.author.id) return;
 
 	message.guild.music.queue.splice(num - 1, 1);
 	message.channel.send(`Success! Song #${num} has been removed from the queue. *someone might have wanted to hear that music*`);
