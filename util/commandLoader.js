@@ -1,6 +1,7 @@
+const { Stopwatch } = require('node-stopwatch');
 const fs = require('fs');
-const { promisify } = require('util');
-const readdir = promisify(fs.readdir);
+
+let count = 0;
 
 const loadCmd = (path, command, client) => {
 	console.log(`Loading ${command}..`);
@@ -9,12 +10,18 @@ const loadCmd = (path, command, client) => {
 	file.config.aliases.forEach(a => {
 		client.aliases.set(a, command.replace(/.js/g, ''));
 	});
+	count++;
+	console.log('Loaded.');
 };
 
 exports.loadCmd = loadCmd;
 
 module.exports = async client => {
-	const files = await readdir(`${__dirname}/../commands`);
+	let stopwatch = Stopwatch.create();
+	console.log('Loading commands..');
+	stopwatch.start();
+
+	const files = fs.readdirSync(`${__dirname}/../commands`);
 	
 	files.forEach(f => {
 		try {
@@ -30,4 +37,7 @@ module.exports = async client => {
 			console.error(`Error loading ${f}:\n${err.stack ? err.stack : err}`);
 		}
 	});
+
+	console.log(`Success! Loaded ${count} commands in ${stopwatch.elapsedMilliseconds} ms.\n`);
+	stopwatch.stop();
 };

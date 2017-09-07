@@ -4,9 +4,8 @@ const sql = require('sqlite');
 
 let cooldownObj = {};
 
-module.exports = async message => {
+module.exports = async (client, message) => {
 	if (message.author.bot) return;
-	const client = message.client;
 	if (message.guild && !message.channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) return;
 	
 	if (message.author.melon === true) message.react('🍉').catch();

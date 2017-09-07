@@ -26,6 +26,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "libsodium-wrappers": "^0.5.4",
     "node-opus": "^0.2.6",
+    "node-stopwatch": "0.0.1",
     "request": "^2.81.0",
     "sqlite": "^2.8.0",
     "sqlite3": "3.1.8",
