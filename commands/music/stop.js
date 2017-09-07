@@ -1,8 +1,10 @@
 exports.run = (message, a, s, d, permLevel) => {
 	if (!message.member.roles.find(r => r.name.toLowerCase() === 'dj') && !message.member.roles.find(r => r.name.toLowerCase() === 'music') && permLevel < 3) return;
 
+	if (!message.guild.music || !message.guild.music.queue) return message.channel.send('I have successfully stopped the nonexistent music.. What were you trying to do?');
+
 	message.channel.send('Music stopped.');
-	message.guild.voiceConnection.disconnect();
+	if (message.guild.voiceConnection) message.guild.voiceConnection.disconnect();
 	message.guild.music = {};
 };
 

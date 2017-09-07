@@ -18,6 +18,11 @@ let Music = {
 		setTimeout(() => {
 			let dispatcher;
 
+			if (!guild.voiceConnection) {
+				guild.music = {};
+				return;
+			}
+
 			if (music.queue[0].type === 1) {
 				const stream = ytdl(music.queue[0].id, { filter: 'audioonly' });
 				dispatcher = guild.voiceConnection.playStream(stream);

@@ -40,7 +40,7 @@ let add = async (message, id, type) => {
 			}
 		}});
 
-		message.guild.music.queue.push({ type: type, person: message.author, id: id });
+		message.guild.music.queue.push({ type: type, person: message.author, id: id, meta: { title: `${info.title} (${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s)`, queueName: `[${info.title}](https://youtu.be/${id}) - ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s` } });
 	} else if (type === 2) {
 		message.channel.send({
 			embed: {
@@ -54,7 +54,7 @@ let add = async (message, id, type) => {
 		});
 	}
 
-	if (type !== 1) message.guild.music.queue.push({ type: type, person: message.author, id: id });
+	if (type !== 1) message.guild.music.queue.push({ type: type, person: message.author, id: id, meta: { title: `A file provided by ${message.author.tag}`, queueName: `A file provided by ${message.author.tag}` } });
 };
 
 exports.run = (message, args, suffix, client) => {
@@ -106,6 +106,9 @@ exports.run = (message, args, suffix, client) => {
 			type: number (see type explanation in above comment)
 			person: string (requester object)
 			id: string (youtube video id or file url)
+			meta: object:
+				title: title to display as queue title
+				queueName: title to display in queue when not title
 	 */
 
 	if (!message.guild.music || !message.guild.music.queue) {
@@ -116,7 +119,6 @@ exports.run = (message, args, suffix, client) => {
 
 		message.member.voiceChannel.join().then(async () => {
 			message.guild.music.playing = true;
-			message.guild.music.queue = [{type: type, person: message.author, id: id}];
 
 			if (type === 1) { // youtube video
 				let info = await ytdl.getInfo(id);
@@ -127,6 +129,8 @@ exports.run = (message, args, suffix, client) => {
 				}
 
 				let secObj = secSpread(info.length_seconds);
+
+				message.guild.music.queue = [ { type: type, person: message.author, id: id, meta: { title: `${info.title} (${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s)`, queueName: `[${info.title}](https://youtu.be/${id}) - ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s` } } ];
 
 				message.channel.send({
 					embed: {
@@ -156,6 +160,8 @@ exports.run = (message, args, suffix, client) => {
 						description: `A file provided by ${message.author.tag}`
 					}
 				});
+
+				message.guild.music.queue = [ { type: type, person: message.author, id: id, meta: { title: `A file provided by ${message.author.tag}`, queueName: `A file provided by ${message.author.tag}` } } ];
 
 				music.next(message.guild, true);
 			}

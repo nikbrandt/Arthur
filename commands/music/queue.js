@@ -1,16 +1,5 @@
 const ytdl = require('ytdl-core');
 
-function secSpread(sec) {
-	let hours = Math.floor(sec / 3600);
-	let mins = Math.floor((sec - hours * 3600) / 60);
-	let secs = sec - (hours * 3600 + mins * 60);
-	return {
-		h: hours,
-		m: mins,
-		s: secs
-	}
-}
-
 exports.run = async (message, args) => {
 	if (!message.guild.music || !message.guild.music.queue) return message.channel.send(`There is no music queued. Add some with the \`play\` command.`);
 
@@ -28,6 +17,26 @@ exports.run = async (message, args) => {
 	let songArray = [];
 	let queue = message.guild.music.queue;
 
+	function iterate () {
+		let obj = queue[i - 1];
+
+		if (i !== 1) songArray.push(`${i}. ${obj.meta.queueName}`);
+
+		i++;
+		if (i <= pars + 9 && i <= queue.length) iterate();
+		else message.channel.send('', {embed: {
+			title: queue[0].meta.title,
+			description: songArray.join('\n'),
+			color: 0x427df4,
+			footer: {
+				text: `Page ${Math.ceil(pars / 10)} of ${Math.ceil(message.guild.music.queue.length / 10)} | ${message.guild.music.queue.length} Song${message.guild.music.queue.length === 1 ? '' : 's'} Total`
+			}
+		}});
+	}
+
+	iterate();
+
+	/*
 	let msg = await message.channel.send('Loading..');
 	await fuckQueue();
 
@@ -72,6 +81,7 @@ exports.run = async (message, args) => {
 			}
 		}});
 	}
+	*/
 };
 
 exports.config = {
