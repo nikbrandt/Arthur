@@ -23,6 +23,7 @@ module.exports = async (client, message) => {
 	
 	let args = message.content.split(' ');
 	if (!message.content.startsWith(prefix)) args = args.slice(1);
+	if (!args[0]) return;
 	const command = args[0].slice(message.content.startsWith(prefix) ? prefix.length : 0).toLowerCase();
 	
 	args = args.slice(1);
