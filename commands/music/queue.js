@@ -25,7 +25,8 @@ exports.run = async (message, args) => {
 		i++;
 		if (i <= pars + 9 && i <= queue.length) iterate();
 		else message.channel.send('', {embed: {
-			title: queue[0].meta.title,
+			title: 'Now Playing: ' + queue[0].meta.title,
+			url: queue[0].meta.url,
 			description: songArray.join('\n'),
 			color: 0x427df4,
 			footer: {

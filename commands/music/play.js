@@ -40,26 +40,28 @@ let add = async (message, id, type) => {
 			}
 		}});
 
-		message.guild.music.queue.push({ type: type, person: message.author, id: id, meta: { title: `${info.title} (${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s)`, queueName: `[${info.title}](https://youtu.be/${id}) - ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s` } });
+		message.guild.music.queue.push({ type: type, person: message.author, id: id, meta: { url: `https://youtu.be/${id}`, title: `${info.title} (${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s)`, queueName: `[${info.title}](https://youtu.be/${id}) - ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s` } });
 	} else if (type === 2) {
+		let filename = id.match(/.*\/\/.*\/.*\/(.*)\.mp3/)[1];
+
 		message.channel.send({
 			embed: {
 				title: 'Added to queue',
 				color: 0x427df4,
-				description: 'Your file has been added to the queue.',
+				description: `[${filename}](${id}) has been added to the queue.`,
 				footer: {
 					text: `Requested by ${message.author.tag}`
 				}
 			}
 		});
-	}
 
-	if (type !== 1) message.guild.music.queue.push({ type: type, person: message.author, id: id, meta: { title: `A file provided by ${message.author.tag}`, queueName: `A file provided by ${message.author.tag}` } });
+		message.guild.music.queue.push({ type: type, person: message.author, id: id, meta: { title: `${filename}`, queueName: `[${filename}](${id})`, url: id } });
+	}
 };
 
 exports.run = (message, args, suffix, client) => {
-	if (!message.member.voiceChannel) return message.channel.send('You\'ve got to be in a voice channel to play music.');
-	if (!args[0] && !message.attachments.size) return message.channel.send('You have to tell me what to play.');
+	if (!message.member.voiceChannel) return message.channel.send('Hey man, I can\'t just play music through your speakers magically. Could you like.. connect to a voice channel?');
+	if (!args[0] && !message.attachments.size) return message.channel.send('What? Do you want me to just play some random song? You seriously think I\'d do that? No. Choose your song.');
 
 	let id;
 	let type = 1;
@@ -109,6 +111,7 @@ exports.run = (message, args, suffix, client) => {
 			meta: object:
 				title: title to display as queue title
 				queueName: title to display in queue when not title
+				url: url to display w/ title
 	 */
 
 	if (!message.guild.music || !message.guild.music.queue) {
@@ -121,6 +124,7 @@ exports.run = (message, args, suffix, client) => {
 			message.guild.music.playing = true;
 
 			if (type === 1) { // youtube video
+				if (!id) return;
 				let info = await ytdl.getInfo(id);
 
 				if (info.livestream === '1') {
@@ -131,7 +135,7 @@ exports.run = (message, args, suffix, client) => {
 
 				let secObj = secSpread(info.length_seconds);
 
-				message.guild.music.queue = [ { type: type, person: message.author, id: id, meta: { title: `${info.title} (${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s)`, queueName: `[${info.title}](https://youtu.be/${id}) - ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s` } } ];
+				message.guild.music.queue = [ { type: type, person: message.author, id: id, meta: { url: `https://youtu.be/${id}`, title: `${info.title} (${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s)`, queueName: `[${info.title}](https://youtu.be/${id}) - ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s` } } ];
 
 				message.channel.send({
 					embed: {
@@ -152,17 +156,22 @@ exports.run = (message, args, suffix, client) => {
 
 				music.next(message.guild, true)
 			} else if (type === 2) { // file url
+				let filename = id.match(/.*\/\/.*\/.*\/(.*)\.mp3/)[1];
+
 				message.channel.send({
 					embed: {
 						author: {
 							name: 'Now Playing'
 						},
 						color: 0x427df4,
-						description: `A file provided by ${message.author.tag}`
+						description: `[${filename}](${id})`,
+						footer: {
+							text: `File uploaded by ${message.author.tag}`
+						}
 					}
 				});
 
-				message.guild.music.queue = [ { type: type, person: message.author, id: id, meta: { title: `A file provided by ${message.author.tag}`, queueName: `A file provided by ${message.author.tag}` } } ];
+				message.guild.music.queue = [ { type: type, person: message.author, id: id, meta: { title: `${filename}`, queueName: `[${filename}](${id})`, url: id } } ];
 
 				music.next(message.guild, true);
 			}

@@ -30,26 +30,30 @@ let Music = {
 				dispatcher.on('end', () => {
 					Music.next(guild);
 				});
+
+				dispatcher.on('start', () => {
+					guild.voiceConnection.player.streamingData.pausedTime = 0;
+				});
 			} else if (music.queue[0].type === 2) {
 				let date = Date.now();
 				let rng = Math.floor(Math.random() * 10000);
 
-				const r = request(music.queue[0].id).pipe(fs.createWriteStream(`../media/mp3temp/${rng}-${date}.mp3`));
+				const r = request(music.queue[0].id).pipe(fs.createWriteStream(`../media/temp/${rng}-${date}.mp3`));
 
 				r.on('finish', () => {
-					const stream = fs.createReadStream(`../media/mp3temp/${rng}-${date}.mp3`);
+					const stream = fs.createReadStream(`../media/temp/${rng}-${date}.mp3`);
 					dispatcher = guild.voiceConnection.playStream(stream);
 
 					dispatcher.on('end', () => {
-						fs.unlinkSync(`../media/mp3temp/${rng}-${date}.mp3`);
+						fs.unlinkSync(`../media/temp/${rng}-${date}.mp3`);
 						Music.next(guild);
+					});
+
+					dispatcher.on('start', () => {
+						guild.voiceConnection.player.streamingData.pausedTime = 0;
 					});
 				})
 			}
-
-			dispatcher.on('start', () => {
-				guild.voiceConnection.player.streamingData.pausedTime = 0;
-			});
 		}, 50);
 	}
 };
