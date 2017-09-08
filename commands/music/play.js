@@ -125,6 +125,7 @@ exports.run = (message, args, suffix, client) => {
 
 				if (info.livestream === '1') {
 					message.guild.music = {};
+					message.member.voiceChannel.leave();
 					return message.channel.send('Trying to play a livestream, eh? I can\'t do that, sorry.. ;-;');
 				}
 
