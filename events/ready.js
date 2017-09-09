@@ -1,3 +1,5 @@
+const postGuilds = require('../functions/postGuilds');
+
 function game (client) {
 	let games = [
 		'Invite me to your server with the "invite" command.',
@@ -20,6 +22,8 @@ function game (client) {
 
 module.exports = client => {
 	console.log(`\nArthur has started! Currently in ${client.guilds.size} guilds, attempting to serve ${client.users.size} users. (${client.tempStopwatch.elapsedMilliseconds} ms)\n`);
+
+	postGuilds(client);
 
 	client.tempStopwatch.stop();
 	client.tempStopwatch = undefined;

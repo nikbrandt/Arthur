@@ -1,4 +1,5 @@
 const defaultChannel = require('../functions/defaultChannel');
+const postGuilds = require('../functions/postGuilds');
 
 module.exports = (client, guild) => {
 	let channel = defaultChannel(guild);
@@ -15,5 +16,9 @@ module.exports = (client, guild) => {
 		footer: {
 			text: `Now in ${client.guilds.size} guilds.`
 		}
-	}})
+	}});
+
+	setTimeout(() => {
+		postGuilds(client);
+	}, 1000);
 };

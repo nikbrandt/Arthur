@@ -67,12 +67,12 @@ exports.run = async (message, args, suffix, client, permLevel) => {
 		fields: [
 			{
 				name: 'Name',
-				value: nameArray.join('\n'),
+				value: '\u200b' + nameArray.join('\n'),
 				inline: true
 			},
 			{
 				name: 'Date Changed',
-				value: dateArray.join('\n'),
+				value: '\u200b' + dateArray.join('\n'),
 				inline: true
 			}
 		],

@@ -21,7 +21,7 @@ let add = async (message, id, type) => {
 	if (type === 1) {
 		let info = await ytdl.getInfo(id);
 
-		if (info.livestream === '1') return message.channel.send('Trying to play a livestream, eh? I can\'t do that, sorry.. ;-;');
+		if (info.livestream === '1' || info.length_seconds > 4200) return message.channel.send(info.livestream === 1 ? 'Trying to play a livestream, eh? I can\'t do that, sorry.. ;-;' : 'A song longer than an hour and ten minutes? Really?');
 
 		let secObj = secSpread(info.length_seconds);
 
