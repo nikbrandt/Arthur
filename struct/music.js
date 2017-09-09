@@ -5,6 +5,10 @@ const request = require('request');
 let Music = {
 	next: (guild, first) => {
 		let music = guild.music;
+		if (!music.queue) {
+			if (guild.voiceConnection) guild.voiceConnection.disconnect();
+			return;
+		}
 		if (!first) music.queue = music.queue.slice(1);
 
 		guild.music = music;

@@ -36,53 +36,6 @@ exports.run = async (message, args) => {
 	}
 
 	iterate();
-
-	/*
-	let msg = await message.channel.send('Loading..');
-	await fuckQueue();
-
-	async function fuckQueue () {
-		let obj = queue[i - 1];
-
-		if (i !== 1) {
-			if (obj.type === 1) {
-				let info = await ytdl.getInfo(obj.id);
-				let secObj = secSpread(info.length_seconds);
-				songArray.push(`${i}. [${info.title}](https://youtu.be/${obj.id}) - ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`);
-			} else if (obj.type === 2) {
-				songArray.push(`${i}. A [file](${obj.id}) provided by ${obj.person.tag}.`)
-			}
-		}
-
-		i++;
-
-		if (i <= pars + 9 && i < queue.length) fuckQueue().catch(console.error);
-		else finishQueue();
-	}
-
-	async function finishQueue() {
-		let npInfo;
-		let npSec;
-		let title;
-
-		if (message.guild.music.queue[0].type === 1) {
-			npInfo = await ytdl.getInfo(message.guild.music.queue[0].id);
-			npSec = secSpread(npInfo.length_seconds);
-			title = `Now playing: ${npInfo.title} (${npSec.h ? `${npSec.h}h ` : ''}${npSec.m ? `${npSec.m}m ` : ''}${npSec.s}s)`;
-		} else if (message.guild.music.queue[0].type === 2) {
-			title = `Now playing: A file provided by ${message.guild.music.queue[0].person.tag}.`;
-		}
-
-		msg.edit('', {embed: {
-			title: title,
-			description: songArray.join('\n'),
-			color: 0x427df4,
-			footer: {
-				text: `Page ${Math.ceil(pars / 10)} of ${Math.ceil(message.guild.music.queue.length / 10)} | ${message.guild.music.queue.length} Song${message.guild.music.queue.length === 1 ? '' : 's'} Total`
-			}
-		}});
-	}
-	*/
 };
 
 exports.config = {
