@@ -3,6 +3,7 @@ const fs = require('fs');
 
 exports.run = (message, args) => {
 	if (!args[0]) return message.channel.send('You have to tell me what to take a picture of..');
+	if (args[0].includes('porn')) return message.channel.send('please..');
 	let date = Date.now();
 
 	let options = {
@@ -31,7 +32,7 @@ exports.run = (message, args) => {
 			return;
 		}
 
-		message.channel.send(`Here's your render of <${args[0].startsWith('http') ? args[0] : 'https://' + args[0]}>:`, { files: [ { attachment: `../media/temp/${date}-${message.author.id}.png`, name: args[0] + '.png' } ] } ).then(() => {
+		message.channel.send(`Here's your render of <${args[0].startsWith('http') ? args[0] : 'https://' + args[0]}>:\n(requested by ${message.author.tag})`, { files: [ { attachment: `../media/temp/${date}-${message.author.id}.png`, name: args[0] + '.png' } ] } ).then(() => {
 			fs.unlinkSync(`../media/temp/${date}-${message.author.id}.png`);
 		});
 	});
