@@ -20,6 +20,7 @@ module.exports = async client => {
 	let stopwatch = Stopwatch.create();
 	console.log('Loading commands..');
 	stopwatch.start();
+	count = 0;
 
 	const files = fs.readdirSync(`${__dirname}/../commands`);
 	
@@ -40,4 +41,6 @@ module.exports = async client => {
 
 	console.log(`Success! Loaded ${count} commands in ${stopwatch.elapsedMilliseconds} ms.\n`);
 	stopwatch.stop();
+
+	return [ count, stopwatch.elapsedMilliseconds ];
 };
