@@ -57,6 +57,17 @@ let Music = {
 						guild.voiceConnection.player.streamingData.pausedTime = 0;
 					});
 				})
+			} else if (music.queue[0].type === 3) {
+				const stream = fs.createReadStream(`../media/sounds/${music.queue[0].id}.mp3`);
+				dispatcher = guild.voiceConnection.playStream(stream);
+
+				dispatcher.on('end', () => {
+					Music.next(guild);
+				});
+
+				dispatcher.on('start', () => {
+					guild.voiceConnection.player.streamingData.pausedTime = 0;
+				});
 			}
 		}, 50);
 	}

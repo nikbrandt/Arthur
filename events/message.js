@@ -12,12 +12,13 @@ module.exports = async (client, message) => {
 
 	let prefix;
 
-	if (message.guild) {
+	if (client.test) prefix = config.testPrefix;
+	else if (message.guild) {
 		let row = await sql.get(`SELECT prefix, levels FROM guildOptions WHERE guildID = '${message.guild.id}'`);
-		XP.addXP(message, row).catch(console.error);
-		if (!row) prefix = config.prefix;
-		else prefix = row.prefix;
-	} else prefix = 'a.';
+		 XP.addXP(message, row).catch(console.error);
+		if (row) prefix = row.prefix;
+		else prefix = config.prefix;
+	} else prefix = config.prefix;
 	
 	if (!message.content.startsWith(prefix) && !message.content.startsWith(`<@${client.user.id}>`) && !message.content.startsWith(`<@!${client.user.id}>`)) {
 		if (message.channel.type !== 'text') client.channels.get('304441662724243457').send({embed: {
@@ -89,7 +90,7 @@ module.exports = async (client, message) => {
 
 	if (cmdFile.config.enabled && cmdFile.config.permLevel <= perms) {
 		try {
-			cmdFile.run(message, args, suffix, client, perms);
+			cmdFile.run(message, args, suffix, client, perms, prefix);
 		} catch (err) {
 			console.error(`Command ${command} has failed to run!\n${err.stack}`);
 		}

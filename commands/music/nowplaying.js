@@ -35,14 +35,15 @@ exports.run = (message) => {
 				}
 			});
 		});
-	} else if (message.guild.music.queue[0].type === 2) { // User-provided file
+	} else if (message.guild.music.queue[0].type >= 2) { // User-provided file
 		message.channel.send({
 			embed: {
 				author: {
 					name: 'Now Playing'
 				},
+				url: message.guild.music.queue[0].meta.url,
 				color: 0x427df4,
-				description: `A song provided by ${message.guild.music.queue[0].person.tag}`
+				description: message.guild.music.queue[0].meta.title
 			}
 		});
 	}

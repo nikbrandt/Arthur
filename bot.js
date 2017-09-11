@@ -11,6 +11,7 @@ const client = new Discord.Client({
 });
 
 client.tempStopwatch = stopwatch;
+client.test = !!(process.argv[2] && process.argv[2] === 'test');
 client.config = require('../media/config.json');
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
@@ -22,4 +23,4 @@ require('./functions/eventLoader.js')(client);
 require('./functions/permLevel.js').pl(client);
 require('./functions/findMember.js')(client);
 
-client.login(client.config.token).catch(console.error);
+client.login(client.test ? client.config.testToken : client.config.token).catch(console.error);

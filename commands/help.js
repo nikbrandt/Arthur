@@ -7,7 +7,7 @@ const forEach = function (obj, loop) {
   }
 };
 
-exports.run = async (message, args, suffix, client, perms) => {
+exports.run = async (message, args, suffix, client, perms, prefix) => {
 	if (!args[0] || args[0] === 'dev' || args[0] === 'eggs') {
 		let commands = client.commands.filter(c => c.config.permLevel <= perms === 1 ? 2 : perms);
 		let categories = {};
@@ -15,7 +15,7 @@ exports.run = async (message, args, suffix, client, perms) => {
 		commands.forEach((com, name) => {
 			if (args[0] === 'dev' && client.config.owners.includes(message.author.id) ? com.help.category !== 'Developer' : args[0] === 'eggs' && client.config.owners.includes(message.author.id) ? com.help.category !== 'Eggs' : com.help.category === 'Developer' || com.help.category === 'Eggs' || !com.help.category) return;
 			if (!categories.hasOwnProperty(com.help.category)) categories[com.help.category] = [];
-			categories[com.help.category].push(`\u200b	${client.config.prefix}${name} - ${com.help.description}`);
+			categories[com.help.category].push(`\u200b	${prefix}${name} - ${com.help.description}`);
 		});
 		forEach(categories, (coms, cat) => {
 			fields.push({
@@ -46,7 +46,7 @@ exports.run = async (message, args, suffix, client, perms) => {
 			fields: [
 				{
 					name: command.help.name,
-					value: `${command.help.help}\n**Usage**: \`${client.config.prefix}${command.help.usage}\`${command.config.aliases && command.config.aliases.length > 0 ? `\n**Aliases**: ${command.config.aliases.join(', ')}` : ''}`,
+					value: `${command.help.help}\n**Usage**: \`${prefix}${command.help.usage}\`${command.config.aliases && command.config.aliases.length > 0 ? `\n**Aliases**: ${command.config.aliases.join(', ')}` : ''}`,
 					inline: true
 				},
 				{

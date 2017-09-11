@@ -21,7 +21,7 @@ function game (client) {
 }
 
 module.exports = client => {
-	console.log(`\nArthur has started! Currently in ${client.guilds.size} guilds, attempting to serve ${client.users.size} users. (${client.tempStopwatch.elapsedMilliseconds} ms)\n`);
+	console.log(`\n${client.test ? 'Testbot' : 'Arthur'} has started! Currently in ${client.guilds.size} guilds, attempting to serve ${client.users.size} users. (${client.tempStopwatch.elapsedMilliseconds} ms)\n`);
 
 	postGuilds(client);
 

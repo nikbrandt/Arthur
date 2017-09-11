@@ -55,7 +55,9 @@ let add = async (message, id, type) => {
 			}
 		});
 
-		message.guild.music.queue.push({ type: type, person: message.author, id: id, meta: { title: `${filename}`, queueName: `[${filename}](${id})`, url: id } });
+		message.guild.music.queue.push({ type: type, person: message.author, id: id, meta: { title: filename, queueName: `[${filename}](${id})`, url: id } });
+	} else if (type === 3) {
+		message.guild.music.queue.push({ type: type, person: message.author, id: id, meta: { title: id, queueName: id, url: 'https://github.com/Gymnophoria/Arthur'}});
 	}
 };
 
@@ -68,12 +70,23 @@ exports.run = (message, args, suffix, client) => {
 
 	/*
 		1 - YouTube
-		2 - File
+		2 - Uploaded File
+		3 - Local File
 
 			in the future, 3 for soundcloud
 	 */
+	if (args[0] === 'file') {
+		type = 3;
+		let files = fs.readdirSync('../media/sounds');
+		files = files.map(f => f.replace(/\.mp3/g, ''));
 
-	if (!YTRegex.test(args[0]) && !message.attachments.size) {
+		if (!args[1]) return message.channel.send('Mhm, I\'ll make sure to play that nothingness real soon.');
+		if (!files.includes(args[1])) return message.channel.send(`Darn! That file doesn't exist. You can suggest to add it by DMing Gymnophoria#8146. The files you *can* play are as follows: ${files.map(f => '`' + f + '`').join(', ')}`);
+
+		id = args[1];
+
+		if (message.guild.music && message.guild.music.queue) add(message, id, 3).catch(console.error);
+	} else if (!YTRegex.test(args[0]) && !message.attachments.size) {
 		let sOpts = {
 			maxResults: 1,
 			key: client.config.ytkey,
@@ -91,7 +104,8 @@ exports.run = (message, args, suffix, client) => {
 		type = 2;
 		id = message.attachments.first().url;
 
-		if (!id.endsWith('.mp3')) return message.channel.send('I only support playback of mp3\'s right now.');
+		if (!id.endsWith('.mp3')) return message.channel.send('I only support playback of mp3\'s.');
+		if (message.attachments.first().filesize < 25000) return message.channel.send('Your file isn\'t powerful enough! I need one bigger than 25 KB, thanks.');
 
 		if (message.guild.music && message.guild.music.queue) add(message, id, 2).catch(console.error);
 	} else {
@@ -172,6 +186,10 @@ exports.run = (message, args, suffix, client) => {
 				});
 
 				message.guild.music.queue = [ { type: type, person: message.author, id: id, meta: { title: `${filename}`, queueName: `[${filename}](${id})`, url: id } } ];
+
+				music.next(message.guild, true);
+			} else if (type === 3) { // local file
+				message.guild.music.queue = [ { type: type, person: message.author, id: id, meta: { title: id, queueName: id, url: 'https://github.com/Gymnophoria/Arthur' } } ];
 
 				music.next(message.guild, true);
 			}
