@@ -16,13 +16,26 @@ function secSpread(sec) {
 	}
 }
 
-async function finish(id, message) {
+async function finish(id, message, client) {
+	let index = client.processing.length;
+	client.processing.push(message.id + ' - MP3');
+
 	let msg = await message.channel.send('Downloading...');
 
 	let date = Date.now();
-	let ytdlStream = ytdl(id, { filter: 'audioonly' });
 
 	let info = await ytdl.getInfo(id);
+	if (info.livestream) {
+		msg.edit('Ah right, you expect me to download a livestream. Just no, thanks.');
+		return client.processing.splice(index, 1);
+	}
+	if (info.length_seconds > 600) {
+		msg.edit('Anything bigger than 10 minutes is gonna be too big for me to send through Discord - Sorry!');
+		return client.processing.splice(index, 1);
+	}
+
+	let ytdlStream = ytdl(id, { filter: 'audioonly' });
+
 	let secObj = secSpread(info.length_seconds);
 
 	msg.edit('Converting...');
@@ -51,6 +64,7 @@ async function finish(id, message) {
 				message.channel.send('The file was too big to send (anything longer than ~10 minutes is probably too long).. Sorry!');
 			}).then(() => {
 				fs.unlinkSync(`../media/temp/${id}-${date}.mp3`);
+				client.processing.splice(index, 1);
 			});
 		})
 		.save(`${__dirname}/../../../media/temp/${id}-${date}.mp3`);
@@ -72,11 +86,11 @@ exports.run = async (message, args, suffix, client) => {
 			if (err) return message.channel.send('The video you searched for does not exist.. rip');
 
 			id = results[0].id;
-			finish(id, message).catch(console.error);
+			finish(id, message, client).catch(console.error);
 		});
 	} else {
 		id = args[0].match(YTRegex)[4];
-		finish(id, message).catch(console.error);
+		finish(id, message, client).catch(console.error);
 	}
 };
 

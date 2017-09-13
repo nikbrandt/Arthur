@@ -2,9 +2,11 @@ const Discord = require('discord.js');
 const webshot = require('webshot');
 const fs = require('fs');
 
-exports.run = (message, args) => {
+exports.run = (message, args, s, client) => {
 	if (!args[0]) return message.channel.send('You have to tell me what to take a picture of..');
 	if (args[0].includes('porn')) return message.channel.send('please..');
+	let index = client.processing.length;
+	client.processing.push(message.id + ' - Webshot');
 	let date = Date.now();
 
 	let options = {
@@ -24,14 +26,15 @@ exports.run = (message, args) => {
 	let del = false;
 
 	message.channel.send('Loading..').then(m => {
-		if (del) return m.delete();
-		msg = m;
+		if (del) m.delete();
+		else msg = m;
 	});
 
 	webshot(args[0], `../media/temp/${date}-${message.author.id}.png`, options, err => {
 		if (err) {
 			if (err.toString().includes('value 1')) message.channel.send('Hey, you gotta provide me with a *valid* url, okay? Your trickery caused you a 10 second cooldown, mister.');
-			if (err.toString().includes('timeout setting')) message.channel.send('That website is too powerful! It\'s taken me more than 30 seconds to render, so I\'m canceling. Sorry!')
+			if (err.toString().includes('timeout setting')) message.channel.send('That website is too powerful! It\'s taken me more than 30 seconds to render, so I\'m canceling. Sorry!');
+			client.processing.splice(index, 1);
 			return;
 		}
 
@@ -46,6 +49,7 @@ exports.run = (message, args) => {
 			if (msg) msg.delete();
 			else del = true;
 			fs.unlinkSync(`../media/temp/${date}-${message.author.id}.png`);
+			client.processing.splice(index, 1);
 		});
 	});
 };

@@ -12,6 +12,7 @@ const client = new Discord.Client({
 
 client.tempStopwatch = stopwatch;
 client.test = !!(process.argv[2] && process.argv[2] === 'test');
+client.processing = [];
 client.config = require('../media/config.json');
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
