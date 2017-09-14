@@ -1,4 +1,5 @@
 const { Stopwatch } = require('node-stopwatch');
+const fs = require('fs');
 
 let stopwatch = Stopwatch.create();
 stopwatch.start();
@@ -11,8 +12,14 @@ const client = new Discord.Client({
 });
 
 client.tempStopwatch = stopwatch;
+
 client.test = !!(process.argv[2] && process.argv[2] === 'test');
 client.processing = [];
+
+client.commandStatsObject = JSON.parse(fs.readFileSync('../media/stats/commands.json'));
+client.dailyStatsObject = JSON.parse(fs.readFileSync('../media/stats/daily.json'));
+client.weeklyStatsObject = JSON.parse(fs.readFileSync('../media/stats/weekly.json'));
+
 client.config = require('../media/config.json');
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();

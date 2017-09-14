@@ -1,4 +1,5 @@
 const postGuilds = require('../functions/postGuilds');
+const fs = require('fs');
 
 function game (client) {
 	let games = [
@@ -20,6 +21,12 @@ function game (client) {
 	client.user.setGame(`${games[Math.floor(Math.random() * games.length)]} | @Arthur help`);
 }
 
+function writeStats (client) {
+	fs.writeFileSync('../media/stats/commands.json', JSON.stringify(client.commandStatsObject));
+	fs.writeFileSync('../media/stats/daily.json', JSON.stringify(client.dailyStatsObject));
+	fs.writeFileSync('../media/stats/weekly.json', JSON.stringify(client.weeklyStatsObject));
+}
+
 module.exports = client => {
 	console.log(`\n${client.test ? 'Testbot' : 'Arthur'} has started! Currently in ${client.guilds.size} guilds, attempting to serve ${client.users.size} users. (${client.tempStopwatch.elapsedMilliseconds} ms)\n`);
 
@@ -34,4 +41,8 @@ module.exports = client => {
 	client.setInterval(() => {
 		game(client);
 	}, 120000);
+
+	client.setInterval(() => {
+		writeStats(client);
+	}, 30000)
 };

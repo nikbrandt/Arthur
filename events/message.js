@@ -1,4 +1,5 @@
 const config = require('../../media/config.json');
+const moment = require('moment');
 const XP = require('../struct/xp.js');
 const sql = require('sqlite');
 
@@ -94,5 +95,23 @@ module.exports = async (client, message) => {
 		} catch (err) {
 			console.error(`Command ${command} has failed to run!\n${err.stack}`);
 		}
+
+		let stats = { date: Date.now(), user: message.author.id, guild: message.guild.id };
+		if (!client.commandStatsObject[command]) client.commandStatsObject[command] = { uses: 1, usesArray: [ stats ] };
+		else {
+			client.commandStatsObject[command].usesArray.push(stats);
+			client.commandStatsObject[command].uses++;
+		}
+
+		let weekAndYear = moment().format('W/YYYY');
+		let date = moment().format('M/D/YYYY');
+
+		if (!client.dailyStatsObject[date]) client.dailyStatsObject[date] = {};
+		if (!client.dailyStatsObject[date][command]) client.dailyStatsObject[date][command] = 1;
+		else client.dailyStatsObject[date][command]++;
+
+		if (!client.weeklyStatsObject[weekAndYear]) client.weeklyStatsObject[weekAndYear] = {};
+		if (!client.weeklyStatsObject[weekAndYear][command]) client.weeklyStatsObject[weekAndYear][command] = 1;
+		else client.weeklyStatsObject[weekAndYear][command]++;
 	}
 };
