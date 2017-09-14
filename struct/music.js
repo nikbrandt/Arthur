@@ -1,6 +1,8 @@
 const fs = require('fs');
 const ytdl = require('ytdl-core');
 const request = require('request');
+const readChunk = require('read-chunk');
+const isThatAnMp3 = require('is-mp3');
 
 let Music = {
 	next: (guild, first) => {
@@ -43,6 +45,9 @@ let Music = {
 				let rng = Math.floor(Math.random() * 10000);
 
 				const r = request(music.queue[0].id).pipe(fs.createWriteStream(`../media/temp/${rng}-${date}.mp3`));
+
+				let buffer = readChunk.sync(`../media/temp/${rng}-${date}.mp3`, 0, 3);
+				if (!isThatAnMp3(buffer)) return Music.next(guild);
 
 				r.on('finish', () => {
 					const stream = fs.createReadStream(`../media/temp/${rng}-${date}.mp3`);
