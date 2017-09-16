@@ -43,13 +43,13 @@ module.exports = async (client, message) => {
 		return;
 	}
 	
-	let args = message.content.split(' ');
+	let args = message.content.split(/\s+/g);
 	if (!message.content.startsWith(prefix)) args = args.slice(1);
 	if (!args[0]) return;
 	const command = args[0].slice(message.content.startsWith(prefix) ? prefix.length : 0).toLowerCase();
-	
+
+	const suffix = message.content.slice(args[0].length + 1);
 	args = args.slice(1);
-	const suffix = args.join(' ');
 	const perms = client.permLevel(message);
 	const cmdFile = client.commands.get(command) || client.commands.get(client.aliases.get(command));
 
