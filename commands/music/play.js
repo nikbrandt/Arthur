@@ -48,7 +48,7 @@ let add = async (message, id, type) => {
 			embed: {
 				title: 'Added to queue',
 				color: 0x427df4,
-				description: `[${filename}](${id}) has been added to the queue.`,
+				description: `[${filename}](${id}) has been added to the queue.\n*If MP3 file is fake, it will`,
 				footer: {
 					text: `Requested by ${message.author.tag}`
 				}
@@ -180,7 +180,7 @@ exports.run = (message, args, suffix, client) => {
 						color: 0x427df4,
 						description: `[${filename}](${id})`,
 						footer: {
-							text: `File uploaded by ${message.author.tag}`
+							text: `File uploaded by ${message.author.tag}\n*Or not, if it's a fake MP3 it will simply be skipped*`
 						}
 					}
 				});
