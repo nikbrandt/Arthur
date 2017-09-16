@@ -96,24 +96,26 @@ module.exports = async (client, message) => {
 			console.error(`Command ${command} has failed to run!\n${err.stack}`);
 		}
 
-		let actualCommand = client.aliases.get(command) || command;
+		if (message.author.id !== client.owner.id) {
+			let actualCommand = client.aliases.get(command) || command;
 
-		let stats = { date: Date.now(), user: message.author.id, guild: message.guild.id };
-		if (!client.commandStatsObject[actualCommand]) client.commandStatsObject[actualCommand] = { uses: 1, usesArray: [ stats ] };
-		else {
-			client.commandStatsObject[actualCommand].usesArray.push(stats);
-			client.commandStatsObject[actualCommand].uses++;
+			let stats = { date: Date.now(), user: message.author.id, guild: message.guild.id };
+			if (!client.commandStatsObject[actualCommand]) client.commandStatsObject[actualCommand] = { uses: 1, usesArray: [ stats ] };
+			else {
+				client.commandStatsObject[actualCommand].usesArray.push(stats);
+				client.commandStatsObject[actualCommand].uses++;
+			}
+
+			let weekAndYear = moment().format('W/YYYY');
+			let date = moment().format('M/D/YYYY');
+
+			if (!client.dailyStatsObject[date]) client.dailyStatsObject[date] = {};
+			if (!client.dailyStatsObject[date][actualCommand]) client.dailyStatsObject[date][actualCommand] = 1;
+			else client.dailyStatsObject[date][actualCommand]++;
+
+			if (!client.weeklyStatsObject[weekAndYear]) client.weeklyStatsObject[weekAndYear] = {};
+			if (!client.weeklyStatsObject[weekAndYear][actualCommand]) client.weeklyStatsObject[weekAndYear][actualCommand] = 1;
+			else client.weeklyStatsObject[weekAndYear][actualCommand]++;
 		}
-
-		let weekAndYear = moment().format('W/YYYY');
-		let date = moment().format('M/D/YYYY');
-
-		if (!client.dailyStatsObject[date]) client.dailyStatsObject[date] = {};
-		if (!client.dailyStatsObject[date][actualCommand]) client.dailyStatsObject[date][actualCommand] = 1;
-		else client.dailyStatsObject[date][actualCommand]++;
-
-		if (!client.weeklyStatsObject[weekAndYear]) client.weeklyStatsObject[weekAndYear] = {};
-		if (!client.weeklyStatsObject[weekAndYear][actualCommand]) client.weeklyStatsObject[weekAndYear][actualCommand] = 1;
-		else client.weeklyStatsObject[weekAndYear][actualCommand]++;
 	}
 };
