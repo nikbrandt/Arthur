@@ -46,14 +46,14 @@ let Music = {
 
 				const r = request(music.queue[0].id).pipe(fs.createWriteStream(`../media/temp/${rng}-${date}.mp3`));
 
-				let buffer = readChunk.sync(`../media/temp/${rng}-${date}.mp3`, 0, 3);
-				if (!isThatAnMp3(buffer)) {
-					Music.next(guild);
-					fs.unlinkSync(`../media/temp/${rng}-${date}.mp3`);
-					return;
-				}
-
 				r.on('finish', () => {
+					let buffer = readChunk.sync(`../media/temp/${rng}-${date}.mp3`, 0, 3);
+					if (!isThatAnMp3(buffer)) {
+						Music.next(guild);
+						fs.unlinkSync(`../media/temp/${rng}-${date}.mp3`);
+						return;
+					}
+
 					const stream = fs.createReadStream(`../media/temp/${rng}-${date}.mp3`);
 					dispatcher = guild.voiceConnection.playStream(stream);
 
