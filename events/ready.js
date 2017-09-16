@@ -42,7 +42,7 @@ module.exports = client => {
 		game(client);
 	}, 120000);
 
-	client.setInterval(() => {
+	if (!client.test) client.setInterval(() => {
 		writeStats(client);
 	}, 30000)
 };

@@ -1,5 +1,33 @@
-const canvas = require('canvas');
+const Canvas = require('canvas');
 const moment = require('moment');
+const os = require('os');
+
+function sort (array) {
+	array.sort((a, b) => {
+		return a - b;
+	});
+
+	return array;
+}
+
+function sortKeys (object) {
+	let keys = Object.keys(object);
+	keys.sort((a, b) => {
+		return object[a] - object[b]
+	});
+
+	return keys;
+}
+
+function reverse (array) {
+	let reversed = [];
+
+	array.forEach(i => {
+		reversed.unshift(i);
+	});
+
+	return reversed;
+}
 
 exports.run = (message, args, suffix, client) => {
 	let object;
@@ -22,15 +50,118 @@ exports.run = (message, args, suffix, client) => {
 		object = temp;
 	}
 
-	let keys = Object.keys(object);
-	let values = Object.values(object);
-	let array = [];
+	let commandsArray = reverse(sortKeys(object));
+	let usesArray = reverse(sort(Object.values(object)));
 
-	for (let i = 0; i < keys.length; i++) {
-		array.push(`${keys[i]}: ${values[i]} uses`);
+	let barMaxHeight = 275;
+
+	const Font = Canvas.Font,
+		canvas = new Canvas(1050, 450),
+		ctx = canvas.getContext('2d');
+
+	let barWidth = Math.floor(700 / commandsArray.length);
+	if (barWidth > 35) barWidth = 35;
+	let curWidth = 15;
+	let heightMult = barMaxHeight / usesArray[0];
+	let accent = '#4286f4';
+
+	ctx.fillStyle = accent; // add fonts, set color
+	ctx.addFont(new Font('RobotoLight', '../media/fonts/Roboto-Light.ttf'));
+	ctx.addFont(new Font('RobotoMedium', '../media/fonts/Roboto-Medium.ttf'));
+	ctx.font = `${barWidth}px RobotoLight`;
+
+	for (let i = 0; i < commandsArray.length; i++) { // generate each bar of graph w/ command name
+		let height =  Math.floor(usesArray[i] * heightMult);
+		ctx.fillRect(curWidth, canvas.height - height, barWidth, height);
+
+		let numTop = ctx.measureText(usesArray[i]).width + 6 > height;
+
+		ctx.save();
+		ctx.translate(curWidth + barWidth - 6, canvas.height - height - 3); //  + ctx.measureText(commandsArray[i]).width
+		ctx.rotate(-Math.PI / 2.5);
+		ctx.fillStyle = '#fff';
+		let string = commandsArray[i];
+		if (numTop) string += ` - ${usesArray[i]}`;
+		ctx.fillText(string, 0, 0);
+		ctx.restore();
+
+		if (!numTop) {
+			ctx.save();
+			ctx.translate(curWidth + barWidth - 3, canvas.height - 4);
+			ctx.rotate(-Math.PI / 2);
+			ctx.fillStyle = '#fff';
+			ctx.fillText(usesArray[i], 0, 0);
+			ctx.restore();
+		}
+
+		curWidth += barWidth + 4;
 	}
 
-	message.channel.send(`Here, have a temporary list that will someday be a glorious image:\n${array.join('\n')}`);
+	curWidth = 50; // show guilds/users/channels amounts
+	ctx.font = '50px RobotoMedium';
+	ctx.fillText(client.guilds.size.toString(), curWidth, 70);
+	curWidth += ctx.measureText(client.guilds.size.toString()).width;
+	ctx.font = '50px RobotoLight';
+	ctx.fillText(' guilds    ', curWidth, 70);
+	curWidth += ctx.measureText(' guilds    ').width;
+	ctx.font = '50px RobotoMedium';
+	ctx.fillText(client.users.size.toString(), curWidth, 70);
+	curWidth += ctx.measureText(client.users.size.toString()).width;
+	ctx.font = '50px RobotoLight';
+	ctx.fillText(' users    ', curWidth, 70);
+	curWidth += ctx.measureText(' users    ').width;
+	ctx.font = '50px RobotoMedium';
+	ctx.fillText(client.channels.size.toString(), curWidth, 70);
+	curWidth += ctx.measureText(client.channels.size.toString()).width;
+	ctx.font = '50px RobotoLight';
+	ctx.fillText(' channels    ', curWidth, 70);
+
+	let lastEnd = -1.57; // RAM pie chart
+	let mem = process.memoryUsage().rss * 1.0e-6;
+	let data = [mem, 250 - mem];
+	let total = 250;
+	let colors = ['#fff', accent];
+
+	for (let i = 0; i < data.length; i++) {
+		ctx.fillStyle = colors[i];
+		ctx.beginPath();
+		ctx.moveTo(925, 75);
+		ctx.arc(925, 75, 70, lastEnd, lastEnd + (Math.PI * 2 * (data[i] / total)), false);
+		ctx.lineTo(925, 75);
+		ctx.fill();
+		lastEnd += Math.PI * 2 * (data[i] / total);
+	}
+
+	lastEnd = -1.57;
+	let cpu = os.loadavg()[1];
+	data = [cpu, 100 - cpu];
+	total = 100;
+
+	for (let i = 0; i < 2; i++) {
+		ctx.fillStyle = colors[i];
+		ctx.beginPath();
+		ctx.moveTo(925, 375);
+		ctx.arc(925, 375, 70, lastEnd, lastEnd + (Math.PI * 2 * (data[i] / total)), false);
+		ctx.lineTo(925, 375);
+		ctx.fill();
+		lastEnd += Math.PI * 2 * (data[i] / total);
+	}
+
+	ctx.fillStyle = accent;
+	ctx.font = '50px RobotoMedium';
+	ctx.textAlign = 'center';
+	ctx.fillText(`${mem.toFixed(1)} MB`, 925, 195);
+	ctx.fillText(`${cpu.toFixed(2)}%`, 925, 290);
+
+	ctx.textBaseline = 'middle';
+	ctx.font = '50px RobotoLight';
+	ctx.globalCompositeOperation = 'xor';
+	ctx.beginPath();
+	ctx.fillText('RAM', 925, 75);
+	ctx.fillText('CPU', 925, 375);
+	ctx.fill();
+
+	message.channel.send({ files: [{ attachment: canvas.toBuffer(), name: 'stats.png' }] });
 };
 
 exports.config = {
