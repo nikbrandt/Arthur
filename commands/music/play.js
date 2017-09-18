@@ -1,8 +1,9 @@
 const fs = require('fs');
+const sql = require('sqlite');
 const request = require('request');
 const ytdl = require('ytdl-core');
 const search = require('youtube-search');
-const music = require('../../struct/music.js');
+const Music = require('../../struct/music.js');
 
 const YTRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([A-z0-9_-]{11})(&.*)?$/;
 
@@ -61,7 +62,7 @@ let add = async (message, id, type) => {
 	}
 };
 
-exports.run = (message, args, suffix, client) => {
+exports.run = async (message, args, suffix, client) => {
 	if (!message.member.voiceChannel) return message.channel.send('Hey man, I can\'t just play music through your speakers magically. Could you like.. connect to a voice channel?');
 	if (!args[0] && !message.attachments.size) return message.channel.send('What? Do you want me to just play some random song? You seriously think I\'d do that? No. Choose your song.');
 
@@ -75,7 +76,39 @@ exports.run = (message, args, suffix, client) => {
 
 			in the future, 3 for soundcloud
 	 */
-	if (args[0] === 'file') {
+	if (args[0] === 'liked' || args[0] === 'likes') {
+		let row = await sql.get(`SELECT songLikes FROM misc WHERE userID = '${message.author.id}'`);
+		if (!row) return message.channel.send('If you haven\'t liked a song yet, it\'s quite challenging for me to play a liked song.');
+
+		let array = JSON.parse(row.songLikes);
+		if (!array.length) return message.channel.send('If you haven\'t liked a song yet, it\'s quite challenging for me to play a liked song.');
+
+		if (!args[1]) return message.channel.send('Yes, I\'ll just pick the song you want. Y\'know, because I have telepathic powers. (tell me which song to play)');
+		let num = parseInt(args[1]);
+		if (!num) return message.channel.send('Hey.. that\'s not a number.. (or you chose zero, which really isn\'t a song number so yeah)');
+		if (num < 1) return message.channel.send('there is no negative song tho <:crazyeyes:359106555314044939>');
+		if (num > array.length) return message.channel.send('I\'m sorry, but you just haven\'t liked that many songs yet.');
+
+		type = array[num - 1].type;
+		id = array[num - 1].id;
+
+		if (message.guild.music && message.guild.music.queue) add(message, id, type).catch(console.error);
+	} else if (args[0] === 'top') {
+		let thingy = await Music.likedArray();
+		let array = thingy[0];
+
+		if (!args[1]) return message.channel.send('Yes, I\'ll just pick the song you want. Y\'know, because I have telepathic powers. (tell me which song to play)');
+		let num = parseInt(args[1]);
+		if (!num) return message.channel.send('Hey.. that\'s not a number.. (or you chose zero, which really isn\'t a song number so yeah)');
+		if (num < 1) return message.channel.send('there is no negative song tho <:crazyeyes:359106555314044939>');
+		if (num > array.length) return message.channel.send('I\'m sorry, but there just aren\'t that many liked songs yet.');
+
+		let obj = array[num - 1];
+		type = obj.type;
+		id = obj.id;
+
+		if (message.guild.music && message.guild.music.queue) add(message, id, type).catch(console.error);
+	} else if (args[0] === 'file') {
 		type = 3;
 		let files = fs.readdirSync('../media/sounds');
 		files = files.map(f => f.replace(/\.mp3/g, ''));
@@ -168,7 +201,7 @@ exports.run = (message, args, suffix, client) => {
 					}
 				});
 
-				music.next(message.guild, true)
+				Music.next(message.guild, true)
 			} else if (type === 2) { // file url
 				let filename = id.match(/.*\/\/.*\/.*\/(.*)\.mp3/)[1];
 
@@ -187,11 +220,11 @@ exports.run = (message, args, suffix, client) => {
 
 				message.guild.music.queue = [ { type: type, person: message.author, id: id, meta: { title: `${filename}`, queueName: `[${filename}](${id})`, url: id } } ];
 
-				music.next(message.guild, true);
+				Music.next(message.guild, true);
 			} else if (type === 3) { // local file
 				message.guild.music.queue = [ { type: type, person: message.author, id: id, meta: { title: id, queueName: id, url: 'https://github.com/Gymnophoria/Arthur' } } ];
 
-				music.next(message.guild, true);
+				Music.next(message.guild, true);
 			}
 		})
 	}

@@ -1,8 +1,20 @@
 const fs = require('fs');
+const sql = require('sqlite');
 const ytdl = require('ytdl-core');
 const request = require('request');
 const readChunk = require('read-chunk');
 const isThatAnMp3 = require('is-mp3');
+
+function reverse (array) {
+	let reversed = [];
+
+	array.forEach(i => {
+		reversed.unshift(i);
+	});
+
+	return reversed;
+}
+
 
 let Music = {
 	next: (guild, first) => {
@@ -79,6 +91,41 @@ let Music = {
 				});
 			}
 		}, 50);
+	},
+	likedArray: async () => {
+		let rows = await sql.all(`SELECT songLikes FROM misc`);
+		let bigArray = [];
+
+		for (let i = 0; i < rows.length; i++) { // parse and combine all entries
+			let parsed = JSON.parse(rows[i].songLikes);
+
+			for (let j = 0; j < parsed.length; j++) {
+				bigArray.push(parsed[j]);
+			}
+		}
+
+		let counts = {};
+
+		for (let i = 0; i < bigArray.length; i++) { // gather amount of likes each song has
+			let id = bigArray[i].id;
+			counts[id] = counts[id] ? counts[id] + 1 : 1;
+		}
+
+		let almostThereBud = [];
+
+		let keys = Object.keys(counts); // make an array of unique songs, no dupes
+		for (let i = 0; i < keys.length; i++) {
+			let obj = bigArray.find(o => o.id === keys[i]);
+			almostThereBud.push(obj);
+		}
+
+		almostThereBud.sort((a, b) => { // sort array from smallest to biggest
+			return counts[a.id] - counts[b.id];
+		});
+
+		almostThereBud = reverse(almostThereBud); // reverse array so it's biggest to smallest
+
+		return [almostThereBud, counts];
 	}
 };
 

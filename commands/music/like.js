@@ -18,10 +18,8 @@ exports.run = async (message) => {
 		meta: message.guild.music.queue[0].meta
 	});
 
-	console.log(json);
-	console.log(JSON.stringify(json));
-
-	sql.run(`UPDATE misc SET songLikes = \`${JSON.stringify(json)}\` WHERE userID = '${message.author.id}'`);
+	if (!row) sql.run(`INSERT INTO misc (userID, songLikes) VALUES (?, ?)`, [message.author.id, JSON.stringify(json)]);
+	else sql.run(`UPDATE misc SET songLikes = ? WHERE userID = '${message.author.id}'`, JSON.stringify(json));
 
 	message.channel.send({
 		embed: {
@@ -36,7 +34,7 @@ exports.run = async (message) => {
 };
 
 exports.config = {
-	enabled: false,
+	enabled: true,
 	permLevel: 2,
 	aliases: ['goodshit', 'ilovethisfuckingsong', 'dudethissongishot', 'nicesong', 'godlysong', 'iwant', 'amazingsong']
 };

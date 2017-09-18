@@ -99,7 +99,7 @@ module.exports = async (client, message) => {
 		if (message.author.id !== client.owner.id) {
 			let actualCommand = client.aliases.get(command) || command;
 
-			let stats = { date: Date.now(), user: message.author.id, guild: message.guild.id };
+			let stats = { date: Date.now(), user: message.author.id || undefined, guild: message.guild.id || 'pms'};
 			if (!client.commandStatsObject[actualCommand]) client.commandStatsObject[actualCommand] = { uses: 1, usesArray: [ stats ] };
 			else {
 				client.commandStatsObject[actualCommand].usesArray.push(stats);
