@@ -37,6 +37,13 @@ module.exports = client => {
 
 	client.owner = client.users.get(client.config.owners[0]);
 
+	if (!client.test) {
+		let tempItems = fs.readdirSync('../media/temp');
+		if (tempItems) tempItems.forEach(i => {
+			fs.unlinkSync(`../media/temp/${i}`);
+		});
+	}
+
 	game(client);
 	client.setInterval(() => {
 		game(client);

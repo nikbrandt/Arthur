@@ -6,6 +6,8 @@ const search = require('youtube-search');
 const Music = require('../../struct/music.js');
 
 const YTRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([A-z0-9_-]{11})(&.*)?$/;
+const songRegex = /\/([^/]+)\.(mp3|ogg)$/;
+const discordRegex = /.*\/\/.*\/.*\/(.*)\.(mp3|ogg)/;
 
 function secSpread(sec) {
 	let hours = Math.floor(sec / 3600);
@@ -43,13 +45,13 @@ let add = async (message, id, type) => {
 
 		message.guild.music.queue.push({ type: type, person: message.author, id: id, meta: { url: `https://youtu.be/${id}`, title: `${info.title} (${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s)`, queueName: `[${info.title}](https://youtu.be/${id}) - ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s` } });
 	} else if (type === 2) {
-		let filename = id.match(/.*\/\/.*\/.*\/(.*)\.mp3/)[1];
+		let filename = id.match(discordRegex)[1];
 
 		message.channel.send({
 			embed: {
 				title: 'Added to queue',
 				color: 0x427df4,
-				description: `[${filename}](${id}) has been added to the queue.\n*If MP3 file is fake, it will simply be skipped*`,
+				description: `[${filename}](${id}) has been added to the queue.\n*If mp3/ogg file is fake, it will simply be skipped*`,
 				footer: {
 					text: `Requested by ${message.author.tag}`
 				}
@@ -59,6 +61,21 @@ let add = async (message, id, type) => {
 		message.guild.music.queue.push({ type: type, person: message.author, id: id, meta: { title: filename, queueName: `[${filename}](${id})`, url: id } });
 	} else if (type === 3) {
 		message.guild.music.queue.push({ type: type, person: message.author, id: id, meta: { title: id, queueName: id, url: 'https://github.com/Gymnophoria/Arthur'}});
+	} else if (type === 4) {
+		let filename = id.match(songRegex)[1];
+
+		message.channel.send({
+			embed: {
+				title: 'Now Playing',
+				color: 0x427df4,
+				description: `[${filename}](${id})`,
+				footer: {
+					text: `Added by ${message.author.tag}`
+				}
+			}
+		});
+
+		message.guild.music.queue.push({ type: type, person: message.author, id: id, meta: { title: filename, queueName: `[${filename}](${id})`, url: id } });
 	}
 };
 
@@ -73,10 +90,19 @@ exports.run = async (message, args, suffix, client) => {
 		1 - YouTube
 		2 - Uploaded File
 		3 - Local File
+		4 - File from URL
 
-			in the future, 3 for soundcloud
+			in the future, next number for soundcloud
 	 */
-	if (args[0] === 'liked' || args[0] === 'likes') {
+	if (message.attachments.size) {
+		type = 2;
+		id = message.attachments.first().url;
+
+		if (!id.endsWith('.mp3') && !id.endsWith('.ogg')) return message.channel.send('I only support playback of mp3\'s and oggs for now. Go ahead and message Gymnophoria#8146 if you need another audio file type supported.');
+		if (message.attachments.first().filesize < 25000) return message.channel.send('Your file isn\'t powerful enough! I need one bigger than 25 KB, thanks.');
+
+		if (message.guild.music && message.guild.music.queue) add(message, id, 2).catch(console.error);
+	} else if (args[0] === 'liked' || args[0] === 'likes') {
 		let row = await sql.get(`SELECT songLikes FROM misc WHERE userID = '${message.author.id}'`);
 		if (!row) return message.channel.send('If you haven\'t liked a song yet, it\'s quite challenging for me to play a liked song.');
 
@@ -119,7 +145,16 @@ exports.run = async (message, args, suffix, client) => {
 		id = args[1];
 
 		if (message.guild.music && message.guild.music.queue) add(message, id, 3).catch(console.error);
-	} else if (!YTRegex.test(args[0]) && !message.attachments.size) {
+	} else if (YTRegex.test(args[0])) {
+		id = args[0].match(YTRegex)[4];
+
+		if (message.guild.music && message.guild.music.queue) add(message, id, 1).catch(console.error);
+	} else if (args[0].endsWith('.mp3') || args[0].endsWith('.ogg')) {
+		type = 4;
+		id = args[0];
+
+		if (message.guild.music && message.guild.music.queue) add(message, id, 2).catch(console.error);
+	} else { //  if (!YTRegex.test(args[0]))
 		let sOpts = {
 			maxResults: 1,
 			key: client.config.ytkey,
@@ -133,18 +168,6 @@ exports.run = async (message, args, suffix, client) => {
 
 			if (message.guild.music && message.guild.music.queue) add(message, id, 1).catch(console.error);
 		});
-	} else if (message.attachments.size) {
-		type = 2;
-		id = message.attachments.first().url;
-
-		if (!id.endsWith('.mp3')) return message.channel.send('I only support playback of mp3\'s.');
-		if (message.attachments.first().filesize < 25000) return message.channel.send('Your file isn\'t powerful enough! I need one bigger than 25 KB, thanks.');
-
-		if (message.guild.music && message.guild.music.queue) add(message, id, 2).catch(console.error);
-	} else {
-		id = args[0].match(YTRegex)[4];
-
-		if (message.guild.music && message.guild.music.queue) add(message, id, 1).catch(console.error);
 	}
 
 	/*
@@ -203,7 +226,7 @@ exports.run = async (message, args, suffix, client) => {
 
 				Music.next(message.guild, true)
 			} else if (type === 2) { // file url
-				let filename = id.match(/.*\/\/.*\/.*\/(.*)\.mp3/)[1];
+				let filename = id.match(discordRegex)[1];
 
 				message.channel.send({
 					embed: {
@@ -211,18 +234,35 @@ exports.run = async (message, args, suffix, client) => {
 							name: 'Now Playing'
 						},
 						color: 0x427df4,
-						description: `[${filename}](${id})\n*Or not, if it's a fake MP3 it will simply be skipped*`,
+						description: `[${filename}](${id})\n*Or not, a fake mp3/ogg it will simply be skipped*`,
 						footer: {
 							text: `File uploaded by ${message.author.tag}`
 						}
 					}
 				});
 
-				message.guild.music.queue = [ { type: type, person: message.author, id: id, meta: { title: `${filename}`, queueName: `[${filename}](${id})`, url: id } } ];
+				message.guild.music.queue = [ { type: type, person: message.author, id: id, meta: { title: filename, queueName: `[${filename}](${id})`, url: id } } ];
 
 				Music.next(message.guild, true);
 			} else if (type === 3) { // local file
 				message.guild.music.queue = [ { type: type, person: message.author, id: id, meta: { title: id, queueName: id, url: 'https://github.com/Gymnophoria/Arthur' } } ];
+
+				Music.next(message.guild, true);
+			} else if (type === 4) {
+				let filename = id.match(songRegex)[1];
+
+				message.channel.send({
+					embed: {
+						title: 'Now Playing',
+						color: 0x427df4,
+						description: `[${filename}](${id})`,
+						footer: {
+							text: `Added by ${message.author.tag}`
+						}
+					}
+				});
+
+				message.guild.music.queue = [ { type: type, person: message.author, id: id, meta: { title: filename, queueName: `[${filename}](${id})`, url: id } } ];
 
 				Music.next(message.guild, true);
 			}

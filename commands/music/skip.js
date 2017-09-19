@@ -1,7 +1,7 @@
 const Music = require('../../struct/music');
 
 exports.run = (message, a, s, d, permLevel) => {
-	if (!message.guild.music || !message.guild.music.queue) return message.channel.send('There is no music playing.');
+	if (!message.guild.music || !message.guild.music.queue) return message.channel.send('There\'s no music playing, so how exactly would I skip the current song? Are you insane?');
 	if (!message.member.roles.find(r => r.name.toLowerCase() === 'dj') && !message.member.roles.find(r => r.name.toLowerCase() === 'music') && permLevel < 3 && message.guild.music.queue[0].person.id !== message.author.id) return;
 
 	message.guild.voiceConnection.dispatcher.end();

@@ -8,7 +8,7 @@ exports.run = (message, args) => {
 
 	request(`https://use.gameapis.net/mc/query/info/${args[0]}`, (err, response, body) => {
 		if (err) return message.channel.send('For some reason there was an error. Please contact Gymnophoria#8146.');
-		if (!body) return message.channel.send('That server is offline or you gave an invalid URL - rip.');
+		if (!body || body.startsWith('<html')) return message.channel.send('That server is offline or you gave an invalid URL - rip.');
 
 		let json = JSON.parse(body);
 		let date = Date.now();

@@ -2,8 +2,9 @@ const fs = require('fs');
 const sql = require('sqlite');
 const ytdl = require('ytdl-core');
 const request = require('request');
-const readChunk = require('read-chunk');
 const isThatAnMp3 = require('is-mp3');
+const orPerhapsOgg = require('is-ogg');
+const readChunk = require('read-chunk');
 
 function reverse (array) {
 	let reversed = [];
@@ -52,25 +53,28 @@ let Music = {
 				dispatcher.on('start', () => {
 					guild.voiceConnection.player.streamingData.pausedTime = 0;
 				});
-			} else if (music.queue[0].type === 2) {
+			} else if (music.queue[0].type === 2 || music.queue[0].type === 4) {
 				let date = Date.now();
 				let rng = Math.floor(Math.random() * 10000);
+				let file = `../media/temp/${rng}-${date}.${music.queue[0].id.match(/\.([^.]+)$/)[1]}`;
 
-				const r = request(music.queue[0].id).pipe(fs.createWriteStream(`../media/temp/${rng}-${date}.mp3`));
+				const r = request(music.queue[0].id, (err) => {
+					if (err) return Music.next(guild);
+				}).pipe(fs.createWriteStream(file));
 
 				r.on('finish', () => {
-					let buffer = readChunk.sync(`../media/temp/${rng}-${date}.mp3`, 0, 3);
-					if (!isThatAnMp3(buffer)) {
+					let buffer = readChunk.sync(file, 0, 4);
+					if (!isThatAnMp3(buffer) && !orPerhapsOgg(buffer)) {
 						Music.next(guild);
-						fs.unlinkSync(`../media/temp/${rng}-${date}.mp3`);
+						fs.unlinkSync(file);
 						return;
 					}
 
-					const stream = fs.createReadStream(`../media/temp/${rng}-${date}.mp3`);
+					const stream = fs.createReadStream(file);
 					dispatcher = guild.voiceConnection.playStream(stream);
 
 					dispatcher.on('end', () => {
-						fs.unlinkSync(`../media/temp/${rng}-${date}.mp3`);
+						fs.unlinkSync(file);
 						Music.next(guild);
 					});
 

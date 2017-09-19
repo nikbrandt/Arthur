@@ -15,8 +15,8 @@ exports.run = async (message, args) => {
 		page = num;
 	}
 
-	almostThereBud = almostThereBud.slice(page * 5 - 5, page * 5); // slice array down to 5 songs - the five of current page
-	let startNum = page * 5 - 4;
+	almostThereBud = almostThereBud.slice(page * 10 - 10, page * 10); // slice array down to 5 songs - the five of current page
+	let startNum = page * 10 - 9;
 	let final = [];
 
 	for (let i = 0; i < almostThereBud.length; i++) { // push each song to the final array, as the song will be displayed
