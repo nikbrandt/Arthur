@@ -1,4 +1,4 @@
-const postGuilds = require('../functions/postGuilds');
+const dbots = require('../functions/dbots');
 const fs = require('fs');
 
 function game (client) {
@@ -30,7 +30,7 @@ function writeStats (client) {
 module.exports = client => {
 	console.log(`\n${client.test ? 'Testbot' : 'Arthur'} has started! Currently in ${client.guilds.size} guilds, attempting to serve ${client.users.size} users. (${client.tempStopwatch.elapsedMilliseconds} ms)\n`);
 
-	postGuilds(client);
+	if (!client.test) dbots.post(client);
 
 	client.tempStopwatch.stop();
 	client.tempStopwatch = undefined;
@@ -49,7 +49,14 @@ module.exports = client => {
 		game(client);
 	}, 120000);
 
-	if (!client.test) client.setInterval(() => {
-		writeStats(client);
-	}, 30000)
+	if (!client.test) {
+		client.setInterval(() => {
+			writeStats(client);
+		}, 30000);
+
+		dbots.getLikes(client);
+		client.setInterval(() => {
+			dbots.getLikes(client);
+		}, 600000);
+	}
 };

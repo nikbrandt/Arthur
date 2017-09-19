@@ -1,4 +1,4 @@
-const postGuilds = require('../functions/postGuilds');
+const { post } = require('../functions/dbots');
 
 module.exports = (client, guild) => {
 	client.channels.get('326587514494124053').send({embed: {
@@ -13,6 +13,6 @@ module.exports = (client, guild) => {
 	}});
 
 	setTimeout(() => {
-		postGuilds(client);
+		post(client);
 	}, 1000);
 };

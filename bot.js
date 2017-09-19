@@ -15,6 +15,7 @@ client.tempStopwatch = stopwatch;
 
 client.test = !!(process.argv[2] && process.argv[2] === 'test');
 client.processing = [];
+client.dbotsUpvotes = [];
 
 client.commandStatsObject = JSON.parse(fs.readFileSync('../media/stats/commands.json'));
 client.dailyStatsObject = JSON.parse(fs.readFileSync('../media/stats/daily.json'));

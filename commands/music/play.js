@@ -20,11 +20,11 @@ function secSpread(sec) {
 	}
 }
 
-let add = async (message, id, type) => {
+let add = async (message, id, type, client) => {
 	if (type === 1) {
 		let info = await ytdl.getInfo(id);
 
-		if (info.livestream === '1' || info.live_playback === '1' || info.length_seconds > 4200) return message.channel.send(info.length_seconds > 4200 ? 'A song longer than an hour and ten minutes? Really?' : 'Trying to play a livestream, eh? I can\'t do that, sorry.. ;-;');
+		if (info.livestream === '1' || info.live_playback === '1' || (info.length_seconds > 1800 && !client.dbotsUpvotes.includes(message.author.id))) return message.channel.send(info.length_seconds > 4200 ? 'Hey there my dude that\'s a bit much, I don\'t wanna play a song longer than 30 minutes for ya...\nUnless you go [upvote me](https://discordbots.org/bot/329085343800229889).. *shameless self promotion* (upvotes can take up to 10 minutes to register, be patient)' : 'Trying to play a livestream, eh? I can\'t do that, sorry.. ;-;');
 
 		let secObj = secSpread(info.length_seconds);
 
@@ -197,10 +197,12 @@ exports.run = async (message, args, suffix, client) => {
 				if (!id) return;
 				let info = await ytdl.getInfo(id);
 
-				if (info.livestream === '1' || info.live_playback === '1' || info.length_seconds > 4200) {
+				if (info.livestream === '1' || info.live_playback === '1' || (info.length_seconds > 4200 && !client.dbotsUpvotes.includes(message.author.id))) {
 					message.guild.music = {};
 					message.member.voiceChannel.leave();
-					return message.channel.send(info.length_seconds > 4200 ? 'A song longer than an hour and ten minutes? Really?' : 'Trying to play a livestream, eh? I can\'t do that, sorry.. ;-;');
+					return message.channel.send(info.length_seconds > 1800
+						? 'Hey there my dude that\'s a bit much, I don\'t wanna play a song longer than 30 minutes for ya...\nUnless you go [upvote me](https://discordbots.org/bot/329085343800229889).. *shameless self promotion* (upvotes can take up to 10 minutes to register, be patient)'
+						: 'Trying to play a livestream, eh? I can\'t do that, sorry.. ;-;');
 				}
 
 				let secObj = secSpread(info.length_seconds);

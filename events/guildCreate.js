@@ -1,5 +1,5 @@
 const defaultChannel = require('../functions/defaultChannel');
-const postGuilds = require('../functions/postGuilds');
+const { post } = require('../functions/dbots');
 
 module.exports = (client, guild) => {
 	let channel = defaultChannel(guild);
@@ -19,6 +19,6 @@ module.exports = (client, guild) => {
 	}});
 
 	setTimeout(() => {
-		postGuilds(client);
+		post(client);
 	}, 1000);
 };
