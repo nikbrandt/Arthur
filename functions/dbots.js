@@ -6,7 +6,7 @@ exports.post = client => {
 		method: 'POST',
 		json: true,
 		headers: {
-			"Authorization": client.config.dbotsAuth.org
+			"Authorization": client.config.dbotsAuth.org.bot
 		},
 		body: {
 			"server_count": client.guilds.size
@@ -18,7 +18,7 @@ exports.post = client => {
 		method: 'POST',
 		json: true,
 		headers: {
-			"Authorization": client.config.dbotsAuth.pw.bot
+			"Authorization": client.config.dbotsAuth.pw
 		},
 		body: {
 			"server_count": client.guilds.size
@@ -35,7 +35,7 @@ exports.getLikes = client => {
 		method: 'GET',
 		json: true,
 		headers: {
-			"Authorization": client.config.dbotsAuth.pw.bot
+			"Authorization": client.config.dbotsAuth.org.bot
 		}
 	};
 

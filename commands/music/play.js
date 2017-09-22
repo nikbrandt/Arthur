@@ -101,7 +101,7 @@ exports.run = async (message, args, suffix, client) => {
 		if (!id.endsWith('.mp3') && !id.endsWith('.ogg')) return message.channel.send('I only support playback of mp3\'s and oggs for now. Go ahead and message Gymnophoria#8146 if you need another audio file type supported.');
 		if (message.attachments.first().filesize < 25000) return message.channel.send('Your file isn\'t powerful enough! I need one bigger than 25 KB, thanks.');
 
-		if (message.guild.music && message.guild.music.queue) add(message, id, 2).catch(console.error);
+		if (message.guild.music && message.guild.music.queue) add(message, id, 2, client).catch(console.error);
 	} else if (args[0] === 'liked' || args[0] === 'likes') {
 		let row = await sql.get(`SELECT songLikes FROM misc WHERE userID = '${message.author.id}'`);
 		if (!row) return message.channel.send('If you haven\'t liked a song yet, it\'s quite challenging for me to play a liked song.');
@@ -118,7 +118,7 @@ exports.run = async (message, args, suffix, client) => {
 		type = array[num - 1].type;
 		id = array[num - 1].id;
 
-		if (message.guild.music && message.guild.music.queue) add(message, id, type).catch(console.error);
+		if (message.guild.music && message.guild.music.queue) add(message, id, type, client).catch(console.error);
 	} else if (args[0] === 'top') {
 		let thingy = await Music.likedArray();
 		let array = thingy[0];
@@ -133,7 +133,7 @@ exports.run = async (message, args, suffix, client) => {
 		type = obj.type;
 		id = obj.id;
 
-		if (message.guild.music && message.guild.music.queue) add(message, id, type).catch(console.error);
+		if (message.guild.music && message.guild.music.queue) add(message, id, type, client).catch(console.error);
 	} else if (args[0] === 'file') {
 		type = 3;
 		let files = fs.readdirSync('../media/sounds');
@@ -144,16 +144,16 @@ exports.run = async (message, args, suffix, client) => {
 
 		id = args[1];
 
-		if (message.guild.music && message.guild.music.queue) add(message, id, 3).catch(console.error);
+		if (message.guild.music && message.guild.music.queue) add(message, id, 3, client).catch(console.error);
 	} else if (YTRegex.test(args[0])) {
 		id = args[0].match(YTRegex)[4];
 
-		if (message.guild.music && message.guild.music.queue) add(message, id, 1).catch(console.error);
+		if (message.guild.music && message.guild.music.queue) add(message, id, 1, client).catch(console.error);
 	} else if (args[0].endsWith('.mp3') || args[0].endsWith('.ogg')) {
 		type = 4;
 		id = args[0];
 
-		if (message.guild.music && message.guild.music.queue) add(message, id, 2).catch(console.error);
+		if (message.guild.music && message.guild.music.queue) add(message, id, 2, client).catch(console.error);
 	} else { //  if (!YTRegex.test(args[0]))
 		let sOpts = {
 			maxResults: 1,
@@ -166,7 +166,7 @@ exports.run = async (message, args, suffix, client) => {
 
 			id = results[0].id;
 
-			if (message.guild.music && message.guild.music.queue) add(message, id, 1).catch(console.error);
+			if (message.guild.music && message.guild.music.queue) add(message, id, 1, client).catch(console.error);
 		});
 	}
 
