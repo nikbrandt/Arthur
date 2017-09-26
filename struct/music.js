@@ -8,6 +8,8 @@ const readChunk = require('read-chunk');
 const search = require('youtube-search');
 
 const YTRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([A-z0-9_-]{11})(&.*)?$/;
+const songRegex = /\/([^/]+)\.(mp3|ogg)$/;
+const discordRegex = /.*\/\/.*\/.*\/(.*)\.(mp3|ogg)/;
 
 function reverse (array) {
 	let reversed = [];
@@ -19,6 +21,16 @@ function reverse (array) {
 	return reversed;
 }
 
+function secSpread(sec) {
+	let hours = Math.floor(sec / 3600);
+	let mins = Math.floor((sec - hours * 3600) / 60);
+	let secs = sec - (hours * 3600 + mins * 60);
+	return {
+		h: hours,
+		m: mins,
+		s: secs
+	}
+}
 
 let Music = {
 	next: (guild, first) => {
@@ -233,7 +245,6 @@ let Music = {
 					}
 
 					id = results[0].id;
-					console.log(results[0]);
 
 					resolve ( {
 						id: id,
@@ -242,6 +253,93 @@ let Music = {
 				});
 			}
 		})
+	},
+
+	getInfo: (type, id, message, client, title) => {
+		return new Promise(async (resolve, reject) => {
+			let filename;
+
+			switch (type) {
+				case 1:
+					let info = await ytdl.getInfo(id);
+					if (info.livestream === '1' || info.live_playback === '1' || (info.length_seconds > 1800 && !client.dbotsUpvotes.includes(message.author.id))) reject(info.length_seconds > 4200 ? 'Hey there my dude that\'s a bit much, I don\'t wanna play a song longer than 30 minutes for ya...\nUnless you go [upvote me](https://discordbots.org/bot/329085343800229889).. *shameless self promotion* (upvotes can take up to 10 minutes to register, be patient)' : 'Trying to play a livestream, eh? I can\'t do that, sorry.. ;-;');
+
+					let secObj = secSpread(info.length_seconds);
+					resolve({
+						meta: {
+							url: `https://youtu.be/${id}`,
+							title: `${info.title} (${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s)`,
+							queueName: `[${info.title}](https://youtu.be/${id}) - ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`
+						},
+						embed: {
+							author: {
+								name: title,
+								icon_url: info.author.avatar
+							},
+							color: 0x427df4,
+							description: `[${info.title}](https://youtu.be/${id})\nBy [${info.author.name}](${info.author.channel_url})\nLength: ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`,
+							thumbnail: {
+								url: info.iurlhq
+							},
+							footer: {
+								text: `Requested by ${message.author.tag}`
+							}
+						}
+					});
+
+					break;
+				case 2:
+					filename = id.match(discordRegex)[1];
+
+					resolve({
+						meta: {
+							title: filename,
+							queueName: `[${filename}](${id})`,
+							url: id
+						},
+						embed: {
+							title: title,
+							color: 0x427df4,
+							description: `[${filename}](${id}) has been added to the queue.\n*If mp3/ogg file is fake, it will simply be skipped*`,
+							footer: {
+								text: `Requested by ${message.author.tag}`
+							}
+						}
+					});
+
+					break;
+				case 3:
+					resolve({
+						meta: {
+							title: id,
+							queueName: id,
+							url: 'https://github.com/Gymnophoria/Arthur'
+						}
+					});
+
+					break;
+				case 4:
+					filename = id.match(songRegex);
+
+					resolve({
+						meta: {
+							title: filename,
+							queueName: `[${filename}](${id})`,
+							url: id
+						},
+						embed: {
+							title: title,
+							color: 0x427df4,
+							description: `[${filename}](${id})`,
+							footer: {
+								text: `Added by ${message.author.tag}`
+							}
+						}
+					});
+
+					break;
+			}
+		});
 	}
 };
 
