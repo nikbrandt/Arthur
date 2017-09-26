@@ -5,6 +5,9 @@ const request = require('request');
 const isThatAnMp3 = require('is-mp3');
 const orPerhapsOgg = require('is-ogg');
 const readChunk = require('read-chunk');
+const search = require('youtube-search');
+
+const YTRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([A-z0-9_-]{11})(&.*)?$/;
 
 function reverse (array) {
 	let reversed = [];
@@ -96,6 +99,7 @@ let Music = {
 			}
 		}, 50);
 	},
+
 	likedArray: async () => {
 		let rows = await sql.all(`SELECT songLikes FROM misc`);
 		let bigArray = [];
@@ -130,6 +134,114 @@ let Music = {
 		almostThereBud = reverse(almostThereBud); // reverse array so it's biggest to smallest
 
 		return [almostThereBud, counts];
+	},
+
+	parseMessage: (message, args, suffix, client) => {
+		return new Promise(async (resolve, reject) => {
+			let type = 1;
+			let id;
+
+			if (message.attachments.size) {
+				type = 2;
+				id = message.attachments.first().url;
+
+				if (!id.endsWith('.mp3') && !id.endsWith('.ogg')) reject('I only support playback of mp3\'s and oggs for now. Go ahead and message Gymnophoria#8146 if you need another audio file type supported.');
+				if (message.attachments.first().filesize < 25000) reject('Your file isn\'t powerful enough! I need one bigger than 25 KB, thanks.');
+
+				resolve( {
+					id: id,
+					type: type
+				} );
+			} else if (args[0] === 'liked' || args[0] === 'likes') {
+				let row = await sql.get(`SELECT songLikes FROM misc WHERE userID = '${message.author.id}'`);
+				if (!row) reject('If you haven\'t liked a song yet, it\'s quite challenging for me to play a liked song.');
+
+				let array = JSON.parse(row.songLikes);
+				if (!array.length) reject('If you haven\'t liked a song yet, it\'s quite challenging for me to play a liked song.');
+
+				if (!args[1]) reject('Yes, I\'ll just pick the song you want. Y\'know, because I have telepathic powers. (tell me which song to play)');
+				let num = parseInt(args[1]);
+				if (!num) reject('Hey.. that\'s not a number.. (or you chose zero, which really isn\'t a song number so yeah)');
+				if (num < 1) reject('there is no negative song tho <:crazyeyes:359106555314044939>');
+				if (num > array.length) reject('I\'m sorry, but you just haven\'t liked that many songs yet.');
+
+				type = array[num - 1].type;
+				id = array[num - 1].id;
+
+				resolve( {
+					id: id,
+					type: type
+				} );
+			} else if (args[0] === 'top') {
+				let thingy = await Music.likedArray();
+				let array = thingy[0];
+
+				if (!args[1]) reject('Yes, I\'ll just pick the song you want. Y\'know, because I have telepathic powers. (tell me which song to play)');
+				let num = parseInt(args[1]);
+				if (!num) reject('Hey.. that\'s not a number.. (or you chose zero, which really isn\'t a song number so yeah)');
+				if (num < 1) reject('there is no negative song tho <:crazyeyes:359106555314044939>');
+				if (num > array.length) reject('I\'m sorry, but there just aren\'t that many liked songs yet.');
+
+				let obj = array[num - 1];
+				type = obj.type;
+				id = obj.id;
+
+				resolve( {
+					id: id,
+					type: type
+				} );
+			} else if (args[0] === 'file') {
+				type = 3;
+				let files = fs.readdirSync('../media/sounds');
+				files = files.map(f => f.replace(/\.mp3/g, ''));
+
+				if (!args[1]) reject('Mhm, I\'ll make sure to play that nothingness real soon.');
+				if (!files.includes(args[1])) reject(`Darn! That file doesn't exist. You can suggest to add it by DMing Gymnophoria#8146. The files you *can* play are as follows: ${files.map(f => '`' + f + '`').join(', ')}`);
+
+				id = args[1];
+
+				resolve ( {
+					id: id,
+					type: type
+				} );
+			} else if (YTRegex.test(args[0])) {
+				id = args[0].match(YTRegex)[4];
+
+				resolve ( {
+					id: id,
+					type: type
+				} );
+			} else if (args[0].endsWith('.mp3') || args[0].endsWith('.ogg')) {
+				type = 4;
+				id = args[0];
+
+				resolve ( {
+					id: id,
+					type: type
+				} );
+			} else { //  if (!YTRegex.test(args[0]))
+				let sOpts = {
+					maxResults: 1,
+					key: client.config.ytkey,
+					type: 'video'
+				};
+
+				search(suffix, sOpts, (err, results) => {
+					if (err || !results[0]) {
+						if (message.guild.voiceConnection && !message.guild.music && !message.guild.music.queue[0]) message.guild.voiceConnection.disconnect();
+						reject('The video you searched for does not exist.. rip');
+					}
+
+					id = results[0].id;
+					console.log(results[0]);
+
+					resolve ( {
+						id: id,
+						type: type
+					} );
+				});
+			}
+		})
 	}
 };
 

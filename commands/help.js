@@ -32,7 +32,7 @@ exports.run = async (message, args, suffix, client, perms, prefix) => {
 			color: 0x00c140,
 			author: {
 				name: 'Arthur Help',
-				icon_url: client.user.avatarURL
+				icon_url: 'https://cdn.discordapp.com/attachments/219218693928910848/361405047608705025/arthur_but_hot.png'
 			},
 			description: `[Invite](${invite}) | [GitHub](https://github.com/Gymnophoria/Arthur) | [Guild](${client.config.info.guildLink}) | [Trello](https://trello.com/b/wt7ptHpC/arthur)\nMade by Gymnophoria#8146\nWhen using commands, <> indicates a required argument and [] indicates an optional requirement. (Do not actually type them)`,
 			fields

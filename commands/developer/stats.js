@@ -97,24 +97,18 @@ exports.run = (message, args, suffix, client) => {
 		curWidth += barWidth + 4;
 	}
 
-	curWidth = 100; // show guilds/users/channels amounts
+	curWidth = 100; // show guild/user amounts
 	ctx.font = '50px RobotoMedium';
 	ctx.fillText(client.guilds.size.toString(), curWidth, 70);
 	curWidth += ctx.measureText(client.guilds.size.toString()).width;
 	ctx.font = '50px RobotoLight';
-	ctx.fillText(' guilds     ', curWidth, 70);
-	curWidth += ctx.measureText(' guilds     ').width;
+	ctx.fillText(' servers     ', curWidth, 70);
+	curWidth += ctx.measureText(' servers     ').width;
 	ctx.font = '50px RobotoMedium';
 	ctx.fillText(client.users.size.toString(), curWidth, 70);
 	curWidth += ctx.measureText(client.users.size.toString()).width;
 	ctx.font = '50px RobotoLight';
 	ctx.fillText(' users', curWidth, 70);
-	/* curWidth += ctx.measureText(' users  ').width;
-	ctx.font = '50px RobotoMedium';
-	ctx.fillText(client.channels.size.toString(), curWidth, 70);
-	curWidth += ctx.measureText(client.channels.size.toString()).width;
-	ctx.font = '50px RobotoLight';
-	ctx.fillText('channels  ', curWidth, 70); */
 
 	let lastEnd = -1.57; // RAM pie chart
 	let mem = process.memoryUsage().rss * 1.0e-6;
@@ -166,7 +160,7 @@ exports.run = (message, args, suffix, client) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 10,
+	permLevel: 2,
 	aliases: []
 };
 
