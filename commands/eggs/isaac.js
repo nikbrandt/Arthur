@@ -8,7 +8,8 @@ exports.config = {
 	enabled: true,
 	permLevel: 2,
 	aliases: ['isaacology', 'eyesackology'],
-	cooldown: 30000
+	cooldown: 30000,
+	perms: ['ATTACH_FILES']
 };
 
 exports.help = {
