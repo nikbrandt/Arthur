@@ -20,8 +20,10 @@ module.exports = async (client, message) => {
 		if (row) prefix = row.prefix;
 		else prefix = config.prefix;
 	} else prefix = config.prefix;
+
+	prefix = prefix.toLowerCase();
 	
-	if (!message.content.startsWith(prefix) && !message.content.startsWith(`<@${client.user.id}>`) && !message.content.startsWith(`<@!${client.user.id}>`)) {
+	if (!message.content.toLowerCase().startsWith(prefix) && !message.content.startsWith(`<@${client.user.id}>`) && !message.content.startsWith(`<@!${client.user.id}>`)) {
 		if (message.channel.type !== 'text') client.channels.get('304441662724243457').send({embed: {
 			author: {
 				name: `Message from ${message.author.tag}`,
@@ -44,9 +46,9 @@ module.exports = async (client, message) => {
 	}
 	
 	let args = message.content.split(/\s+/g);
-	if (!message.content.startsWith(prefix)) args = args.slice(1);
+	if (!message.content.toLowerCase().startsWith(prefix)) args = args.slice(1);
 	if (!args[0]) return;
-	const command = args[0].slice(message.content.startsWith(prefix) ? prefix.length : 0).toLowerCase();
+	const command = args[0].slice(message.content.toLowerCase().startsWith(prefix) ? prefix.length : 0).toLowerCase();
 
 	const suffix = message.content.slice(args[0].length + 1);
 	args = args.slice(1);
