@@ -18,7 +18,7 @@ exports.run = (message, args, suffix, client) => {
 
 	trello.addCard(splitified[0],
 		splitified[1]
-		? splitified[1] + `\n\n*Suggested by ${message.author.tag} (${message.author.id})*`
+		? splitified.slice(1).join('\n') + `\n\n*Suggested by ${message.author.tag} (${message.author.id})*`
 		: `*Suggested by ${message.author.tag} (${message.author.id})*`,
 		config.trello.board
 	).then(() => {
