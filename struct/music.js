@@ -170,12 +170,16 @@ let Music = {
 
 				let array = JSON.parse(row.songLikes);
 				if (!array.length) reject('If you haven\'t liked a song yet, it\'s quite challenging for me to play a liked song.');
+				let num;
 
-				if (!args[1]) reject('Yes, I\'ll just pick the song you want. Y\'know, because I have telepathic powers. (tell me which song to play)');
-				let num = parseInt(args[1]);
-				if (!num) reject('Hey.. that\'s not a number.. (or you chose zero, which really isn\'t a song number so yeah)');
-				if (num < 1) reject('there is no negative song tho <:crazyeyes:359106555314044939>');
-				if (num > array.length) reject('I\'m sorry, but you just haven\'t liked that many songs yet.');
+				if (args[1] === 'random') num = Math.ceil(Math.random() * array.length);
+				else {
+					if (!args[1]) reject('Yes, I\'ll just pick the song you want. Y\'know, because I have telepathic powers. (tell me which song to play)');
+					num = parseInt(args[1]);
+					if (!num) reject('Hey.. that\'s not a number.. (or you chose zero, which really isn\'t a song number so yeah)');
+					if (num < 1) reject('there is no negative song tho <:crazyeyes:359106555314044939>');
+					if (num > array.length) reject('I\'m sorry, but you just haven\'t liked that many songs yet.');
+				}
 
 				type = array[num - 1].type;
 				id = array[num - 1].id;
@@ -187,12 +191,16 @@ let Music = {
 			} else if (args[0] === 'top') {
 				let thingy = await Music.likedArray();
 				let array = thingy[0];
+				let num;
 
-				if (!args[1]) reject('Yes, I\'ll just pick the song you want. Y\'know, because I have telepathic powers. (tell me which song to play)');
-				let num = parseInt(args[1]);
-				if (!num) reject('Hey.. that\'s not a number.. (or you chose zero, which really isn\'t a song number so yeah)');
-				if (num < 1) reject('there is no negative song tho <:crazyeyes:359106555314044939>');
-				if (num > array.length) reject('I\'m sorry, but there just aren\'t that many liked songs yet.');
+				if (args[1] === 'random') num = Math.ceil(Math.random() * array.length);
+				else {
+					if (!args[1]) reject('Yes, I\'ll just pick the song you want. Y\'know, because I have telepathic powers. (tell me which song to play)');
+					num = parseInt(args[1]);
+					if (!num) reject('Hey.. that\'s not a number.. (or you chose zero, which really isn\'t a song number so yeah)');
+					if (num < 1) reject('there is no negative song tho <:crazyeyes:359106555314044939>');
+					if (num > array.length) reject('I\'m sorry, but there just aren\'t that many liked songs yet.');
+				}
 
 				let obj = array[num - 1];
 				type = obj.type;
