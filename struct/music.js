@@ -41,8 +41,6 @@ let Music = {
 			return;
 		}
 
-		console.log(music.queue);
-
 		if (!first) {
 			if (music.loop) {
 				let first = music.queue[0];
@@ -335,7 +333,7 @@ let Music = {
 
 					break;
 				case 4:
-					filename = id.match(songRegex);
+					filename = id.match(songRegex)[1];
 
 					resolve({
 						meta: {
