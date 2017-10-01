@@ -1,9 +1,9 @@
 const sql = require('sqlite');
 
-exports.run = async (message, args) => {
+exports.run = async (message, args, s, c, permLevel) => {
 	let row = await sql.get(`SELECT prefix FROM guildOptions WHERE guildID = '${message.guild.id}'`);
 
-	if (!args[0]) {
+	if (!args[0] || permLevel < 4) {
 		if (!row) {
 			message.channel.send('The current prefix is `a.`.');
 			sql.run(`INSERT INTO guildOptions (guildID, prefix) VALUES (?, ?)`, [message.guild.id, 'a.']);
@@ -19,7 +19,7 @@ exports.run = async (message, args) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 4,
+	permLevel: 2,
 	aliases: ['setprefix']
 };
 
