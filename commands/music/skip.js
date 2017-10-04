@@ -19,7 +19,7 @@ exports.run = (message, a, s, d, permLevel) => {
 	let skipNum = Math.round((message.guild.voiceConnection.channel.members.size - 1) / 2);
 	if (message.guild.music.queue[0].voteSkips.length >= skipNum) return skip(message);
 
-	message.channel.send(`Vote registered. ${skipNum - message.guild.music.queue[0].voteSkips.length} more votes until song is skipped.${canForceSkip ? '\n*To force skip, add `-f` on the end of the command*' : ''}`)
+	message.channel.send(`Vote registered. ${skipNum - message.guild.music.queue[0].voteSkips.length} more votes until song is skipped. (${message.guild.music.queue[0].voteSkips.length}/${skipNum})${canForceSkip ? '\n*To force skip, add `-f` on the end of the command*' : ''}`)
 };
 
 exports.config = {
