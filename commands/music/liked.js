@@ -1,16 +1,13 @@
 const sql = require('sqlite');
 
 exports.run = async (message, args) => {
-	let row = await sql.get(`SELECT songLikes FROM misc WHERE userID = '${message.author.id}'`);
-	if (!row) return message.channel.send('You don\'t have any likes tho..');
-
-	let array = JSON.parse(row.songLikes);
-	if (!array.length) return message.channel.send('You have to like some songs for me to show em\'');
+	let rows = await sql.all(`SELECT queueName FROM musicLikes WHERE userID = '${message.author.id}'`);
+	if (!rows || !rows.length) return message.channel.send('You don\'t have any likes tho..');
 
 	let songArray = [];
 
-	for (let i = 0; i < array.length; i++) {
-		songArray.push(`${i + 1}. ${array[i].meta.queueName}`);
+	for (let i = 0; i < rows.length; i++) {
+		songArray.push(`${i + 1}. ${rows[i].queueName}`);
 	}
 
 	let maxPage = Math.ceil(songArray.length / 10); // check that parsed number is correct

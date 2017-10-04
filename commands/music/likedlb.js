@@ -1,11 +1,9 @@
 const Music = require('../../struct/music');
 
 exports.run = async (message, args) => {
-	let thingy = await Music.likedArray();
-	let almostThereBud = thingy[0],
-		counts = thingy[1];
+	let array = await Music.likedArray();
 
-	let maxPage = Math.ceil(almostThereBud.length / 10); // check that parsed number is correct
+	let maxPage = Math.ceil(array.length / 10); // check that parsed number is correct
 	let page = 1;
 	if (args[0]) {
 		let num = parseInt(args[0]);
@@ -15,12 +13,12 @@ exports.run = async (message, args) => {
 		page = num;
 	}
 
-	almostThereBud = almostThereBud.slice(page * 10 - 10, page * 10); // slice array down to 5 songs - the five of current page
+	array = array.slice(page * 10 - 10, page * 10); // slice array down to 5 songs - the five of current page
 	let startNum = page * 10 - 9;
 	let final = [];
 
-	for (let i = 0; i < almostThereBud.length; i++) { // push each song to the final array, as the song will be displayed
-		final.push(`**${startNum}**. ${almostThereBud[i].meta.queueName} - ${counts[almostThereBud[i].id]} like${counts[almostThereBud[i].id] - 1 ? 's' : ''}`);
+	for (let i = 0; i < array.length; i++) { // push each song to the final array, as the song will be displayed
+		final.push(`**${startNum}**. ${array[i].queueName} - ${array[i].count} like${array[i].count - 1 ? 's' : ''}`);
 		startNum++;
 	}
 

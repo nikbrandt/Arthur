@@ -122,39 +122,13 @@ let Music = {
 	},
 
 	likedArray: async () => {
-		let rows = await sql.all(`SELECT songLikes FROM misc`);
-		let bigArray = [];
+		let rows = await sql.all('SELECT DISTINCT S.type, S.id, S.url, S.title, S.queueName, C.count FROM musicLikes S INNER JOIN (SELECT id, count(id) as count FROM musicLikes GROUP BY id) C ON S.id = C.id');
 
-		for (let i = 0; i < rows.length; i++) { // parse and combine all entries
-			let parsed = JSON.parse(rows[i].songLikes);
-
-			for (let j = 0; j < parsed.length; j++) {
-				bigArray.push(parsed[j]);
-			}
-		}
-
-		let counts = {};
-
-		for (let i = 0; i < bigArray.length; i++) { // gather amount of likes each song has
-			let id = bigArray[i].id;
-			counts[id] = counts[id] ? counts[id] + 1 : 1;
-		}
-
-		let almostThereBud = [];
-
-		let keys = Object.keys(counts); // make an array of unique songs, no dupes
-		for (let i = 0; i < keys.length; i++) {
-			let obj = bigArray.find(o => o.id === keys[i]);
-			almostThereBud.push(obj);
-		}
-
-		almostThereBud.sort((a, b) => { // sort array from smallest to biggest
-			return counts[a.id] - counts[b.id];
+		rows.sort((a, b) => {
+			return b.count - a.count;
 		});
 
-		almostThereBud = reverse(almostThereBud); // reverse array so it's biggest to smallest
-
-		return [almostThereBud, counts];
+		return rows;
 	},
 
 	parseMessage: (message, args, suffix, client) => {
@@ -174,11 +148,8 @@ let Music = {
 					type: type
 				} );
 			} else if (args[0] === 'liked' || args[0] === 'likes') {
-				let row = await sql.get(`SELECT songLikes FROM misc WHERE userID = '${message.author.id}'`);
-				if (!row) reject('If you haven\'t liked a song yet, it\'s quite challenging for me to play a liked song.');
-
-				let array = JSON.parse(row.songLikes);
-				if (!array.length) reject('If you haven\'t liked a song yet, it\'s quite challenging for me to play a liked song.');
+				let array = await sql.all(`SELECT type, id FROM musicLikes WHERE userID = '${message.author.id}'`);
+				if (!array || !array.length) reject('If you haven\'t liked a song yet, it\'s quite challenging for me to play a liked song.');
 				let num;
 
 				if (args[1] === 'random') num = Math.ceil(Math.random() * array.length);
@@ -198,8 +169,7 @@ let Music = {
 					type: type
 				} );
 			} else if (args[0] === 'top') {
-				let thingy = await Music.likedArray();
-				let array = thingy[0];
+				let array = await Music.likedArray();
 				let num;
 
 				if (args[1] === 'random') num = Math.ceil(Math.random() * array.length);
