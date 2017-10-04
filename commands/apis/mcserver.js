@@ -3,25 +3,37 @@ const webshot = require('webshot');
 const Discord = require('discord.js');
 const fs = require('fs');
 
-exports.run = (message, args) => {
+const failedEmbed = {
+	title: 'Server offline or invalid.',
+	description: 'Sorry ¯\\_(ツ)_/¯',
+	color: 0xff9335,
+	footer: {
+		text: 'If the server is actually online, try setting enable-query to true in server.properties.'
+	}
+};
+
+function failed (messageOptions, msg, client, index) {
+	msg.edit('', messageOptions);
+	client.processing.splice(index, 1);
+}
+
+exports.run = async (message, args, s, client) => {
 	if (!args[0]) return message.channel.send('Please tell me which server to query.');
+	let index = client.processing.length;
+	client.processing.push(message.id + ' - Webshot');
+	let msg = await message.channel.send('Processing..');
 
 	request(`https://use.gameapis.net/mc/query/info/${args[0]}`, (err, response, body) => {
-		if (err) return message.channel.send('For some reason there was an error. Please contact Gymnophoria#8146.');
-		if (!body || body.startsWith('<html')) return message.channel.send('That server is offline or you gave an invalid URL - rip.');
+		if (!body || body.startsWith('<html')) return failed({embed: failedEmbed}, msg, client, index);
 
 		let json = JSON.parse(body);
 		let date = Date.now();
 		let num = Math.floor(Math.random() * 10000);
 
-		if (!json.status) return message.channel.send({embed: {
-			title: 'Server offline or invalid.',
-			description: 'Sorry ¯\\_(ツ)_/¯',
-			color: 0xff9335
-		}});
+		if (!json.status) return failed({embed: failedEmbed}, msg, client, index);
 
 		webshot(json.motds.html.replace('\n', '<br>'), `../media/temp/${num}-${date}.png`, {siteType: 'html', windowSize: { width: 700, height: 85 }, customCSS: '@font-face{font-family:Minecraftia;src:url(../media/fonts/Minecraftia-Regular.ttf) format(\'truetype\')}*{font-size:24px;font-family:Minecraftia}'}, err => {
-			if (err) console.log ('error o noes\n', err);
+			if (err) console.log('mcserver command error while rendering webshot - rip\n', err);
 
 			const embed = new Discord.RichEmbed()
 				.setAuthor(`${json.hostname} is online.`, `https://use.gameapis.net/mc/query/icon/${args[0]}`)
@@ -33,6 +45,7 @@ exports.run = (message, args) => {
 				.setImage(`attachment://${num}-${date}.png`);
 
 			message.channel.send({embed}).then(() => {
+				msg.delete();
 				fs.unlinkSync(`../media/temp/${num}-${date}.png`);
 			});
 		})
