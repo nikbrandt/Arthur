@@ -44,6 +44,7 @@ let Music = {
 		if (!first) {
 			if (music.loop) {
 				let first = music.queue[0];
+				if (first.voteskips) first.voteskips = undefined;
 				music.queue.push(first);
 				music.queue = music.queue.slice(1);
 			} else music.queue = music.queue.slice(1);
@@ -54,6 +55,8 @@ let Music = {
 			guild.music = {};
 			return;
 		}
+
+		guild.music = music;
 
 		setTimeout(() => {
 			let dispatcher;

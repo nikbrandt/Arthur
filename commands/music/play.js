@@ -39,9 +39,9 @@ exports.run = async (message, args, suffix, client) => {
 		4 - File from URL
 
 			soundcloud/discordfm in the future
-	 */
 
-	/*
+
+
 	music contains:
 		playing: bool
 		channel: Discord.VoiceChannel
@@ -53,6 +53,7 @@ exports.run = async (message, args, suffix, client) => {
 				title: title to display as queue title
 				queueName: title to display in queue when not title
 				url: url to display w/ title
+			voteSkips: array (all people who have voted to skip)
 	 */
 
 	let object;

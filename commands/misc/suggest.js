@@ -39,5 +39,5 @@ exports.help = {
 	description: 'Suggest a command or feature to be added to Arthur.',
 	usage: 'suggest <suggestion>',
 	help: 'Suggest something to be added to Arthur.',
-	category: ' Important'
+	category: 'Other'
 };
