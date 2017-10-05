@@ -14,6 +14,35 @@ const loadCmd = (path, command, client) => {
 	console.log('Loaded.');
 };
 
+const soundEffects = (client) => {
+	let effects = fs.readdirSync('../media/sounds');
+	effects.forEach(file => {
+		console.log(`Generating file for ${file}..`);
+		let basename = file.replace('.mp3', '');
+		client.commands.set(basename, {
+			run: (message, args, suffix, client) => {
+				client.commands.get('play').run(message, ['file', basename], suffix, client);
+			},
+			config: {
+				enabled: true,
+				permLevel: 2,
+				aliases: [],
+				perms: ['EMBED_LINKS', 'SPEAK', 'CONNECT'],
+				guildCooldown: 1000
+			},
+			help: {
+				name: basename.charAt(0).toUpperCase() + basename.slice(1),
+				description: `Alias for \`play file ${basename}\``,
+				usage: basename,
+				help: `Alias for \`play file ${basename}\`. Plays the \`${basename}\` sound effect.`,
+				category: 'Sound Effects'
+			}
+		});
+		count++;
+		console.log('Done.');
+	})
+};
+
 exports.loadCmd = loadCmd;
 
 module.exports = async client => {
@@ -38,6 +67,9 @@ module.exports = async client => {
 			console.error(`Error loading ${f}:\n${err.stack ? err.stack : err}`);
 		}
 	});
+
+	console.log('Generating sound effect commands..');
+	soundEffects(client);
 
 	console.log(`Success! Loaded ${count} commands in ${stopwatch.elapsedMilliseconds} ms.\n`);
 	stopwatch.stop();
