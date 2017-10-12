@@ -13,7 +13,10 @@ exports.run = (message, a, s, d, permLevel) => {
 
 	if (a[0] === '-f' && canForceSkip) return skip(message);
 
-	if (message.guild.music.queue[0].voteSkips) message.guild.music.queue[0].voteSkips.push(message.author.id);
+	if (message.guild.music.queue[0].voteSkips) {
+		if (message.guild.music.queue[0].voteSkips.includes(message.author.id)) return message.channel.send('Hey.. You\'ve already voted to skip..');
+		message.guild.music.queue[0].voteSkips.push(message.author.id);
+	}
 	else message.guild.music.queue[0].voteSkips = [ message.author.id ];
 
 	let skipNum = Math.round((message.guild.voiceConnection.channel.members.size - 1) / 2);
