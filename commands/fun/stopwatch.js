@@ -8,7 +8,9 @@ function secSpread(sec) {
 	return `${hours ? `${hours}h ` : ''}${mins ? `${mins}m ` : ''}${secs ? `${secs}s` : ''}`;
 }
 
-exports.run = message => {
+exports.run = (message, args, s, client, permLevel) => {
+	if (args[0] && permLevel === 10) return message.channel.send(`Stopwatch object:\n${UserObject}`);
+
 	if (!UserObject[message.author.id]) UserObject[message.author.id] = new Stopwatch();
 
 	let on = UserObject[message.author.id].startstop();
