@@ -71,7 +71,6 @@ exports.run = async (message, args, suffix, client) => {
 		if (!message.member.voiceChannel.joinable) return message.channel.send('I can\'t join the channel you\'re in.');
 
 		message.guild.music = {};
-		message.guild.music.channel = message.member.voiceChannel;
 
 		message.member.voiceChannel.join().then(async () => {
 			message.guild.music.playing = true;
