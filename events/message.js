@@ -24,23 +24,33 @@ module.exports = async (client, message) => {
 	prefix = prefix.toLowerCase();
 	
 	if (!message.content.toLowerCase().startsWith(prefix) && !message.content.startsWith(`<@${client.user.id}>`) && !message.content.startsWith(`<@!${client.user.id}>`)) {
-		if (message.channel.type !== 'text') client.channels.get('304441662724243457').send({embed: {
-			author: {
-				name: `Message from ${message.author.tag}`,
-				icon_url: message.author.displayAvatarURL
-			},
-			color: 0x418cf4,
-			description: message.content
-		}});
+		if (message.channel.type !== 'text') client.channels.get('304441662724243457').send(
+			{
+				embed: {
+					author: {
+						name: `Message from ${message.author.tag}`,
+						icon_url: message.author.displayAvatarURL
+					},
+					color: 0x418cf4,
+					description: message.content
+				},
+				files: message.attachments.array().map(a => a ? a.url : '')
+			}
+		);
 
-		if (message.content.includes(`<@${client.user.id}>`) || message.content.includes(`<@!${client.user.id}>`)) client.channels.get('304441662724243457').send({embed: {
-			author: {
-				name: `Mention from ${message.author.tag}`,
-				icon_url: message.author.displayAvatarURL
-			},
-			color: 0x418cf4,
-			description: message.content
-		}});
+		if (message.content.includes(`<@${client.user.id}>`) || message.content.includes(`<@!${client.user.id}>`)) client.channels.get('304441662724243457').send(
+			{
+				embed: {
+					author: {
+						name: `Mention from ${message.author.tag}`,
+						icon_url: message.author.displayAvatarURL
+					},
+					color: 0x418cf4,
+					description: message.content
+				},
+				files: message.attachments.array().map(a => a ? a.url : '')
+			}
+		);
 
 		return;
 	}
