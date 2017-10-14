@@ -12,8 +12,8 @@ exports.run = async (message, args) => {
 	let uuid;
 
 	if (!args[0]) uuid = randos[Math.floor(Math.random() * randos.length)];
-	if (args[0].length === 36) args[0] = args[0].replace(/-/g, '');
-	if (args[0].length === 32) uuid = args[0];
+	else if (args[0].length === 36) args[0] = args[0].replace(/-/g, '');
+	else if (args[0].length === 32) uuid = args[0];
 	else if (args[0].length < 16) uuid = await getUUID(args[0]);
 	else return message.channel.send('If only usernames could be that long..');
 
