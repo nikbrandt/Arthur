@@ -194,7 +194,7 @@ let Music = {
 				let files = fs.readdirSync('../media/sounds');
 				files = files.map(f => f.replace(/\.mp3/g, ''));
 
-				if (!args[1]) reject('Mhm, I\'ll make sure to play that nothingness real soon.');
+				if (!args[1]) reject(`Hey man, you have to tell me what file to play.. The current options are: ${files.map(f => '`' + f + '`').join(', ')}`);
 				if (!files.includes(args[1])) reject(`Darn! That file doesn't exist. You can suggest to add it by DMing Gymnophoria#8146. The files you *can* play are as follows: ${files.map(f => '`' + f + '`').join(', ')}`);
 
 				id = args[1];
