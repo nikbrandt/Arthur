@@ -298,8 +298,8 @@ let Music = {
 				case 3:
 					resolve({
 						meta: {
-							title: id,
-							queueName: id,
+							title: `Sound effect - ${id}`,
+							queueName: `Sound effect - ${id}`,
 							url: 'https://github.com/Gymnophoria/Arthur'
 						}
 					});
