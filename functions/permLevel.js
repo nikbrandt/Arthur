@@ -34,7 +34,7 @@ exports.pl = client => {
 exports.numMapping = {
 	0: '**Anyone** can use this command.',
 	1: '**Anyone** can use this command.',
-	2: 'This command can be used by **anyone in a guild**',
+	2: 'This command can be used by **anyone in a server**',
 	3: 'Only people with a **Mod role** can use this command.',
 	4: 'Only people with the **Manage Server permission** or higher can use this command.',
 	5: 'Only people with an **Admin role** or with the **Admin permission** can use this command.',
