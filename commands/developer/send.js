@@ -6,15 +6,22 @@ exports.run = (message, args, suffix, client) => {
 	let user = client.users.get(args[0]);
 	if (!user) return message.channel.send('That\'s not a valid ID, sorry.');
 
-	user.send(suffix.slice(args[0].length + 1), { files: message.attachments.size ? message.attachments.array().map(f => f.url) : [] });
-
-	channel.send({
-		embed: {
-			title: `Message to ${user.tag}`,
-			description: suffix.slice(args[0].length + 1),
-			color: 0x00c140
-		},
-		files: message.attachments.size ? message.attachments.array().map(f => f.url) : []
+	message.delete().catch();
+	user.send(suffix.slice(args[0].length + 1), { files: message.attachments.size ? message.attachments.array().map(f => f.url) : [] }).then(() => {
+		channel.send({
+			embed: {
+				title: `Message to ${user.tag}`,
+				description: suffix.slice(args[0].length + 1),
+				color: 0x00c140
+			},
+			files: message.attachments.size ? message.attachments.array().map(f => f.url) : []
+		});
+	}).catch(() => {
+		return channel.send({embed: {
+			title: `Could not send message to ${user.tag}`,
+			description: 'rip.',
+			color: 0xf00
+		}})
 	});
 };
 

@@ -5,16 +5,23 @@ exports.run = (message, args, suffix, client, permLevel) => {
 	let user = client.lastMessage;
 	if (!user) return message.channel.send('nobody has sent a message to me.. are you drunk?');
 
-	user.send(suffix, { files: message.attachments.size ? message.attachments.array().map(f => f.url) : [] });
-
-	channel.send({
-		embed: {
-			title: `Message to ${user.tag}`,
-			description: suffix,
-			color: 0x00c140
-		},
-		files: message.attachments.size ? message.attachments.array().map(f => f.url) : []
-	})
+	message.delete().catch();
+	user.send(suffix, { files: message.attachments.size ? message.attachments.array().map(f => f.url) : [] }).then(() => {
+		channel.send({
+			embed: {
+				title: `Message to ${user.tag}`,
+				description: suffix,
+				color: 0x00c140
+			},
+			files: message.attachments.size ? message.attachments.array().map(f => f.url) : []
+		});
+	}).catch(() => {
+		return channel.send({embed: {
+			title: `Could not send message to ${user.tag}`,
+			description: 'rip.',
+			color: 0xf00
+		}})
+	});
 };
 
 exports.config = {
