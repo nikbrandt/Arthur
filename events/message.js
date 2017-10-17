@@ -25,7 +25,7 @@ module.exports = async (client, message) => {
 	
 	if (!message.content.toLowerCase().startsWith(prefix) && !message.content.startsWith(`<@${client.user.id}>`) && !message.content.startsWith(`<@!${client.user.id}>`)) {
 		if (message.channel.type !== 'text') {
-			client.channels.get('304441662724243457').send(
+			client.channels.get(config.messageLogChannel).send(
 				{
 					embed: {
 						author: {
