@@ -22,7 +22,7 @@ exports.run = (message, args, suffix, client) => {
 		: `*Suggested by ${message.author.tag} (${message.author.id})*`,
 		config.trello.board
 	).then(() => {
-		message.channel.send('Thanks, your suggestion might be added someday :thumbsup:');
+		message.channel.send(`Thanks, your suggestion might be added someday :thumbsup:\nCheck the [support server](${client.config.info.guildLink}) to see the response to your suggestion.`);
 	}).catch(err => {
 		message.channel.send(`I couldn't add the card for some reason.. Heck man that's weird, could you report it to Gymnophoria#8146?\n${err}`)
 	})
