@@ -10,7 +10,7 @@ const statusUpdate  = (embed) => {
 };
 
 const errorLog = (error, stack, code) => {
-	if (!(process.argv[2] && process.argv[2] === 'test')) errorWebhookClient.send({ embeds: [ { title: error, description: stack, footer: { text: `Code ${code}` }, timestamp: new Date().toISOString(), color: 0xf00 } ] }).catch(console.error);
+	if (!(process.argv[2] && process.argv[2] === 'test')) errorWebhookClient.send({ embeds: [ { title: error, description: stack, footer: { text: `Code ${code}` }, timestamp: new Date().toISOString(), color: 0xff0000 } ] }).catch(console.error);
 };
 
 exports.load = client => {
@@ -37,7 +37,7 @@ exports.load = client => {
 
 	client.on('error', err => {
 		console.error('Client error\n', err.stack);
-		errorLog(err.message, err.stack, err.code);
+		errorLog('Discord.JS Client Error', err.stack, err.code);
 	});
 
 	client.on('reconnecting', () => {
@@ -58,13 +58,11 @@ exports.load = client => {
 	});
 
 	process.on('unhandledPromiseRejection', err => {
-		console.error('Unhandled Promise Rejection\n', err.stack);
-		errorLog(err.message, err.stack, err.code);
+		errorLog('Unhandled Promise Rejection', err.stack, err.code);
 	});
 
 	process.on('unhandledRejection', err => {
-		console.error('Unhandled Rejection Error\n', err.stack);
-		errorLog(err.message, err.stack, err.code);
+		errorLog('Unhandled Rejection Error', err.stack, err.code);
 	});
 };
 
