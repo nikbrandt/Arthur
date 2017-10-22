@@ -99,8 +99,8 @@ module.exports = async (client, message) => {
 		else cooldownObj[message.author.id] = { [cmdFile.help.name]: Date.now() };
 	}
 
-	if (cmdFile.config.guildCooldown && cooldownObj[message.guild.id] && cooldownObj[message.guild.id][cmdFile.help.name] && Date.now() - cooldownObj[message.guild.id][cmdFile.help.name] < cmdFile.config.guildCooldown) return message.channel.send(`Dude, this guild is just being way too spicy. Some people need to seriously chill.. Wait another ${Math.ceil((cooldownObj[message.guild.id][cmdFile.help.name] + cmdFile.config.guildCooldown - Date.now()) / 1000)} second(s), would ya?`);
-	if (cmdFile.config.guildCooldown) {
+	if (cmdFile.config.guildCooldown && message.guild && cooldownObj[message.guild.id] && cooldownObj[message.guild.id][cmdFile.help.name] && Date.now() - cooldownObj[message.guild.id][cmdFile.help.name] < cmdFile.config.guildCooldown) return message.channel.send(`Dude, this guild is just being way too spicy. Some people need to seriously chill.. Wait another ${Math.ceil((cooldownObj[message.guild.id][cmdFile.help.name] + cmdFile.config.guildCooldown - Date.now()) / 1000)} second(s), would ya?`);
+	if (cmdFile.config.guildCooldown && message.guild) {
 		if (cooldownObj[message.guild.id]) cooldownObj[message.guild.id][cmdFile.help.name] = Date.now();
 		else cooldownObj[message.guild.id] = { [cmdFile.help.name]: Date.now() };
 	}
