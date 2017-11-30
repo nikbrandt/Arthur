@@ -108,7 +108,9 @@ module.exports = async (client, message) => {
 	if (cmdFile.config.enabled && cmdFile.config.permLevel <= perms) {
 		try {
 			let resp = cmdFile.run(message, args, suffix, client, perms, prefix);
-			if (typeof resp.then === 'function') resp.catch(console.error(`Command ${command} has failed to run!\n${err.stack}`));
+			if (resp && typeof resp.then === 'function') resp.catch(err => { 
+				console.error(`Command ${command} has failed to run!\n${err.stack}`) 
+			});
 		} catch (err) {
 			console.error(`Command ${command} has failed to run!\n${err.stack}`);
 		}

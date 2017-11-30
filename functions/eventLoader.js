@@ -22,9 +22,11 @@ module.exports = client => {
 	client.on('debug', d => {
 		if (!d.includes('eartbeat')) console.log(d);
 	});
+	
 	client.on('warn', console.warn);
 	client.on('error', console.error);
 
 	process.on('unhandledPromiseRejection', console.error);
 	process.on('unhandledRejection', console.error);
+	process.on('uncaughtException', console.error);
 };
