@@ -42,19 +42,24 @@ module.exports = async (client, message) => {
 			client.lastMessage = message.author;
 		}
 
-		if (message.content.includes(`<@${client.user.id}>`) || message.content.includes(`<@!${client.user.id}>`)) client.channels.get('304441662724243457').send(
-			{
-				embed: {
-					author: {
-						name: `Mention from ${message.author.tag}`,
-						icon_url: message.author.displayAvatarURL
+		if (message.content.includes(`<@${client.user.id}>`) || message.content.includes(`<@!${client.user.id}>`)) {
+			client.channels.get('304441662724243457').send(
+				{
+					embed: {
+						author: {
+							name: `Mention from ${message.author.tag}`,
+							icon_url: message.author.displayAvatarURL
+						},
+						color: 0x418cf4,
+						description: message.content
 					},
-					color: 0x418cf4,
-					description: message.content
-				},
-				files: message.attachments.array().map(a => a ? a.url : '')
-			}
-		);
+					files: message.attachments.array().map(a => a ? a.url : '')
+				}
+			);
+			if (message.content.toLowerCase().includes('ship')) message.channel.send('*shipped*', {
+				files: ['https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/HMS_BOUNTY_II_with_Full_Sails.jpg/1200px-HMS_BOUNTY_II_with_Full_Sails.jpg']
+			})
+		}
 
 		return;
 	}

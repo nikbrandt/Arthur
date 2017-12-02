@@ -75,9 +75,16 @@ exports.run = async (message, args, suffix, client) => {
 		message.member.voiceChannel.join().then(async () => {
 			message.guild.music.playing = true;
 
-			add(message, id, type, client, true).catch(console.error);
-		})
-	} else add (message, id, type, client, false).catch(console.error);
+			add(message, id, type, client, true).catch(() => {
+				message.guild.music = {};
+				return message.channel.send('The video you were trying to play is unavailable in the US - sorry.');
+			});
+		}).catch(() => {
+			message.channel.send('Connection not established, please try again.');
+		});
+	} else add (message, id, type, client, false).catch(() => {
+		message.channel.send('The video you tried to add is unavailable in the US - sorry.');
+	});
 };
 
 exports.config = {
