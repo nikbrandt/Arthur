@@ -63,7 +63,7 @@ exports.run = async (message, args, suffix, client, perms, prefix) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	aliases: ['h', 'halp']
+	aliases: ['h', 'halp', 'commands']
 };
 
 exports.help = {
