@@ -8,8 +8,6 @@ exports.run = async (message, args) => {
 
 	if (!args[0] && (!message.guild.music && !message.guild.music.queue)) return message.channel.send('Yes, I\'ll just pick the song you want. Y\'know, because I have telepathic powers. (tell me which song to remove)');
 
-	console.log(rows);
-
 	if (args[0]) {
 		num = parseInt(args[0]);
 		if (!num) return message.channel.send('Hey.. that\'s not a number.. (or you chose zero, which really isn\'t a song number so yeah)');
@@ -31,13 +29,13 @@ exports.run = async (message, args) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: ['unlike']
+	aliases: ['dislike']
 };
 
 exports.help = {
-	name: 'Dislike Song',
-	description: 'Dislike that one song you liked',
-	usage: 'dislike <song number>',
-	help: 'Dislike that one song you liked a while ago because you now realize it\'s not as good as you thought it was.',
+	name: 'Unlike Song',
+	description: 'Unlike that one song you liked',
+	usage: 'unlike <song number>',
+	help: 'Unlike that one song you liked a while ago because you now realize it\'s not as good as you thought it was.',
 category: 'Music'
 };
