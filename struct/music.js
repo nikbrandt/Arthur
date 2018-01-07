@@ -11,16 +11,6 @@ const YTRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([A
 const songRegex = /\/([^/]+)\.(mp3|ogg)$/;
 const discordRegex = /.*\/\/.*\/.*\/(.*)\.(mp3|ogg)/;
 
-function reverse (array) {
-	let reversed = [];
-
-	array.forEach(i => {
-		reversed.unshift(i);
-	});
-
-	return reversed;
-}
-
 function secSpread(sec) {
 	let hours = Math.floor(sec / 3600);
 	let mins = Math.floor((sec - hours * 3600) / 60);
