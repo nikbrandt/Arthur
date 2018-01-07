@@ -7,24 +7,35 @@ exports.run = (message, args, suffix, client) => {
 	let splitified = suffix.split('\n');
 	let channel = client.channels.get('304429067892031490');
 
-	channel.send({embed: {
-		author: {
-			name: `New suggestion by ${message.author.tag}`,
-			icon_url: message.author.displayAvatarURL
+	let attachments = message.attachments.array().map(a => a ? a.url : '');
+
+	channel.send({
+		embed: {
+			author: {
+				name: `New suggestion by ${message.author.tag}`,
+				icon_url: message.author.displayAvatarURL
+			},
+			description: suffix,
+			color: 0x00c140
 		},
-		description: suffix,
-		color: 0x00c140
-	}});
+		files: attachments
+	});
+
+	console.log(attachments);
+
+	let footer = attachments.length
+		? `Attached:\n${attachments.map(a => `[${a.name}](${a.attachment})`).join('\n')}\n\n*Suggested by ${message.author.tag} (${message.author.id})*`
+		: `*Suggested by ${message.author.tag} (${message.author.id})*`;
 
 	trello.addCard(splitified[0],
 		splitified[1]
-		? splitified.slice(1).join('\n') + `\n\n*Suggested by ${message.author.tag} (${message.author.id})*`
-		: `*Suggested by ${message.author.tag} (${message.author.id})*`,
+		? splitified.slice(1).join('\n') + `\n\n${footer}`
+		: footer,
 		config.trello.board
 	).then(() => {
-		message.channel.send(`Thanks, your suggestion might be added someday :thumbsup:\nCheck the [support server](${client.config.info.guildLink}) to see the response to your suggestion.`);
+		message.channel.send(`Thanks, your suggestion might be added someday :thumbsup:\nCheck the support server - ${client.config.info.guildLink} to see the if your suggestion gets accepted.`);
 	}).catch(err => {
-		message.channel.send(`I couldn't add the card for some reason.. Heck man that's weird, could you report it to Gymnophoria#8146?\n${err}`)
+		message.channel.send(`I couldn't add the card for some reason.. Heck man that's weird, could you report it on my support server - ${client.config.info.guildLink}\n${err}`)
 	})
 };
 
