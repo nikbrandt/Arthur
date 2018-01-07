@@ -6,7 +6,10 @@ function reverse(text) {
 
 exports.run = (message, args, suffix) => {
 	if (!args[0]) return message.channel.send('You\'ve gotta provide me with something to reverse, lul');
-	message.channel.send(reverse(suffix));
+	message.channel.send({embed: {
+		description: reverse(suffix),
+		color: 0x00c140
+	}});
 };
 
 exports.config = {
