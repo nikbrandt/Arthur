@@ -5,7 +5,7 @@ exports.run = (message, args, suffix, client, permLevel) => {
 	let num = parseInt(args[0]);
 	if (!num) return message.channel.send('Hey.. that\'s not a number.. (or you chose zero and that\'s also not a song number dumbo)');
 	if (num < 1) return message.channel.send('there is no negative queue tho <:crazyeyes:359106555314044939>');
-	if (num === 1) return message.channel.send('hey use skip don\'t remove the current song that borks things..');
+	if (num === 1) return message.channel.send('hey, use skip, don\'t remove the current song; that borks things..');
 	if (num > message.guild.music.queue.length) return message.channel.send('C\'mon, there aren\'t that many songs in the queue.. yet.');
 
 	if (!message.member.roles.find(r => r.name.toLowerCase() === 'dj') && !message.member.roles.find(r => r.name.toLowerCase() === 'music') && permLevel < 3 && message.guild.music.queue[num - 1].person.id !== message.author.id) return;

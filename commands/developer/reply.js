@@ -4,8 +4,8 @@ exports.run = (message, args, suffix, client, permLevel) => {
 	let channel = client.channels.get('304441662724243457');
 	let user = client.lastMessage;
 	if (!user) return message.channel.send('nobody has sent a message to me.. are you drunk?');
-
 	message.delete().catch();
+  
 	user.send(suffix, { files: message.attachments.size ? message.attachments.array().map(f => f.url) : [] }).then(() => {
 		channel.send({
 			embed: {
@@ -16,17 +16,19 @@ exports.run = (message, args, suffix, client, permLevel) => {
 			files: message.attachments.size ? message.attachments.array().map(f => f.url) : []
 		});
 	}).catch(() => {
-		return channel.send({embed: {
-			title: `Could not send message to ${user.tag}`,
-			description: 'rip.',
-			color: 0xf00
-		}})
+		channel.send({
+			embed: {
+				title: `Message to ${user.tag} failed to send`,
+				description: suffix.slice(args[0].length + 1),
+				color: 0xff0000
+			}
+		});
 	});
 };
 
 exports.config = {
 	enabled: true,
-	permLevel: 10,
+	permLevel: 9,
 	aliases: []
 };
 

@@ -8,17 +8,10 @@ exports.run = async (message, args, suffix, client) => {
 	if (args[0] === 'server' || args[0] === 'guild' || args[0] === 's' || !args[0] || (args[0].length > 0 && args[0].length < 4 && args[0] !== 'g') || args[0].length === 19) {
 		let guildID = message.guild.id;
 		
-		if (client.config.owners.includes(message.author.id) && !!args[0] && args[0].length === 19) {
-			let guild = client.guilds.get(args[0].slice(1));
-			if (!guild) {
-				guildID = message.guild.id;
-			} else guildID = guild.id;
-		}
-		
 		let page = 1;
 		if (args[1] || args[0]) {
-			if (args[0].length === 19) return;
-			let tempPage = parseInt(args[0].length < 4 && args[0] !== 's' ? args[0] : args[1], 10);
+			if ((args[0] === 'server' || args[0] === 'guild' || args[0] === 's') && !args[1]) args[1] = '1';
+			let tempPage = parseInt(args[0].length < 4 && args[0] !== 's' && args[0] !== 'server' && args[0] !== 'guild' ? args[0] : args[1], 10);
 			if (isNaN(tempPage)) return message.channel.send(`\`${args[0].length < 4 ? args[0] : args[1]}\` is not a valid page number.`);
 			if (tempPage < 1) return message.channel.send('There is no page 0 or negative.');
 			page = Math.floor(tempPage);

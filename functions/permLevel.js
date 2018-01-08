@@ -2,7 +2,8 @@ exports.pl = client => {
 	client.permLevel = message => {
 		let permLevel = 2;
 		
-		if (client.config.owners.includes(message.author.id)) return 10;
+		if (client.owner.id === message.author.id) return 10;
+		if (client.config.owners.includes(message.author.id)) return 9;
 		if (!message.author) return 0;
 		if (!message.guild) return 1;
 		
