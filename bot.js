@@ -28,7 +28,7 @@ client.aliases = new Discord.Collection();
 sql.open('../media/db.sqlite').catch(console.error);
 
 require('./functions/commandLoader.js')(client);
-require('./functions/eventLoader.js')(client);
+require('./functions/eventLoader.js').load(client);
 require('./functions/permLevel.js').pl(client);
 require('./functions/findMember.js')(client);
 

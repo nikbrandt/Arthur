@@ -25,7 +25,7 @@ module.exports = async (client, message) => {
 	
 	if (!message.content.toLowerCase().startsWith(prefix) && !message.content.startsWith(`<@${client.user.id}>`) && !message.content.startsWith(`<@!${client.user.id}>`)) {
 		if (message.channel.type !== 'text') {
-			client.channels.get('304441662724243457').send(
+			client.channels.get(config.messageLogChannel).send(
 				{
 					embed: {
 						author: {
@@ -113,8 +113,8 @@ module.exports = async (client, message) => {
 	if (cmdFile.config.enabled && cmdFile.config.permLevel <= perms) {
 		try {
 			let resp = cmdFile.run(message, args, suffix, client, perms, prefix);
-			if (resp && typeof resp.then === 'function') resp.catch(err => { 
-				console.error(`Command ${command} has failed to run!\n${err.stack}`) 
+			if (resp && typeof resp.then === 'function' && typeof resp.catch === 'function') resp.catch(err => {
+				console.error(`Command ${command} has failed to run!\n${err.stack}`)
 			});
 		} catch (err) {
 			console.error(`Command ${command} has failed to run!\n${err.stack}`);

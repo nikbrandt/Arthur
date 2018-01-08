@@ -1,7 +1,19 @@
 const { Stopwatch } = require('node-stopwatch');
+const Discord = require('discord.js');
+const config = require('../../media/config.json');
+const statusWebhookClient = new Discord.WebhookClient(config.statusLog.id, config.statusLog.token);
+const errorWebhookClient = new Discord.WebhookClient(config.errorLog.id, config.errorLog.token);
 const fs = require('fs');
 
-module.exports = client => {
+const statusUpdate  = (embed) => {
+	if (!(process.argv[2] && process.argv[2] === 'test')) statusWebhookClient.send({ embeds: [ embed ] }).catch(console.error);
+};
+
+const errorLog = (error, stack, code) => {
+	if (!(process.argv[2] && process.argv[2] === 'test')) errorWebhookClient.send({ embeds: [ { title: error, description: stack, footer: { text: `Code ${code}` }, timestamp: new Date().toISOString(), color: 0xff0000 } ] }).catch(console.error);
+};
+
+exports.load = client => {
 	let stopwatch = Stopwatch.create();
 	let events = fs.readdirSync('./events');
 	console.log(`Loading ${events.length} events..`);
@@ -22,11 +34,36 @@ module.exports = client => {
 	client.on('debug', d => {
 		if (!d.includes('eartbeat')) console.log(d);
 	});
-	
-	client.on('warn', console.warn);
-	client.on('error', console.error);
 
-	process.on('unhandledPromiseRejection', console.error);
-	process.on('unhandledRejection', console.error);
-	process.on('uncaughtException', console.error);
+	client.on('error', err => {
+		console.error('Client error\n', err.stack);
+		errorLog('Discord.JS Client Error', err.stack, err.code);
+	});
+
+	client.on('reconnecting', () => {
+		statusUpdate({
+			title: 'Reconnecting',
+			timestamp: new Date().toISOString(),
+			color: 0xfff53a
+		});
+	});
+
+	client.on('resume', num => {
+		statusUpdate({
+			title: 'Resumed',
+			description: `${num} events replayed.`,
+			timestamp: new Date().toISOString(),
+			color: 0x39ffb0
+		})
+	});
+
+	process.on('unhandledPromiseRejection', err => {
+		errorLog('Unhandled Promise Rejection', err.stack, err.code);
+	});
+
+	process.on('unhandledRejection', err => {
+		errorLog('Unhandled Rejection Error', err.stack, err.code);
+	});
 };
+
+exports.statusUpdate = statusUpdate;

@@ -102,6 +102,6 @@ exports.help = {
 	name: 'Play',
 	description: 'Play a song or add it to the queue',
 	usage: 'play <song name/youtube url/file url/file/top/liked> [extra params]',
-	help: 'Play a song or add one to the queue. Only supports youtube right now.',
+	help: 'Play a song or add one to the queue. Only supports songs playable in the US.',
 	category: 'Music'
 };

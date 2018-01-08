@@ -63,7 +63,7 @@ exports.run = (message, args, suffix, client) => {
 	if (barWidth > 35) barWidth = 35;
 	let curWidth = 15;
 	let heightMult = barMaxHeight / usesArray[0];
-	let accent = '#4286f4';
+	let accent = '#00c140';
 
 	ctx.fillStyle = accent; // add fonts, set color
 	ctx.addFont(new Font('RobotoLight', '../media/fonts/Roboto-Light.ttf'));
@@ -110,10 +110,26 @@ exports.run = (message, args, suffix, client) => {
 	ctx.font = '50px RobotoLight';
 	ctx.fillText(' users', curWidth, 70);
 
+	let text;
+	switch(args[0]) {
+		case 'daily':
+			text = moment().format('MMM Do YYYY');
+			break;
+		case 'weekly':
+			text = moment().format('wo [week of] YYYY');
+			break;
+		default:
+			text = 'All time'
+			break;
+	};
+	curWidth = 800 - ctx.measureText(text).width;
+	ctx.font = '40px RobotoLight';
+	ctx.fillText(text, curWidth, 150);
+
 	let lastEnd = -1.57; // RAM pie chart
 	let mem = process.memoryUsage().rss * 1.0e-6;
-	let data = [mem, 250 - mem];
-	let total = 250;
+	let total = 400;
+	let data = [mem, total - mem];
 	let colors = ['#fff', accent];
 
 	for (let i = 0; i < data.length; i++) {
@@ -126,7 +142,7 @@ exports.run = (message, args, suffix, client) => {
 		lastEnd += Math.PI * 2 * (data[i] / total);
 	}
 
-	lastEnd = -1.57;
+	lastEnd = -1.57; // CPU pie chart
 	let cpu = os.loadavg()[1];
 	data = [cpu, 100 - cpu];
 	total = 100;
@@ -141,13 +157,13 @@ exports.run = (message, args, suffix, client) => {
 		lastEnd += Math.PI * 2 * (data[i] / total);
 	}
 
-	ctx.fillStyle = accent;
+	ctx.fillStyle = accent; // RAM and CPU amounts
 	ctx.font = '50px RobotoMedium';
 	ctx.textAlign = 'center';
 	ctx.fillText(`${mem.toFixed(1)} MB`, 925, 195);
 	ctx.fillText(`${cpu.toFixed(2)}%`, 925, 290);
 
-	ctx.textBaseline = 'middle';
+	ctx.textBaseline = 'middle'; // RAM and CPU labels
 	ctx.font = '50px RobotoLight';
 	ctx.globalCompositeOperation = 'xor';
 	ctx.beginPath();

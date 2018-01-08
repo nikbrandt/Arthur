@@ -1,3 +1,4 @@
+const { statusUpdate } = require('../functions/eventLoader');
 const dbots = require('../functions/dbots');
 const fs = require('fs');
 
@@ -59,4 +60,10 @@ module.exports = client => {
 			dbots.getLikes(client);
 		}, 600000);
 	}
+
+	statusUpdate({
+		title: 'Bot started',
+		timestamp: new Date().toISOString(),
+		color: 0x00c140
+	})
 };

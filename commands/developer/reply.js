@@ -5,7 +5,7 @@ exports.run = (message, args, suffix, client, permLevel) => {
 	let user = client.lastMessage;
 	if (!user) return message.channel.send('nobody has sent a message to me.. are you drunk?');
 	message.delete().catch();
-
+  
 	user.send(suffix, { files: message.attachments.size ? message.attachments.array().map(f => f.url) : [] }).then(() => {
 		channel.send({
 			embed: {
