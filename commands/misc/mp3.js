@@ -46,13 +46,14 @@ async function finish(id, message, client) {
 		.audioBitrate(128)
 		.on('end', () => {
 			const options = {
-				url: 'https://rokket.space/upload?output=text',
+				url: 'https://uguu.se/api.php?d=upload-tool',
 				method: 'POST',
 				headers: {
 					'User-Agent': 'Arthur Discord Bot (github.com/Gymnophoria/Arthur)'
 				},
 				formData: {
-					"files[]": fs.createReadStream(`../media/temp/${title}.mp3`)
+					"file": fs.createReadStream(`../media/temp/${title}.mp3`),
+					"name": title + '.mp3'
 				}
 			};
 
