@@ -36,8 +36,9 @@ let Music = {
 				let first = music.queue[0];
 				if (first.voteskips) first.voteskips = undefined;
 				music.queue.push(first);
-				music.queue = music.queue.slice(1);
-			} else music.queue = music.queue.slice(1);
+			}
+
+			music.queue = music.queue.slice(1);
 		}
 
 		if (music.queue.length === 0) {
@@ -58,7 +59,7 @@ let Music = {
 
 			if (music.queue[0].type === 1) {
 				const stream = ytdl(music.queue[0].id, { filter: 'audioonly' });
-				dispatcher = guild.voiceConnection.playStream(stream);
+				dispatcher = guild.voiceConnection.playStream(stream, { volume: 0.3, passes: 2, bitrate: 'auto' });
 
 				dispatcher.on('end', () => {
 					Music.next(guild);
@@ -85,7 +86,7 @@ let Music = {
 					}
 
 					const stream = fs.createReadStream(file);
-					dispatcher = guild.voiceConnection.playStream(stream);
+					dispatcher = guild.voiceConnection.playStream(stream, { volume: 0.3, passes: 2, bitrate: 'auto' });
 
 					dispatcher.on('end', () => {
 						fs.unlinkSync(file);
@@ -98,7 +99,7 @@ let Music = {
 				})
 			} else if (music.queue[0].type === 3) {
 				const stream = fs.createReadStream(`../media/sounds/${music.queue[0].id}.mp3`);
-				dispatcher = guild.voiceConnection.playStream(stream);
+				dispatcher = guild.voiceConnection.playStream(stream, { volume: 0.3, passes: 2, bitrate: 'auto' });
 
 				dispatcher.on('end', () => {
 					Music.next(guild);

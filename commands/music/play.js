@@ -18,7 +18,7 @@ let add = async (message, id, type, client, first) => {
 		return message.channel.send(err);
 	}
 
-	let queueObj = {type: type, person: message.author, id: id, meta: obj.meta };
+	let queueObj = { type: type, person: message.author, id: id, meta: obj.meta };
 	if (obj.embed) message.channel.send({embed: obj.embed});
 
 	if (first) {
@@ -75,15 +75,20 @@ exports.run = async (message, args, suffix, client, perms) => {
 
 		message.guild.music = {};
 
-		message.member.voiceChannel.join().then(async () => {
+		message.member.voiceChannel.join().then(connection => {
 			message.guild.music.playing = true;
 
 			add(message, id, type, client, true).catch(() => {
 				message.guild.music = {};
 				return message.channel.send('The video you were trying to play is unavailable in the US - sorry.');
 			});
-		}).catch(() => {
-			message.channel.send('Connection not established, please try again.');
+
+			connection.on('error', () => {
+				message.guild.music = {};
+				return message.channel.send('Connection to voice channel not established, please try again.');
+			})
+		}).catch(err => {
+			message.channel.send('Connection not established - ' + err.name);
 		});
 	} else add (message, id, type, client, false).catch(() => {
 		message.channel.send('The video you tried to add is unavailable in the US - sorry.');

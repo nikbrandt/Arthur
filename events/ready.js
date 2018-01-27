@@ -16,10 +16,11 @@ function game (client) {
 		'feeling like you need help with life? have the 8ball make all your choices.',
 		'don\'t like my prefix? weirdo. change it with the "prefix" command.',
 		'( ͡° ͜ʖ ͡°)',
-		'if you feel like this bot is crap, feel free to message Gymnophoria#8146 on how to make it less crap.'
+		'if you feel like this bot is crap, feel free to message Gymnophoria#8146 on how to make it less crap.',
+		'join my server so my dev feels popular - click "Support Server" in the help command'
 	];
 
-	client.user.setGame(`${games[Math.floor(Math.random() * games.length)]} | @Arthur help`);
+	client.user.setActivity(`${games[Math.floor(Math.random() * games.length)]} | @Arthur help`).catch();
 }
 
 function writeStats (client) {
