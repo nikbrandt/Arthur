@@ -2,6 +2,7 @@ const ffmpeg = require('fluent-ffmpeg');
 const ytdl = require('ytdl-core');
 const search = require('youtube-search');
 const fs = require('fs');
+const request = require('request');
 
 const YTRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([A-z0-9_-]{11})(&.*)?$/;
 
@@ -20,54 +21,61 @@ async function finish(id, message, client) {
 	let index = client.processing.length;
 	client.processing.push(message.id + ' - MP3');
 
-	let msg = await message.channel.send('Downloading...');
-
-	let date = Date.now();
+	let msg = await message.channel.send('Downloading..');
 
 	let info = await ytdl.getInfo(id);
 	if (info.livestream) {
 		msg.edit('Ah right, you expect me to download a livestream. Just no, thanks.');
 		return client.processing.splice(index, 1);
 	}
-	if (info.length_seconds > 600) {
-		msg.edit('Anything bigger than 10 minutes is gonna be too big for me to send through Discord - Sorry!');
+
+	if (info.length_seconds > 5400) {
+		msg.edit('I\'ve set a limit of an hour and a half on these songs; I operate best when not on fire.');
 		return client.processing.splice(index, 1);
 	}
+
+	msg.edit('Downloading... This should take about **' + (info.length_seconds / 60 / 4).toFixed(1) + '** minutes to convert..');
+	let title = info.title.replace(/[^A-z0-9]/g, '_');
 
 	let ytdlStream = ytdl(id, { filter: 'audioonly' });
 
 	let secObj = secSpread(info.length_seconds);
 
-	msg.edit('Converting...');
-
 	ffmpeg(ytdlStream)
 		.duration(info.length_seconds + 1)
 		.audioBitrate(128)
 		.on('end', () => {
-			msg.delete().catch();
-			message.channel.send('', {
-				embed: {
-					description: `Song downloaded.\nOriginal video [here](https://youtu.be/${id})\n${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`,
-					thumbnail: {
-						url: info.iurlhq
-					},
-					color: 0x42f45c,
-					footer: {
-						text: `Requested by ${message.author.tag}`
-					}
+			const options = {
+				url: 'https://rokket.space/upload?output=text',
+				method: 'POST',
+				headers: {
+					'User-Agent': 'Arthur Discord Bot (github.com/Gymnophoria/Arthur)'
 				},
-				files: [{
-					attachment: `../media/temp/${id}-${date}.mp3`,
-					name: info.title + '.mp3'
-				}]
-			}).catch(() => {
-				message.channel.send('The file was too big to send (anything longer than ~10 minutes is probably too long).. Sorry!');
-			}).then(() => {
-				fs.unlinkSync(`../media/temp/${id}-${date}.mp3`);
+				formData: {
+					"files[]": fs.createReadStream(`../media/temp/${title}.mp3`)
+				}
+			};
+
+			request(options, (err, res, body) => {
+				fs.unlinkSync(`../media/temp/${title}.mp3`);
 				client.processing.splice(index, 1);
+
+				msg.edit('', {
+					embed: {
+						title: info.title,
+						description: `Song is [here](${body}).\nOriginal video [here](https://youtu.be/${id}).\n${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`,
+						thumbnail: {
+							url: info.thumbnail_url
+						},
+						color: 0x42f45c,
+						footer: {
+							text: `Requested by ${message.author.tag} | File will be deleted after 48 hours`
+						}
+					}
+				});
 			});
 		})
-		.save(`${__dirname}/../../../media/temp/${id}-${date}.mp3`);
+		.save(`${__dirname}/../../../media/temp/${title}.mp3`);
 }
 
 exports.run = async (message, args, suffix, client) => {

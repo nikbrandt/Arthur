@@ -260,7 +260,7 @@ let Music = {
 							color: 0x427df4,
 							description: `[${info.title}](https://youtu.be/${id})\nBy [${info.author.name}](${info.author.channel_url})\nLength: ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`,
 							thumbnail: {
-								url: info.iurlhq
+								url: info.thumbnail_url
 							},
 							footer: {
 								text: `Requested by ${message.author.tag}`
