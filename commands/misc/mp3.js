@@ -25,16 +25,16 @@ async function finish(id, message, client) {
 
 	let info = await ytdl.getInfo(id);
 	if (info.livestream) {
-		msg.edit('Ah right, you expect me to download a livestream. Just no, thanks.');
+		msg.edit('Ah right, you expect me to download a livestream. Just no, thanks.').catch();
 		return client.processing.splice(index, 1);
 	}
 
-	if (info.length_seconds > 5400) {
-		msg.edit('I\'ve set a limit of an hour and a half on these songs; I operate best when not on fire.');
+	if (info.length_seconds > 600) {
+		msg.edit('I\'ve set a limit of 10 minutes on songs; my CPU is limited and so is your time.').catch();
 		return client.processing.splice(index, 1);
 	}
 
-	msg.edit('Downloading... This should take about **' + (info.length_seconds / 60 / 4).toFixed(1) + '** minutes to convert..');
+	msg.edit('Downloading... This should take about **' + (info.length_seconds / 60 / 4).toFixed(1) + '** minutes to convert..').catch();
 	let title = info.title.replace(/[^A-z0-9]/g, '_');
 
 	let ytdlStream = ytdl(id, { filter: 'audioonly' });
@@ -61,7 +61,9 @@ async function finish(id, message, client) {
 				fs.unlinkSync(`../media/temp/${title}.mp3`);
 				client.processing.splice(index, 1);
 
-				msg.edit('', {
+				msg.delete().catch();
+
+				message.channel.send(`${message.member.toString()}, your song is converted.`, {
 					embed: {
 						title: info.title,
 						description: `Song is [here](${body}).\nOriginal video [here](https://youtu.be/${id}).\n${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`,
