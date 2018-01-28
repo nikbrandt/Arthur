@@ -8,6 +8,11 @@ let cooldownObj = {};
 module.exports = async (client, message) => {
 	if (message.author.bot) return;
 	if (message.guild && message.channel.permissionsFor(message.guild.me) && !message.channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) return;
+
+	if (message.guild) {
+		let blacklisted = await sql.get(`SELECT count(1) FROM guildUserBlacklist WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`);
+		if (!!blacklisted['count(1)']) return;
+	}
 	
 	if (message.author.melon === true) message.react('🍉').catch();
 
@@ -16,7 +21,7 @@ module.exports = async (client, message) => {
 	if (client.test) prefix = config.testPrefix;
 	else if (message.guild) {
 		let row = await sql.get(`SELECT prefix, levels FROM guildOptions WHERE guildID = '${message.guild.id}'`);
-		 XP.addXP(message, row).catch(console.error);
+		XP.addXP(message, row).catch(console.error);
 		if (row) prefix = row.prefix;
 		else prefix = config.prefix;
 	} else prefix = config.prefix;
