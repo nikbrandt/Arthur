@@ -75,20 +75,24 @@ exports.run = async (message, args, suffix, client, perms) => {
 
 		message.guild.music = {};
 
-		message.member.voiceChannel.join().then(connection => {
-			message.guild.music.playing = true;
+		let connection;
 
-			add(message, id, type, client, true).catch(() => {
-				message.guild.music = {};
-				return message.channel.send('The video you were trying to play is unavailable in the US - sorry.');
-			});
+		try {
+			connection = await message.member.voiceChannel.join();
+		} catch (e) {
+			return message.channel.send('Could not connect to voice channel; ' + e.name);
+		}
 
-			connection.on('error', () => {
-				message.guild.music = {};
-				return message.channel.send('Connection to voice channel not established, please try again.');
-			})
-		}).catch(err => {
-			message.channel.send('Connection not established - ' + err.name);
+		message.guild.music.playing = true;
+
+		add(message, id, type, client, true).catch(() => {
+			message.guild.music = {};
+			return message.channel.send('The video you were trying to play is unavailable in the US - sorry.');
+		});
+
+		connection.on('error', () => {
+			message.guild.music = {};
+			return message.channel.send('Connection to voice channel not established, please try again.');
 		});
 	} else add (message, id, type, client, false).catch(() => {
 		message.channel.send('The video you tried to add is unavailable in the US - sorry.');
