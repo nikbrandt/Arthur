@@ -96,12 +96,12 @@ module.exports = async (client, message) => {
 
 	if (cmdFile.config.userPerms && message.guild) {
 		cmdFile.config.userPerms.forEach(p => {
-			if (!message.channel.permissionsFor(message.guild.me).has(p)) userGo = false;
+			if (!message.channel.permissionsFor(message.member).has(p)) userGo = false;
 		})
 	}
 
 	if (!go) return message.channel.send(`I lack the permission(s) needed to run this command: ${missingPerms.join(', ')}`);
-	if (!userGo) return;
+	if (!userGo) return message.react(':missingpermissions:407054344874229760');
 
 	if (cmdFile.config.cooldown && cooldownObj[message.author.id] && cooldownObj[message.author.id][cmdFile.help.name] && Date.now() - cooldownObj[message.author.id][cmdFile.help.name] < cmdFile.config.cooldown) return message.channel.send(`Whoah there, you\'re being too spicy for me. Could you just chill? Wait another ${Math.ceil((cooldownObj[message.author.id][cmdFile.help.name] + cmdFile.config.cooldown - Date.now()) / 1000)} second(s), would ya?`);
 	if (cmdFile.config.cooldown) {
@@ -115,7 +115,9 @@ module.exports = async (client, message) => {
 		else cooldownObj[message.guild.id] = { [cmdFile.help.name]: Date.now() };
 	}
 
-	if (cmdFile.config.enabled && cmdFile.config.permLevel <= perms) {
+	if (cmdFile.config.permLevel > perms) return message.react(':missingpermissions:407054344874229760');
+
+	if (cmdFile.config.enabled) {
 		try {
 			let resp = cmdFile.run(message, args, suffix, client, perms, prefix);
 			if (resp && typeof resp.then === 'function' && typeof resp.catch === 'function') resp.catch(err => {
