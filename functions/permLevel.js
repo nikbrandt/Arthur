@@ -8,7 +8,7 @@ exports.pl = client => {
 		if (!message.guild) return 1;
 		
 		try {
-			let mod = message.guild.roles.find(r => /mod|moderator.+/.test(r.name.toLowerCase()));
+			let mod = message.guild.roles.find(r => /mod$|moderator.*/.test(r.name.toLowerCase()));
 			let admin = message.guild.roles.find(r => r.name.toLowerCase().includes('admin'));
 			if (message.member.permissions.has('MANAGE_GUILD')) permLevel = 4;
 			if (mod && message.member.roles.has(mod)) permLevel = 3;
@@ -27,7 +27,8 @@ exports.pl = client => {
 		4 - admin
 		5 - manage server perm
 		6 - guild owner
-		10 - bot owner
+		9 - bot owner
+		10 - gymno
 		*/
 	};
 };
