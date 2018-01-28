@@ -10,6 +10,7 @@ exports.run = (message, args, s, client) => {
 	let index = client.processing.length;
 	client.processing.push(message.id + ' - Webshot');
 	let date = Date.now();
+	let sent = false;
 
 	let options = {
 		windowSize: {
@@ -26,13 +27,25 @@ exports.run = (message, args, s, client) => {
 
 	let msg;
 	let del = false;
+	let cancel = false;
 
 	message.channel.send('Loading..').then(m => {
 		if (del) m.delete();
 		else msg = m;
 	});
 
+	setTimeout(function () {
+		if (!sent) {
+			message.channel.send('That website is too powerful! It\'s taken me more than 30 seconds to render, so I\'m canceling the render. Sorry!');
+			cancel = true;
+			client.processing.splice(index, 1);
+			return;
+		}
+	}, 35000) // if webshot not complete in 35 seconds, cancel operation.
+
 	webshot(args[0], `../media/temp/${date}-${message.author.id}.png`, options, err => {
+		if (cancel) return;
+
 		if (err) {
 			if (err.toString().includes('value 1')) message.channel.send('Hey, you gotta provide me with a *valid* url, okay? Your trickery caused you a 10 second cooldown, mister.');
 			if (err.toString().includes('timeout setting')) message.channel.send('That website is too powerful! It\'s taken me more than 30 seconds to render, so I\'m canceling. Sorry!');
@@ -42,12 +55,13 @@ exports.run = (message, args, s, client) => {
 
 		message.channel.send({embed: new Discord.RichEmbed()
 			.setTitle(`Render of ${args[0]}`)
-			.setDescription(`Website can be found [here](${args[0]})\nI am not responsible for the content of this website.`)
+			.setDescription(`Website can be found [here](${ args[0].startsWith('https://') || args[0].startsWith('http://') ? args[0] : 'https://' + args[0] })\nI am not responsible for the content of this website.`)
 			.attachFile(`../media/temp/${date}-${message.author.id}.png`)
 			.setImage(`attachment://${date}-${message.author.id}.png`)
 			.setFooter(`Requested by ${message.author.tag}`)
 			.setColor(0x00c140)
 		}).then(() => {
+			sent = true;
 			if (msg) msg.delete();
 			else del = true;
 			fs.unlinkSync(`../media/temp/${date}-${message.author.id}.png`);

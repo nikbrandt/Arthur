@@ -29,8 +29,8 @@ async function finish(id, message, client) {
 		return client.processing.splice(index, 1);
 	}
 
-	if (info.length_seconds > 600) {
-		msg.edit('I\'ve set a limit of 10 minutes on songs; my CPU is limited and so is your time.').catch();
+	if (info.length_seconds > 1200) {
+		msg.edit('I\'ve set a limit of 20 minutes on songs; my CPU is limited and so is your time.').catch();
 		return client.processing.splice(index, 1);
 	}
 

@@ -29,6 +29,15 @@ function writeStats (client) {
 	fs.writeFileSync('../media/stats/weekly.json', JSON.stringify(client.weeklyStatsObject));
 }
 
+function purgeEmptyVoiceConnections (client) {
+	let connections = client.voiceConnections;
+	if (connections.size === 0) return;
+
+	connections.forEach(conn => {
+		if (!conn.channel.guild.music || !conn.channel.guild.music.queue) conn.disconnect();
+	});
+}
+
 module.exports = client => {
 	console.log(`\n${client.test ? 'Testbot' : 'Arthur'} has started! Currently in ${client.guilds.size} guilds, attempting to serve ${client.users.size} users. (${client.tempStopwatch.elapsedMilliseconds} ms)\n`);
 
@@ -50,6 +59,10 @@ module.exports = client => {
 	client.setInterval(() => {
 		game(client);
 	}, 120000);
+
+	client.setInterval(() => {
+		purgeEmptyVoiceConnections(client);
+	}, 600000)
 
 	if (!client.test) {
 		client.setInterval(() => {

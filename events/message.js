@@ -7,7 +7,7 @@ let cooldownObj = {};
 
 module.exports = async (client, message) => {
 	if (message.author.bot) return;
-	if (message.guild && !message.channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) return;
+	if (message.guild && message.channel.permissionsFor(message.guild.me) && !message.channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) return;
 	
 	if (message.author.melon === true) message.react('🍉').catch();
 
