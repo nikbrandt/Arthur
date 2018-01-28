@@ -22,8 +22,12 @@ exports.run = async (message, args) => {
 
 	let title = rows[num - 1].title;
 	await sql.run(`DELETE FROM musicLikes WHERE userID = '${message.author.id}' AND id = '${rows[num - 1].id}'`);
-
-	message.channel.send(`Tada! Song #${num} (*${title}*) has been removed from your liked songs.`);
+// `Tada! Song #${num} (*${title}*) has been removed from your liked songs.`
+	message.channel.send({embed: {
+		title: 'Song Unliked',
+		description: `${title}`,
+		color: 0x427df4
+	}});
 };
 
 exports.config = {
