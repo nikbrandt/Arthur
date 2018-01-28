@@ -30,6 +30,8 @@ module.exports = async (client, message) => {
 	
 	if (!message.content.toLowerCase().startsWith(prefix) && !message.content.startsWith(`<@${client.user.id}>`) && !message.content.startsWith(`<@!${client.user.id}>`)) {
 		if (message.channel.type !== 'text') {
+			if (/^[^ ]*help$/i.test(message.content)) return message.channel.send('My prefix is `a.`; do `a.help` for help.');
+
 			client.channels.get(config.messageLogChannel).send(
 				{
 					embed: {
@@ -48,7 +50,7 @@ module.exports = async (client, message) => {
 		}
 
 		if (message.content.includes(`<@${client.user.id}>`) || message.content.includes(`<@!${client.user.id}>`)) {
-			client.channels.get('304441662724243457').send(
+			client.channels.get(config.messageLogChannel).send(
 				{
 					embed: {
 						author: {

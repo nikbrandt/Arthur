@@ -152,6 +152,8 @@ let Music = {
 					if (num > array.length) reject('I\'m sorry, but you just haven\'t liked that many songs yet.');
 				}
 
+				if (!array[num - 1]) reject('Not sure why, but I simply couldn\'t find that song. Huh.');
+
 				type = array[num - 1].type;
 				id = array[num - 1].id;
 
@@ -173,6 +175,7 @@ let Music = {
 				}
 
 				let obj = array[num - 1];
+				if (!obj) reject('I couldn\'t find that song for some reason, I\'m sorry.');
 				type = obj.type;
 				id = obj.id;
 
