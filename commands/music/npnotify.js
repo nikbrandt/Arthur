@@ -20,7 +20,7 @@ exports.run = async (message) => { // npNotify column
 exports.config = {
 	enabled: true,
 	permLevel: 3,
-	aliases: ['npn', 'nowplayingn', 'nowplayingnotify']
+	aliases: ['npn', 'nowplayingn', 'nowplayingnotify', 'npnotify']
 };
 
 exports.help = {
