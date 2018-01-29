@@ -15,7 +15,14 @@ function secString(secObj) {
 	return `${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`;
 }
 
-exports.run = (message) => {
+exports.run = (message, args, s, client, permLevel) => {
+	if (args[0] && (args[0] === 'n' || args[0] === 'notify')) {
+		if (permLevel > 2) client.commands.get('npnotify').run(message);
+		else message.react(':missingpermissions:407054344874229760').catch();
+
+		return;
+	}
+
 	if (!message.guild.music || !message.guild.music.queue) return message.channel.send('Now playing: The sound of silence.');
 
 	if (message.guild.music.queue[0].type === 1) { // YouTube video

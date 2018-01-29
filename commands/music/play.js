@@ -18,8 +18,10 @@ let add = async (message, id, type, client, first) => {
 		return message.channel.send(err);
 	}
 
-	let queueObj = { type: type, person: message.author, id: id, meta: obj.meta };
+	let queueObj = { type: type, person: message.author, id: id, meta: obj.meta, embed: obj.embed };
 	if (obj.embed) message.channel.send({embed: obj.embed});
+
+	message.guild.music.textChannel = message.channel;
 
 	if (first) {
 		message.guild.music.queue = [ queueObj ];
@@ -44,7 +46,6 @@ exports.run = async (message, args, suffix, client, perms) => {
 			soundcloud/discordfm in the future
 
 
-
 	music contains:
 		playing: bool
 		channel: Discord.VoiceChannel
@@ -56,7 +57,9 @@ exports.run = async (message, args, suffix, client, perms) => {
 				title: title to display as queue title
 				queueName: title to display in queue when not title
 				url: url to display w/ title
+			embed: embed message if applicable
 			voteSkips: array (all people who have voted to skip)
+		textChannel: channel in which last play message was
 	 */
 
 	let object;

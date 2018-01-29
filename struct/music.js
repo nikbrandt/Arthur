@@ -23,7 +23,11 @@ function secSpread(sec) {
 }
 
 let Music = {
-	next: (guild, first) => {
+	next: async (guild, first) => {
+		let notify = await sql.get(`SELECT npNotify FROM guildOptions WHERE guildID = '${guild.id}'`);
+		if (!notify) notify = 'false';
+		else notify = notify.npNotify;
+
 		let music = guild.music;
 
 		if (!music.queue) {
@@ -55,6 +59,12 @@ let Music = {
 			if (!guild.voiceConnection) {
 				guild.music = {};
 				return;
+			}
+
+			if (notify === 'true' && music.queue[0].embed && !first) {
+				let embed = music.queue[0].embed;
+				embed.author.name = 'Now Playing';
+				music.textChannel.send({ embed });
 			}
 
 			if (music.queue[0].type === 1) {
