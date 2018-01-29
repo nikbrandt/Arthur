@@ -11,12 +11,19 @@ function secSpread(sec) {
 	}
 }
 
+function secString(secObj) {
+	return `${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`;
+}
+
 exports.run = (message) => {
 	if (!message.guild.music || !message.guild.music.queue) return message.channel.send('Now playing: The sound of silence.');
 
 	if (message.guild.music.queue[0].type === 1) { // YouTube video
 		ytdl.getInfo(message.guild.music.queue[0].id).then(info => {
 			let secObj = secSpread(info.length_seconds);
+
+			let data = message.guild.voiceConnection.player.streamingData;
+			let remainingTime = Math.round((Date.now() - (data.startTime - data.pausedTime)) / 1000);
 
 			message.channel.send({
 				embed: {
@@ -25,7 +32,9 @@ exports.run = (message) => {
 						icon_url: info.author.avatar
 					},
 					color: 0x427df4,
-					description: `[${info.title}](https://www.youtu.be/${message.guild.music.queue[0].id})\nBy [${info.author.name}](${info.author.channel_url})\nLength: ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`,
+					description: `[${info.title}](https://www.youtu.be/${message.guild.music.queue[0].id})
+By [${info.author.name}](${info.author.channel_url})
+**${secString(secSpread(remainingTime))}** of **${secString(secObj)}**`,
 					thumbnail: {
 						url: info.iurlhq
 					},
