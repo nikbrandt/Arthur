@@ -82,6 +82,7 @@ module.exports = async (client, message) => {
 	const cmdFile = client.commands.get(command) || client.commands.get(client.aliases.get(command));
 
 	if (!cmdFile) return;
+	if (!cmdFile.config.enabled) return;
 
 	let go = true;
 	let userGo = true;
@@ -89,7 +90,7 @@ module.exports = async (client, message) => {
 
 	if (cmdFile.config.perms && message.guild) {
 		cmdFile.config.perms.forEach(p => {
-			if (!message.channel.permissionsFor(message.guild.me).has(p)) {
+			if (!message.channel.permissionsFor(message.guild.me) || !message.channel.permissionsFor(message.guild.me).has(p)) {
 				go = false;
 				missingPerms.push(p.toLowerCase())
 			}
@@ -119,32 +120,30 @@ module.exports = async (client, message) => {
 
 	if (cmdFile.config.permLevel > perms) return message.react(':missingpermissions:407054344874229760');
 
-	if (cmdFile.config.enabled) {
-		try {
-			let resp = cmdFile.run(message, args, suffix, client, perms, prefix);
-			if (resp && typeof resp.then === 'function' && typeof resp.catch === 'function') resp.catch(err => {
-				console.error(`Command ${command} has failed to run!\n${err.stack}`)
-			});
-		} catch (err) {
-			console.error(`Command ${command} has failed to run!\n${err.stack}`);
-		}
+	try {
+		let resp = cmdFile.run(message, args, suffix, client, perms, prefix);
+		if (resp && typeof resp.then === 'function' && typeof resp.catch === 'function') resp.catch(err => {
+			console.error(`Command ${command} has failed to run!\n${err.stack}`)
+		});
+	} catch (err) {
+		console.error(`Command ${command} has failed to run!\n${err.stack}`);
+	}
 
-		if (message.author.id !== client.owner.id) {
-			let actualCommand = client.aliases.get(command) || command;
+	if (message.author.id !== client.owner.id) {
+		let actualCommand = client.aliases.get(command) || command;
 
-			if (!client.commandStatsObject[actualCommand]) client.commandStatsObject[actualCommand] = { uses: 1 };
-			else client.commandStatsObject[actualCommand].uses++;
+		if (!client.commandStatsObject[actualCommand]) client.commandStatsObject[actualCommand] = { uses: 1 };
+		else client.commandStatsObject[actualCommand].uses++;
 
-			let weekAndYear = moment().format('W/YYYY');
-			let date = moment().format('M/D/YYYY');
+		let weekAndYear = moment().format('W/YYYY');
+		let date = moment().format('M/D/YYYY');
 
-			if (!client.dailyStatsObject[date]) client.dailyStatsObject[date] = {};
-			if (!client.dailyStatsObject[date][actualCommand]) client.dailyStatsObject[date][actualCommand] = 1;
-			else client.dailyStatsObject[date][actualCommand]++;
+		if (!client.dailyStatsObject[date]) client.dailyStatsObject[date] = {};
+		if (!client.dailyStatsObject[date][actualCommand]) client.dailyStatsObject[date][actualCommand] = 1;
+		else client.dailyStatsObject[date][actualCommand]++;
 
-			if (!client.weeklyStatsObject[weekAndYear]) client.weeklyStatsObject[weekAndYear] = {};
-			if (!client.weeklyStatsObject[weekAndYear][actualCommand]) client.weeklyStatsObject[weekAndYear][actualCommand] = 1;
-			else client.weeklyStatsObject[weekAndYear][actualCommand]++;
-		}
+		if (!client.weeklyStatsObject[weekAndYear]) client.weeklyStatsObject[weekAndYear] = {};
+		if (!client.weeklyStatsObject[weekAndYear][actualCommand]) client.weeklyStatsObject[weekAndYear][actualCommand] = 1;
+		else client.weeklyStatsObject[weekAndYear][actualCommand]++;
 	}
 };
