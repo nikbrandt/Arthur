@@ -122,6 +122,7 @@ module.exports = async (client, message) => {
 
 	try {
 		let resp = cmdFile.run(message, args, suffix, client, perms, prefix);
+		console.log(`${moment().format('MM-DD H:mm:ss')} - Command ${command} run.`);
 		if (resp && typeof resp.then === 'function' && typeof resp.catch === 'function') resp.catch(err => {
 			console.error(`Command ${command} has failed to run!\n${err.stack}`)
 		});
