@@ -82,7 +82,7 @@ module.exports = async (client, message) => {
 	const cmdFile = client.commands.get(command) || client.commands.get(client.aliases.get(command));
 
 	if (!cmdFile) return;
-	if (!cmdFile.config.enabled) return;
+	if (!cmdFile.config.enabled) return message.channel.send('This command is currently disabled. Join the support server for more information.');
 
 	let go = true;
 	let userGo = true;
