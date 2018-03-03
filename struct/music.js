@@ -68,7 +68,7 @@ let Music = {
 			}
 
 			if (music.queue[0].type === 1) {
-				const stream = ytdl(music.queue[0].id, { filter: 'audioonly' });
+				const stream = ytdl(music.queue[0].id, { quality: 'highestaudio' });
 				dispatcher = guild.voiceConnection.playStream(stream, { volume: 0.3, passes: 2, bitrate: 'auto' });
 
 				dispatcher.on('end', () => {

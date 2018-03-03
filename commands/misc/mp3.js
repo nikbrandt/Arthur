@@ -34,14 +34,14 @@ async function finish(id, message, client) {
 		return client.processing.splice(index, 1);
 	}
 
-	msg.edit('Downloading... This should take about **' + (info.length_seconds / 60 / 4).toFixed(1) + '** minutes to convert..').catch();
+	msg.edit('Downloading... This should take about **' + (info.length_seconds / 15).toFixed(0) + '** seconds to convert..').catch();
 	let title = info.title.replace(/[^A-z0-9]/g, '_');
 
-	let ytdlStream = ytdl(id, { filter: 'audioonly' });
+	let ytdlStream = ytdl(id, { quality: 'highestaudio' });
 
 	let secObj = secSpread(info.length_seconds);
 
-	ffmpeg(ytdlStream)
+	ffmpeg(ytdlStream, {priority: 20})
 		.duration(info.length_seconds + 1)
 		.audioBitrate(128)
 		.on('end', () => {
@@ -78,6 +78,7 @@ async function finish(id, message, client) {
 				});
 			});
 		})
+		.audioCodec('libmp3lame')
 		.save(`${__dirname}/../../../media/temp/${title}.mp3`);
 }
 

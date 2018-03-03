@@ -5,8 +5,8 @@ const statusWebhookClient = new Discord.WebhookClient(config.statusLog.id, confi
 const errorWebhookClient = new Discord.WebhookClient(config.errorLog.id, config.errorLog.token);
 const fs = require('fs');
 
-const statusUpdate  = (embed) => {
-	if (!(process.argv[2] && process.argv[2] === 'test')) statusWebhookClient.send({ embeds: [ embed ] }).catch(console.error);
+const statusUpdate  = (embed, restart) => {
+	if (!(process.argv[2] && process.argv[2] === 'test')) statusWebhookClient.send({ embeds: [ embed ] }).then(() => {if (restart) process.exit(0)}).catch(console.error);
 };
 
 const errorLog = (error, stack, code) => {
@@ -32,6 +32,11 @@ exports.load = client => {
 	stopwatch.stop();
 
 	client.on('debug', d => {
+		if (d.includes('Session invalidated')) statusUpdate({
+			title: 'Session Invalidated, Restarting',
+			timestamp: new Date.toISOString(),
+			color: 0xf47742,
+		}, true)
 		if (!d.includes('eartbeat')) console.log(d);
 	});
 

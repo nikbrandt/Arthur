@@ -54,7 +54,7 @@ exports.run = (message, args, s, client) => {
 		}
 
 		message.channel.send({embed: new Discord.RichEmbed()
-			.setTitle(`Render of ${args[0]}`)
+			.setTitle(`Render of ${args[0].length > 245 ? args[0].slice(0, -(args[0].length - 245)) : args[0]}`)
 			.setDescription(`Website can be found [here](${ args[0].startsWith('https://') || args[0].startsWith('http://') ? args[0] : 'https://' + args[0] })\nI am not responsible for the content of this website.`)
 			.attachFile(`../media/temp/${date}-${message.author.id}.png`)
 			.setImage(`attachment://${date}-${message.author.id}.png`)
