@@ -33,7 +33,7 @@ exports.run = (message, args, suffix, client) => {
 		: footer,
 		config.trello.board
 	).then(() => {
-		message.channel.send(`Thanks, your suggestion might be added someday :thumbsup:\nCheck the support server - ${client.config.info.guildLink} to see the if your suggestion gets accepted.`);
+		message.channel.send(`Thanks, your suggestion might be added someday :thumbsup:${message.guild && message.guild.name === 'Arthur Official Discord' ? '' : `\nCheck the support server - ${client.config.info.guildLink} to see the if your suggestion gets accepted.`}`);
 	}).catch(err => {
 		message.channel.send(`I couldn't add the card for some reason.. Heck man that's weird, could you report it on my support server - ${client.config.info.guildLink}\n${err}`)
 	})
@@ -41,7 +41,7 @@ exports.run = (message, args, suffix, client) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 2,
+	permLevel: 1,
 	aliases: ['suggestion', 'iwant']
 };
 

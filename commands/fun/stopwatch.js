@@ -26,7 +26,7 @@ exports.run = (message, args, s, client, permLevel) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 2,
+	permLevel: 1,
 	aliases: []
 };
 

@@ -14,7 +14,7 @@ exports.run = (message, args, suffix) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 2,
+	permLevel: 1,
 	aliases: ['flip']
 };
 

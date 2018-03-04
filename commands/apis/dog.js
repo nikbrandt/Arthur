@@ -17,7 +17,7 @@ exports.run = message => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 2,
+	permLevel: 1,
 	aliases: ['doggo', 'pupper', 'puppy', 'pup', 'woof', 'bark', 'doge'],
 	perms: ['EMBED_LINKS']
 };

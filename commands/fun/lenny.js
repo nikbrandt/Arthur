@@ -4,7 +4,7 @@ exports.run = message => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 2,
+	permLevel: 1,
 	aliases: []
 };
 

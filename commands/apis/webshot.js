@@ -72,7 +72,7 @@ exports.run = (message, args, s, client) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 2,
+	permLevel: 1,
 	aliases: ['screenshot', 'ss'],
 	perms: ['ATTACH_FILES'],
 	cooldown: 10000

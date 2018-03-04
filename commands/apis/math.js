@@ -23,7 +23,7 @@ exports.run = (message, args, suffix, client) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 2,
+	permLevel: 1,
 	aliases: ['calc'],
 	cooldown: 2000,
 	perms: ['EMBED_LINKS']

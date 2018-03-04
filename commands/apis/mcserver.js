@@ -54,7 +54,7 @@ exports.run = async (message, args, s, client) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 2,
+	permLevel: 1,
 	aliases: ['mcs', 'server', 'minecraftserver']
 };
 
