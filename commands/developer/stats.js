@@ -119,16 +119,16 @@ exports.run = (message, args, suffix, client) => {
 			text = moment().format('wo [week of] YYYY');
 			break;
 		default:
-			text = 'All time'
+			text = 'All time';
 			break;
-	};
+	}
 	curWidth = 800 - ctx.measureText(text).width;
 	ctx.font = '40px RobotoLight';
 	ctx.fillText(text, curWidth, 150);
 
 	let lastEnd = -1.57; // RAM pie chart
 	let mem = process.memoryUsage().rss * 1.0e-6;
-	let total = 400;
+	let total = 3000;
 	let data = [mem, total - mem];
 	let colors = ['#fff', accent];
 
