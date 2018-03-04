@@ -8,7 +8,7 @@ exports.run = async (message, args, asdf, client) => {
 			name: 'Arthur - Yet another Discord bot',
 			icon_url: 'https://cdn.discordapp.com/attachments/219218693928910848/361405047608705025/arthur_but_hot.png'
 		},
-		description: `A rewrite of Marvin, with tons of.. average features.\n [Invite](${invite}) | [GitHub](https://github.com/Gymnophoria/Arthur) | [Support Server](${client.config.info.guildLink}) | [Trello](https://trello.com/b/wt7ptHpC/arthur)`,
+		description: `A rewrite of Marvin, with tons of.. average features.\n [Invite](${invite}) | [GitHub](https://github.com/Gymnophoria/Arthur) | [Support Server](${client.config.info.guildLink}) | [Trello](https://trello.com/b/wt7ptHpC/arthur) | [TOS](https://docs.google.com/document/d/1kbGlTbG-SDcO5AiN2mWbhJNr7AyOZi26n3Nt9duI95w/edit?usp=sharing)`,
 		color: 0x00c140,
 		fields: [
 			{
