@@ -62,17 +62,17 @@ module.exports = client => {
 
 	client.setInterval(() => {
 		purgeEmptyVoiceConnections(client);
-	}, 600000)
+	}, 600000);
 
 	if (!client.test) {
 		client.setInterval(() => {
 			writeStats(client);
-		}, 30000);
+		}, 30000);/*
 
 		dbots.getLikes(client);
 		client.setInterval(() => {
 			dbots.getLikes(client);
-		}, 600000);
+		}, 600000);*/
 	}
 
 	statusUpdate({

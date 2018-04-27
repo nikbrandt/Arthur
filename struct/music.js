@@ -276,7 +276,7 @@ let Music = {
 						return reject('There seems to have been an error retrieving info for that video - \n' + err.stack.split('\n')[0]);
 					});
 					if (!info) return reject('I couldn\'t gather information on this video - this might be because it is not available in the US, sorry!');
-					if (info.livestream === '1' || info.live_playback === '1' || (info.length_seconds > 1800 && !client.dbotsUpvotes.includes(message.author.id))) reject(info.length_seconds > 4200 ? 'Hey there my dude that\'s a bit much, I don\'t wanna play a song longer than 30 minutes for ya...\nUnless you go upvote me (https://discordbots.org/bot/329085343800229889/vote).. *shameless self promotion* (upvotes can take up to 10 minutes to register, be patient)' : 'Trying to play a livestream, eh? I can\'t do that, sorry.. ;-;');
+					if (info.livestream === '1' || info.live_playback === '1' || info.length_seconds > 7200 ) reject(info.length_seconds > 7200 ? 'Hey there my dude that\'s a bit much, I don\'t wanna play a song longer than 2 hours for ya.' : 'Trying to play a livestream, eh? I can\'t do that, sorry.. ;-;');
 
 					let secObj = secSpread(info.length_seconds);
 					resolve({
@@ -356,6 +356,7 @@ let Music = {
 					let meta = await soundcloud.getInfo(id).catch(err => {
 						return reject (`I couldn't retrieve info for that song - ${err.stack.split('\n')[0]}`);
 					});
+					if (meta.duration > 7200000) return reject ('I\'d rather not play a song longer than two hours long, sorry.');
 
 					let timeObj = secSpread(Math.round(meta.duration / 1000));
 
