@@ -77,7 +77,7 @@ exports.run = (message, args, suffix, client) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 1,
+	permLevel: 2,
 	aliases: []
 };
 

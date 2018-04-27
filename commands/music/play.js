@@ -42,8 +42,9 @@ exports.run = async (message, args, suffix, client, perms) => {
 		2 - Uploaded File
 		3 - Local File
 		4 - File from URL
+		5 - SoundCloud
 
-			soundcloud/discordfm in the future
+			discordfm in the future
 
 
 	music contains:

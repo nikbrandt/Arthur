@@ -6,8 +6,10 @@ const isThatAnMp3 = require('is-mp3');
 const orPerhapsOgg = require('is-ogg');
 const readChunk = require('read-chunk');
 const search = require('youtube-search');
+const soundcloud = require('./soundcloud');
 
 const YTRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([A-z0-9_-]{11})(&.*)?$/;
+const soundcloudRegex = /^(https:\/\/)?soundcloud.com\/.+\/[^/]+$/;
 const songRegex = /\/([^/]+)\.(mp3|ogg)$/;
 const discordRegex = /.*\/\/.*\/.*\/(.*)\.(mp3|ogg)/;
 
@@ -118,6 +120,17 @@ let Music = {
 				dispatcher.on('start', () => {
 					guild.voiceConnection.player.streamingData.pausedTime = 0;
 				});
+			} else if (music.queue[0].type === 5) {
+				const stream = soundcloud(music.queue[0].meta.id);
+				dispatcher = guild.voiceConnection.playStream(stream, { volume: 0.3, passes: 2, bitrate: 'auto' });
+
+				dispatcher.on('end', () => {
+					Music.next(guild);
+				});
+
+				dispatcher.on('start', () => {
+					guild.voiceConnection.player.streamingData.pausedTime = 0;
+				});
 			}
 		}, 50);
 	},
@@ -214,6 +227,13 @@ let Music = {
 					id: id,
 					type: type
 				} );
+			} else if (soundcloudRegex.test(args[0])) {
+				type = 5;
+				id = args[0];
+
+				resolve ( {
+					id, type
+				} );
 			} else if (args[0].endsWith('.mp3') || args[0].endsWith('.ogg')) {
 				type = 4;
 				id = args[0];
@@ -231,8 +251,8 @@ let Music = {
 
 				search(suffix, sOpts, (err, results) => {
 					if (err || !results || !results[0]) {
-						if (message.guild.voiceConnection && !message.guild.music && !message.guild.music.queue[0]) message.guild.voiceConnection.disconnect();
-						return reject('The video you searched for does not exist.. rip');
+						if (message.guild.voiceConnection && !message.guild.music && !message.guild.music.queue[0]) message.guild.voiceConnection.disconnect(); // add support for SC soonish™
+						return reject('The song you searched for does not exist.. rip');
 					}
 
 					id = results[0].id;
@@ -256,7 +276,7 @@ let Music = {
 						return reject('There seems to have been an error retrieving info for that video - \n' + err.stack.split('\n')[0]);
 					});
 					if (!info) return reject('I couldn\'t gather information on this video - this might be because it is not available in the US, sorry!');
-					if (info.livestream === '1' || info.live_playback === '1' || (info.length_seconds > 1800 && !client.dbotsUpvotes.includes(message.author.id))) reject(info.length_seconds > 4200 ? 'Hey there my dude that\'s a bit much, I don\'t wanna play a song longer than 30 minutes for ya...\nUnless you go upvote me (https://discordbots.org/bot/329085343800229889).. *shameless self promotion* (upvotes can take up to 10 minutes to register, be patient)' : 'Trying to play a livestream, eh? I can\'t do that, sorry.. ;-;');
+					if (info.livestream === '1' || info.live_playback === '1' || (info.length_seconds > 1800 && !client.dbotsUpvotes.includes(message.author.id))) reject(info.length_seconds > 4200 ? 'Hey there my dude that\'s a bit much, I don\'t wanna play a song longer than 30 minutes for ya...\nUnless you go upvote me (https://discordbots.org/bot/329085343800229889/vote).. *shameless self promotion* (upvotes can take up to 10 minutes to register, be patient)' : 'Trying to play a livestream, eh? I can\'t do that, sorry.. ;-;');
 
 					let secObj = secSpread(info.length_seconds);
 					resolve({
@@ -327,6 +347,37 @@ let Music = {
 							description: `[${filename}](${id})`,
 							footer: {
 								text: `Added by ${message.author.tag}`
+							}
+						}
+					});
+
+					break;
+				case 5: // soundcloud
+					let meta = await soundcloud.getInfo(id).catch(err => {
+						return reject (`I couldn't retrieve info for that song - ${err.stack.split('\n')[0]}`);
+					});
+
+					let timeObj = secSpread(Math.round(meta.duration / 1000));
+
+					resolve ({
+						meta: {
+							url: id,
+							title: `${meta.title} (${timeObj.h ? `${timeObj.h}h ` : ''}${timeObj.m ? `${timeObj.m}m ` : ''}${timeObj.s}s)`,
+							queueName: `[${meta.title}](${id}) - ${timeObj.h ? `${timeObj.h}h ` : ''}${timeObj.m ? `${timeObj.m}m ` : ''}${timeObj.s}s`,
+							id: meta.id
+						},
+						embed: {
+							author: {
+								name: title,
+								icon_url: meta.user.avatar_url
+							},
+							color: 0x427df4,
+							description: `[${meta.title}](${id})\nBy ${meta.user.username}\nLength: ${timeObj.h ? `${timeObj.h}h ` : ''}${timeObj.m ? `${timeObj.m}m ` : ''}${timeObj.s}s`,
+							thumbnail: {
+								url: meta.artwork_url
+							},
+							footer: {
+								text: `Requested by ${message.author.tag}`
 							}
 						}
 					});
