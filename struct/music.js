@@ -243,16 +243,36 @@ let Music = {
 					type: type
 				} );
 			} else { //  if (!YTRegex.test(args[0]))
-				let sOpts = {
+				let youtubeSearch = {
 					maxResults: 1,
 					key: client.config.ytkey,
 					type: 'video'
 				};
 
-				search(suffix, sOpts, (err, results) => {
+				if (suffix.includes('-s') || suffix.includes('-soundcloud')) {
+					let term = suffix.replace(/-s(oundcloud)?/g, '');
+
+					let result = await soundcloud.search(term).catch(err => {
+						return reject(err);
+					});
+
+					resolve ( {
+						id: result.permalink_url,
+						type: 5
+					} );
+				}
+
+				search(suffix, youtubeSearch, (err, results) => {
 					if (err || !results || !results[0]) {
-						if (message.guild.voiceConnection && !message.guild.music && !message.guild.music.queue[0]) message.guild.voiceConnection.disconnect(); // add support for SC soonish™
-						return reject('The song you searched for does not exist.. rip');
+						soundcloud.search(suffix).then(result => {
+							resolve ( {
+								id: result.permalink_url,
+								type: 5
+							});
+						}).catch(() => {
+							if (message.guild.voiceConnection && !message.guild.music && !message.guild.music.queue[0]) message.guild.voiceConnection.disconnect();
+							return reject('The song you searched for does not exist on YouTube or SoundCloud.. rip');
+						})
 					}
 
 					id = results[0].id;
@@ -271,7 +291,7 @@ let Music = {
 			let filename;
 
 			switch (type) {
-				case 1:
+				case 1: // youtube
 					let info = await ytdl.getInfo(id).catch(err => {
 						return reject('There seems to have been an error retrieving info for that video - \n' + err.stack.split('\n')[0]);
 					});
@@ -290,7 +310,7 @@ let Music = {
 								name: title,
 								icon_url: info.author.avatar
 							},
-							color: 0x427df4,
+							color: 0xff0000,
 							description: `[${info.title}](https://youtu.be/${id})\nBy [${info.author.name}](${info.author.channel_url})\nLength: ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`,
 							thumbnail: {
 								url: info.thumbnail_url
@@ -302,7 +322,7 @@ let Music = {
 					});
 
 					break;
-				case 2:
+				case 2: // uploaded file
 					filename = id.match(discordRegex)[1];
 
 					resolve({
@@ -313,7 +333,7 @@ let Music = {
 						},
 						embed: {
 							title: title,
-							color: 0x427df4,
+							color: 0x7289DA,
 							description: `[${filename}](${id}) has been added to the queue.\n*If mp3/ogg file is fake, it will simply be skipped*`,
 							footer: {
 								text: `Requested by ${message.author.tag}`
@@ -322,7 +342,7 @@ let Music = {
 					});
 
 					break;
-				case 3:
+				case 3: // sound effect
 					resolve({
 						meta: {
 							title: `Sound effect - ${id}`,
@@ -332,7 +352,7 @@ let Music = {
 					});
 
 					break;
-				case 4:
+				case 4: // custom file
 					filename = id.match(songRegex)[1];
 
 					resolve({
@@ -343,7 +363,7 @@ let Music = {
 						},
 						embed: {
 							title: title,
-							color: 0x427df4,
+							color: 0xff5900,
 							description: `[${filename}](${id})`,
 							footer: {
 								text: `Added by ${message.author.tag}`
@@ -372,7 +392,7 @@ let Music = {
 								name: title,
 								icon_url: meta.user.avatar_url
 							},
-							color: 0x427df4,
+							color: 0xff8800,
 							description: `[${meta.title}](${id})\nBy ${meta.user.username}\nLength: ${timeObj.h ? `${timeObj.h}h ` : ''}${timeObj.m ? `${timeObj.m}m ` : ''}${timeObj.s}s`,
 							thumbnail: {
 								url: meta.artwork_url
