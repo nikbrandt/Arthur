@@ -10,7 +10,7 @@ const soundcloud = require('./soundcloud');
 
 const YTRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([A-z0-9_-]{11})(&.*)?$/;
 const soundcloudRegex = /^(https:\/\/)?soundcloud.com\/.+\/[^/]+$/;
-const songRegex = /\/([^/]+)\.(mp3|ogg)$/;
+const songRegex = /^https?:\/\/.+\/([^/]+)\.(mp3|ogg)$/;
 const discordRegex = /.*\/\/.*\/.*\/(.*)\.(mp3|ogg)/;
 
 function secSpread(sec) {
@@ -69,7 +69,7 @@ let Music = {
 				music.textChannel.send({ embed });
 			}
 
-			if (music.queue[0].type === 1) {
+			if (music.queue[0].type === 1) { // youtube
 				const stream = ytdl(music.queue[0].id, { quality: 'highestaudio' });
 				dispatcher = guild.voiceConnection.playStream(stream, { volume: 0.3, passes: 2, bitrate: 'auto' });
 
@@ -80,7 +80,7 @@ let Music = {
 				dispatcher.on('start', () => {
 					guild.voiceConnection.player.streamingData.pausedTime = 0;
 				});
-			} else if (music.queue[0].type === 2 || music.queue[0].type === 4) {
+			} else if (music.queue[0].type === 4) { // from URL
 				let date = Date.now();
 				let rng = Math.floor(Math.random() * 10000);
 				let file = `../media/temp/${rng}-${date}.${music.queue[0].id.match(/\.([^.]+)$/)[1]}`;
@@ -109,7 +109,7 @@ let Music = {
 						guild.voiceConnection.player.streamingData.pausedTime = 0;
 					});
 				})
-			} else if (music.queue[0].type === 3) {
+			} else if (music.queue[0].type === 3) { // local file
 				const stream = fs.createReadStream(`../media/sounds/${music.queue[0].id}.mp3`);
 				dispatcher = guild.voiceConnection.playStream(stream, { volume: 0.3, passes: 2, bitrate: 'auto' });
 
@@ -120,16 +120,22 @@ let Music = {
 				dispatcher.on('start', () => {
 					guild.voiceConnection.player.streamingData.pausedTime = 0;
 				});
-			} else if (music.queue[0].type === 5) {
-				const stream = soundcloud(music.queue[0].meta.id);
-				dispatcher = guild.voiceConnection.playStream(stream, { volume: 0.3, passes: 2, bitrate: 'auto' });
+			} else if (music.queue[0].type === 5) { // soundcloud
+				let id = Date.now() + guild.id;
+				let writeStream = soundcloud(music.queue[0].meta.id).pipe(fs.createWriteStream(`../media/temp/${id}.mp3`));
 
-				dispatcher.on('end', () => {
-					Music.next(guild);
-				});
+				writeStream.on('finish', () => {
+					let scStream = fs.createReadStream(`../media/temp/${id}.mp3`);
+					dispatcher = guild.voiceConnection.playStream(scStream, { volume: 0.3, passes: 2, bitrate: 'auto' });
 
-				dispatcher.on('start', () => {
-					guild.voiceConnection.player.streamingData.pausedTime = 0;
+					dispatcher.on('end', () => {
+						fs.unlinkSync(`../media/temp/${id}.mp3`);
+						Music.next(guild);
+					});
+
+					dispatcher.on('start', () => {
+						guild.voiceConnection.player.streamingData.pausedTime = 0;
+					});
 				});
 			}
 		}, 50);
@@ -151,10 +157,10 @@ let Music = {
 			let id;
 
 			if (message.attachments.size) {
-				type = 2;
+				type = 4;
 				id = message.attachments.first().url;
 
-				if (!id.endsWith('.mp3') && !id.endsWith('.ogg')) reject('I only support playback of mp3\'s and oggs for now. Go ahead and message Gymnophoria#8146 if you need another audio file type supported.');
+				if (!id.endsWith('.mp3') && !id.endsWith('.ogg')) reject('I only support playback of mp3\'s and oggs for now. Go ahead and type `a.suggest music in <file type> format pls` if you need another audio file type supported.');
 				if (message.attachments.first().filesize < 25000) reject('Your file isn\'t powerful enough! I need one bigger than 25 KB, thanks.');
 
 				resolve( {
@@ -235,6 +241,8 @@ let Music = {
 					id, type
 				} );
 			} else if (args[0].endsWith('.mp3') || args[0].endsWith('.ogg')) {
+				if (!songRegex.test(args[0])) return reject('Please provide a valid URL. (mp3/ogg only supported, suggest more formats if needed)');
+
 				type = 4;
 				id = args[0];
 
@@ -288,7 +296,6 @@ let Music = {
 
 	getInfo: (type, id, message, client, title) => {
 		return new Promise(async (resolve, reject) => {
-			let filename;
 
 			switch (type) {
 				case 1: // youtube
@@ -322,7 +329,7 @@ let Music = {
 					});
 
 					break;
-				case 2: // uploaded file
+				/*case 2: // uploaded file
 					filename = id.match(discordRegex)[1];
 
 					resolve({
@@ -341,7 +348,7 @@ let Music = {
 						}
 					});
 
-					break;
+					break;*/
 				case 3: // sound effect
 					resolve({
 						meta: {
@@ -353,7 +360,8 @@ let Music = {
 
 					break;
 				case 4: // custom file
-					filename = id.match(songRegex)[1];
+					let filename = id.match(songRegex)[1];
+					if (!filename) return reject('Could not parse URL, please provide a valid \'un.');
 
 					resolve({
 						meta: {
@@ -363,10 +371,10 @@ let Music = {
 						},
 						embed: {
 							title: title,
-							color: 0xff5900,
+							color: 0x7289DA,
 							description: `[${filename}](${id})`,
 							footer: {
-								text: `Added by ${message.author.tag}`
+								text: `Added by ${message.author.tag} | Invalid URLs will be skipped`
 							}
 						}
 					});

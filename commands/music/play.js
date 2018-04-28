@@ -39,8 +39,8 @@ exports.run = async (message, args, suffix, client, perms) => {
 	/*
 			types
 		1 - YouTube
-		2 - Uploaded File
-		3 - Local File
+		2 - Uploaded File (being deprecated to type 4)
+		3 - Local File (bot filesystem)
 		4 - File from URL
 		5 - SoundCloud
 

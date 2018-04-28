@@ -38,10 +38,10 @@ exports.run = (message, args, s, client, permLevel) => {
 						name: 'Now Playing',
 						icon_url: info.author.avatar
 					},
-					color: 0x427df4,
+					color: 0xff0000,
 					description: `[${info.title}](https://www.youtu.be/${message.guild.music.queue[0].id})
 By [${info.author.name}](${info.author.channel_url})
-**${secString(secSpread(remainingTime))}** of **${secString(secObj)}**`,
+${secString(secSpread(remainingTime))} of ${secString(secObj)}`,
 					thumbnail: {
 						url: info.iurlhq
 					},
@@ -51,6 +51,15 @@ By [${info.author.name}](${info.author.channel_url})
 				}
 			});
 		});
+	} else if (message.guild.music.queue[0].type === 5) {
+		let data = message.guild.voiceConnection.player.streamingData;
+		let remainingTime = Math.round((Date.now() - (data.startTime - data.pausedTime)) / 1000);
+
+		let embed = message.guild.music.queue[0].embed;
+		embed.author.name = 'Now Playing';
+		embed.description = embed.description.replace(/Length: /g, `**${secString(secSpread(remainingTime))}** of `);
+
+		message.channel.send({embed})
 	} else if (message.guild.music.queue[0].type >= 2) { // User-provided file
 		message.channel.send({
 			embed: {
@@ -58,7 +67,7 @@ By [${info.author.name}](${info.author.channel_url})
 					name: 'Now Playing'
 				},
 				url: message.guild.music.queue[0].meta.url,
-				color: 0x427df4,
+				color: 0x7289DA,
 				description: message.guild.music.queue[0].meta.title
 			}
 		});
