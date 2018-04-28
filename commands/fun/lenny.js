@@ -1,5 +1,5 @@
 exports.run = (message, a, suffix) => {
-	message.channel.send('( ͡° ͜ʖ ͡°)' + suffix ? suffix : '');
+	message.channel.send(suffix ? suffix : '' + '( ͡° ͜ʖ ͡°)');
 };
 
 exports.config = {
