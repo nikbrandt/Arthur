@@ -11,7 +11,6 @@ const soundcloud = require('./soundcloud');
 const YTRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([A-z0-9_-]{11})(&.*)?$/;
 const soundcloudRegex = /^(https:\/\/)?soundcloud.com\/.+\/[^/]+$/;
 const songRegex = /^https?:\/\/.+\/([^/]+)\.(mp3|ogg)$/;
-const discordRegex = /.*\/\/.*\/.*\/(.*)\.(mp3|ogg)/;
 
 function secSpread(sec) {
 	let hours = Math.floor(sec / 3600);
