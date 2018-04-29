@@ -51,7 +51,7 @@ ${secString(secSpread(remainingTime))} of ${secString(secObj)}`,
 				}
 			});
 		});
-	} else if (message.guild.music.queue[0].type === 5) {
+	} else if (message.guild.music.queue[0].type === 5) { // soundcloud
 		let data = message.guild.voiceConnection.player.streamingData;
 		let remainingTime = Math.round((Date.now() - (data.startTime - data.pausedTime)) / 1000);
 

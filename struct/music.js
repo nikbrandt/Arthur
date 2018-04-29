@@ -125,17 +125,22 @@ let Music = {
 				let writeStream = soundcloud(music.queue[0].meta.id).pipe(fs.createWriteStream(`../media/temp/${id}.mp3`));
 
 				writeStream.on('finish', () => {
-					let scStream = fs.createReadStream(`../media/temp/${id}.mp3`);
-					dispatcher = guild.voiceConnection.playStream(scStream, { volume: 0.3, passes: 2, bitrate: 'auto' });
+					setTimeout(() => {
+						let scStream = fs.createReadStream(`../media/temp/${id}.mp3`);
+						dispatcher = guild.voiceConnection.playStream(scStream, { volume: 0.3, passes: 2, bitrate: 'auto' });
 
-					dispatcher.on('end', () => {
-						fs.unlinkSync(`../media/temp/${id}.mp3`);
-						Music.next(guild);
-					});
+						dispatcher.on('end', () => {
+							fs.unlinkSync(`../media/temp/${id}.mp3`);
+							Music.next(guild);
+							setTimeout(() => {
+								if (guild.voiceConnection && !guild.voiceConnection.dispatcher) Music.next(guild);
+							}, 1000);
+						});
 
-					dispatcher.on('start', () => {
-						guild.voiceConnection.player.streamingData.pausedTime = 0;
-					});
+						dispatcher.on('start', () => {
+							guild.voiceConnection.player.streamingData.pausedTime = 0;
+						});
+					}, 100);
 				});
 			}
 		}, 50);
