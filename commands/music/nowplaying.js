@@ -18,7 +18,7 @@ function secString(secObj) {
 exports.run = (message, args, s, client, permLevel) => {
 	if (args[0] && (args[0] === 'n' || args[0] === 'notify')) {
 		if (permLevel > 2) client.commands.get('npnotify').run(message);
-		else message.react(':missingpermissions:407054344874229760').catch();
+		else message.react(':missingpermissions:407054344874229760').catch(() => {});
 
 		return;
 	}

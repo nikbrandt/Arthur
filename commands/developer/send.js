@@ -1,7 +1,7 @@
 exports.run = (message, args, suffix, client) => {
 	if (!args[0]) return message.channel.send('Mhm. I\'ll send it to no one.');
 	if (!args[1] && !message.attachments.size) return message.channel.send('Right. And what, exactly, are you sending?');
-	message.delete().catch();
+	message.delete().catch(() => {});
 
 	let messageChannel = client.channels.get('304441662724243457');
 	let channel = client.users.get(args[0]);

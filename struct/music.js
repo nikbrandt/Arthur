@@ -126,6 +126,7 @@ let Music = {
 				writeStream.on('finish', () => {
 					setTimeout(() => {
 						let scStream = fs.createReadStream(`../media/temp/${id}.mp3`);
+						if (!guild.voiceConnection) return;
 						dispatcher = guild.voiceConnection.playStream(scStream, { volume: 0.3, passes: 2, bitrate: 'auto' });
 
 						dispatcher.on('end', () => {
@@ -133,7 +134,7 @@ let Music = {
 							Music.next(guild);
 							setTimeout(() => {
 								if (guild.voiceConnection && !guild.voiceConnection.dispatcher) Music.next(guild);
-							}, 1000);
+							}, 10000);
 						});
 
 						dispatcher.on('start', () => {
@@ -276,15 +277,15 @@ let Music = {
 
 				search(suffix, youtubeSearch, (err, results) => {
 					if (err || !results || !results[0]) {
-						soundcloud.search(suffix).then(result => {
+						return soundcloud.search(suffix).then(result => {
 							resolve ( {
 								id: result.permalink_url,
 								type: 5
 							});
 						}).catch(() => {
 							if (message.guild.voiceConnection && !message.guild.music && !message.guild.music.queue[0]) message.guild.voiceConnection.disconnect();
-							return reject('The song you searched for does not exist on YouTube or SoundCloud.. rip');
-						})
+							reject('The song you searched for does not exist on YouTube or SoundCloud.. rip');
+						});
 					}
 
 					id = results[0].id;

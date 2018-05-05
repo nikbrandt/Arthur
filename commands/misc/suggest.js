@@ -21,8 +21,6 @@ exports.run = (message, args, suffix, client) => {
 		files: attachments
 	});
 
-	console.log(attachments);
-
 	let footer = attachments.length
 		? `Attached:\n${attachments.map(a => `[${a.name}](${a.attachment})`).join('\n')}\n\n*Suggested by ${message.author.tag} (${message.author.id})*`
 		: `*Suggested by ${message.author.tag} (${message.author.id})*`;

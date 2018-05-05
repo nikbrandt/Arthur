@@ -30,7 +30,7 @@ exports.run = (message, a, suffix) => {
             }
         }}).catch(() => { message.channel.send('the definition was probably too long to fit in a message, sorry') });
     });
-}
+};
 
 exports.config = {
     enabled: true,

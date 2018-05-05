@@ -40,11 +40,11 @@ exports.run = async (message, args, suffix, client, perms, prefix) => {
 			if (args[0] === '-chat') message.channel.send({embed});
 			else {
 				let msg = await message.channel.send('Check your DM\'s :mailbox_with_mail:');
-				message.author.send({embed}).catch(err => {
+				message.author.send({embed}).catch(() => {
 					if (msg) msg.edit('Message send failed. If you\'d like to see the help in this channel, type `a.help -chat`');
 				});
 			}
-		} else message.author.send({embed}).catch();
+		} else message.author.send({embed}).catch(() => {});
 	} else {
 		let command = client.commands.get(args[0]) || client.commands.get(client.aliases.get(args[0]));
 		if (!command) return message.channel.send(`I do not have a \`${args[0]}\` command.`);

@@ -25,16 +25,16 @@ async function finish(id, message, client) {
 
 	let info = await ytdl.getInfo(id);
 	if (info.livestream) {
-		msg.edit('Ah right, you expect me to download a livestream. Just no, thanks.').catch();
+		msg.edit('Ah right, you expect me to download a livestream. Just no, thanks.').catch(() => {});
 		return client.processing.splice(index, 1);
 	}
 
 	if (info.length_seconds > 1200) {
-		msg.edit('I\'ve set a limit of 20 minutes on songs; my CPU is limited and so is your time.').catch();
+		msg.edit('I\'ve set a limit of 20 minutes on songs; my CPU is limited and so is your time.').catch(() => {});
 		return client.processing.splice(index, 1);
 	}
 
-	msg.edit('Downloading... This should take about **' + (info.length_seconds / 15).toFixed(0) + '** seconds to convert..').catch();
+	msg.edit('Downloading... This should take about **' + (info.length_seconds / 15).toFixed(0) + '** seconds to convert..').catch(() => {});
 	let title = info.title.replace(/[^A-z0-9]/g, '_');
 
 	let ytdlStream = ytdl(id, { quality: 'highestaudio' });
@@ -61,7 +61,7 @@ async function finish(id, message, client) {
 				fs.unlinkSync(`../media/temp/${title}.mp3`);
 				client.processing.splice(index, 1);
 
-				msg.delete().catch();
+				msg.delete().catch(() => {});
 
 				message.channel.send(`${message.member.toString()}, your song is converted.`, {
 					embed: {

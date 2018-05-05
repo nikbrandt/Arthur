@@ -23,7 +23,7 @@ function game (client) {
 		'join my server so my dev feels popular - click "Support Server" in the help command'
 	];
 
-	client.user.setActivity(`${games[Math.floor(Math.random() * games.length)]} | @Arthur help`).catch();
+	client.user.setActivity(`${games[Math.floor(Math.random() * games.length)]} | @Arthur help`).catch(() => {});
 }
 
 function writeStats (client) {

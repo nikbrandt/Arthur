@@ -34,7 +34,7 @@ exports.load = client => {
 	client.on('debug', d => {
 		if (d.includes('Session invalidated')) statusUpdate({
 			title: 'Session Invalidated, Restarting',
-			timestamp: new Date.toISOString(),
+			timestamp: new Date().toISOString(),
 			color: 0xf47742,
 		}, true)
 		if (!d.includes('eartbeat')) console.log(d);
