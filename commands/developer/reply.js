@@ -3,7 +3,7 @@ exports.run = (message, args, suffix, client, permLevel) => {
 
 	let channel = client.channels.get('304441662724243457');
 	let user = client.lastMessage;
-	if (!user) return message.channel.send('nobody has sent a message to me.. are you drunk?');
+	if (!user) return message.channel.send('ive restarted since the last person sent a message, ffs');
 	message.delete().catch(() => {});
   
 	user.send(suffix, { files: message.attachments.size ? message.attachments.array().map(f => f.url) : [] }).then(() => {

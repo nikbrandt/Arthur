@@ -50,6 +50,8 @@ module.exports = client => {
 	client.tempStopwatch = undefined;
 
 	client.owner = client.users.get(client.config.owners[0]);
+	client.recentMessages = {};
+	client.lastRecentMessageID = 0;
 
 	if (!client.test) {
 		let tempItems = fs.readdirSync('../media/temp');

@@ -4,7 +4,10 @@ exports.run = (message, args, suffix, client) => {
 	message.delete().catch(() => {});
 
 	let messageChannel = client.channels.get('304441662724243457');
-	let channel = client.users.get(args[0]);
+	let name;
+
+	let channel = client.users.get(Object.keys(client.recentMessages)[Object.values(client.recentMessages).indexOf(args[0])]);
+	if (!channel) channel = client.users.get(args[0]);
 	if (!channel) {
 		channel = client.channels.get(args[0]);
 		if (!channel) return message.channel.send('That\'s not a valid ID, sorry.');

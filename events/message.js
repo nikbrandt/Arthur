@@ -32,11 +32,20 @@ module.exports = async (client, message) => {
 		if (message.channel.type !== 'text') {
 			if (/^[^ ]*help$/i.test(message.content)) return message.channel.send('My prefix is `a.`; do `a.help` for help.');
 
+			let authorID;
+
+			if (client.recentMessages[message.author.id]) authorID = client.recentMessages[message.author.id];
+			else {
+				authorID = client.lastRecentMessageID + 1;
+				client.recentMessages[message.author.id] = authorID.toString();
+				client.lastRecentMessageID += 1;
+			}
+
 			client.channels.get(config.messageLogChannel).send(
 				{
 					embed: {
 						author: {
-							name: `Message from ${message.author.tag}`,
+							name: `Message from ${message.author.tag} | ID ${authorID}`,
 							icon_url: message.author.displayAvatarURL
 						},
 						color: 0x418cf4,
@@ -50,11 +59,21 @@ module.exports = async (client, message) => {
 		}
 
 		if (message.content.includes(`<@${client.user.id}>`) || message.content.includes(`<@!${client.user.id}>`)) {
+
+			let authorID;
+
+			if (client.recentMessages[message.author.id]) authorID = client.recentMessages[message.author.id];
+			else {
+				authorID = client.lastRecentMessageID + 1;
+				client.recentMessages[message.author.id] = authorID.toString();
+				client.lastRecentMessageID += 1;
+			}
+
 			client.channels.get(config.messageLogChannel).send(
 				{
 					embed: {
 						author: {
-							name: `Mention from ${message.author.tag}`,
+							name: `Mention from ${message.author.tag} | ID ${authorID}`,
 							icon_url: message.author.displayAvatarURL
 						},
 						color: 0x418cf4,
