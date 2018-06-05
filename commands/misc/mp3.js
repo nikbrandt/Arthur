@@ -4,7 +4,7 @@ const search = require('youtube-search');
 const fs = require('fs');
 const request = require('request');
 
-const YTRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([A-z0-9_-]{11})(&.*)?$/;
+const YTRegex = /^(https?:\/\/)?(www\.|m\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/v\/|youtube\.com\/embed\/)([A-z0-9_-]{11})(&.*)?$/;
 
 function secSpread(sec) {
 	let hours = Math.floor(sec / 3600);
