@@ -11,7 +11,6 @@ function game (client) {
 		'Check out the mp3 command',
 		'what do i put here',
 		'SOUNDCLOUD SUPPOOORRRRTTTT',
-		'still more users than nintenbot',
 		'talk to me im lonely',
 		'honestly the best way to code is by etching engravings into your hard drive',
 		'enable hot levels with the levels command',
