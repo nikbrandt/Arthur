@@ -8,13 +8,13 @@ module.exports = (client, guild) => {
 
 	client.channels.get('326587514494124053').send({embed: {
 		author: {
-			name: `Added to ${guild.name}`,
+			name: `${guild.name}`,
 			icon_url: guild.iconURL
 		},
 		color: 0x00c140,
-		description: `Owner is ${guild.owner.user.tag} (${guild.ownerID})\nHas ${guild.memberCount} members\nID is ${guild.id}`,
+		description: `${guild.memberCount} members`,
 		footer: {
-			text: `Now in ${client.guilds.size} guilds.`
+			text: `${client.guilds.size} guilds`
 		}
 	}});
 
