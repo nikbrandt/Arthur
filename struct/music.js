@@ -47,7 +47,7 @@ let Music = {
 		}
 
 		if (music.queue.length === 0) {
-			guild.voiceConnection.disconnect();
+			if (guild.voiceConnection) guild.voiceConnection.disconnect();
 			guild.music = {};
 			return;
 		}
