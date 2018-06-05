@@ -72,11 +72,11 @@ let Music = {
 				const stream = ytdl(music.queue[0].id, { quality: 'highestaudio' });
 				dispatcher = guild.voiceConnection.playStream(stream, { volume: 0.3, passes: 2, bitrate: 'auto' });
 
-				dispatcher.on('end', () => {
+				dispatcher.once('end', () => {
 					Music.next(guild);
 				});
 
-				dispatcher.on('start', () => {
+				dispatcher.once('start', () => {
 					guild.voiceConnection.player.streamingData.pausedTime = 0;
 				});
 			} else if (music.queue[0].type === 4) { // from URL
@@ -99,12 +99,12 @@ let Music = {
 					const stream = fs.createReadStream(file);
 					dispatcher = guild.voiceConnection.playStream(stream, { volume: 0.3, passes: 2, bitrate: 'auto' });
 
-					dispatcher.on('end', () => {
+					dispatcher.once('end', () => {
 						fs.unlinkSync(file);
 						Music.next(guild);
 					});
 
-					dispatcher.on('start', () => {
+					dispatcher.once('start', () => {
 						guild.voiceConnection.player.streamingData.pausedTime = 0;
 					});
 				})
@@ -112,11 +112,11 @@ let Music = {
 				const stream = fs.createReadStream(`../media/sounds/${music.queue[0].id}.mp3`);
 				dispatcher = guild.voiceConnection.playStream(stream, { volume: 0.3, passes: 2, bitrate: 'auto' });
 
-				dispatcher.on('end', () => {
+				dispatcher.once('end', () => {
 					Music.next(guild);
 				});
 
-				dispatcher.on('start', () => {
+				dispatcher.once('start', () => {
 					guild.voiceConnection.player.streamingData.pausedTime = 0;
 				});
 			} else if (music.queue[0].type === 5) { // soundcloud
@@ -129,7 +129,7 @@ let Music = {
 						if (!guild.voiceConnection) return;
 						dispatcher = guild.voiceConnection.playStream(scStream, { volume: 0.3, passes: 2, bitrate: 'auto' });
 
-						dispatcher.on('end', () => {
+						dispatcher.once('end', () => {
 							fs.unlinkSync(`../media/temp/${id}.mp3`);
 							Music.next(guild);
 							setTimeout(() => {
@@ -137,7 +137,7 @@ let Music = {
 							}, 10000);
 						});
 
-						dispatcher.on('start', () => {
+						dispatcher.once('start', () => {
 							guild.voiceConnection.player.streamingData.pausedTime = 0;
 						});
 					}, 100);
