@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const moment = require('moment');
 
 exports.run = async (message, args, asdf, client) => {
 	const invite = await client.generateInvite(client.config.info.invitePerms);
@@ -23,7 +24,7 @@ exports.run = async (message, args, asdf, client) => {
 			},
 			{
 				name: 'Info',
-				value: `Language - Javascript\nNode ${process.version}\nDiscord.JS v${Discord.version}`
+				value: `Language - Javascript\nNode ${process.version}\nDiscord.JS v${Discord.version}\nUptime of ${moment.duration(client.uptime).humanize()}`
 			}
 		]
 	}});
