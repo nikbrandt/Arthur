@@ -11,6 +11,7 @@ const soundcloud = require('./soundcloud');
 const YTRegex = /^(https?:\/\/)?(www\.|m\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/v\/|youtube\.com\/embed\/)([A-z0-9_-]{11})(&.*)?$/;
 const soundcloudRegex = /^(https:\/\/)?soundcloud.com\/.+\/[^/]+$/;
 const songRegex = /^https?:\/\/.+\/([^/]+)\.(mp3|ogg)$/;
+const reactionFilter = reaction => ['👍', '⏩', '⏹', '🔁', '🎶'].includes(reaction.emoji.name);
 
 function secSpread(sec) {
 	let hours = Math.floor(sec / 3600);
@@ -65,7 +66,9 @@ let Music = {
 			if (notify === 'true' && music.queue[0].embed && !first) {
 				let embed = music.queue[0].embed;
 				embed.author.name = 'Now Playing';
-				music.textChannel.send({ embed });
+				music.textChannel.send({ embed }).then(msg => {
+					Music.addReactionCollector(msg, client, music.queue[0].ms);
+				});
 			}
 
 			if (music.queue[0].type === 1) { // youtube
@@ -330,7 +333,8 @@ let Music = {
 							footer: {
 								text: `Requested by ${message.author.tag}`
 							}
-						}
+						},
+						ms: info.length_seconds * 1000
 					});
 
 					break;
@@ -360,7 +364,8 @@ let Music = {
 							title: `Sound effect - ${id}`,
 							queueName: `Sound effect - ${id}`,
 							url: 'https://github.com/Gymnophoria/Arthur'
-						}
+						},
+						ms: 30000
 					});
 
 					break;
@@ -381,7 +386,8 @@ let Music = {
 							footer: {
 								text: `Added by ${message.author.tag} | Invalid URLs will be skipped`
 							}
-						}
+						},
+						ms: 180000
 					});
 
 					break;
@@ -413,11 +419,67 @@ let Music = {
 							footer: {
 								text: `Requested by ${message.author.tag}`
 							}
-						}
+						},
+						ms: meta.duration
 					});
 
 					break;
 			}
+		});
+	},
+	// 👍⏩⏹🔁🎶
+	/*
+const collector = message.createReactionCollector(filter, 50000);
+collector.on('collect', () => {message.channel.send('collected');}); */
+	addReactionCollector: async (message, client, time) => {
+		if (!message) return;
+		if (!message.channel.permissionsFor(message.guild.me).has('MANAGE_MESSAGES')) return;
+
+		const collector = message.createReactionCollector(reactionFilter, { time: time ? time + 10000 : 600000 });
+
+		try {
+			await message.react('👍');
+			await message.react('⏩');
+			await message.react('⏹');
+			await message.react('🔁');
+			await message.react('🎶');
+		} catch (e) {
+			return;
+		}
+
+		collector.on('collect', async reaction => {
+			let user = reaction.users.filter(user => user.id !== client.user.id).first();
+			if (!user) return;
+
+			// .then(() => {console.log('removed reaction')}).catch(e => console.error);
+			// console.log(user);
+
+			let fakeMessage = message;
+			fakeMessage.author = user;
+			fakeMessage.member = await message.guild.fetchMember(user);
+			let permLevel = client.permLevel(fakeMessage);
+
+			switch (reaction.emoji.name) {
+				case '👍':
+					client.commands.get('like').run(fakeMessage, [], '', client);
+					break;
+				case '⏩':
+					client.commands.get('skip').run(fakeMessage, [], '', 'ded', permLevel);
+					break;
+				case '⏹':
+					client.commands.get('stop').run(fakeMessage, [], '', 'hi mom', permLevel);
+					break;
+				case '🔁':
+					client.commands.get('loop').run(fakeMessage, [], '', '', permLevel);
+					break;
+				case '🎶':
+					client.commands.get('queue').run(fakeMessage, []);
+					break;
+			}
+
+			reaction.remove(user).catch(err => {
+				console.error('failed to remove reaction; \n' + err.stack);
+			})
 		});
 	}
 };

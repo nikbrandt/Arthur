@@ -4,10 +4,10 @@ exports.run = (message, a, s, c, permLevel) => {
 
 	if (message.guild.music.loop) {
 		message.guild.music.loop = false;
-		message.channel.send('A\'ight loops off, as you wish.');
+		message.channel.send(`A\'ight ${message.member.displayName}, loops off, as you wish.`);
 	} else {
 		message.guild.music.loop = true;
-		message.channel.send('Loops on, have fun listening to the same stuff *forever*');
+		message.channel.send(`Loops on, ${message.member.displayName}, have fun listening to the same stuff *forever*`);
 	}
 };
 

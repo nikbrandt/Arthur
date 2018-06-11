@@ -25,6 +25,7 @@ let add = async (message, id, type, client, first, loadMessage) => {
 	message.guild.music.textChannel = message.channel;
 
 	if (first) {
+		Music.addReactionCollector(loadMessage, client, obj.ms);
 		message.guild.music.queue = [ queueObj ];
 		Music.next(message.guild, true);
 	} else message.guild.music.queue.push(queueObj);

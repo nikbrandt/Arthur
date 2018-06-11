@@ -30,7 +30,7 @@ exports.run = async (message, args) => {
 			description: songArray.join('\n'),
 			color: 0x427df4,
 			footer: {
-				text: `Page ${Math.ceil(pars / 10)} of ${Math.ceil(message.guild.music.queue.length / 10)} | ${message.guild.music.queue.length} Song${message.guild.music.queue.length === 1 ? '' : 's'} Total`
+				text: `Page ${Math.ceil(pars / 10)} of ${Math.ceil(message.guild.music.queue.length / 10)} | ${message.guild.music.queue.length} Song${message.guild.music.queue.length === 1 ? '' : 's'} Total | Requested by ${message.member.displayName}`
 			}
 		}});
 	}

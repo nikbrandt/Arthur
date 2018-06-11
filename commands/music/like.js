@@ -36,7 +36,7 @@ exports.run = async (message, args, suffix, client) => {
 	message.channel.send({
 		embed: {
 			author: {
-				name: 'Song Liked'
+				name: `${message.author.username} - Song Liked`
 			},
 			url: meta.url,
 			color: 0x427df4,
