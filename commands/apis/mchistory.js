@@ -23,7 +23,7 @@ exports.run = async (message, args, suffix, client, permLevel) => {
 
 	if (args[0].length === 36) args[0] = args[0].replace(/-/g, '');
 	if (args[0].length === 32) uuid = args[0];
-	else if (args[0].length < 16) uuid = await getUUID(args[0]);
+	else if (args[0].length <= 16) uuid = await getUUID(args[0]);
 	else return message.channel.send('If only usernames could be that long..');
 
 	if (!uuid) return message.channel.send('Yeah, that\'s not a name.');
@@ -58,10 +58,13 @@ exports.run = async (message, args, suffix, client, permLevel) => {
 		index--;
 	}
 
+	if (!nameArray.length) nameArray = ['Nothin\' to see here, carry on.']
+
 	message.channel.send({embed: {
 		author: {
 			name: `Name history of ${rever[0].name}`,
-			icon_url: `https://visage.surgeplay.com/face/256/${uuid}.png`
+			icon_url: `https://visage.surgeplay.com/face/256/${uuid}.png`,
+			url: `https://namemc.com/profile/${uuid}`
 		},
 		color: 0x00AA00,
 		fields: [

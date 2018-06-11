@@ -14,12 +14,14 @@ exports.run = async (message, args) => {
 	if (!args[0]) uuid = randos[Math.floor(Math.random() * randos.length)];
 	else if (args[0].length === 36) args[0] = args[0].replace(/-/g, '');
 	else if (args[0].length === 32) uuid = args[0];
-	else if (args[0].length < 16) uuid = await getUUID(args[0]);
+	else if (args[0].length <= 16) uuid = await getUUID(args[0]);
 	else return message.channel.send('If only usernames could be that long..');
 
 	if (!uuid) uuid = randos[Math.floor(Math.random() * randos.length)];
 
 	message.channel.send({embed: {
+		title: `${args[0]}'s Skin (click for namemc)`,
+		url: `https://namemc.com/profile/${uuid}`,
 		footer: {
 			text: 'Render courtesy of Visage.'
 		},
