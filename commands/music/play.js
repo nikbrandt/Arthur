@@ -3,8 +3,9 @@ const ytdl = require('ytdl-core');
 const request = require('request');
 const search = require('youtube-search');
 const Music = require('../../struct/music.js');
+const config = require('../../../media/config.json');
 
-let add = async (message, id, type, client, first) => {
+let add = async (message, id, type, client, first, loadMessage) => {
 	let title = first
 		? 'Now Playing'
 		: 'Added to Queue';
@@ -15,11 +16,11 @@ let add = async (message, id, type, client, first) => {
 		obj = await Music.getInfo(type, id, message, client, title);
 	} catch (err) {
 		if (!message.guild.music.queue && message.guild.voiceConnection) message.guild.voiceConnection.disconnect();
-		return message.channel.send(err);
+		return loadMessage.edit('I\'m havin\' trouble gettin\' info for that video - ' + err + '\n report this to my support server if you want it fixed. Or don\'t. I\'m not the boss of you.');
 	}
 
 	let queueObj = { type: type, person: message.author, id: id, meta: obj.meta, embed: obj.embed };
-	if (obj.embed) message.channel.send({embed: obj.embed});
+	if (obj.embed) loadMessage.edit('', {embed: obj.embed});
 
 	message.guild.music.textChannel = message.channel;
 
@@ -64,18 +65,19 @@ exports.run = async (message, args, suffix, client, perms) => {
 	 */
 
 	let object;
+	let loadMessage = await message.channel.send(config.musicLoadingEmojis[Math.floor(Math.random() * config.musicLoadingEmojis.length)]);
 
 	try {
 		object = await Music.parseMessage(message, args, suffix, client);
 	} catch (err) {
-		return message.channel.send(err);
+		return loadMessage.edit(err);
 	}
 
 	let { id } = object;
 	let { type } = object;
 
 	if (!message.guild.music || !message.guild.music.queue) {
-		if (!message.member.voiceChannel.joinable) return message.channel.send('I can\'t join the channel you\'re in.');
+		if (!message.member.voiceChannel.joinable) return loadMessage.edit('I can\'t join the channel you\'re in. Rude. I wanted to join you, and play you some tunes. Do you see this conflict of interests?');
 
 		message.guild.music = {};
 
@@ -84,22 +86,22 @@ exports.run = async (message, args, suffix, client, perms) => {
 		try {
 			connection = await message.member.voiceChannel.join();
 		} catch (e) {
-			return message.channel.send('Could not connect to voice channel; ' + e.name);
+			return loadMessage.edit('Could not connect to voice channel; ' + e.name + '\nYou should seriously fix that. Or if that error doesn\'t really make sense, go complain to the dev.');
 		}
 
 		message.guild.music.playing = true;
 
-		add(message, id, type, client, true).catch(() => {
+		add(message, id, type, client, true, loadMessage).catch(() => {
 			message.guild.music = {};
-			return message.channel.send('The video you were trying to play is unavailable in the US - sorry.');
+			return loadMessage.edit('The video you were trying to play is unavailable in the US - sorry, I\'m based there, and can\'t really do much about that. ~~just reupload the video or gimme a soundcloud link~~');
 		});
 
 		connection.on('error', () => {
 			message.guild.music = {};
-			return message.channel.send('Connection to voice channel not established, please try again.');
+			return loadMessage.edit('Connection to voice channel not established, please try again. Darn Discord dun\' it again. (or my internet, you can\'t ever leave out my internet)');
 		});
-	} else add (message, id, type, client, false).catch(() => {
-		message.channel.send('The video you tried to add is unavailable in the US - sorry.');
+	} else add (message, id, type, client, false, loadMessage).catch(() => {
+		loadMessage.edit('The video you tried to add is unavailable in the US - sorry.');
 	});
 };
 
