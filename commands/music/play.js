@@ -21,11 +21,12 @@ let add = async (message, id, type, client, first, loadMessage) => {
 
 	let queueObj = { type: type, person: message.author, id: id, meta: obj.meta, embed: obj.embed };
 	if (obj.embed) loadMessage.edit('', {embed: obj.embed});
+	else loadMessage.delete();
 
 	message.guild.music.textChannel = message.channel;
 
 	if (first) {
-		Music.addReactionCollector(loadMessage, client, obj.ms);
+		if (obj.embed) Music.addReactionCollector(loadMessage, client, obj.ms);
 		message.guild.music.queue = [ queueObj ];
 		Music.next(message.guild, true);
 	} else message.guild.music.queue.push(queueObj);

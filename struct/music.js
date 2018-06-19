@@ -67,7 +67,7 @@ let Music = {
 				let embed = music.queue[0].embed;
 				embed.author.name = 'Now Playing';
 				music.textChannel.send({ embed }).then(msg => {
-					Music.addReactionCollector(msg, client, music.queue[0].ms);
+					Music.addReactionCollector(msg, msg.client, music.queue[0].ms);
 				});
 			}
 

@@ -1,4 +1,5 @@
 const ytdl = require('ytdl-core');
+const Music = require('../../struct/music');
 
 function secSpread(sec) {
 	let hours = Math.floor(sec / 3600);
@@ -49,6 +50,8 @@ ${secString(secSpread(remainingTime))} of ${secString(secObj)}`,
 						text: `Requested by ${message.guild.music.queue[0].person.tag}`
 					}
 				}
+			}).then(msg => {
+				Music.addReactionCollector(msg, client, remainingTime * 1000);
 			});
 		});
 	} else if (message.guild.music.queue[0].type === 5) { // soundcloud
@@ -59,7 +62,9 @@ ${secString(secSpread(remainingTime))} of ${secString(secObj)}`,
 		embed.author.name = 'Now Playing';
 		embed.description = embed.description.replace(/Length: /g, `**${secString(secSpread(remainingTime))}** of `);
 
-		message.channel.send({embed})
+		message.channel.send({embed}).then(msg => {
+			Music.addReactionCollector(msg, client, remainingTime * 1000);
+		});
 	} else if (message.guild.music.queue[0].type >= 2) { // User-provided file
 		message.channel.send({
 			embed: {
@@ -70,6 +75,8 @@ ${secString(secSpread(remainingTime))} of ${secString(secObj)}`,
 				color: 0x7289DA,
 				description: message.guild.music.queue[0].meta.title
 			}
+		}).then(msg => {
+			Music.addReactionCollector(msg, client);
 		});
 	}
 };
