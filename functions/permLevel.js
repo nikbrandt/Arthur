@@ -38,8 +38,8 @@ exports.numMapping = {
 	1: '**Anyone** can use this command in DMs.',
 	2: 'This command can be used by **anyone in a server**',
 	3: 'Only people with a **Mod role** can use this command.',
-	4: 'Only people with the **Manage Server permission** or higher can use this command.',
-	5: 'Only people with an **Admin role** or with the **Admin permission** can use this command.',
+	4: 'Only people with an **Admin role** or with the **Admin permission** can use this command.',
+	5: 'Only people with the **Manage Server permission** or higher can use this command.',
 	6: 'Only the **server owner** can use this command.',
 	9: 'Only **bot developers** can use this command',
 	10: 'Only **the main bot developer** can use this command.'
