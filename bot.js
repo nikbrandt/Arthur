@@ -24,6 +24,7 @@ client.weeklyStatsObject = JSON.parse(fs.readFileSync('../media/stats/weekly.jso
 client.config = require('../media/config.json');
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
+client.reactionCollectors = new Discord.Collection();
 
 sql.open('../media/db.sqlite').catch(console.error);
 

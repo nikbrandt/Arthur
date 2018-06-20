@@ -1,28 +1,37 @@
 const { statusUpdate } = require('../functions/eventLoader');
+const { watch } = require('../commands/misc/poll');
 const dbots = require('../functions/dbots');
+const sql = require('sqlite');
 const fs = require('fs');
 
 function game (client) {
 	let games = [
-		'Invite me to your server with the "invite" command.',
-		`In ${client.guilds.size} servers`,
-		`Serving ${client.users.size} users.`,
-		'The webshot command is pretty cool',
-		'Check out the mp3 command',
-		'what do i put here',
-		'SOUNDCLOUD SUPPOOORRRRTTTT',
-		'talk to me im lonely',
-		'honestly the best way to code is by etching engravings into your hard drive',
-		'enable hot levels with the levels command',
-		'are you feeling sad? look at a cat and feel happy for a few seconds.',
-		'feeling like you need help with life? have the 8ball make all your choices.',
-		'don\'t like my prefix? weirdo. change it with the "prefix" command.',
-		'( ͡° ͜ʖ ͡°)',
-		'if you feel like this bot is crap, feel free to message Gymnophoria#8146 on how to make it less crap.',
-		'join my server so my dev feels popular - click "Support Server" in the help command'
+		[ 'Invite me to your server with the "invite" command.', 'PLAYING' ],
+		[ `${client.guilds.size} servers do their things`, 'WATCHING' ],
+		[ `${client.users.size} users very closely`, 'WATCHING' ],
+		[ 'With the webshot command', 'PLAYING' ],
+		[ 'The lovely mp3 command', 'LISTENING' ],
+		[ 'what do i put here', 'PLAYING' ],
+		[ 'SOUNDCLOUD SUPPOOORRRRTTTT', 'LISTENING' ],
+		[ 'talk to me im lonely', 'PLAYING' ],
+		[ 'honestly the best way to code is by etching engravings into your hard drive', 'PLAYING' ],
+		[ 'enable hot levels with the levels command', 'PLAYING' ],
+		[ 'are you feeling sad? look at a cat and feel happy for a few seconds.', 'PLAYING' ],
+		[ 'feeling like you need help with life? have the 8ball make all your choices.', 'PLAYING' ],
+		[ 'don\'t like my prefix? weirdo. change it with the "prefix" command.', 'PLAYING' ],
+		[ '( ͡° ͜ʖ ͡°)', 'PLAYING' ],
+		[ 'if you feel like this bot is crap, feel free to \'a.suggest\' on how to make it less crap.', 'PLAYING' ],
+		[ 'join my server so my dev feels popular - click "Support Server" in the help command', 'PLAYING' ],
+		[ 'did you know that you\'re a nerd?', 'PLAYING' ],
+		[ 'mmm sexy polls i think', 'PLAYING' ],
+		[ 'you.', 'WATCHING' ],
+		[ 'to the screams of.. uh.. nevermind..', 'LISTENING' ],
+		[ `simultaneously with all of you ;)`, 'PLAYING'],
+		[ 'the Earth burn as I hitch a ride with the Vogons', 'WATCHING']
 	];
 
-	client.user.setActivity(`${games[Math.floor(Math.random() * games.length)]} | @Arthur help`).catch(() => {});
+	let array = games[Math.floor(Math.random() * games.length)];
+	client.user.setActivity(`${array[0]} | @Arthur help`, { type: array[1] }).catch(() => {});
 }
 
 function writeStats (client) {
@@ -83,5 +92,30 @@ module.exports = client => {
 		title: 'Bot started',
 		timestamp: new Date().toISOString(),
 		color: 0x00c140
-	})
+	});
+
+	sql.all('SELECT * FROM pollReactionCollectors').then(results => {
+		let parsed = [];
+
+		results.forEach(obj => {
+			let options = JSON.parse(obj.options);
+			let embed = JSON.parse(obj.embed);
+			parsed.push({
+				channelID: obj.channelID,
+				messageID: obj.messageID,
+				options,
+				endDate: obj.endDate,
+				embed
+			});
+		});
+
+		parsed.forEach(obj => {
+			let channel = client.channels.get(obj.channelID);
+			channel.fetchMessage(obj.messageID).then(msg => {
+				watch(msg, obj.options, obj.endDate, client, obj.embed);
+			}).catch(() => {
+				sql.run('DELETE FROM pollReactionCollectors WHERE messageID = ?', [obj.messageID]).catch(console.log);
+			})
+		});
+	}).catch(console.error);
 };

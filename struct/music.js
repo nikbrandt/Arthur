@@ -427,10 +427,7 @@ let Music = {
 			}
 		});
 	},
-	// 👍⏩⏹🔁🎶
-	/*
-const collector = message.createReactionCollector(filter, 50000);
-collector.on('collect', () => {message.channel.send('collected');}); */
+
 	addReactionCollector: async (message, client, time) => {
 		if (!message) return;
 		if (!message.channel.permissionsFor(message.guild.me).has('MANAGE_MESSAGES')) return;
