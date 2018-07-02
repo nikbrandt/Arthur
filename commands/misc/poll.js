@@ -6,7 +6,7 @@ const askQuestion = require('../../functions/askQuestion');
 const emojis = [ '🇦', '🇧', '🇨', '🇩', '🇪', '🇫', '🇬', '🇭', '🇮', '🇯' ];
 
 const footer = {
-	text: 'Command will cancel in 60 seconds. Type "cancel" to cancel now. Attempt 1.'
+	text: 'Command will cancel in 60 seconds. Type "cancel" to cancel now. Attempt 1 of 5.'
 };
 
 const titleEmbed = {
@@ -157,7 +157,7 @@ exports.run = async (message, a, s, client) => {
 		time = timeObj.response;
 		embedMessage = timeObj.message;
 	} catch (e) {
-		return message.channel.send('error: ' + e.stack);
+		return e;
 	}
 
 	options = options.split('|');
@@ -182,7 +182,6 @@ exports.run = async (message, a, s, client) => {
 
 	let endDate = Date.now() + time;
 
-	// ADD SQLITE MAGICS HERE with channelID, messageID, options, endDate, embed
 	await sql.run('INSERT INTO pollReactionCollectors (channelID, messageID, options, endDate, embed) VALUES (?, ?, ?, ?, ?)',
 		[embedMessage.channel.id, embedMessage.id, JSON.stringify(options), endDate, JSON.stringify(embed)]).catch(console.log);
 

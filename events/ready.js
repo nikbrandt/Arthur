@@ -111,6 +111,7 @@ module.exports = client => {
 
 		parsed.forEach(obj => {
 			let channel = client.channels.get(obj.channelID);
+			if (!channel) return sql.run('DELETE FROM pollReactionCollectors WHERE messageID = ?', [obj.messageID]).catch(console.log);
 			channel.fetchMessage(obj.messageID).then(msg => {
 				watch(msg, obj.options, obj.endDate, client, obj.embed);
 			}).catch(() => {
