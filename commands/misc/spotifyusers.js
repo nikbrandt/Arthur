@@ -19,7 +19,6 @@ exports.run = (message, args, suffix, client) => {
 	});
 
 	users = users.filter(member => {
-		if (member.presence.game && member.presence.game.name === 'Spotify') console.log(' - with game ', member.presence.game);
 		return member.presence.game && member.presence.game.name === 'Spotify';
 	});
 
