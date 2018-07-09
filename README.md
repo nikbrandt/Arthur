@@ -14,4 +14,4 @@ I guess the overall point of this is that Arthur is like a nice multipurpose bot
 No license is included with this product. Follow the US copyright laws and you're good.
 
 
-Copyright (c) 2017 Gymnophoria
+Copyright © 2017 - 2018 Gymnophoria
