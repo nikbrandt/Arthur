@@ -58,7 +58,8 @@ async function finish(id, message, client) {
 			};
 
 			request(options, (err, res, body) => {
-				fs.unlinkSync(`../media/temp/${title}.mp3`);
+				let filePath = `../media/temp/${title}.mp3`;
+				if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
 				client.processing.splice(index, 1);
 
 				msg.delete().catch(() => {});
