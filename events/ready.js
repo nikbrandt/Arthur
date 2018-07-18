@@ -25,7 +25,7 @@ function game (client) {
 		[ 'did you know that you\'re a nerd?', 'PLAYING' ],
 		[ 'mmm sexy polls i think', 'PLAYING' ],
 		[ 'you.', 'WATCHING' ],
-		[ 'to the screams of.. uh.. nevermind..', 'LISTENING' ],
+		[ 'the screams of.. uh.. nevermind..', 'LISTENING' ],
 		[ `simultaneously with all of you ;)`, 'PLAYING'],
 		[ 'the Earth burn as I hitch a ride with the Vogons', 'WATCHING']
 	];
