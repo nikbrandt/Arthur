@@ -5,12 +5,17 @@ const statusWebhookClient = new Discord.WebhookClient(config.statusLog.id, confi
 const errorWebhookClient = new Discord.WebhookClient(config.errorLog.id, config.errorLog.token);
 const fs = require('fs');
 
-let lastHeartbeat;
+let lastHeartbeat = Date.now();
 
-const statusUpdate  = (embed, restart, client) => {
+function statusUpdate (embed, restart, client) {
 	if (!(process.argv[2] && process.argv[2] === 'test')) statusWebhookClient.send({ embeds: [ embed ] }).then(() => {
-		setTimeout(() => {
-			if (restart && (Date.now() - lastHeartbeat > 45000 || (client && client.ws.lastHeartbeatAck === false))) process.exit(0);
+		if (restart) setTimeout(() => {
+			if (Date.now() - lastHeartbeat > 45000 || (client && client.ws.lastHeartbeatAck === false)) process.exit(0);
+			else statusUpdate({
+				title: 'Reconnected',
+				timestamp: new Date().toISOString(),
+				color: 0xb25bff
+			});
 		}, 60000);
 	}).catch(console.error);
 };
@@ -67,7 +72,7 @@ exports.load = client => {
 			description: `${num} events replayed.`,
 			timestamp: new Date().toISOString(),
 			color: 0x39ffb0
-		})
+		});
 	});
 
 	process.on('unhandledPromiseRejection', err => {
