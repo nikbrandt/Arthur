@@ -49,7 +49,7 @@ exports.load = client => {
 			color: 0xf47742,
 		}, true);
 		
-		if (d.includes('eartbeat')) lastHeartbeat = Date.now();
+		if (d.includes('heartbeat')) lastHeartbeat = Date.now();
 		else console.log(d);
 	});
 
