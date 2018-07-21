@@ -24,7 +24,7 @@ function secSpread(sec) {
 	}
 }
 
-let Music = {
+const Music = {
 	next: async (guild, first) => {
 		let notify = await sql.get(`SELECT npNotify FROM guildOptions WHERE guildID = '${guild.id}'`);
 		if (!notify) notify = 'false';
