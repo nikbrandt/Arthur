@@ -21,7 +21,7 @@
   "license": "MIT",
   "dependencies": {
     "bufferutil": "^3.0.4",
-    "canvas": "^1.6.10",
+    "canvas": "^1.6.11",
     "discord.js": "^11.3.2",
     "erlpack": "github:discordapp/erlpack",
     "fluent-ffmpeg": "^2.1.2",
