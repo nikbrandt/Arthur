@@ -18,7 +18,7 @@
     "type": "git",
     "url": "https://github.com/Gymnophoria/Arthur.git"
   },
-  "license": "UNLICENSED",
+  "license": "MIT",
   "dependencies": {
     "bufferutil": "^3.0.4",
     "canvas": "^1.6.10",

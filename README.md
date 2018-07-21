@@ -1,6 +1,6 @@
 ## Arthur
 
-[Support Server](https://discord.gg/HW7KYG9) . [TOS](http://bit.ly/ArthurTOS) . [Invite](https://discordapp.com/oauth2/authorize?client_id=329085343800229889&permissions=3460096&scope=bot) . [Trello](https://trello.com/b/wt7ptHpC/arthur)  
+[Support Server](https://discord.gg/HW7KYG9) . [TOS](http://bit.ly/ArthurTOS) . [Invite](https://discordapp.com/oauth2/authorize?client_id=329085343800229889&permissions=34683526&scope=bot) . [Trello](https://trello.com/b/wt7ptHpC/arthur)  
 [![Discord Bots](https://discordbots.org/api/widget/status/329085343800229889.svg)](https://discordbots.org/bot/329085343800229889) [![Discord Bots](https://discordbots.org/api/widget/servers/329085343800229889.svg)](https://discordbots.org/bot/329085343800229889) [![Discord Bots](https://discordbots.org/api/widget/upvotes/329085343800229889.svg)](https://discordbots.org/bot/329085343800229889)
 
 ---
@@ -11,7 +11,8 @@ Arthur does have some hot features that other bots don't, but not that many. To 
 
 I guess the overall point of this is that Arthur is like a nice multipurpose bot that ~~won't ever include moderation features *because every other bot does that*~~ will eventually include moderation features because *idk i was forced or something*. Yeah, that's all. I dunno.
 
-No license is included with this product. Follow the US copyright laws and you're good.
+Eh, we're going back to using an MIT license, I feel weird having contributors but still being under copyright. To get this bot up and running, you'll probably need to add quite a lot of files to a `../media` directory, and since I'm not *really* trying to decentralize this bot, that challenge is up to you.
 
+PRs, issues, complaints, whatever, all welcome. You can also complain in the support serrver above.
 
-Copyright © 2017 - 2018 Gymnophoria
+Gymnophoria
