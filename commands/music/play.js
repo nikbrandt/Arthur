@@ -83,12 +83,10 @@ exports.run = async (message, args, suffix, client, perms) => {
 
 		message.guild.music = {};
 
-		let connection;
-
 		try {
-			connection = await message.member.voiceChannel.join();
+			await message.member.voiceChannel.join();
 		} catch (e) {
-			return loadMessage.edit('Could not connect to voice channel; ' + e.name + '\nYou should seriously fix that. Or if that error doesn\'t really make sense, go complain to the dev.');
+			return loadMessage.edit('Could not connect to voice channel; ' + e.name + '\nYou should fix that. Or if that error doesn\'t really make sense, go complain to the dev.');
 		}
 
 		message.guild.music.playing = true;
@@ -97,11 +95,16 @@ exports.run = async (message, args, suffix, client, perms) => {
 			message.guild.music = {};
 			return loadMessage.edit('The video you were trying to play is unavailable in the US - sorry, I\'m based there, and can\'t really do much about that. ~~just reupload the video or gimme a soundcloud link~~');
 		});
-
-		connection.on('error', () => {
-			message.guild.music = {};
-			return loadMessage.edit('Connection to voice channel not established, please try again. Darn Discord dun\' it again. (or my internet, you can\'t ever leave out my internet)');
-		});
+		
+		let errorInterval = setInterval(() => {
+			if (message.guild.voiceConnection) {
+				clearInterval(errorInterval);
+				message.guild.voiceConnection.on('error', err => {
+					message.guild.music = {};
+					loadMessage.edit('Could not connect to voice channel - ' + err + '\nTry again, if you will.');
+				});
+			}
+		}, 500);
 	} else add (message, id, type, client, false, loadMessage).catch(() => {
 		loadMessage.edit('The video you tried to add is unavailable in the US - sorry.');
 	});
