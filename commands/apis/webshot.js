@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const webshot = require('webshot');
+const moment = require('moment');
 const fs = require('fs');
 
 let nonobad = ['porn', 'redtube', 'sex'];
@@ -8,7 +9,7 @@ exports.run = (message, args, s, client) => {
 	if (!args[0]) return message.channel.send('You have to tell me what to take a picture of..');
 	if (nonobad.some(i => args[0].includes(i))) return message.channel.send('please..');
 	let index = client.processing.length;
-	client.processing.push(message.id + ' - Webshot');
+	client.processing.push(moment().format('h:mm:ss A') + ' - Webshot');
 	let date = Date.now();
 	let sent = false;
 

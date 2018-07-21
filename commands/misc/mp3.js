@@ -19,7 +19,7 @@ function secSpread(sec) {
 
 async function finish(id, message, client) {
 	let index = client.processing.length;
-	client.processing.push(message.id + ' - MP3');
+	client.processing.push(moment().format('h:mm:ss A') + ' - MP3');
 
 	let msg = await message.channel.send('Downloading..');
 

@@ -1,6 +1,7 @@
 const request = require('request');
 const webshot = require('webshot');
 const Discord = require('discord.js');
+const moment = require('moment');
 const fs = require('fs');
 
 const failedEmbed = {
@@ -20,7 +21,7 @@ function failed (messageOptions, msg, client, index) {
 exports.run = async (message, args, s, client) => {
 	if (!args[0]) return message.channel.send('Please tell me which server to query.');
 	let index = client.processing.length;
-	client.processing.push(message.id + ' - Webshot');
+	client.processing.push(moment().format('h:mm:ss A') + ' - MC Server/Webshot');
 	let msg = await message.channel.send('Processing..');
 
 	request(`https://use.gameapis.net/mc/query/info/${args[0]}`, (err, response, body) => {
