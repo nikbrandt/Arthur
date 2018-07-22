@@ -3,7 +3,7 @@ exports.run = (message, a, s, d, permLevel) => {
 
 	if (!message.guild.music || !message.guild.music.queue) return message.channel.send('I have successfully stopped the nonexistent music.. What were you trying to do?');
 
-	message.channel.send(`${message.member.displayName}, Music stopped.`);
+	message.channel.send(`Music stopped. #Blame${message.member.displayName}`);
 	if (message.guild.voiceConnection) message.guild.voiceConnection.disconnect();
 	message.guild.music = {};
 };

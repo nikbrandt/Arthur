@@ -2,7 +2,7 @@ const Music = require('../../struct/music');
 
 function skip (message) {
 	message.guild.voiceConnection.dispatcher.end();
-	message.channel.send(`${message.member.displayName}, Song skipped.`);
+	message.channel.send(`Song skipped. #Blame${message.member.displayName}`);
 }
 
 exports.run = (message, a, s, d, permLevel) => {
