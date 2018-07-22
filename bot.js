@@ -1,16 +1,14 @@
-const { Stopwatch } = require('node-stopwatch');
 const fs = require('fs');
-
-global.__basedir = __dirname;
-
-let stopwatch = Stopwatch.create();
-stopwatch.start();
-
 const sql = require('sqlite');
 const Discord = require('discord.js');
+
+global.__basedir = __dirname;
+let loadStart = Date.now();
+
 const client = new Discord.Client({
     fetchAllMembers: true,
-    disabledEvents: ['TYPING_START']
+    disabledEvents: ['TYPING_START'],
+	disableEveryone: true
 });
 
 client.tempStopwatch = stopwatch;
