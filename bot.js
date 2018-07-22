@@ -1,6 +1,8 @@
 const { Stopwatch } = require('node-stopwatch');
 const fs = require('fs');
 
+global.__basedir = __dirname;
+
 let stopwatch = Stopwatch.create();
 stopwatch.start();
 
@@ -32,9 +34,5 @@ require('./functions/commandLoader.js')(client);
 require('./functions/eventLoader.js').load(client);
 require('./functions/permLevel.js').pl(client);
 require('./functions/findMember.js')(client);
-
-process.on('unhandledRejection', (reason, promise) => {
-    conosle.error('Unhandled promise rejection at ', promise, '\nReason: ', reason);
-});
 
 client.login(client.test ? client.config.testToken : client.config.token).catch(console.error);
