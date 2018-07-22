@@ -22,11 +22,14 @@ exports.run = (message, args, suffix, client) => {
 		channel.send({
 			embed: {
 				author: {
-					name: `New suggestion by ${message.author.tag}`,
-					icon_url: message.author.displayAvatarURL,
+					name: splitified[0],
 					url: card.url
 				},
-				description: suffix,
+				description: splitified[1] ? splitified[1] : '*No further info provided. ;-;*',
+				footer: {
+					text: `Suggested by ${message.author.tag}`,
+					icon_url: message.author.displayAvatarURL
+				},
 				color: 0x00c140
 			},
 			files: attachments
