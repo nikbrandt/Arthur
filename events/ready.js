@@ -54,9 +54,6 @@ module.exports = client => {
 
 	if (!client.test) dbots.post(client);
 
-	client.tempStopwatch.stop();
-	client.tempStopwatch = undefined;
-
 	client.owner = client.users.get(client.config.owners[0]);
 	client.recentMessages = {};
 	client.lastRecentMessageID = 0;

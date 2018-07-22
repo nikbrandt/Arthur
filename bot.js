@@ -11,9 +11,4 @@ const client = new ArthurClient({
 
 sql.open('../media/db.sqlite').catch(console.error);
 
-require('./functions/commandLoader.js')(client);
-require('./functions/eventLoader.js').load(client);
-require('./functions/permLevel.js').pl(client);
-require('./functions/findMember.js')(client);
-
-client.login(client.test ? client.config.testToken : client.config.token).catch(console.error);
+client.init();
