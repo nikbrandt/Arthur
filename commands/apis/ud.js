@@ -5,9 +5,11 @@ exports.run = (message, a, suffix) => {
         if (err) return message.channel.send('Urban Dictionary is broken right now, dunno why, riperoni in pepperoni.');
 
         const hotBod = JSON.parse(body);
-        if (hotBod.result_type === 'no_results') return message.channel.send('sir/ma\'am, the urban dictionary does not have a definition for your messed up word.');
+        if (!hotBod || hotBod.result_type === 'no_results') return message.channel.send('sir/ma\'am, the urban dictionary does not have a definition for your messed up word.');
         const choice = Math.floor(Math.random() * hotBod.list.length);
         const theChosenOne = hotBod.list[choice];
+
+	    if (!theChosenOne) return message.channel.send('No results. None. Nada. Rip.');
 
         message.channel.send({embed: {
             color: 680000,
