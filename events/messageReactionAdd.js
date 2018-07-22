@@ -16,5 +16,5 @@ module.exports = (client, reaction, user) => {
 		if (reaction.users.has(user.id)) total++;
 	});
 
-	if (total > 1) reaction.remove(user);
+	if (total > 1) reaction.remove(user).catch(() => {});
 };

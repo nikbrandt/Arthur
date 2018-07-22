@@ -1,3 +1,4 @@
+require('superstack');
 const sql = require('sqlite');
 const ArthurClient = require('./struct/ArthurClient');
 

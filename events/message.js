@@ -88,13 +88,12 @@ module.exports = async (client, message) => {
 			})
 		}
 
-		if (message.channel.type === 'text') {
-			let alexaStringLower = message.content.toLowerCase();
-			let alexaString = Array.from(alexaStringLower);
-			alexaString = alexaString.filter(character => character.toLowerCase() !== character.toUpperCase());
-			if (alexaString.join('').startsWith('thisissosadalexaplay')) alexaPlay = true;
-			else return;
-		}
+		if (message.channel.type !== 'text') return;
+		
+		let alexaStringLower = message.content.toLowerCase();
+		let alexaString = Array.from(alexaStringLower);
+		alexaString = alexaString.filter(character => character.toLowerCase() !== character.toUpperCase());
+		if (alexaString.join('').startsWith('thisissosadalexaplay')) alexaPlay = true;
 		else return;
 	}
 
