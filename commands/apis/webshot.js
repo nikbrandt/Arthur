@@ -40,9 +40,8 @@ exports.run = (message, args, s, client) => {
 			message.channel.send('That website is too powerful! It\'s taken me more than 30 seconds to render, so I\'m canceling the render. Sorry!');
 			cancel = true;
 			client.processing.splice(index, 1);
-			return;
 		}
-	}, 35000) // if webshot not complete in 35 seconds, cancel operation.
+	}, 35000); // if webshot not complete in 35 seconds, cancel operation.
 
 	webshot(args[0], `../media/temp/${date}-${message.author.id}.png`, options, err => {
 		if (cancel) return;
@@ -51,6 +50,7 @@ exports.run = (message, args, s, client) => {
 			if (err.toString().includes('value 1')) message.channel.send('Hey, you gotta provide me with a *valid* url, okay? Your trickery caused you a 10 second cooldown, mister.');
 			if (err.toString().includes('timeout setting')) message.channel.send('That website is too powerful! It\'s taken me more than 30 seconds to render, so I\'m canceling. Sorry!');
 			client.processing.splice(index, 1);
+			sent = true;
 			return;
 		}
 
