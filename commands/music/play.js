@@ -86,7 +86,7 @@ exports.run = async (message, args, suffix, client, perms) => {
 		try {
 			await message.member.voiceChannel.join();
 		} catch (e) {
-			return loadMessage.edit('Could not connect to voice channel; ' + e.name + '\nYou should fix that. Or if that error doesn\'t really make sense, go complain to the dev.');
+			return loadMessage.edit('Could not connect to voice channel; ' + e.stack.split('\n')[0] + '\nYou should fix that. Or if that error doesn\'t really make sense, go complain to the dev.');
 		}
 
 		message.guild.music.playing = true;
