@@ -25,7 +25,7 @@ const errorLog = (error, stack, code) => {
 
 const rawEvents = {
 	MESSAGE_REACTION_ADD: 'messageReactionAdd',
-	MSESAGE_REACTION_REMOVE: 'messageReactionRemove'
+	MESSAGE_REACTION_REMOVE: 'messageReactionRemove'
 };
 
 exports.load = client => {
