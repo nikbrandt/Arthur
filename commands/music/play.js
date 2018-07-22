@@ -33,7 +33,7 @@ let add = async (message, id, type, client, first, loadMessage) => {
 };
 
 exports.run = async (message, args, suffix, client, perms) => {
-	if (!message.member.voiceChannel) return message.channel.send('Hey man, I can\'t just play music through your speakers magically. Could you like.. connect to a voice channel?').then(msg => { msg.delete(5000); });
+	if (!message.member.voiceChannel) return message.channel.send('Hey man, I can\'t just play music through your speakers magically. Could you like.. connect to a voice channel?').then(msg => { msg.delete(5000).catch(() => {}); });
 	if (!args[0] && !message.attachments.size) {
 		if (message.guild.music && message.guild.music.playing === false) return client.commands.get('resume').run(message, 'yes', 'no', 'die', perms);
 		return message.channel.send('What? Do you want me to just play some random song? You seriously think I\'d do that? No. Choose your song.');
