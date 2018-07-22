@@ -90,12 +90,12 @@ module.exports = async (client, message) => {
 		return;
 	}
 	
-	let args = message.content.split(/\s+/g);
+	let args = message.content.split(/ +/g);
 	if (!message.content.toLowerCase().startsWith(prefix)) args = args.slice(1);
 	if (!args[0]) return;
 	const command = args[0].slice(message.content.toLowerCase().startsWith(prefix) ? prefix.length : 0).toLowerCase();
 
-	const suffix = message.content.slice(args[0].length + 1);
+	const suffix = message.content.slice( args[0].length + ( message.content.toLowerCase().startsWith(prefix) ? 1 : message.guild && message.guild.me.nickname ? 23 : 22 ));
 	args = args.slice(1);
 	const perms = client.permLevel(message);
 	const cmdFile = client.commands.get(command) || client.commands.get(client.aliases.get(command));
