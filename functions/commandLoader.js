@@ -46,9 +46,8 @@ const soundEffects = (client) => {
 exports.loadCmd = loadCmd;
 
 module.exports = async client => {
-	let stopwatch = Stopwatch.create();
+	let start = Date.now();
 	console.log('Loading commands..');
-	stopwatch.start();
 	count = 0;
 
 	const files = fs.readdirSync(`${__dirname}/../commands`);
@@ -71,8 +70,7 @@ module.exports = async client => {
 	console.log('Generating sound effect commands..');
 	soundEffects(client);
 
-	console.log(`Success! Loaded ${count} commands in ${stopwatch.elapsedMilliseconds} ms.\n`);
-	stopwatch.stop();
+	console.log(`Success! Loaded ${count} commands in ${Date.now() - start} ms.\n`);
 
 	return [ count, stopwatch.elapsedMilliseconds ];
 };
