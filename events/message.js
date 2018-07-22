@@ -93,6 +93,7 @@ module.exports = async (client, message) => {
 			let alexaString = Array.from(alexaStringLower);
 			alexaString = alexaString.filter(character => character.toLowerCase() !== character.toUpperCase());
 			if (alexaString.join('').startsWith('thisissosadalexaplay')) alexaPlay = true;
+			else return;
 		}
 		else return;
 	}
