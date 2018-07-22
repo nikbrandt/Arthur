@@ -17,6 +17,7 @@ module.exports = async (client, message) => {
 	if (message.author.melon === true) message.react('🍉').catch(() => {});
 
 	let prefix;
+	let alexaPlay = false;
 
 	if (client.test) prefix = config.testPrefix;
 	else if (message.guild) {
@@ -87,16 +88,24 @@ module.exports = async (client, message) => {
 			})
 		}
 
-		return;
+		if (message.channel.type === 'text' && message.content.toLowerCase().startsWith('this is so sad, alexa play')) alexaPlay = true;
+		else return;
 	}
 	
 	let args = message.content.split(/ +/g);
 	if (!message.content.toLowerCase().startsWith(prefix)) args = args.slice(1);
 	if (!args[0]) return;
-	const command = args[0].slice(message.content.toLowerCase().startsWith(prefix) ? prefix.length : 0).toLowerCase();
+	let command = args[0].slice(message.content.toLowerCase().startsWith(prefix) ? prefix.length : 0).toLowerCase();
 
-	const suffix = message.content.slice( args[0].length + ( message.content.toLowerCase().startsWith(prefix) ? 1 : message.guild && message.guild.me.nickname ? 23 : 22 ));
+	let suffix = message.content.slice( args[0].length + ( message.content.toLowerCase().startsWith(prefix) ? 1 : message.guild && message.guild.me.nickname ? 23 : 22 ));
 	args = args.slice(1);
+	
+	if (alexaPlay) {
+		command = 'play';
+		suffix = message.content.slice(27);
+		args = suffix.split(/ +/g);
+	}
+	
 	const perms = client.permLevel(message);
 	const cmdFile = client.commands.get(command) || client.commands.get(client.aliases.get(command));
 
