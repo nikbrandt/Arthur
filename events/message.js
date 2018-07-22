@@ -13,7 +13,7 @@ module.exports = async (client, message) => {
 		let blacklisted = await sql.get(`SELECT count(1) FROM guildUserBlacklist WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`);
 		if (!!blacklisted['count(1)']) return;
 	}
-	
+
 	if (message.author.melon === true) message.react('🍉').catch(() => {});
 
 	let prefix;
@@ -28,7 +28,7 @@ module.exports = async (client, message) => {
 	} else prefix = config.prefix;
 
 	prefix = prefix.toLowerCase();
-	
+
 	if (!message.content.toLowerCase().startsWith(prefix) && !message.content.startsWith(`<@${client.user.id}>`) && !message.content.startsWith(`<@!${client.user.id}>`)) {
 		if (message.channel.type !== 'text') {
 			if (/^[^ ]*help$/i.test(message.content)) return message.channel.send('My prefix is `a.`; do `a.help` for help.');
@@ -88,10 +88,15 @@ module.exports = async (client, message) => {
 			})
 		}
 
-		if (message.channel.type === 'text' && message.content.toLowerCase().startsWith('this is so sad, alexa play')) alexaPlay = true;
+		if (message.channel.type === 'text') {
+			let alexaStringLower = message.content.toLowerCase();
+			let alexaString = Array.from(alexaStringLower);
+			alexaString = alexaString.filter(character => character.toLowerCase() !== character.toUpperCase());
+			if (alexaString.join('').startsWith('thisissosadalexaplay')) alexaPlay = true;
+		}
 		else return;
 	}
-	
+
 	let args = message.content.split(/ +/g);
 	if (!message.content.toLowerCase().startsWith(prefix)) args = args.slice(1);
 	if (!args[0]) return;
@@ -99,13 +104,13 @@ module.exports = async (client, message) => {
 
 	let suffix = message.content.slice( args[0].length + ( message.content.toLowerCase().startsWith(prefix) ? 1 : message.guild && message.guild.me.nickname ? 23 : 22 ));
 	args = args.slice(1);
-	
+
 	if (alexaPlay) {
 		command = 'play';
 		suffix = message.content.slice(27);
 		args = suffix.split(/ +/g);
 	}
-	
+
 	const perms = client.permLevel(message);
 	const cmdFile = client.commands.get(command) || client.commands.get(client.aliases.get(command));
 
