@@ -54,6 +54,7 @@ exports.load = client => {
 		if (!channel || channel.messages.has(data.message_id)) return;
 		
 		const message = await channel.fetchMessage(data.message_id);
+		if (!message) return;
 
 		const emojiKey = (data.emoji.id) ? `${data.emoji.name}:${data.emoji.id}` : data.emoji.name;
 		const reaction = message.reactions.get(emojiKey);
