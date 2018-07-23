@@ -271,6 +271,8 @@ const Music = {
 					let result = await soundcloud.search(term).catch(err => {
 						return reject(err);
 					});
+					
+					if (!result) return reject('No results found. Silly goose.');
 
 					resolve ( {
 						id: result.permalink_url,
