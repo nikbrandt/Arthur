@@ -72,6 +72,7 @@ exports.run = async (message, args, suffix, client, perms) => {
 	try {
 		object = await Music.parseMessage(message, args, suffix, client);
 	} catch (err) {
+		if (message.guild.voiceConnection && !message.guild.music && !message.guild.music.queue[0]) message.guild.voiceConnection.disconnect().catch(() => {});
 		return loadMessage.edit(err);
 	}
 

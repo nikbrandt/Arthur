@@ -168,8 +168,8 @@ const Music = {
 				type = 4;
 				id = message.attachments.first().url;
 
-				if (!id.endsWith('.mp3') && !id.endsWith('.ogg')) reject('I only support playback of mp3\'s and oggs for now. Go ahead and type `a.suggest music in <file type> format pls` if you need another audio file type supported.');
-				if (message.attachments.first().filesize < 25000) reject('Your file isn\'t powerful enough! I need one bigger than 25 KB, thanks.');
+				if (!id.endsWith('.mp3') && !id.endsWith('.ogg')) return reject('I only support playback of mp3\'s and oggs for now. Go ahead and type `a.suggest music in <file type> format pls` if you need another audio file type supported.');
+				if (message.attachments.first().filesize < 25000) return reject('Your file isn\'t powerful enough! I need one bigger than 25 KB, thanks.');
 
 				resolve( {
 					id: id,
@@ -177,19 +177,19 @@ const Music = {
 				} );
 			} else if (args[0] === 'liked' || args[0] === 'likes') {
 				let array = await sql.all(`SELECT type, id FROM musicLikes WHERE userID = '${message.author.id}'`);
-				if (!array || !array.length) reject('If you haven\'t liked a song yet, it\'s quite challenging for me to play a liked song.');
+				if (!array || !array.length) return reject('If you haven\'t liked a song yet, it\'s quite challenging for me to play a liked song.');
 				let num;
 
 				if (args[1] === 'random') num = Math.ceil(Math.random() * array.length);
 				else {
-					if (!args[1]) reject('Yes, I\'ll just pick the song you want. Y\'know, because I have telepathic powers. (tell me which song to play)');
+					if (!args[1]) return reject('Yes, I\'ll just pick the song you want. Y\'know, because I have telepathic powers. (tell me which song to play)');
 					num = parseInt(args[1]);
-					if (!num) reject('Hey.. that\'s not a number.. (or you chose zero, which really isn\'t a song number so yeah)');
-					if (num < 1) reject('there is no negative song tho <:crazyeyes:359106555314044939>');
-					if (num > array.length) reject('I\'m sorry, but you just haven\'t liked that many songs yet.');
+					if (!num) return reject('Hey.. that\'s not a number.. (or you chose zero, which really isn\'t a song number so yeah)');
+					if (num < 1) return reject('there is no negative song tho <:crazyeyes:359106555314044939>');
+					if (num > array.length) return reject('I\'m sorry, but you just haven\'t liked that many songs yet.');
 				}
 
-				if (!array[num - 1]) reject('Not sure why, but I simply couldn\'t find that song. Huh.');
+				if (!array[num - 1]) return reject('Not sure why, but I simply couldn\'t find that song. Huh.');
 
 				type = array[num - 1].type;
 				id = array[num - 1].id;
@@ -204,15 +204,15 @@ const Music = {
 
 				if (args[1] === 'random') num = Math.ceil(Math.random() * array.length);
 				else {
-					if (!args[1]) reject('Yes, I\'ll just pick the song you want. Y\'know, because I have telepathic powers. (tell me which song to play)');
+					if (!args[1]) return reject('Yes, I\'ll just pick the song you want. Y\'know, because I have telepathic powers. (tell me which song to play)');
 					num = parseInt(args[1]);
-					if (!num) reject('Hey.. that\'s not a number.. (or you chose zero, which really isn\'t a song number so yeah)');
-					if (num < 1) reject('there is no negative song tho <:crazyeyes:359106555314044939>');
-					if (num > array.length) reject('I\'m sorry, but there just aren\'t that many liked songs yet.');
+					if (!num) return reject('Hey.. that\'s not a number.. (or you chose zero, which really isn\'t a song number so yeah)');
+					if (num < 1) return reject('there is no negative song tho <:crazyeyes:359106555314044939>');
+					if (num > array.length) return reject('I\'m sorry, but there just aren\'t that many liked songs yet.');
 				}
 
 				let obj = array[num - 1];
-				if (!obj) reject('I couldn\'t find that song for some reason, I\'m sorry.');
+				if (!obj) return reject('I couldn\'t find that song for some reason, I\'m sorry.');
 				type = obj.type;
 				id = obj.id;
 
@@ -225,8 +225,8 @@ const Music = {
 				let files = fs.readdirSync('../media/sounds');
 				files = files.map(f => f.replace(/\.mp3/g, ''));
 
-				if (!args[1]) reject(`Hey man, you have to tell me what file to play.. The current options are: ${files.map(f => '`' + f + '`').join(', ')}`);
-				if (!files.includes(args[1])) reject(`Darn! That file doesn't exist. You can suggest to add it by DMing Gymnophoria#8146. The files you *can* play are as follows: ${files.map(f => '`' + f + '`').join(', ')}`);
+				if (!args[1]) return reject(`Hey man, you have to tell me what file to play.. The current options are: ${files.map(f => '`' + f + '`').join(', ')}`);
+				if (!files.includes(args[1])) return reject(`Darn! That file doesn't exist. You can suggest to add it by DMing Gymnophoria#8146. The files you *can* play are as follows: ${files.map(f => '`' + f + '`').join(', ')}`);
 
 				id = args[1];
 
@@ -283,12 +283,13 @@ const Music = {
 				search(suffix, youtubeSearch, (err, results) => {
 					if (err || !results || !results[0]) {
 						return soundcloud.search(suffix).then(result => {
+							if (!result) return reject('The song you searched for does not exist on YouTube or SoundCloud.. rip');
+							
 							resolve ( {
 								id: result.permalink_url,
 								type: 5
 							});
 						}).catch(() => {
-							if (message.guild.voiceConnection && !message.guild.music && !message.guild.music.queue[0]) message.guild.voiceConnection.disconnect();
 							reject('The song you searched for does not exist on YouTube or SoundCloud.. rip');
 						});
 					}
@@ -313,7 +314,7 @@ const Music = {
 						return reject('There seems to have been an error retrieving info for that video - \n' + err.stack.split('\n')[0]);
 					});
 					if (!info) return reject('I couldn\'t gather information on this video - this might be because it is not available in the US, sorry!');
-					if (info.livestream === '1' || info.live_playback === '1' || info.length_seconds > 7200 ) reject(info.length_seconds > 7200 ? 'Hey there my dude that\'s a bit much, I don\'t wanna play a song longer than 2 hours for ya.' : 'Trying to play a livestream, eh? I can\'t do that, sorry.. ;-;');
+					if (info.livestream === '1' || info.live_playback === '1' || info.length_seconds > 7200 ) return reject(info.length_seconds > 7200 ? 'Hey there my dude that\'s a bit much, I don\'t wanna play a song longer than 2 hours for ya.' : 'Trying to play a livestream, eh? I can\'t do that, sorry.. ;-;');
 
 					let secObj = secSpread(info.length_seconds);
 					resolve({
