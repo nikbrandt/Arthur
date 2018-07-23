@@ -25,7 +25,7 @@ exports.run = (message, args, suffix, client) => {
 					name: splitified[0],
 					url: card.url
 				},
-				description: splitified[1] ? splitified[1] : '*No further info provided. ;-;*',
+				description: splitified[1] ? splitified.slice(1).join('\n') : undefined,
 				footer: {
 					text: `Suggested by ${message.author.tag}`,
 					icon_url: message.author.displayAvatarURL
