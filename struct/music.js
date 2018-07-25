@@ -396,7 +396,7 @@ const Music = {
 					break;
 				case 5: // soundcloud
 					let meta = await soundcloud.getInfo(id).catch(err => {
-						return reject (`I couldn't retrieve info for that song - ${err.stack.split('\n')[0]}`);
+						return reject (`I couldn't retrieve info for that song - ${err.stack ? err.stack.split('\n')[0] : err}`);
 					});
 					if (meta.duration > 7200000) return reject ('I\'d rather not play a song longer than two hours long, sorry.');
 
