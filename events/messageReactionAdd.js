@@ -1,6 +1,7 @@
 const { emojis } = require('../commands/misc/poll');
 
 module.exports = (client, reaction, user) => {
+	if (!reaction) return;
 	if (!client.reactionCollectors.has(reaction.message.id)) return;
 	if (user.id === client.user.id) return;
 
