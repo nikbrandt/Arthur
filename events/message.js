@@ -8,6 +8,9 @@ let cooldownObj = {};
 module.exports = async (client, message) => {
 	if (message.author.bot) return;
 	if (message.guild && message.channel.permissionsFor(message.guild.me) && !message.channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) return;
+	
+	let shouldIStayOrShouldIGo = await sql.get('SELECT * FROM hardBlacklist WHERE id = ? OR id = ?', [ message.author.id, message.guild.id ]);
+	if (shouldIStayOrShouldIGo && !config.owners.includes(message.author.id)) return;
 
 	if (message.guild) {
 		let blacklisted = await sql.get(`SELECT count(1) FROM guildUserBlacklist WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`);
