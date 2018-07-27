@@ -13,6 +13,6 @@ I guess the overall point of this is that Arthur is like a nice multipurpose bot
 
 Eh, we're going back to using an MIT license, I feel weird having contributors but still being under copyright. To get this bot up and running, you'll probably need to add quite a lot of files to a `../media` directory, and since I'm not *really* trying to decentralize this bot, that challenge is up to you.
 
-PRs, issues, complaints, whatever, all welcome. You can also complain in the support serrver above.
+PRs, issues, complaints, whatever, all welcome. You can also complain in the support server above.
 
 Gymnophoria
