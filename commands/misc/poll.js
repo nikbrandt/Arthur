@@ -1,7 +1,7 @@
 const ms = require('ms');
 const moment = require('moment');
 const sql = require('sqlite');
-const askQuestion = require('../../functions/askQuestion');
+const { askWithCondition } = require('../../functions/askQuestion');
 
 const emojis = [ '🇦', '🇧', '🇨', '🇩', '🇪', '🇫', '🇬', '🇭', '🇮', '🇯' ];
 
@@ -17,7 +17,7 @@ const titleEmbed = {
 };
 
 const titleCondition = (title) => {
-	return title;
+	return !!title;
 };
 
 const optionsEmbed = {
@@ -52,26 +52,6 @@ function parseTimeString (string) {
 		time += thingy;
 	});
 	return time;
-}
-
-function askeroni (channel, embed, authorID, message, attempt, condition, resolve, reject) {
-	if (resolve) {
-		askQuestion(channel, embed, authorID, message, attempt).then(object => {
-			if (!condition(object.response)) return askeroni(channel, embed, authorID, object.message, object.attempt, condition, resolve, reject);
-			resolve(object);
-		}).catch(err => {
-			reject(err);
-		});
-	} else {
-		return new Promise((resolve, reject) => {
-			askQuestion(channel, embed, authorID, message, attempt).then(object => {
-				if (!condition(object.response)) return askeroni(channel, embed, authorID, object.message, object.attempt, condition, resolve, reject);
-				resolve(object);
-			}).catch(err => {
-				reject(err);
-			});
-		});
-	}
 }
 
 function emojiDescription (array) {
@@ -149,11 +129,11 @@ exports.run = async (message, a, s, client) => {
 	let embedMessage;
 
 	try {
-		let titleObj = await askeroni(message.channel, titleEmbed, message.author.id, undefined, 1, titleCondition);
+		let titleObj = await askWithCondition(message.channel, titleEmbed, message.author.id, undefined, 1, undefined, titleCondition);
 		title = titleObj.response;
-		let optionsObj = await askeroni(message.channel, optionsEmbed, message.author.id, titleObj.message, 1, optionsCondition);
+		let optionsObj = await askWithCondition(message.channel, optionsEmbed, message.author.id, titleObj.message, 1, undefined, optionsCondition);
 		options = optionsObj.response;
-		let timeObj = await askeroni(message.channel, timeEmbed, message.author.id, optionsObj.message, 1, timeCondition);
+		let timeObj = await askWithCondition(message.channel, timeEmbed, message.author.id, optionsObj.message, 1, undefined, timeCondition);
 		time = timeObj.response;
 		embedMessage = timeObj.message;
 	} catch (e) {
@@ -162,7 +142,7 @@ exports.run = async (message, a, s, client) => {
 
 	options = options.split('|');
 	options.forEach((op, i) => {
-		options[i] = op.replace(/^ ?(.*) ?$/g, '$1');
+		options[i] = op.replace(/^ *(.*) *$/g, '$1');
 	});
 	time = parseTimeString(time);
 
