@@ -9,7 +9,7 @@ module.exports = async (client, message) => {
 	if (message.author.bot) return;
 	if (message.guild && message.channel.permissionsFor(message.guild.me) && !message.channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) return;
 	
-	let shouldIStayOrShouldIGo = await sql.get('SELECT * FROM hardBlacklist WHERE id = ? OR id = ?', [ message.author.id, message.guild.id ]);
+	let shouldIStayOrShouldIGo = await sql.get('SELECT * FROM hardBlacklist WHERE id = ? OR id = ?', [ message.author.id, message.guild ? message.guild.id : 'xd' ]);
 	if (shouldIStayOrShouldIGo && !config.owners.includes(message.author.id)) return;
 
 	if (message.guild) {
