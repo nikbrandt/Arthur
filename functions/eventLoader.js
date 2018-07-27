@@ -16,11 +16,11 @@ function statusUpdate (embed, restart, client) {
 				color: 0xb25bff
 			});
 		}, 60000);
-	}).catch(console.error);
+	}).catch(() => {});
 }
 
 const errorLog = (error, stack, code) => {
-	if (!(process.argv[2] && process.argv[2] === 'test')) errorWebhookClient.send({ embeds: [ { title: error, description: stack, footer: { text: `Code ${code}` }, timestamp: new Date().toISOString(), color: 0xff0000 } ] }).catch(console.error);
+	if (!(process.argv[2] && process.argv[2] === 'test')) errorWebhookClient.send({ embeds: [ { title: error, description: stack, footer: { text: `Code ${code}` }, timestamp: new Date().toISOString(), color: 0xff0000 } ] }).catch(() => {});
 };
 
 const rawEvents = {
@@ -95,12 +95,14 @@ exports.load = client => {
 		});
 	});
 
-	process.on('unhandledPromiseRejection', err => {
+	process.on('unhandledPromiseRejection', (err, promise) => {
 		errorLog('Unhandled Promise Rejection', err.stack, err.code);
+		console.error('Unhandled Promise Rejection at ', promise, ':\n', err);
 	});
 
-	process.on('unhandledRejection', err => {
+	process.on('unhandledRejection', (err, promise) => {
 		errorLog('Unhandled Rejection Error', err.stack, err.code);
+		console.error('Unhandled Promise Rejection at ', promise, ':\n', err);
 	});
 };
 
