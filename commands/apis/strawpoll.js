@@ -123,7 +123,7 @@ exports.run = async (message, args, suffix) => {
 	let embed = {
 		title: 'Poll created',
 		description: `It can be accessed [here](https://www.strawpoll.me/${response.id})`,
-		color: 0x007c29
+		color: 0x00c140
 	};
 	
 	editMessage
