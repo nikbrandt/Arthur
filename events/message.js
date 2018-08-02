@@ -96,7 +96,7 @@ module.exports = async (client, message) => {
 		let alexaStringLower = message.content.toLowerCase();
 		let alexaString = Array.from(alexaStringLower);
 		alexaString = alexaString.filter(character => character.toLowerCase() !== character.toUpperCase());
-		if (!message.guild.name.toLowerCase().includes('bots') && alexaString.join('').startsWith('thisissosadalexaplay')) alexaPlay = true;
+		if (!message.guild.name.toLowerCase().includes('bots') && !message.guild.name.toLowerCase().includes('listcord') && alexaString.join('').startsWith('thisissosadalexaplay')) alexaPlay = true;
 		else return;
 	}
 
@@ -110,7 +110,7 @@ module.exports = async (client, message) => {
 
 	if (alexaPlay) {
 		command = 'play';
-		suffix = message.content.slice(27);
+		suffix = message.content.slice(message.content.toLowerCase().indexOf('play') + 5);
 		args = suffix.split(/ +/g);
 	}
 
