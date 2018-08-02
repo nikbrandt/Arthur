@@ -71,4 +71,5 @@ module.exports = async client => {
 	soundEffects(client);
 
 	console.log(`Success! Loaded ${count} commands in ${Date.now() - start} ms.\n`);
+	return [ count, Date.now() - start ];
 };
