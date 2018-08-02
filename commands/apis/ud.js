@@ -1,6 +1,7 @@
 const request = require('request');
 
 exports.run = (message, a, suffix) => {
+    if (message.guild && !message.channel.nsfw) return message.channel.send('Apparently the urban dictionary is NSFW. I know, it\'s annoying, just tryin\' to keep this bot afloat. (You can only use this command in NSFW channels)');
     request(`http://api.urbandictionary.com/v0/define?term=${suffix}`, (err, resp, body) => {
         if (err) return message.channel.send('Urban Dictionary is broken right now, dunno why, riperoni in pepperoni.');
 
