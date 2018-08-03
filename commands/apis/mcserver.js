@@ -52,6 +52,7 @@ exports.run = async (message, args, s, client) => {
 			message.channel.send({embed}).then(() => {
 				msg.delete().catch(() => {});
 				try {
+					client.processing.splice(index, 1);
 					fs.unlinkSync(`../media/temp/${num}-${date}.png`);
 				} catch (e) {}
 			});
