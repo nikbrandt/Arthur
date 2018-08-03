@@ -9,21 +9,28 @@ async function getUUID (name) {
 }
 
 exports.run = async (message, args) => {
+	let fake = false;
 	let uuid;
 
-	if (!args[0]) uuid = randos[Math.floor(Math.random() * randos.length)];
+	if (!args[0]) {
+		fake = true;
+		uuid = randos[Math.floor(Math.random() * randos.length)];
+	}
 	else if (args[0].length === 36) args[0] = args[0].replace(/-/g, '');
 	else if (args[0].length === 32) uuid = args[0];
 	else if (args[0].length <= 16) uuid = await getUUID(args[0]);
-	else return message.channel.send('If only usernames could be that long..');
-
-	if (!uuid) uuid = randos[Math.floor(Math.random() * randos.length)];
+	else return message.channel.send(i18n.get('commands.mchistory.long_name', message));
+	
+	if (!uuid) {
+		fake = true;
+		uuid = randos[Math.floor(Math.random() * randos.length)];
+	}
 
 	message.channel.send({embed: {
-		title: `${args[0]}'s Skin (click for namemc)`,
+		title: message.__('embed.title', { user: fake ? message.__('some_rando') : args[0] }),
 		url: `https://namemc.com/profile/${uuid}`,
 		footer: {
-			text: 'Render courtesy of Visage.'
+			text: message.__('embed.footer')
 		},
 		image: {
 			url: `https://visage.surgeplay.com/full/512/${uuid}.png`

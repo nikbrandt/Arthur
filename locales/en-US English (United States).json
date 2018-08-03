@@ -1,7 +1,142 @@
 {
 	"commands": {
+		"8ball": {
+			"answer": [
+				":8ball: It is certain.",
+				":8ball: It is decidedly so.",
+				":8ball: Without a doubt.",
+				":8ball: Yes - definitely.",
+				":8ball: You may rely on it.",
+				":8ball: As I see it, yes.",
+				":8ball: Most likely.",
+				":8ball: Outlook good.",
+				":8ball: Yes.",
+				":8ball: Signs point to yes.",
+				":8ball: Reply hazy, try again.",
+				":8ball: Ask again later.",
+				":8ball: Better not tell you now.",
+				":8ball: Cannot predict now.",
+				":8ball: Concentrate and ask again.",
+				":8ball: Don't count on it.",
+				":8ball: My reply is no.",
+				":8ball: My sources say no.",
+				":8ball: Outlook not so good.",
+				":8ball: Very doubtful."
+			]
+		},
+		"cat": {
+			"error": "There was an error. Join the support server if you need your cats ASAP.",
+			"embed_description": "Original image [here]($url)."
+		},
+		"dog": {
+			"error": "An error occurred.. ;-;. Join the support server if you're in dire need of floofs ASAP.",
+			"embed_description": "Original image [here]($url)."
+		},
+		"math": {
+			"no_args": [
+				"Seriously? You expect me to evaluate nothing? :clap:",
+				"Nothing? Nothing at all? I don't think I can evaluate that, sorry."
+			],
+			"long_equation": "your equation is too long; please chill, rethink, and make an equation shorter than 256 characters.",
+			"error": "Your equation is invalid. Rude."
+		},
+		"mchistory": {
+			"no_args": [
+				"Alright, so here's your name history:\n3. You_need\n2. To_provide\n1. Me_with_a_name",
+				"Gimme a name. Please.",
+				"I'll uh.. I'll need a name to get history for that user."
+			],
+			"long_name": [
+				"If only usernames could be that long..",
+				"Names that long don't exist. Sorry."
+			],
+			"invalid_name": "Yeah, that's not a name.",
+			"invalid_page": "That's really not a valid page number, I'm sorry.",
+			"negative_page": "Negative pages? Really?",
+			"no_body": "Something broke. You sure you spelt that correctly?",
+			"page_too_high": "This person hasn't quite changed their name enough to generate page $page. rip.",
+			"no_name_changes": "Nothin' to see here, carry on.",
+			"embed_title": "Name history of $name",
+			"name": "Name",
+			"date_changed": "Date Changed",
+			"embed_footer": "Page $page of $maxPage | Original username was $name"
+		},
+		"mcserver": {
+			"failed": {
+				"title": "Server offline or invalid",
+				"description": "Sorry ¯\\_(ツ)_/¯",
+				"footer": "If the server is actually online, try setting enable-query to true in server.properties."
+			},
+			"no_args": [
+				"Please tell me which server to query.",
+				"You're gonna have to tell me which server to query.",
+				"Really, it's impossible to get the status of a server if you don't give me the server."
+			],
+			"processing": "Processing..",
+			"embed": {
+				"title": "$hostname is online.",
+				"footer": "Port $port | $ping Ping | Protocol $protocol",
+				"players": "Players",
+				"version": "Version"
+			}
+		},
+		"mcskin": {
+			"some_rando": "some rando",
+			"embed": {
+				"title": "$user's Skin (click for namemc link)",
+				"footer": "Render courtesy of Visage."
+			}
+		},
+		"strawpoll": {
+			"default_footer": "Command will be canceled in 15 seconds. Type \"cancel\" to cancel now. Attempt 1 of 5.",
+			"multiple_votes": "Multiple votes",
+			"multiple_votes_description": "Should users be able to submit multiple votes? <__Y__es/__N__o>",
+			"duplication_checking": "Duplication checking",
+			"duplication_checking_description": "How should duplication checking be handled?\n`normal` for IP checking, `permissive` for browser cookie checking, `disabled` for no checking.",
+			"captcha_description": "Should the poll include a captcha? <__Y__es/__N__o>",
+			"no_title": [
+				"You'll uh.. you'll need a title for that poll there.",
+				"It's pretty hard to make a poll without a title.",
+				"You gonna ask a question? Polls aren't very useful without questions."
+			],
+			"no_options": [
+				"You probably want some options with that poll, right?",
+				"Polls are *extremely* difficult to conduct if people can't answer them. You just get no data. You're sad. People are sad. We're all sad."
+			],
+			"too_many_polls": "I've created too many polls this hour. Try again later. Sorry 'bout that.",
+			"advanced": "advanced",
+			"advanced_abbreviation": "adv",
+			"advanced_abbreviation_ending": "anced",
+			"not_enough_options": "Minimum two options. Seriously, what's the point in one option? What?",
+			"too_many_options": "Are you actually insane? Why do you need more than 30 options? Anyways, strollpoll.me won't take it, so I won't take it.",
+			"error": "Error while creating poll: $err\nPlease report this in the support server if you'd like it fixed.",
+			"poll_created": "Poll created",
+			"it_can_be_accessed_here": "It can be accessed [here](https://www.strawpoll.me/$id)"
+		},
 		"stopwatch": {
-			"stopwatch_started": "Stopwatch started."
+			"stopwatch_started": "Stopwatch started.",
+			"stopwatch_stopped": "Stopwatch stopped. $time."
+		}
+	},
+	"time": {
+		"abbreviations": {
+			"hours": "h",
+			"minutes": "m",
+			"seconds": "s"
+		},
+		"moment": {
+			"precise": "MMM Do YYYY [at] hh:mm A",
+			"time_only": "h:mm:ss A"
+		}
+	},
+	"booleans": {
+		"yesno": {
+			"abbreviations": {
+				"yes": "y",
+				"no": "n",
+				"yes_end": "es",
+				"no_end": "o"
+			}
 		}
 	}
 }

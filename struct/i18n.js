@@ -4,7 +4,7 @@ const path = require('path');
 const { Collection } = require('discord.js');
 
 const localeDirectory = path.join(__dirname, '..', 'locales');
-const variableRegex = /\$[^ ]+/g;
+const variableRegex = /\$[A-z_-]+/g;
 
 class i18n {
 	constructor () {
@@ -107,7 +107,7 @@ class i18n {
 			if (!currentLayer) return retry = true;
 		});
 		
-		selection = currentLayer[selection];
+		if (currentLayer) selection = currentLayer[selection];
 		if (!selection) retry = true;
 
 		if (retry) {

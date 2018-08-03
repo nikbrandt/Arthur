@@ -2,11 +2,11 @@ const request = require('request');
 
 exports.run = message => {
 	request('http://dog.ceo/api/breeds/image/random', (err, response, body) => {
-		if (err) return message.channel.send('There was an error. Contact Gymnophoria#8146 if you need dogs ASAP.');
+		if (err) return message.channel.send(message.__('error'));
 		const json = JSON.parse(body);
 
 		message.channel.send({embed: {
-			description: `Original image [here](${json.message})`,
+			description: message.__('embed_description', { url: json.message }),
 			image: {
 				url: json.message
 			},

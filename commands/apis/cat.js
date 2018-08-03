@@ -3,11 +3,11 @@ const { toJson } = require('xml2json');
 
 exports.run = (message) => {
 	request('http://thecatapi.com/api/images/get?format=xml', (err, response, body) => {
-		if (err) return message.channel.send('There was an error. Contact Gymnophoria#8146 if you need your cats ASAP.');
+		if (err) return message.channel.send(message.__('error'));
 		const json = JSON.parse(toJson(body));
 
 		message.channel.send({embed: {
-			description: `Original image [here](${json.response.data.images.image.source_url})`,
+			description: message.__('embed_description', { url: json.response.data.images.image.source_url }),
 			image: {
 				url: json.response.data.images.image.url
 			},

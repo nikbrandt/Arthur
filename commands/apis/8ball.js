@@ -1,10 +1,5 @@
-const request = require('request');
-
 exports.run = (message) => {
-	request('https://8ball.delegator.com/magic/JSON/am%20i%20naked', (err, resp, body) => {
-		if (err) return console.log(`Got an error with an 8ball request (status code ${resp.statusCode}):\n${err.stack}`);
-		message.channel.send(`:8ball: ${JSON.parse(body).magic.answer}`);
-	});
+	message.channel.send(message.__('answer'));
 };
 
 exports.config = {

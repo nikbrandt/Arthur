@@ -157,7 +157,8 @@ module.exports = async (client, message) => {
 	if (cmdFile.config.permLevel > perms) return message.react(':missingpermissions:407054344874229760').catch(() => {});
 	
 	message.__ = (string, variables) => {
-		return i18n.get('commands.' + client.aliases.has(command) ? client.aliases.get(command) : command + '.' + string, message, variables);
+		command = client.aliases.get(command) || command;
+		return i18n.get('commands.' + command + '.' + string, message, variables);
 	};
 
 	try {
@@ -171,20 +172,18 @@ module.exports = async (client, message) => {
 	}
 
 	if (message.author.id !== client.owner.id) {
-		let actualCommand = client.aliases.get(command) || command;
-
-		if (!client.commandStatsObject[actualCommand]) client.commandStatsObject[actualCommand] = { uses: 1 };
-		else client.commandStatsObject[actualCommand].uses++;
+		if (!client.commandStatsObject[command]) client.commandStatsObject[command] = { uses: 1 };
+		else client.commandStatsObject[command].uses++;
 
 		let weekAndYear = moment().format('W/YYYY');
 		let date = moment().format('M/D/YYYY');
 
 		if (!client.dailyStatsObject[date]) client.dailyStatsObject[date] = {};
-		if (!client.dailyStatsObject[date][actualCommand]) client.dailyStatsObject[date][actualCommand] = 1;
-		else client.dailyStatsObject[date][actualCommand]++;
+		if (!client.dailyStatsObject[date][command]) client.dailyStatsObject[date][command] = 1;
+		else client.dailyStatsObject[date][command]++;
 
 		if (!client.weeklyStatsObject[weekAndYear]) client.weeklyStatsObject[weekAndYear] = {};
-		if (!client.weeklyStatsObject[weekAndYear][actualCommand]) client.weeklyStatsObject[weekAndYear][actualCommand] = 1;
-		else client.weeklyStatsObject[weekAndYear][actualCommand]++;
+		if (!client.weeklyStatsObject[weekAndYear][command]) client.weeklyStatsObject[weekAndYear][command] = 1;
+		else client.weeklyStatsObject[weekAndYear][command]++;
 	}
 };

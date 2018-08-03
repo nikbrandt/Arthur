@@ -15,8 +15,8 @@ function reverse (array) {
 	return reversed;
 }
 
-exports.run = async (message, args, suffix, client, permLevel) => {
-	if (!args[0]) return message.channel.send('Alright, so here\'s your name history:\n3. You_need\n2. To_provide\n1. Me_with_a_name');
+exports.run = async (message, args) => {
+	if (!args[0]) return message.channel.send(message.__('no_args'));
 
 	let uuid;
 	let page;
@@ -24,20 +24,20 @@ exports.run = async (message, args, suffix, client, permLevel) => {
 	if (args[0].length === 36) args[0] = args[0].replace(/-/g, '');
 	if (args[0].length === 32) uuid = args[0];
 	else if (args[0].length <= 16) uuid = await getUUID(args[0]);
-	else return message.channel.send('If only usernames could be that long..');
+	else return message.channel.send(message.__('long_name'));
 
-	if (!uuid) return message.channel.send('Yeah, that\'s not a name.');
+	if (!uuid) return message.channel.send(message.__('invalid_name'));
 
 	if (!args[1]) page = 1;
 	else {
 		page = parseInt(args[1]);
-		if (!page) return message.channel.send('That\'s really not a valid page number, I\'m sorry.');
-		if (page < 0) return message.channel.send('Negative pages? Really?');
+		if (!page) return message.channel.send(message.__('invalid_page'));
+		if (page < 0) return message.channel.send(message.__('negative_page'));
 	}
 
 	let body = await request(`https://api.mojang.com/user/profiles/${uuid}/names`);
 
-	if (!body) return message.channel.send('Something broke. You sure you spelt that correctly?');
+	if (!body) return message.channel.send(message.__('no_body'));
 
 	let json = JSON.parse(body);
 	let rever = reverse(json);
@@ -45,7 +45,7 @@ exports.run = async (message, args, suffix, client, permLevel) => {
 	let dateArray = [];
 
 	let maxPage = Math.ceil(json.length / 10);
-	if (page > maxPage) return message.channel.send('This person hasn\'t quite changed their name enough to generate page ' + page + '. rip.');
+	if (page > maxPage) return message.channel.send(message.__('page_too_high', { page }));
 
 	let index = json.length - (page * 10 - 10);
 	let reversed = rever.slice(page * 10 - 10, page * 10);
@@ -53,34 +53,34 @@ exports.run = async (message, args, suffix, client, permLevel) => {
 	for (let object of reversed) {
 		if (index !== json.length && index !== 1) {
 			nameArray.push(`${index}. ${object.name}  \u200b`);
-			dateArray.push(moment(object.changedToAt).utc().format('MMM Do YYYY [at] hh:mm A'));
+			dateArray.push(moment(object.changedToAt).utc().format(i18n.get('time.moment.precise', message)));
 		}
 		index--;
 	}
 
-	if (!nameArray.length) nameArray = ['Nothin\' to see here, carry on.']
+	if (!nameArray.length) nameArray = [ message.__('no_name_changes') ];
 
 	message.channel.send({embed: {
 		author: {
-			name: `Name history of ${rever[0].name}`,
+			name: message.__('embed_title', { name: rever[0].name }),
 			icon_url: `https://visage.surgeplay.com/face/256/${uuid}.png`,
 			url: `https://namemc.com/profile/${uuid}`
 		},
 		color: 0x00AA00,
 		fields: [
 			{
-				name: 'Name',
+				name: message.__('name'),
 				value: '\u200b' + nameArray.join('\n'),
 				inline: true
 			},
 			{
-				name: 'Date Changed',
+				name: message.__('date_changed'),
 				value: '\u200b' + dateArray.join('\n'),
 				inline: true
 			}
 		],
 		footer: {
-			text: `Page ${page} of ${maxPage} | Original username was ${json[0].name}`
+			text: message.__('embed_footer', { page, maxPage, name: json[0].name })
 		}
 	}});
 };

@@ -3,40 +3,8 @@ const requestPromise = require('request-promise');
 
 const quoteRegex = /^"([^"]+)"/;
 
-const footer = {
-	text: 'Command will be canceled in 15 seconds. Type "cancel" to cancel now. Attempt 1 of 5.'
-};
-
-const isYesNo = text => {
-	return /^(y(es)?|no?)$/i.test(text);
-};
-const parseYesNo = text => {
-	const lowercased = text.toLowerCase();
-	return lowercased.includes('y');
-};
-
-const multiEmbed = {
-	title: 'Multiple votes',
-	description: 'Should users be able to submit multiple votes? <__Y__es/__N__o>',
-	color: 0x007c29,
-	footer
-};
-
-const dupeEmbed = {
-	title: 'Duplication checking',
-	description: 'How should duplication checking be handled?\n`normal` for IP checking, `permissive` for browser cookie checking, `disabled` for no checking.',
-	color: 0x007c29,
-	footer
-};
 const dupeCondition = text => {
 	return [ 'normal', 'permissive', 'disabled' ].includes(text.toLowerCase());
-};
-
-const captchaEmbed = {
-	title: 'Captcha',
-	description: 'Should the poll include a captcha? <__Y__es/__N__o>',
-	color: 0x007c29,
-	footer
 };
 
 let lastPoll = {
@@ -46,8 +14,42 @@ let lastPoll = {
 };
 
 exports.run = async (message, args, suffix) => {
-	if (!args[0]) return message.channel.send('You\'ll uh.. you\'ll need a title for that poll there.');
-	if (!args[1]) return message.channel.send('You probably want some options with that poll, right?');
+	const footer = {
+		text: message.__('default_footer')
+	};
+
+	const isYesNo = text => {
+		let regex = new RegExp(`^(${i18n.get('booleans.yesno.abbreviations.yes', message)}(${i18n.get('booleans.yesno.abbreviations.yes_end', message)})?|${i18n.get('booleans.yesno.abbreviations.no', message)}(${i18n.get('booleans.yesno.abbreviations.no_end', message)})?)$`, 'i');
+		return regex.test(text);
+	}; // `
+	const parseYesNo = text => {
+		const lowercased = text.toLowerCase();
+		return lowercased.includes(i18n.get('booleans.yesno.abbreviations.yes', message));
+	};
+
+	const multiEmbed = {
+		title: message.__('multiple_votes'),
+		description: message.__('multiple_votes_description'),
+		color: 0x007c29,
+		footer
+	};
+
+	const dupeEmbed = {
+		title: message.__('duplication_checking'),
+		description: message.__('duplication_checking_description'),
+		color: 0x007c29,
+		footer
+	};
+
+	const captchaEmbed = {
+		title: 'Captcha',
+		description: message.__('captcha_description'),
+		color: 0x007c29,
+		footer
+	};
+	
+	if (!args[0]) return message.channel.send(message.__('no_title'));
+	if (!args[1]) return message.channel.send(message.__('no_options'));
 
 	if (!lastPoll.start) lastPoll.start = Date.now();
 	if (!lastPoll.last) lastPoll.last = Date.now();
@@ -56,7 +58,7 @@ exports.run = async (message, args, suffix) => {
 		lastPoll.last = Date.now();
 		lastPoll.uses = 1;
 	}
-	if (lastPoll.uses >= 100) return message.channel.send('I\'ve created too many polls this hour. Try again later. Sorry \'bout that.');
+	if (lastPoll.uses >= 100) return message.channel.send(message.__('too_many_polls'));
 	
 	let title;
 	let options;
@@ -76,14 +78,14 @@ exports.run = async (message, args, suffix) => {
 		suffix = suffix.slice(args[0].length + 1);
 	}
 	
-	if (suffix.includes('--adv') || suffix.includes('--advanced')) {
+	if (suffix.includes(`--${message.__('advanced')}`) || suffix.includes(`--${message.__('advanced_abbreviation')}`)) {
 		advanced = true;
-		suffix = suffix.replace(/ *--adv(anced)? */g, '');
+		suffix = suffix.replace(new RegExp(` *--${message.__('advanced_abbreviation')}(${message.__('advanced_abbreviation_ending')})? *`, 'g'), '');// / *--adv(anced)? */g, '');
 	}
 	
 	options = suffix.split('|');
-	if (options.length < 2) return message.channel.send('Minimum two options. Seriously, what\'s the point in one option? What?');
-	if (options.length > 30) return message.channel.send('Are you actually insane? Why do you need more than 30 options? Anyways, strollpoll.me won\'t take it, so I won\'t take it.');
+	if (options.length < 2) return message.channel.send(message.__('not_enough_options'));
+	if (options.length > 30) return message.channel.send(message.__('too_many_options'));
 	options.forEach((op, i) => {
 		options[i] = op.replace(/^ *(.*) *$/, '$1');
 	});
@@ -116,13 +118,13 @@ exports.run = async (message, args, suffix) => {
 	} catch (err) {
 		err = err.stack ? err.stack.split('\n')[0] : err;
 		return editMessage
-			? editMessage.edit(`Error while creating poll: ${err}\nPlease report this in the support server if you'd like it fixed.`, {embed: {}}).catch(() => {})
-			: message.channel.send(`Error while creating poll: ${err}\nPlease report this in the support server if you'd like it fixed.`);
+			? editMessage.edit(message.__('error', { err }), {embed: {}}).catch(() => {})
+			: message.channel.send(message.__('error', { err }));
 	}
 	
 	let embed = {
-		title: 'Poll created',
-		description: `It can be accessed [here](https://www.strawpoll.me/${response.id})`,
+		title: message.__('poll_created'),
+		description: message.__('it_can_be_accessed_here', { id: response.id }),
 		color: 0x00c140
 	};
 	

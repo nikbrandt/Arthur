@@ -1,11 +1,11 @@
 const Stopwatch = require('timer-stopwatch');
 const UserObject = {};
 
-function secSpread(sec) {
+function secSpread(sec, locale) {
 	let hours = Math.floor(sec / 3600);
 	let mins = Math.floor((sec - hours * 3600) / 60);
 	let secs = sec - (hours * 3600 + mins * 60);
-	return `${hours ? `${hours}h ` : ''}${mins ? `${mins}m ` : ''}${secs ? `${secs}s` : ''}`;
+	return `${hours ? `${hours}${i18n.getString('time.abbreviations.hours', locale)} ` : ''}${mins ? `${mins}${i18n.getString('time.abbreviations.minutes', locale)} ` : ''}${secs ? `${secs}${i18n.getString('time.abbreviations.seconds', locale)}` : ''}`;
 }
 
 exports.run = (message, args, s, client, permLevel) => {
@@ -18,9 +18,9 @@ exports.run = (message, args, s, client, permLevel) => {
 	if (on) {
 		UserObject[message.author.id].reset();
 		UserObject[message.author.id].start();
-		message.channel.send('Stopwatch started.');
+		message.channel.send(message.__('stopwatch_started'));
 	} else {
-		message.channel.send(`Stopwatch stopped. ${secSpread(Math.ceil(UserObject[message.author.id].ms / 1000))}.`);
+		message.channel.send(message.__('stopwatch_stopped', { time: secSpread(Math.ceil(UserObject[message.author.id].ms / 1000), i18n.getLocale(message)) }));
 	}
 };
 
