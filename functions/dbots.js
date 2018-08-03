@@ -24,9 +24,22 @@ exports.post = client => {
 			"server_count": client.guilds.size
 		}
 	};
+	
+	let listcordOpts = {
+		uri: `https://listcord.com/api/bot/${client.user.id}/guilds`,
+		method: 'POST',
+		json: true,
+		headers: {
+			"Authorization": client.config.dbotsAuth.listcord
+		},
+		body: {
+			"guilds": client.guilds.size
+		}
+	};
 
 	request(orgOpts);
 	request(pwOpts);
+	request(listcordOpts);
 };
 
 exports.getLikes = client => {
