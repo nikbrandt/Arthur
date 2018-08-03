@@ -3,6 +3,7 @@ const loadCommands = require('../functions/commandLoader');
 const eventLoader = require('../functions/eventLoader');
 const permLevel = require('../functions/permLevel.js');
 const findMember = require('../functions/findMember.js');
+const i18n = require('../struct/i18n');
 const fs = require('fs');
 
 class ArthurClient extends Client {
@@ -22,6 +23,7 @@ class ArthurClient extends Client {
 		this.commands = new Collection();
 		this.aliases = new Collection();
 		this.reactionCollectors = new Collection();
+		this.i18n = new i18n();
 		
 		permLevel.pl(this);
 		findMember(this);

@@ -8,7 +8,7 @@ exports.run = (message, args, suffix, client) => {
 		if (error) return message.channel.send(`Received error: \`\`\`shell\n${error.stack}\`\`\``);
 		
 		if (stdout.includes('up to date.')) return message.channel.send('Already up to date.');
-		if (stdout.includes('files changed')) {
+		if (stdout.includes('changed, ')) {
 			message.channel.send(`Pulled successfully <:discreetkappa:474445143974608898> ${reload ? '- Reloading commands now.' : ''}`);
 			if (reload) client.commands.get('load').run(message, args, suffix, client);
 			return;
