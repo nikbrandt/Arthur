@@ -1,1 +1,7 @@
-{}
+{
+	"commands": {
+		"stopwatch": {
+			"stopwatch_started": "Stopwatch started."
+		}
+	}
+}

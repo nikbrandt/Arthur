@@ -4,6 +4,7 @@ const path = require('path');
 const { Collection } = require('discord.js');
 
 const localeDirectory = path.join(__dirname, '..', 'locales');
+const variableRegex = /\$[^ ]+/g;
 
 class i18n {
 	constructor () {
@@ -11,7 +12,6 @@ class i18n {
 		this._userLocaleCache = new Collection();
 		this._locales = new Collection();
 		this._localeNames = new Collection();
-		this._localeNamesReversed = new Collection();
 		
 		let files = fs.readdirSync(localeDirectory);
 		if (!files) throw new Error('No locales found.');
@@ -24,13 +24,12 @@ class i18n {
 			let args = filename.split(' ');
 			
 			this._locales.set(args[0], require(path.join(localeDirectory, file)));
-			this._localeNamesReversed.set(args.slice(1).join(' '), args[0]);
 			this._localeNames.set(args.shift(), args.join(' '));
 		});
 	}
 	
 	async init () {
-		console.log('init i18n');
+		console.log('Caching guild and user locale settings..');
 		
 		const guildResults = await sql.all('SELECT guildID, locale FROM guildOptions');
 		if (guildResults) {
@@ -38,6 +37,7 @@ class i18n {
 				if (!result.locale) return;
 				this._guildLocaleCache.set(result.guildID, result.locale);
 			});
+			console.log('Guild locale settings cached.');
 		}
 
 		const userResults = await sql.all('SELECT userID, locale FROM userOptions');
@@ -45,7 +45,8 @@ class i18n {
 		userResults.forEach(result => {
 			if (!result.locale) return;
 			this._userLocaleCache.set(result.userID, result.locale);
-		})
+		});
+		console.log('User locale settings cached.\n');
 	}
 	
 	getLocales () {
@@ -84,10 +85,62 @@ class i18n {
 	async removeUserLocale (id) {
 		await sql.run(`UPDATE userOptions SET locale = null WHERE userID = '${id}'`);
 	}
-	
-	get (string, message) {
+
+	/**
+	 * @param {string} string 
+	 * @param {string} locale
+	 * @param {object} variables An object containing all variables used in the string.
+	 * @returns {*}
+	 */
+	getString (string, locale, variables = {}) {
+		const file = this._locales.get(locale);
+		if (!file) throw new Error('Invalid locale.');
 		
+		let retry = false;
+		let args = string.split('.');
+		let currentLayer = file;
+		let selection = args.pop();
+		
+		args.forEach(arg => {
+			if (retry) return;
+			currentLayer = currentLayer[arg];
+			if (!currentLayer) return retry = true;
+		});
+		
+		selection = currentLayer[selection];
+		if (!selection) retry = true;
+
+		if (retry) {
+			if (locale === 'en-US') throw new Error('en-US locale missing string: ' + string);
+			return this.getString(string, 'en-US');
+		}
+		
+		variables.$ = '$';
+		
+		if (typeof selection !== 'string' && !selection instanceof Array) throw new Error(`Locale string ${string} returning ${selection}`);
+		if (selection instanceof Array) selection = selection[Math.floor(Math.random() * selection.length)];
+		
+		if (!variableRegex.test(selection)) return selection;
+		let matches = selection.match(variableRegex);
+		
+		matches.forEach(match => {
+			const variable = variables[match.slice(1)];
+			selection = selection.replace(match, variable);
+		});
+		
+		return selection;
 	}
+	
+	getLocale (message) {
+		if (this._userLocaleCache.has(message.author.id)) return this._userLocaleCache.get(message.author.id);
+		if (this._guildLocaleCache.has(message.guild.id)) return this._guildLocaleCache.get(message.guild.id);
+		return 'en-US';
+	}
+	
+	get (string, message, variables) {
+		return this.getString(string, this.getLocale(message), variables);
+	}
+	
 }
 
 module.exports = i18n;
