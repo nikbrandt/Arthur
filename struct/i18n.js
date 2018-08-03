@@ -7,11 +7,11 @@ const localeDirectory = path.join(__dirname, '..', 'locales');
 
 class i18n {
 	constructor () {
+		this._guildLocaleCache = new Collection();
+		this._userLocaleCache = new Collection();
 		this._locales = new Collection();
 		this._localeNames = new Collection();
 		this._localeNamesReversed = new Collection();
-		this._guildLocaleCache = new Collection();
-		this._userLocaleCache = new Collection();
 		
 		let files = fs.readdirSync(localeDirectory);
 		if (!files) throw new Error('No locales found.');
@@ -26,6 +26,25 @@ class i18n {
 			this._locales.set(args[0], require(path.join(localeDirectory, file)));
 			this._localeNamesReversed.set(args.slice(1).join(' '), args[0]);
 			this._localeNames.set(args.shift(), args.join(' '));
+		});
+	}
+	
+	async init () {
+		console.log('init i18n');
+		
+		const guildResults = await sql.all('SELECT guildID, locale FROM guildOptions');
+		if (guildResults) {
+			guildResults.forEach(result => {
+				if (!result.locale) return;
+				this._guildLocaleCache.set(result.guildID, result.locale);
+			});
+		}
+
+		const userResults = await sql.all('SELECT userID, locale FROM userOptions');
+		if (!userResults) return;
+		userResults.forEach(result => {
+			if (!result.locale) return;
+			this._userLocaleCache.set(result.userID, result.locale);
 		})
 	}
 	
@@ -60,6 +79,14 @@ class i18n {
 	async setUserLocale (id, locale) {
 		await sql.run(`INSERT OR IGNORE INTO userOptions (userID, locale) VALUES ('${id}', '${locale}'); UPDATE userOptions SET locale = '${locale}' WHERE userID = '${id}'`);
 		this._userLocaleCache.set(id, locale);
+	}
+	
+	async removeUserLocale (id) {
+		await sql.run(`UPDATE userOptions SET locale = null WHERE userID = '${id}'`);
+	}
+	
+	get (string, message) {
+		
 	}
 }
 

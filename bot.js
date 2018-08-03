@@ -12,6 +12,6 @@ const client = new ArthurClient({
 	disableEveryone: true
 });
 
-sql.open('../media/db.sqlite').catch(console.error);
-
-client.init();
+sql.open('../media/db.sqlite').then(() => {
+	client.init().catch(console.error);
+}).catch(console.error);

@@ -24,14 +24,16 @@ class ArthurClient extends Client {
 		this.aliases = new Collection();
 		this.reactionCollectors = new Collection();
 		this.i18n = new i18n();
+		global.i18n = this.i18n;
 		
 		permLevel.pl(this);
 		findMember(this);
 	}
 	
-	init () {
+	async init () {
 		loadCommands(this);
 		eventLoader.load(this);
+		await this.i18n.init();
 		
 		this.login(this.test ? this.config.testToken : this.config.token).catch(console.error);
 	}
