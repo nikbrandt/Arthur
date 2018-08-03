@@ -3,6 +3,7 @@ const moment = require('moment');
 const XP = require('../struct/xp.js');
 const sql = require('sqlite');
 
+const { errorLog } = require('../functions/eventLoader');
 let cooldownObj = {};
 
 module.exports = async (client, message) => {
@@ -165,9 +166,11 @@ module.exports = async (client, message) => {
 		console.log(`${moment().format('MM-DD H:mm:ss')} - Command ${command} being run.`);
 		let resp = cmdFile.run(message, args, suffix, client, perms, prefix);
 		if (resp && typeof resp.then === 'function' && typeof resp.catch === 'function') resp.catch(err => {
+			errorLog(`Error while running ${command} | ${err.message}`, err.stack, err.code);
 			console.error(`Command ${command} has failed to run!\n${err.stack}`)
 		});
 	} catch (err) {
+		errorLog(`Error while running ${command} | ${err.message}`, err.stack, err.code);
 		console.error(`Command ${command} has failed to run!\n${err.stack}`);
 	}
 

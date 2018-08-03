@@ -75,7 +75,7 @@ exports.load = client => {
 
 	client.on('error', err => {
 		console.error('Client error\n', err);
-		errorLog('Discord.JS Client Error', err, err.code);
+		errorLog('Discord.JS Client Error', err.stack, err.code);
 	});
 
 	client.on('reconnecting', () => {
@@ -107,3 +107,4 @@ exports.load = client => {
 };
 
 exports.statusUpdate = statusUpdate;
+exports.errorLog = errorLog;
