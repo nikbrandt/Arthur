@@ -155,6 +155,10 @@ module.exports = async (client, message) => {
 	}
 
 	if (cmdFile.config.permLevel > perms) return message.react(':missingpermissions:407054344874229760').catch(() => {});
+	
+	message.__ = (string, variables) => {
+		return i18n.get('commands.' + client.aliases.has(command) ? client.aliases.get(command) : command + '.' + string, message, variables);
+	};
 
 	try {
 		console.log(`${moment().format('MM-DD H:mm:ss')} - Command ${command} being run.`);
