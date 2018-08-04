@@ -56,11 +56,11 @@ exports.run = async (message, args, s, client) => {
 		}
 
 		message.channel.send({embed: new Discord.RichEmbed()
-			.setTitle(message.__('title', { url: args[0].length > 245 ? args[0].slice(0, -(args[0].length - 245)) : args[0] }))
-			.setDescription(message.__('description', { url: args[0].startsWith('https://') || args[0].startsWith('http://') ? args[0] : 'https://' + args[0] }))
+			.setTitle(message.__('embed.title', { url: args[0].length > 245 ? args[0].slice(0, -(args[0].length - 245)) : args[0] }))
+			.setDescription(message.__('embed.description', { url: args[0].startsWith('https://') || args[0].startsWith('http://') ? args[0] : 'https://' + args[0] }))
 			.attachFile(`../media/temp/${date}-${message.author.id}.png`)
 			.setImage(`attachment://${date}-${message.author.id}.png`)
-			.setFooter(message.__('footer', { name: message.author.tag }))
+			.setFooter(message.__('embed.footer', { name: message.author.tag }))
 			.setColor(0x00c140)
 		}).then(() => {
 			sent = true;

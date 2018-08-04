@@ -171,6 +171,84 @@
 		"stopwatch": {
 			"stopwatch_started": "Stopwatch started.",
 			"stopwatch_stopped": "Stopwatch stopped. $time."
+		},
+		"leaderboard": {
+			"server": "server",
+			"guild": "guild",
+			"server_abbreviation": "s",
+			"global": "global",
+			"global_abbreviation": "g",
+			"invalid_page": "`$page` is not a valid page number.",
+			"negative_or_zero_page": "There is no page 0 or negative page.",
+			"not_enough_people": "Not enough people have talked to generate page $page.",
+			"footer": "Viewing page $page of $maxPage$end",
+			"footer_rank": "You are rank $rank on page $page",
+			"global_leaderboard": "Global Leaderboard"
+		},
+		"levels": {
+			"leveling_enabled": "Leveling has been enabled.",
+			"leveling_disabled": "Leveling has been disabled."
+		},
+		"xp": {
+			"description": "**$xp** global XP$end",
+			"rank_on_page": "Rank **$rank**, on page **$page**.",
+			"guild_xp": "Guild XP",
+			"current_xp": "Current: **$current**$total\nLevel **$level**$rank",
+			"total": "Total",
+			"rank": "Rank",
+			"page": "Page",
+			"xp_to_level": "XP to level"
+		},
+		"xpinfo": {
+			"leveling_system": "Leveling System",
+			"description": "Arthur has a leveling system that will give you XP and eventually level you up while you type messages. This is $levels for this server and can be toggled by a server manager with `$prefix\u200bleveling`.",
+			"enabled": "enabled",
+			"disabled": "disabled",
+			"current_settings": "Current Settings",
+			"settings_message": "XP revolves around **$base**, for a range of **$min** to **$max** XP per message.\nXP is added every **$seconds** seconds.\nTo achieve level one, you need **$levelOne** XP.\nEach level requires **$mult**x as much XP as the previous.\nThe maximum XP will be multiplied for activity is **$maxMult**x."
+		},
+		"blacklist": {
+			"blacklisted_users": "Blacklisted Users",
+			"nothing_to_display": "Nothin' to display here, carry on.",
+			"invalid_user": [
+				"Did you make that person up in your imagination? They don't exist. You can't blacklist people that aren't here. It just doesn't work.",
+				"Who? I.. can't find whoever it is you're trying to find.",
+				"That person just.. doesn't exist. rip.",
+				"A real person would be nice.",
+				"I could not find the member whom you have tried to find. Could you try again with someone who *exists*?"
+			],
+			"self_blacklist": [
+				"Hey. I'm not blacklisting you from me. Thanks, but no thanks.",
+				"You can't.. you can't do that. At least, I won't let you do that.",
+				"Seriously, you don't like me that much? Wow. Alright. I see how it is. Why don't you just kick me then, if that's how it's going to be?",
+				"lol. no."
+			],
+			"already_blacklisted": "This person is already blacklisted.\nGo ahead and run `unblacklist $id` if you don't want them blacklisted anymore. Thanks.",
+			"blacklisted": "**$tag** has been blacklisted from usage of Arthur in this server. Riperoni in pepperoni.\nShould you want to unblacklist them, run `unblacklist $id`.\nHave a good day. :thumbsup:"
+		},
+		"guildlanguage": {
+			"current_language": "This server's language is $locale",
+			"list": "Currently supported locales:\n$locales\nIf you'd like to help translate arthur, contact Gymnophoria in the support server.",
+			"invalid_locale": "Invalid locale string. Must be one of $locales. case-SENSITIVE.",
+			"locale_set": "Server locale set."
+		},
+		"prefix": {
+			"current": "This server's prefix is `$prefix`.",
+			"too_long": [
+				"That prefix is just a bit too long..",
+				"That's a bit too long for me. ~~That's what she said~~. No more than 10 characters.",
+				"That's gonna need to be shorter. No sexual reference intended."
+			],
+			"updated": "Server prefix updated to `$prefix`."
+		},
+		"unblacklist": {
+			"no_args": [
+				"Well? You gonna choose who you want to unblacklist? Or just ~~stand~~ sit there?",
+				"I'm on it. I'll unblacklist ` ` right away."
+			],
+			"self_blacklist": "You're clearly not blacklisted if I'm talking to you. You alright there, bud?",
+			"not_blacklisted": "That person isn't blacklisted. How nice of you, looking out for those who are doing just fine.",
+			"unblacklisted": "Like magic, **$tag** can interact with me again. :tada:"
 		}
 	},
 	"time": {

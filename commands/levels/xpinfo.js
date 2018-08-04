@@ -8,16 +8,12 @@ exports.run = async (message, ar, sui, client) => {
 		color: 0x8356ff,
 		fields: [
 			{
-				name: 'Leveling System',
-				value: `Arthur has a leveling system that will give you XP and eventually level you up while you type messages. This is ${levels ? 'enabled' : 'disabled'} for this guild and can be toggled by a server manager with \`${client.config.prefix}leveling\``
+				name: message.__('leveling_system'),
+				value: message.__('description', { levels: levels ? message.__('enabled') : message.__('disabled'), prefix: client.config.prefix })
 			},
 			{
-				name: 'Current Settings',
-				value: `XP revolves around **${client.config.xp.base}**, for a range of **${client.config.xp.base - client.config.xp.min}** to **${client.config.xp.base + client.config.xp.max}** XP per message.
-XP is added every **${client.config.xp.xpAdd / 1000}** seconds.
-To achieve level 1, you need **${client.config.xp.levelOne}** XP.
-Each level requires **${client.config.xp.mult}**x as much XP as the previous.
-The maximum XP will be multiplied for activity is **${client.config.xp.maxMult}x**`
+				name: message.__('current_settings'),
+				value: message.__('settings_message', { base: client.config.xp.base, min: client.config.xp.base - client.config.xp.min, max: client.config.xp.base + client.config.xp.max, seconds: client.config.xp.xpAdd / 1000, levelOne: client.config.xp.levelOne, mult: client.config.xp.mult, maxMult: client.config.xp.maxMult })
 			}
 		]
 	}});

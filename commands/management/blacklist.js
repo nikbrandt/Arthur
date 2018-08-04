@@ -9,18 +9,18 @@ exports.run = async (message, args, suffix, client) => {
 		let memberList = members.map(mem => mem.user.username === mem.displayName ? mem.user.tag : `${mem.user.tag} (${mem.displayName})`).join('\n');
 
 		message.channel.send({embed: {
-			title: 'Blacklisted Users',
-			description: memberList ? memberList : 'Nothin\' to display here, carry on.',
+			title: message.__('blacklisted_users'),
+			description: memberList ? memberList : message.__('nothing_to_display'),
 			color: 0xed3636
 		}});
 	} else {
 		let obj = client.findMember(message, suffix);
-		if (!obj) return message.channel.send('Did you make that person up in your imagination? They don\'t exist. You can\'t blacklist people that aren\'t here. It just doesn\'t work.');
-		if (obj.user.id === message.author.id) return message.channel.send('Hey. I\'m not blacklisting you from me. Thanks, but no thanks.');
-		if (users.includes(obj.user.id)) return message.channel.send('This person is already blacklisted.\nGo ahead and run `unblacklist <their name>` if you don\'t want them blacklisted anymore. Thanks.');
+		if (!obj) return message.channel.send(message.__('invalid_user'));
+		if (obj.user.id === message.author.id) return message.channel.send(message.__('self_blacklist'));
+		if (users.includes(obj.user.id)) return message.channel.send(message.__('already_blacklisted', { id: obj.user.id }));
 
 		sql.run(`INSERT INTO guildUserBlacklist (guildID, userID) VALUES (?, ?)`, [ message.guild.id, obj.user.id ]);
-		message.channel.send(`**${obj.user.tag}** has been blacklisted from usage of Arthur. Riperoni in pepperoni.\nShould you want to unblacklist them, run \`unblacklist ${obj.user.id}\`.\nHave a good day. :thumbsup:`)
+		message.channel.send(message.__('blacklisted', { tag: obj.user.tag, id: obj.user.id }));
 	}
 };
 

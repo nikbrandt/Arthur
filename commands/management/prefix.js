@@ -5,13 +5,13 @@ exports.run = async (message, args, s, c, permLevel) => {
 
 	if (!args[0] || permLevel < 4) {
 		if (!row) {
-			message.channel.send('The current prefix is `a.`.');
+			message.channel.send(message.__('current', { prefix: 'a.' }));
 			sql.run(`INSERT INTO guildOptions (guildID, prefix) VALUES (?, ?)`, [message.guild.id, 'a.']);
-		} else message.channel.send(`This servers's prefix is \`${row.prefix}\``);
+		} else message.channel.send(message.__('current', { prefix: row.prefix }));
 	} else {
-		if (args[0].length > 10) return message.channel.send('That prefix is just a bit too long..');
+		if (args[0].length > 10) return message.channel.send(message.__('too_long'));
 
-		message.channel.send(`Guild prefix updated to \`${args[0]}\``);
+		message.channel.send(message.__('updated', { prefix: args[0] }));
 		if (!row) sql.run(`INSERT INTO guildOptions (guildID, prefix) VALUES (?, ?)`, [message.guild.id, args[0]]);
 		else sql.run(`UPDATE guildOptions SET prefix = '${args[0]}' WHERE guildID = '${message.guild.id}'`);
 	}

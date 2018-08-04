@@ -4,7 +4,7 @@ const path = require('path');
 const { Collection } = require('discord.js');
 
 const localeDirectory = path.join(__dirname, '..', 'locales');
-const variableRegex = /\$[A-z_-]+/g;
+const variableRegex = /\$[A-Za-z]+/g;
 
 class i18n {
 	constructor () {

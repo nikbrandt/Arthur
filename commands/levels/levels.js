@@ -5,15 +5,15 @@ exports.run = async message => {
 
 	if (!row) {
 		sql.run(`INSERT INTO guildOptions (guildID, levels) VALUES (?, ?)`, [message.guild.id, 'true']);
-		return message.channel.send('Leveling has been enabled.');
+		return message.channel.send(message.__('leveling_enabled'));
 	}
 
 	if (row.levels === 'true') {
 		sql.run(`UPDATE guildOptions SET levels = 'false' WHERE guildID = '${message.guild.id}'`);
-		message.channel.send('Leveling has been disabled.');
+		message.channel.send(message.__('leveling_disabled'));
 	} else {
 		sql.run(`UPDATE guildOptions SET levels = 'true' WHERE guildID = '${message.guild.id}'`);
-		message.channel.send('Leveling has been enabled.');
+		message.channel.send(message.__('leveling_enabled'));
 	}
 };
 

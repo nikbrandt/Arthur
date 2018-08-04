@@ -24,16 +24,21 @@ exports.run = async (message, args, suffix, client) => {
 			icon_url: mem.user.avatarURL
 		},
 		color: 0x8356ff,
-		description: `**${xpObj.global}** global XP${gRank ? ` - Rank **${gRank.rank}**, on page **${gRank.page}**.` : '.'}`,
+		description: message.__('description', { xp: xpObj.global, end: gRank ? ' - ' + message.__('rank_on_page', { rank: gRank.rank, page: gRank.page }) : '' }),
 		fields: [
 			{
-				name: 'Guild XP',
-				value: `Current: **${xpObj.current}**${xpObj.current === xpObj.total ? '' : `, Total: **${xpObj.total}**`}\nLevel: **${xpObj.level}**${rank ? `\nRank: **${rank.rank}**, Page: **${rank.page}**.` : ''}`,
+				name: message.__('guild_xp'),
+				value: message.__('current_xp', { 
+					current: xpObj.current,
+					total: xpObj.current === xpObj.total ? '' : ', ' + message.__('total') + `: **${xpObj.total}**`,
+					level: xpObj.level,
+					rank: rank ? '\n' + message.__('rank') + `: **${rank.rank}**, ` + message.__('page') + `: **${rank.page}**.` : ''
+				}),
 				inline: true
 			},
 			{
 				name: 'Progress',
-				value: `[${':dollar:'.repeat(parseInt(percent.toString().slice(0, 1), 10))}${':yen:'.repeat(10 - parseInt(percent.toString().slice(0, 1), 10))}]\n**${neededXP}** XP to level ${xpObj.level + 1}. (${percent}%)`,
+				value: `[${':dollar:'.repeat(parseInt(percent.toString().slice(0, 1), 10))}${':yen:'.repeat(10 - parseInt(percent.toString().slice(0, 1), 10))}]\n**${neededXP}** ${message.__('xp_to_level')} ${xpObj.level + 1}. (${percent}%)`,
 				inline: true
 			}
 		]

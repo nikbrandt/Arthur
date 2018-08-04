@@ -1,17 +1,17 @@
 exports.run = async (message, args, suffix, client, permLevel) => {
 	if (!args[0] || permLevel < 4) {
 		let locale = await i18n.getGuildLocale(message.guild.id);
-		return message.channel.send(`This server's language is ${locale}`);
+		return message.channel.send(message.__('current_language', { locale }));
 	}
 	
 	let locales = i18n.getLocales();
 	let localeNames = i18n.getLocaleNames();
 	
-	if (args[0] === 'list') return message.channel.send(`Currently supported locales:\n${locales.map((locale, i) => `\`${locale}\` | ${localeNames[i]}`).join('\n')}\nIf you'd like to help translate, contact Gymnophoria in the support server (in the help/info commands).`);
-	if (!locales.includes(args[0])) return message.channel.send(`Invalid locale string. Must be one of ${locales.map(locale => '`' + locale + '`').join(', ')}. case-SENSITIVE.`);
+	if (args[0] === 'list') return message.channel.send(message.__('list', { locales: locales.map((locale, i) => `\`${locale}\` | ${localeNames[i]}`).join('\n') }));
+	if (!locales.includes(args[0])) return message.channel.send(message.__('invalid_locale', { locales: locales.map(locale => '`' + locale + '`').join(', ') }));
 	
 	await i18n.setGuildLocale(message.guild.id, args[0]);
-	message.channel.send('Guild locale set.');
+	message.channel.send(message.__('locale_set'));
 };
 
 exports.config = {
