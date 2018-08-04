@@ -22,20 +22,20 @@ async function finish(id, message, client) {
 	let index = client.processing.length;
 	client.processing.push(moment().format('h:mm:ss A') + ' - MP3');
 
-	let msg = await message.channel.send('Downloading..');
+	let msg = await message.channel.send(message.__('downloading'));
 
 	let info = await ytdl.getInfo(id);
 	if (info.livestream) {
-		msg.edit('Ah right, you expect me to download a livestream. Just no, thanks.').catch(() => {});
+		msg.edit(message.__('livestream')).catch(() => {});
 		return client.processing.splice(index, 1);
 	}
 
 	if (info.length_seconds > 1200) {
-		msg.edit('I\'ve set a limit of 20 minutes on songs; my CPU is limited and so is your time.').catch(() => {});
+		msg.edit(message.__('too_long', { mins: 20 })).catch(() => {});
 		return client.processing.splice(index, 1);
 	}
 
-	msg.edit('Downloading... This should take about **' + (info.length_seconds / 15).toFixed(0) + '** seconds to convert..').catch(() => {});
+	msg.edit(message.__('downloading_with_time', { seconds: (info.length_seconds / 15).toFixed(0) })).catch(() => {});
 	let title = info.title.replace(/[^A-z0-9]/g, '_');
 
 	let ytdlStream = ytdl(id, { quality: 'highestaudio' });
@@ -65,16 +65,16 @@ async function finish(id, message, client) {
 
 				msg.delete().catch(() => {});
 
-				message.channel.send(`${message.member.toString()}, your song is converted.`, {
+				message.channel.send(message.__('song_converted', { user: message.author.toString() }), {
 					embed: {
 						title: info.title,
-						description: `Song is [here](${body}).\nOriginal video [here](https://youtu.be/${id}).\n${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`,
+						description: message.__('description', { url: body, id, length: `${secObj.h ? `${secObj.h}${i18n.get('time.abbreviations.hours', message)} ` : ''}${secObj.m ? `${secObj.m}${i18n.get('time.abbreviations.minutes', message)} ` : ''}${secObj.s}${i18n.get('time.abbreviations.seconds', message)}` }),
 						thumbnail: {
 							url: info.thumbnail_url
 						},
 						color: 0x42f45c,
 						footer: {
-							text: `Requested by ${message.author.tag} | File will be deleted after 48 hours`
+							text: message.__('footer', { tag: message.author.tag })
 						}
 					}
 				});
@@ -85,7 +85,7 @@ async function finish(id, message, client) {
 }
 
 exports.run = async (message, args, suffix, client) => {
-	if (!args[0]) return message.channel.send('I can\'t download nothing..');
+	if (!args[0]) return message.channel.send(message.__('no_args'));
 
 	let id;
 
@@ -97,7 +97,7 @@ exports.run = async (message, args, suffix, client) => {
 		};
 
 		search(suffix, sOpts, (err, results) => {
-			if (err) return message.channel.send('The video you searched for does not exist.. rip');
+			if (err) return message.channel.send(message.__('no_results'));
 
 			id = results[0].id;
 			finish(id, message, client).catch(console.error);

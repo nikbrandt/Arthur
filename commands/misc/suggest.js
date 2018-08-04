@@ -3,7 +3,7 @@ const Trello = require('trello');
 const trello = new Trello(config.trello.key, config.trello.token);
 
 exports.run = (message, args, suffix, client) => {
-	if (!args[0]) return message.channel.send('So you want to suggest nothing? Nothing at all? Really? No.');
+	if (!args[0]) return message.channel.send(message.__('no_args'));
 	let splitified = suffix.split('\n');
 	let channel = client.channels.get(config.trello.channel);
 
@@ -35,10 +35,10 @@ exports.run = (message, args, suffix, client) => {
 			files: attachments
 		});
 
-		message.channel.send(`Thanks, your suggestion might be added someday :thumbsup:${message.guild && message.guild.name === 'Arthur Official Discord' ? '' : `\nCheck the support server - ${client.config.info.guildLink} to see the if your suggestion gets accepted.`}`);
+		message.channel.send(message.__('success', { extra: message.guild && message.guild.name === 'Arthur Official Discord' ? '' : '\n' + message.__('check_support_server', { link: client.config.info.guildLink }) }));
 	}).catch(err => {
-		message.channel.send(`I couldn't add the card for some reason.. Heck man that's weird, could you report this on my support server? - ${client.config.info.guildLink}\n${err}`)
-	})
+		message.channel.send(message.__('error', { link: client.config.info.guildLink, err }));
+	});
 };
 
 exports.config = {
@@ -51,6 +51,6 @@ exports.help = {
 	name: 'Suggest',
 	description: 'Suggest a command or feature to be added to Arthur.',
 	usage: 'suggest <suggestion>',
-	help: 'Suggest something to be added to Arthur.',
+	help: 'Suggest something to be added to Arthur, preferably in English.',
 	category: 'Other'
 };

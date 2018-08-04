@@ -249,6 +249,50 @@
 			"self_blacklist": "You're clearly not blacklisted if I'm talking to you. You alright there, bud?",
 			"not_blacklisted": "That person isn't blacklisted. How nice of you, looking out for those who are doing just fine.",
 			"unblacklisted": "Like magic, **$tag** can interact with me again. :tada:"
+		},
+		"language": {
+			"current": "Your language is currently $locale",
+			"removed": "Locale removed. Defaulting to server locale if set, or English.",
+			"locale_set": "Locale set."
+		},
+		"mp3": {
+			"downloading": "Downloading..",
+			"livestream": "Ah right, you expect me to download a livestream. Just no, thanks.",
+			"too_long": "I've set a limit of $minutes minutes on songs; my CPU is limited and so is your time.",
+			"downloading_with_time": "Downloading... This should take about **$seconds** seconds to convert..",
+			"song_converted": "$user, your song is converted.",
+			"description": "Song is [here]($url).\nOriginal video [here](https://youtu.be/$id).\n$length",
+			"footer": "Requested by $tag | File will be deleted after 48 hours.",
+			"no_args": [
+				"I can't download nothing..",
+				"It is *exceedingly* hard to download nothing at all and send it to you.",
+				"Convert *what* to mp3?"
+			],
+			"no_results": "The video you searched for does not exist.. rip"
+		},
+		"poll": {
+			"footer": "Command will cancel in 60 seconds. Type \"cancel\" to cancel now. Attempt 1 of 5.",
+			"title": {
+				"title": "Poll title",
+				"description": "What would you like the poll title to be?"
+			},
+			"options": {
+				"title": "Poll options",
+				"description": "What poll options would you like?\nSeparate each option with a `|` character (below the backspace key).\nMaximum 10 options."
+			},
+			"time": {
+				"title": "Poll time",
+				"description": "How long would you like the poll to run for?\ne.g. `2d 8h 3m 14s` (maximum time of one week)"
+			},
+			"ended": "Ended",
+			"finished": "Poll finished",
+			"ends": "Ends"
+		},
+		"suggest": {
+			"no_args": "So you want to suggest nothing? Nothing at all? Really? No.",
+			"success": "Thanks, your suggestion might be added someday :thumbsup:$extra",
+			"check_support_server": "Check the support server - $link - to see if your suggestion gets accepted.",
+			"error": "I couldn't add the card to trello for some reason.. Heck man, that's weird, could your report this on my support server? - $link\n```\n$err\n```"
 		}
 	},
 	"time": {

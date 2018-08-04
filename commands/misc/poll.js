@@ -5,37 +5,12 @@ const { askWithCondition } = require('../../functions/askQuestion');
 
 const emojis = [ '🇦', '🇧', '🇨', '🇩', '🇪', '🇫', '🇬', '🇭', '🇮', '🇯' ];
 
-const footer = {
-	text: 'Command will cancel in 60 seconds. Type "cancel" to cancel now. Attempt 1 of 5.'
-};
-
-const titleEmbed = {
-	title: 'Poll title',
-	description: 'What would you like the poll title to be?',
-	color: 0x007c29,
-	footer: footer
-};
-
 const titleCondition = (title) => {
 	return !!title;
 };
 
-const optionsEmbed = {
-	title: 'Poll options',
-	description: 'What poll options would you like?\nSeperate each option with a `|` character (below the backspace key)\nMaximum 10 options',
-	color: 0x00892d,
-	footer: footer
-};
-
 const optionsCondition = options => {
 	return options.split('|')[1] && options.split('|').length <= 10;
-};
-
-const timeEmbed = {
-	title: 'Poll time',
-	description: 'How long would you like the poll to run for?\ne.g. `2d 8h 3m 14s` (maximum time of one week)',
-	color: 0x008e2e,
-	footer: footer
 };
 
 const timeCondition = string => {
@@ -69,19 +44,22 @@ async function addReactions (message, number) {
 }
 
 function watch (message, options, endDate, client, embed) {
+	const locale = i18n.getLocale(message);
+	
 	client.reactionCollectors.set(message.id, {
 		message: message,
 		number: options.length,
 		options: options,
-		embed: embed
+		embed: embed,
+		locale: locale
 	});
 
 	setTimeout(() => {
-		finish(message.id, client)
+		finish(message.id, client, locale)
 	}, endDate - Date.now());
 }
 
-function finish (messageID, client) {
+function finish (messageID, client, locale) {
 	let obj = client.reactionCollectors.get(messageID);
 	let theseEmojis = emojis.slice(0, obj.options.length);
 	let emojiObject = {};
@@ -94,8 +72,8 @@ function finish (messageID, client) {
 
 	let total = calculateTotalResults(theseEmojis, emojiObject);
 	embed.description = finishedEmojiDescription(theseEmojis, emojiObject, obj.options, total);
-	embed.footer.text = 'Ended';
-	embed.title = 'Poll finished: ' + embed.title;
+	embed.footer.text = i18n.getString('commands.poll.ended', locale);
+	embed.title = i18n.getString('commands.poll.finished' + ': ', locale) + embed.title;
 	embed.color = 0x42f4a1;
 
 	obj.message.channel.send({ embed: obj.embed });
@@ -123,6 +101,32 @@ function calculateTotalResults (emojiArray, emojiObject) {
 }
 
 exports.run = async (message, a, s, client) => {
+	const footer = {
+		text: message.__('footer')
+	};
+
+	const titleEmbed = {
+		title: message.__('title.title'),
+		description: message.__('title.description'),
+		color: 0x007c29,
+		footer: footer
+	};
+
+	const optionsEmbed = {
+		title: message.__('options.title'),
+		description: message.__('options.description'),
+		color: 0x00892d,
+		footer: footer
+	};
+
+	const timeEmbed = {
+		title: message.__('time.title'),
+		description: message.__('time.description'),
+		color: 0x008e2e,
+		footer: footer
+	};
+	
+	
 	let title;
 	let options;
 	let time;
@@ -150,7 +154,7 @@ exports.run = async (message, a, s, client) => {
 		title: title,
 		description: emojiDescription(options),
 		footer: {
-			text: 'Ends '
+			text: message.__('ends') + ' '
 		},
 		timestamp: moment(Date.now() + time).toISOString(),
 		color: 0x00c140
