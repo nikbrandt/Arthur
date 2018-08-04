@@ -1,14 +1,13 @@
-const requestPromise = require('request-promise');
 const Discord = require('discord.js');
 const webshot = require('webshot');
 const moment = require('moment');
 const fs = require('fs');
 
-let nonobad = [ 'file://', 'ip', 'porn', 'redtube', 'sex', 'rule34', 'anal', 'amateur', 'cuckold', 'creampie', 'cum', 'jiz', 'milf', 'orgasm', 'orgy', 'threesome', 'ass', 'tit', 'dick', 'penis', 'despacito', 'pussy', 'fuck', 'finger', 'bang', 'hentai', 'yaoi', 'virgin', 'handjob', 'blowjob', 'xxx', 'milf' ];
+let nonobad = [ 'file://', 'ip', 'porn', 'redtube', 'sex', 'rule34', 'amateur', 'cuckold', 'creampie', 'cum', 'jiz', 'milf', 'orgasm', 'orgy', 'threesome', 'ass', 'tit', 'dick', 'penis', 'despacito', 'pussy', 'fuck', 'finger', 'bang', 'hentai', 'yaoi', 'virgin', 'handjob', 'blowjob', 'xxx', 'milf' ];
 
 exports.run = async (message, args, s, client) => {
-	if (!args[0]) return message.channel.send('You have to tell me what to take a picture of..');
-	if (nonobad.some(i => args[0].toLowerCase().includes(i))) return message.channel.send('please..');
+	if (!args[0]) return message.channel.send(message.__('no_args'));
+	if (nonobad.some(i => args[0].toLowerCase().includes(i))) return message.channel.send(message.__('blacklisted_website'));
 	let index = client.processing.length;
 	client.processing.push(moment().format('h:mm:ss A') + ' - Webshot');
 	let date = Date.now();
@@ -31,14 +30,14 @@ exports.run = async (message, args, s, client) => {
 	let del = false;
 	let cancel = false;
 
-	message.channel.send('Loading..').then(m => {
+	message.channel.send(message.__('loading')).then(m => {
 		if (del) m.delete();
 		else msg = m;
 	});
 	
 	setTimeout(function () {
 		if (!sent) {
-			message.channel.send('That website is too powerful! It\'s taken me more than 30 seconds to render, so I\'m canceling the render. Sorry!');
+			message.channel.send(message.__('timed_out'));
 			cancel = true;
 			client.processing.splice(index, 1);
 		}
@@ -48,19 +47,20 @@ exports.run = async (message, args, s, client) => {
 		if (cancel) return;
 
 		if (err) {
-			if (err.toString().includes('value 1')) message.channel.send('Hey, you gotta provide me with a *valid* url, okay? Your trickery caused you a 10 second cooldown, mister.');
-			if (err.toString().includes('timeout setting')) message.channel.send('That website is too powerful! It\'s taken me more than 30 seconds to render, so I\'m canceling. Sorry!');
+			if (err.toString().includes('value 1')) message.channel.send(message.__('invalid_url'));
+			else if (err.toString().includes('timeout setting')) message.channel.send(message.__('timed_out'));
+			else message.channel.send(message.__('unknown_error', { err: err.toString() }));
 			client.processing.splice(index, 1);
 			sent = true;
 			return;
 		}
 
 		message.channel.send({embed: new Discord.RichEmbed()
-			.setTitle(`Render of ${args[0].length > 245 ? args[0].slice(0, -(args[0].length - 245)) : args[0]}`)
-			.setDescription(`Website can be found [here](${ args[0].startsWith('https://') || args[0].startsWith('http://') ? args[0] : 'https://' + args[0] })\nI am not responsible for the content of this website.`)
+			.setTitle(message.__('title', { url: args[0].length > 245 ? args[0].slice(0, -(args[0].length - 245)) : args[0] }))
+			.setDescription(message.__('description', { url: args[0].startsWith('https://') || args[0].startsWith('http://') ? args[0] : 'https://' + args[0] }))
 			.attachFile(`../media/temp/${date}-${message.author.id}.png`)
 			.setImage(`attachment://${date}-${message.author.id}.png`)
-			.setFooter(`Requested by ${message.author.tag}`)
+			.setFooter(message.__('footer', { name: message.author.tag }))
 			.setColor(0x00c140)
 		}).then(() => {
 			sent = true;

@@ -2,7 +2,7 @@ const request = require('request-promise');
 const moment = require('moment');
 
 function send (message, json) {
-	let timeString = moment(`${json.month}-${json.day}-${json.year}`, 'M-D-YYYY').format('MMMM Do, YYYY');
+	let timeString = moment(`${json.month}-${json.day}-${json.year}`, 'M-D-YYYY').format(i18n.get('time.moment.date_only_nice', message));
 
 	message.channel.send({embed: {
 		title: json.title,
@@ -22,13 +22,13 @@ exports.run = async (message, args) => {
 	let latest = await request( { uri: 'https://xkcd.com/info.0.json', json: true } );
 	let comic;
 
-	if (args[0] === 'latest') comic = latest.num;
-	else if (!args[0] || args[0] === 'random') comic = Math.ceil(Math.random() * latest.num);
+	if (args[0] === message.__('latest')) comic = latest.num;
+	else if (!args[0] || args[0] === message.__('random')) comic = Math.ceil(Math.random() * latest.num);
 	else {
 		let parsed = parseInt(args[0]);
-		if (!parsed) return message.channel.send('That\'s not a valid number.');
-		if (parsed < 0) return message.channel.send('Right, because there are negative comic numbers.');
-		if (parsed > latest.num) return message.channel.send('That comic hasn\'t been created.. yet.');
+		if (!parsed) return message.channel.send(i18n.get('parsing.invalid_number', message));
+		if (parsed < 0) return message.channel.send(message.__('negative_number'));
+		if (parsed > latest.num) return message.channel.send(message.__('comic_not_created'));
 
 		comic = parsed;
 	}

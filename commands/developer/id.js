@@ -5,12 +5,12 @@ exports.run = (message, args, suffix, client, permLevel) => {
 	if (permLevel === 10) user = client.users.find('tag', suffix) || client.users.find(u => u.tag.toLowerCase().includes(suffix.toLowerCase()));
 	else user = message.guild.members.find(m => m.user.tag.toLowerCase() === suffix.toLowerCase()) || message.guild.members.find(m => m.user.tag.toLowerCase().includes(suffix.toLowerCase()));
 
-	if (!user) return message.channel.send('I don\'t have access to that user or they don\'t exist.. Sorry!');
+	if (!user) return message.channel.send(message.__('user_does_not_exist'));
 
 	message.channel.send({embed: {
 		title: user.id,
 		footer: {
-			text: `ID of ${user.username}`
+			text: message.__('id_of', { name: user.username })
 		}
 	}});
 };

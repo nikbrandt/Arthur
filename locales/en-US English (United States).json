@@ -113,6 +113,61 @@
 			"poll_created": "Poll created",
 			"it_can_be_accessed_here": "It can be accessed [here](https://www.strawpoll.me/$id)"
 		},
+		"ud": {
+			"nsfw": "Apparently the urban dictionary is NSFW. I know, it's annoying, just tryin' to keep this bot afloat. (You can only use this command in NSFW channels)",
+			"not_connected": "Urban Dictionary is broken right now, dunno why, riperoni in pepperoni.",
+			"no_results": [
+				"sir/ma'am, the urban dictionary does not have a definition for your messed up word.",
+				"You word.. whatever it is.. is not on the urban dictionary.",
+				"Nope. Not even the *urban dictionary* has your word.",
+				"No results. None. Nada. Rip."
+			],
+			"definition": "Definition",
+			"example": "Example",
+			"footer": "Authored by $author | Ratings: +$thumbsup, -$thumbsdown",
+			"catch": "The definition was probably too long to fit in a message, sorry, can't send it."
+		},
+		"webshot": {
+			"no_args": [
+				"You have to tell me what to take a picture of..",
+				"Try as I might, it's *really* hard to take a photo of *nothing at all*."
+			],
+			"blacklisted_website": [
+				"please..",
+				"n.. no.",
+				"im not taking a picture of that.. im just not..",
+				"go there yourself."
+			],
+			"loading": [
+				"Loading..",
+				"Loading...",
+				"lOaDIng.."
+			],
+			"timed_out": [
+				"That website is too powerful! It's taken me more than 30 seconds to render, so I'm canceling the render. Sorry!",
+				"Your website is too powerful for me; it's taken over 30 seconds to render it. Nop."
+			],
+			"unknown_error": "Unknown error: `$err`",
+			"invalid_url": "Hey, you gotta provide me with a *valid* url, okay? Your trickery caused you a 10 second cooldown, mister.",
+			"embed": {
+				"title": "Render of $url",
+				"description": "Website can be found [here]($url)\nI am not responsible for the content of this website.",
+				"footer": "Requested by $name"
+			}
+		},
+		"xkcd": {
+			"latest": "latest",
+			"random": "random",
+			"negative_number": "Right, because there are negative comics.",
+			"comic_not_created": "That comic hasn't been created.. yet."
+		},
+		"id": {
+			"user_does_not_exist": "I don't have access to that user or they don't exist.. Sorry.",
+			"id_of": "ID of $name"
+		},
+		"reverse": {
+			"no_args": "You've gotta provide me with something to reverse, lul"
+		},
 		"stopwatch": {
 			"stopwatch_started": "Stopwatch started.",
 			"stopwatch_stopped": "Stopwatch stopped. $time."
@@ -126,7 +181,8 @@
 		},
 		"moment": {
 			"precise": "MMM Do YYYY [at] hh:mm A",
-			"time_only": "h:mm:ss A"
+			"time_only": "h:mm:ss A",
+			"date_only_nice": "MMMM Do, YYYY"
 		}
 	},
 	"booleans": {
@@ -138,5 +194,8 @@
 				"no_end": "o"
 			}
 		}
+	},
+	"parsing": {
+		"invalid_number": "That's not a valid number."
 	}
 }
