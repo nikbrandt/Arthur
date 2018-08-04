@@ -50,7 +50,11 @@
 				"If only usernames could be that long..",
 				"Names that long don't exist. Sorry."
 			],
-			"invalid_name": "Yeah, that's not a name.",
+			"invalid_name": [
+				"Yeah, that's not a name.",
+				"Not sure I know that guy...",
+				"Who's that?"
+			],
 			"invalid_page": "That's really not a valid page number, I'm sorry.",
 			"negative_page": "Negative pages? Really?",
 			"no_body": "Something broke. You sure you spelt that correctly?",
@@ -81,7 +85,10 @@
 			}
 		},
 		"mcskin": {
-			"some_rando": "some rando",
+			"some_rando": [
+				"some rando",
+				"guy I found on the side of the road"
+			],
 			"embed": {
 				"title": "$user's Skin (click for namemc link)",
 				"footer": "Render courtesy of Visage."
@@ -166,7 +173,10 @@
 			"id_of": "ID of $name"
 		},
 		"reverse": {
-			"no_args": "You've gotta provide me with something to reverse, lul"
+			"no_args": [
+				"You've gotta provide me with something to reverse, lul",
+				"What do you think I'm supposed to esrever?"
+			]
 		},
 		"stopwatch": {
 			"stopwatch_started": "Stopwatch started.",
