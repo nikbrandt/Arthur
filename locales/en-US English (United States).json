@@ -303,6 +303,11 @@
 			"success": "Thanks, your suggestion might be added someday :thumbsup:$extra",
 			"check_support_server": "Check the support server - $link - to see if your suggestion gets accepted.",
 			"error": "I couldn't add the card to trello for some reason.. Heck man, that's weird, could your report this on my support server? - $link\n```\n$err\n```"
+		},
+		"like": {
+			"no_song_specified": "Alright so if there's no music playing *how am I gonna like the currently playing song*? Eh? You see how that doesn't work?",
+			"song_already_liked": "Mhm, you think I'm gonna let you like a song twice. No. I don't care how good it is, go get your ~~alt~~ friend to like it.",
+			"song_liked": "Song Liked"
 		}
 	},
 	"struct": {

@@ -3,6 +3,7 @@ const sql = require('sqlite');
 const path = require('path');
 const { Collection } = require('discord.js');
 
+const { errorLog } = require('../functions/eventLoader');
 const localeDirectory = path.join(__dirname, '..', 'locales');
 const variableRegex = /\$[A-Za-z]+/g;
 
@@ -94,7 +95,12 @@ class i18n {
 	 */
 	getString (string, locale, variables = {}) {
 		const file = this._locales.get(locale);
-		if (!file) throw new Error('Invalid locale.');
+		if (!file) {
+			locale = 'en_US';
+			let error = new Error('Invalid locale.');
+			errorLog('i18n error', error.stack, 42069);
+			console.error(error);
+		}
 		
 		let retry = false;
 		let args = string.split('.');
@@ -111,13 +117,22 @@ class i18n {
 		if (!selection) retry = true;
 
 		if (retry) {
-			if (locale === 'en-US') throw new Error('en-US locale missing string: ' + string);
-			return this.getString(string, 'en-US');
+			if (locale === 'en-US') {
+				selection = 'String not found. This will be fixed ASAP, try again later.';
+				let error = new Error('en-US locale missing string `' + string + '`');
+				errorLog('i18n error', error.stack, 420);
+				console.error('en-US locale missing string ' + string);
+			} else return this.getString(string, 'en-US');
 		}
 		
 		variables.$ = '$';
 		
-		if (typeof selection !== 'string' && !selection instanceof Array) throw new Error(`Locale string ${string} returning ${selection}`);
+		if (typeof selection !== 'string' && !selection instanceof Array) {
+			selection = 'String not found. This will be fixed ASAP, try again later.';
+			let error = new Error(`Locale string ${string} returning ${selection}`);
+			errorLog('i18n error', error.stack, 69);
+			console.error(`Locale string ${string} returning ${selection}`);
+		}
 		if (selection instanceof Array) selection = selection[Math.floor(Math.random() * selection.length)];
 		
 		if (!variableRegex.test(selection)) return selection;

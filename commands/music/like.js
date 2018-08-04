@@ -2,7 +2,7 @@ const sql = require('sqlite');
 const Music = require('../../struct/music');
 
 exports.run = async (message, args, suffix, client) => {
-	if ((!message.guild.music || !message.guild.music.queue) && !args[0] && !message.attachments.size) return message.channel.send('Alright so if there\'s no music playing *how am I gonna like the currently playing song*? Eh? You see how that doesn\'t work?');
+	if ((!message.guild.music || !message.guild.music.queue) && !args[0] && !message.attachments.size) return message.channel.send(message.__('no_song_specified'));
 
 	let id;
 	let type;
@@ -29,14 +29,14 @@ exports.run = async (message, args, suffix, client) => {
 	}
 
 	let dupeCheck = await sql.get(`SELECT count(1) FROM musicLikes WHERE userID = '${message.author.id}' AND id = '${id}'`);
-	if (dupeCheck['count(1)']) return message.channel.send('Mhm, you think I\'m gonna let you like a song twice. No. I don\'t care how good it is, go get your ~~alt~~ friend to like it.');
+	if (dupeCheck['count(1)']) return message.channel.send(message.__('song_already_liked'));
 
 	sql.run(`INSERT INTO musicLikes (userID, type, id, url, title, queueName) VALUES (?, ?, ?, ?, ?, ?)`, [message.author.id, type, id, meta.url, meta.title, meta.queueName]);
 
 	message.channel.send({
 		embed: {
 			author: {
-				name: `${message.author.username} - Song Liked`
+				name: `${message.author.username} - ${message.__('song_liked')}`
 			},
 			url: meta.url,
 			color: 0x427df4,
