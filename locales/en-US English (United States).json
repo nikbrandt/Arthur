@@ -305,6 +305,11 @@
 			"error": "I couldn't add the card to trello for some reason.. Heck man, that's weird, could your report this on my support server? - $link\n```\n$err\n```"
 		}
 	},
+	"struct": {
+		"xp": {
+			"no_one_talked_yet": "No one in this server has talked yet."
+		}
+	},
 	"time": {
 		"abbreviations": {
 			"hours": "h",

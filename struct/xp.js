@@ -106,12 +106,12 @@ class XP {
 		};
 	}
 
-	static async guildLeaderboard (guildID, page, client) {
+	static async guildLeaderboard (guildID, page, client, locale) {
 		let entries = await sql.all(`SELECT userID, level, total FROM xp WHERE guildID = '${guildID}'`);
 
 		if (!entries) return {
 			max: 1,
-			array: ['No one in this server has talked yet.']
+			array: [ i18n.getString('struct.xp.no_one_talked_yet', locale) ]
 		};
 
 		entries = entries.sort((a, b) => {
@@ -140,10 +140,13 @@ class XP {
 	static async globalLeaderboard (page, client) {
 		let entries = await sql.all(`SELECT DISTINCT userID, global FROM xp`);
 
-		if (!entries) return {
-			max: 1,
-			array: ['No one, across the entire bot, has ever talked.. how sad.']
-		};
+		if (!entries) {
+			console.error('No sqlite entries, xp.js#144');
+			return {
+				max: 1,
+				array: ['no entries found - you shouldn\'t ever see this - please report it']
+			};
+		}
 
 		entries = entries.sort((a, b) => {
 			return a.global < b.global ? 1 : -1;
