@@ -9,7 +9,7 @@ Arthur - Another one of those bots that does things. It has an active developer,
 
 Arthur does have some hot features that other bots don't, but not that many. To list a few, `mp3` which downloads and converts YouTube videos to mp3, and `webshot` which takes a full-length shot of a website. And I think the leveling system is pretty damn nice, but who knows. More features are always being added, just wait a while because the developer is very slow to add things.
 
-I guess the overall point of this is that Arthur is like a nice multipurpose bot that ~~won't ever include moderation features *because every other bot does that*~~ will eventually include moderation features because *idk i was forced or something*. Yeah, that's all. I dunno.
+I guess the overall point of this is that Arthur is like a nice multipurpose bot. Yeah.
 
 Eh, we're going back to using an MIT license, I feel weird having contributors but still being under copyright. To get this bot up and running, you'll probably need to add quite a lot of files to a `../media` directory, and since I'm not *really* trying to decentralize this bot, that challenge is up to you.
 
