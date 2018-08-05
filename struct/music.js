@@ -464,18 +464,38 @@ const Music = {
 
 			switch (reaction.emoji.name) {
 				case '👍':
+					fakeMessage.__ = (string, variables) => {
+						return i18n.get('commands.like.' + string, message, variables);
+					};
+					
 					client.commands.get('like').run(fakeMessage, [], '', client);
 					break;
 				case '⏩':
+					fakeMessage.__ = (string, variables) => {
+						return i18n.get('commands.skip.' + string, message, variables);
+					};
+					
 					client.commands.get('skip').run(fakeMessage, [], '', 'ded', permLevel);
 					break;
 				case '⏹':
+					fakeMessage.__ = (string, variables) => {
+						return i18n.get('commands.stop.' + string, message, variables);
+					};
+					
 					client.commands.get('stop').run(fakeMessage, [], '', 'hi mom', permLevel);
 					break;
 				case '🔁':
+					fakeMessage.__ = (string, variables) => {
+						return i18n.get('commands.loop.' + string, message, variables);
+					};
+					
 					client.commands.get('loop').run(fakeMessage, [], '', '', permLevel);
 					break;
 				case '🎶':
+					fakeMessage.__ = (string, variables) => {
+						return i18n.get('commands.queue.' + string, message, variables);
+					};
+					
 					client.commands.get('queue').run(fakeMessage, []);
 					break;
 			}
