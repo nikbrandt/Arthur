@@ -1,5 +1,5 @@
 function shuffle(array) { // Fisher-Yates shuffle, https://bost.ocks.org/mike/shuffle/
-	var m = array.length, t, i;
+	let m = array.length, t, i;
 	while (m) {
 		i = Math.floor(Math.random() * m--);
 		t = array[m];

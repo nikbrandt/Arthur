@@ -11,7 +11,7 @@ exports.run = (message, args, suffix, client, permLevel) => {
 	if (!message.member.roles.find(r => r.name.toLowerCase() === 'dj') && !message.member.roles.find(r => r.name.toLowerCase() === 'music') && permLevel < 3 && message.guild.music.queue[num - 1].person.id !== message.author.id) return;
 
 	message.guild.music.queue.splice(num - 1, 1);
-	message.channel.send(`Success! Song #${num} has been removed from the queue.\n*someone might have wanted to hear that song*`);
+	message.channel.send(`Success! Song #${num} has been removed from the queue.\n*someone might have wanted to hear that song, #Blame${message.member.displayName.replace(/@/g, '@\u200b').replace(/ /g, '')}*`);
 };
 
 exports.config = {

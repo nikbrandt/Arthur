@@ -317,7 +317,7 @@
 			],
 			"invalid_page": "Eyy that's not a page number, I'd love it if you'd supply me with a *real* page number, thanks.",
 			"negative_page": "Negative pages don't exist, okay? Think of a book. Does said book have a page -3? I didn't think so.",
-			"nonexistent_page": "'That page doesn\'t exist yet. Go like a ton of songs, make that page, I believe in you!",
+			"nonexistent_page": "'That page doesn't exist yet. Go like a ton of songs, make that page, I believe in you!",
 			"liked_songs": "$name$s Liked Songs",
 			"footer": "Page $page of $maxPage | Play a liked song with play liked <number>"
 		},
