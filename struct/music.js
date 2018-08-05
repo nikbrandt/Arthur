@@ -25,6 +25,12 @@ function secSpread(sec) {
 }
 
 const Music = {
+	/**
+	 * Play the next song in the queue
+	 * @param {Guild} guild The guild to play a song in
+	 * @param {boolean} [first] Whether or not this is the first song
+	 * @returns {Promise<void>}
+	 */
 	next: async (guild, first) => {
 		let notify = await sql.get(`SELECT npNotify FROM guildOptions WHERE guildID = '${guild.id}'`);
 		if (!notify) notify = 'false';
@@ -65,7 +71,7 @@ const Music = {
 
 			if (notify === 'true' && music.queue[0].embed && !first) {
 				let embed = music.queue[0].embed;
-				embed.author.name = 'Now Playing';
+				embed.author.name = i18n.get('struct.music.now_playing', guild);
 				music.textChannel.send({ embed }).then(msg => {
 					Music.addReactionCollector(msg, msg.client, music.queue[0].ms);
 				});

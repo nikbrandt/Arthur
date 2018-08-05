@@ -7,9 +7,9 @@ exports.run = async (message, args) => {
 	let page = 1;
 	if (args[0]) {
 		let num = parseInt(args[0]);
-		if (!num) return message.channel.send('Eyy that\'s not a page number, I\'d love it if you\'d supply me with a *real* page number, thanks.');
-		if (num < 1) return message.channel.send('Negative pages don\'t exist. Okay? Think of a book. Does said book have a page -3? I didn\'t think so.');
-		if (num > maxPage) return message.channel.send('That page doesn\'t exist yet. Go like a ton of songs, make that page, I believe in you!');
+		if (!num) return message.channel.send(i18n.get('commands.liked.invalid_page', message));
+		if (num < 1) return message.channel.send(i18n.get('commands.liked.negative_page', message));
+		if (num > maxPage) return message.channel.send(i18n.get('commands.liked.nonexistent_page', message));
 		page = num;
 	}
 
@@ -18,16 +18,16 @@ exports.run = async (message, args) => {
 	let final = [];
 
 	for (let i = 0; i < array.length; i++) { // push each song to the final array, as the song will be displayed
-		final.push(`**${startNum}**. ${array[i].queueName} - ${array[i].count} like${array[i].count - 1 ? 's' : ''}`);
+		final.push(`**${startNum}**. ${array[i].queueName} - ${array[i].count} ${array[i].count - 1 ? message.__('likes') : message.__('like')}`);
 		startNum++;
 	}
 
 	message.channel.send({embed: {
-		title: 'Top Liked Songs',
+		title: message.__('top_liked_songs'),
 		description: final.join('\n'),
 		color: 0x427df4,
 		footer: {
-			text: `Page ${page} of ${maxPage} | Play a top song with play top <number>`
+			text: message.__('footer', { page, maxPage })
 		}
 	}});
 };

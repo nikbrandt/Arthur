@@ -308,11 +308,47 @@
 			"no_song_specified": "Alright so if there's no music playing *how am I gonna like the currently playing song*? Eh? You see how that doesn't work?",
 			"song_already_liked": "Mhm, you think I'm gonna let you like a song twice. No. I don't care how good it is, go get your ~~alt~~ friend to like it.",
 			"song_liked": "Song Liked"
+		},
+		"liked": {
+			"no_likes": [
+				"You don't have any likes tho..",
+				"You're gonna need to like some songs if ya want me to display some liked songs.",
+				"You uh.. You haven't liked a song yet.."
+			],
+			"invalid_page": "Eyy that's not a page number, I'd love it if you'd supply me with a *real* page number, thanks.",
+			"negative_page": "Negative pages don't exist, okay? Think of a book. Does said book have a page -3? I didn't think so.",
+			"nonexistent_page": "'That page doesn\'t exist yet. Go like a ton of songs, make that page, I believe in you!",
+			"liked_songs": "$name$s Liked Songs",
+			"footer": "Page $page of $maxPage | Play a liked song with play liked <number>"
+		},
+		"likedlb": {
+			"like": "like",
+			"likes": "likes",
+			"top_liked_songs": "Top Liked Songs",
+			"footer": "Page $page of $maxPage | Play a top song with play top <number>"
+		},
+		"loop": {
+			"no_music_playing": "Ah yes, I'll make sure to loop the nonexistent music. (play some music thanks)",
+			"no_permissions": "hey you don't have permission to loop the music, weirdo",
+			"off": "A'ight $name, loops off, as you wish.",
+			"on": "Loops on, $name, have fun listening to the same song(s) *forever*"
+		},
+		"nowplaying": {
+			"notify": "notify",
+			"notify_abbreviation": "n",
+			"nothing_playing": "Now playing: The sound of silence",
+			"by": "By",
+			"of": "of",
+			"footer": "Requested by $tag"
 		}
 	},
 	"struct": {
 		"xp": {
 			"no_one_talked_yet": "No one in this server has talked yet."
+		},
+		"music": {
+			"now_playing": "Now Playing",
+			"length": "Length"
 		}
 	},
 	"time": {

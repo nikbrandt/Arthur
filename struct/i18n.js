@@ -1,7 +1,7 @@
 const fs = require('fs');
 const sql = require('sqlite');
 const path = require('path');
-const { Collection } = require('discord.js');
+const { Collection, Message, Guild, User } = require('discord.js');
 
 const { errorLog } = require('../functions/eventLoader');
 const localeDirectory = path.join(__dirname, '..', 'locales');
@@ -63,7 +63,7 @@ class i18n {
 		else return this._localeNames.get(result.locale) + ' | ' + result.locale;
 	}
 	
-	async getGuildLocale (id) {
+	async getGuildLocaleString (id) {
 		let result = await sql.get('SELECT locale FROM guildOptions WHERE guildID = ?', [ id ]);
 		return this._handleLocaleResult(result);
 	}
@@ -73,7 +73,7 @@ class i18n {
 		this._guildLocaleCache.set(id, locale);
 	}
 	
-	async getUserLocale (id) {
+	async getUserLocaleString (id) {
 		let result = await sql.get('SELECT locale FROM userOptions WHERE userID = ?', [ id ]);
 		return this._handleLocaleResult(result);
 	}
@@ -85,6 +85,7 @@ class i18n {
 	
 	async removeUserLocale (id) {
 		await sql.run(`UPDATE userOptions SET locale = null WHERE userID = '${id}'`);
+		this._userLocaleCache.delete(id);
 	}
 
 	/**
@@ -145,15 +146,34 @@ class i18n {
 		
 		return selection;
 	}
-	
-	getLocale (message) {
-		if (this._userLocaleCache.has(message.author.id)) return this._userLocaleCache.get(message.author.id);
-		if (this._guildLocaleCache.has(message.guild.id)) return this._guildLocaleCache.get(message.guild.id);
+
+	/**
+	 * Get a locale string for a guild, user, or message
+	 * @param {Message|Guild|User} resolvable
+	 * @returns {string} locale The returned locale
+	 */
+	getLocale (resolvable) {
+		if (resolvable instanceof Message) {
+			if (this._userLocaleCache.has(resolvable.author.id)) return this._userLocaleCache.get(resolvable.author.id);
+			if (this._guildLocaleCache.has(resolvable.guild.id)) return this._guildLocaleCache.get(resolvable.guild.id);
+		} else if (resolvable instanceof Guild) {
+			if (this._guildLocaleCache.has(resolvable.id)) return this._guildLocaleCache.get(resolvable.id);
+		} else if (resolvable instanceof User) {
+			if (this._userLocaleCache.has(resolvable.id)) return this._userLocaleCache.get(resolvable.id);
+		}
+
 		return 'en-US';
 	}
-	
-	get (string, message, variables) {
-		return this.getString(string, this.getLocale(message), variables);
+
+	/**
+	 * Get a locale string
+	 * @param {string} string The string you would like to get
+	 * @param {Message|Guild|User} resolvable The resolvable object to get the locale from
+	 * @param {object} [variables] Any variables to pass in
+	 * @returns {string} locale The returned locale
+	 */
+	get (string, resolvable, variables) {
+		return this.getString(string, this.getLocale(resolvable), variables);
 	}
 	
 }

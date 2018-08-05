@@ -2,7 +2,7 @@ const sql = require('sqlite');
 
 exports.run = async (message, args) => {
 	let rows = await sql.all(`SELECT queueName FROM musicLikes WHERE userID = '${message.author.id}'`);
-	if (!rows || !rows.length) return message.channel.send('You don\'t have any likes tho..');
+	if (!rows || !rows.length) return message.channel.send(message.__('no_likes'));
 
 	let songArray = [];
 
@@ -14,20 +14,20 @@ exports.run = async (message, args) => {
 	let page = 1;
 	if (args[0]) {
 		let num = parseInt(args[0]);
-		if (!num) return message.channel.send('Eyy that\'s not a page number, I\'d love it if you\'d supply me with a *real* page number, thanks.');
-		if (num < 1) return message.channel.send('Negative pages don\'t exist. Okay? Think of a book. Does said book have a page -3? I didn\'t think so.');
-		if (num > maxPage) return message.channel.send('That page doesn\'t exist yet. Go like a ton of songs, make that page, I believe in you!');
+		if (!num) return message.channel.send(message.__('invalid_page'));
+		if (num < 1) return message.channel.send(message.__('negative_page'));
+		if (num > maxPage) return message.channel.send(message.__('nonexistent_page'));
 		page = num;
 	}
 
 	songArray = songArray.slice(page * 10 - 10, page * 10);
 
 	message.channel.send({embed: {
-		title: `${message.member.displayName}'${message.member.displayName.endsWith('s') ? '' : 's'} Liked Songs`,
+		title: message.__('liked_songs', { name: message.member.displayName, s: message.member.displayName.endsWith('s') ? '\'' : '\'s' }),
 		description: songArray.join('\n'),
 		color: 0x427df4,
 		footer: {
-			text: `Page ${page} of ${maxPage} | Play a liked song with play liked <number>`
+			text: message.__('footer', { page, maxPage })
 		}
 	}})
 };

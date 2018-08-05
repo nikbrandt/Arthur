@@ -4,6 +4,12 @@ const clientID = config.soundcloudID;
 
 const soundcloudRegex = /^(https:\/\/)?soundcloud.com\/.+\/[^/]+$/;
 
+/**
+ * Get a readable stream of a soundcloud track
+ * @param {string} id The track ID to get
+ * @type {function(*): *}
+ * @returns {stream.Readable}
+ */
 const soundcloud = module.exports = function soundcloud (id) {
 	return request(`https://api.soundcloud.com/tracks/${id}/stream?client_id=${clientID}`);
 };
@@ -26,6 +32,11 @@ function getInfo (url) {
 	});
 }
 
+/**
+ * Search for a song
+ * @param term
+ * @returns {Promise<object>}
+ */
 function search (term) {
 	return new Promise((resolve, reject) => {
 		request(`https://api.soundcloud.com/tracks?q=${encodeURIComponent(term)}&client_id=${clientID}`, (err, res, body) => {

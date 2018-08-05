@@ -1,6 +1,6 @@
 exports.run = async (message, args, suffix, client, permLevel) => {
 	if (!args[0] || permLevel < 4) {
-		let locale = await i18n.getGuildLocale(message.guild.id);
+		let locale = await i18n.getGuildLocaleString(message.guild.id);
 		return message.channel.send(message.__('current_language', { locale }));
 	}
 	

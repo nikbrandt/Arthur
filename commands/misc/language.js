@@ -1,6 +1,6 @@
 exports.run = async (message, args) => {
 	if (!args[0]) {
-		let locale = await i18n.getUserLocale(message.author.id);
+		let locale = await i18n.getUserLocaleString(message.author.id);
 		return message.channel.send(message.__('current', { locale }));
 	}
 
