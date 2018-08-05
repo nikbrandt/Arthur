@@ -163,7 +163,7 @@ module.exports = async (client, message) => {
 	};
 
 	try {
-		console.log(`${moment().format('MM-DD H:mm:ss')} - Command ${command} being run.`);
+		console.log(`${moment().format('MM-DD H:mm:ss')} - Command ${command} being run, user id ${message.author.id}${message.guild ? `, guild id ${message.guild.id}` : ''}`);
 		let resp = cmdFile.run(message, args, suffix, client, perms, prefix);
 		if (resp && typeof resp.then === 'function' && typeof resp.catch === 'function') resp.catch(err => {
 			errorLog(`Error while running ${command} | ${err.message}`, err.stack, err.code);
