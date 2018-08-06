@@ -21,6 +21,10 @@ const soundEffects = (client) => {
 		let basename = file.replace('.mp3', '');
 		client.commands.set(basename, {
 			run: (message, args, suffix, client) => {
+				message.__ = (string, variables) => {
+					return i18n.get('commands.play.' + string, message, variables);
+				};
+				
 				client.commands.get('play').run(message, ['file', basename], suffix, client);
 			},
 			config: {
