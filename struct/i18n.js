@@ -119,7 +119,7 @@ class i18n {
 
 		if (retry) {
 			if (locale === 'en-US') {
-				selection = 'String not found. This will be fixed ASAP, try again later.';
+				selection = 'Response not found. This will be fixed ASAP, try again later. String name, for reference: `' + string + '`.';
 				let error = new Error('en-US locale missing string `' + string + '`');
 				errorLog('i18n error', error.stack, 420);
 				console.error('en-US locale missing string ' + string);
