@@ -473,6 +473,9 @@
 			"you_cancelled": "You cancelled the command.",
 			"too_many_attempts": "You took too many attempts.",
 			"loser_abbreviation": "L."
+		},
+		"i18n": {
+			"response_not_found": "Response not found. This will be fixed ASAP, try again later. String name, for reference: `$string`."
 		}
 	},
 	"time": {

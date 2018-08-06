@@ -91,10 +91,11 @@ class i18n {
 	/**
 	 * @param {string} string 
 	 * @param {string} locale
-	 * @param {object} variables An object containing all variables used in the string.
+	 * @param {object} [variables] An object containing all variables used in the string.
+	 * @param {string} [_originalLocale] The original locale used, if having to move to en-US
 	 * @returns {*}
 	 */
-	getString (string, locale, variables = {}) {
+	getString (string, locale, variables = {}, _originalLocale = 'en_US') {
 		const file = this._locales.get(locale);
 		if (!file) {
 			locale = 'en_US';
@@ -119,17 +120,15 @@ class i18n {
 
 		if (retry) {
 			if (locale === 'en-US') {
-				selection = 'Response not found. This will be fixed ASAP, try again later. String name, for reference: `' + string + '`.';
+				selection = this.getString('struct.i18n.response_not_found', _originalLocale, { string });
 				let error = new Error('en-US locale missing string `' + string + '`');
 				errorLog('i18n error', error.stack, 420);
 				console.error('en-US locale missing string ' + string);
-			} else return this.getString(string, 'en-US');
+			} else return this.getString(string, 'en-US', variables, locale);
 		}
 		
-		variables.$ = '$';
-		
 		if (typeof selection !== 'string' && !selection instanceof Array) {
-			selection = 'String not found. This will be fixed ASAP, try again later.';
+			selection = this.getString('struct.i18n.response_not_found', locale, { string });
 			let error = new Error(`Locale string ${string} returning ${selection}`);
 			errorLog('i18n error', error.stack, 69);
 			console.error(`Locale string ${string} returning ${selection}`);
