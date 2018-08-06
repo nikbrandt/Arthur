@@ -2,7 +2,7 @@ exports.run = async (message, args, suffix, client) => {
 	let invite = await client.generateInvite(client.config.info.invitePerms);
 
 	message.channel.send({embed: {
-		description: `Arthur can be invited with [this link](${invite}). You need to have Manage Server or Admin permission to add the bot to a server.`,
+		description: message.__('description', { invite }),
 		color: 0x00c140
 	}})
 };

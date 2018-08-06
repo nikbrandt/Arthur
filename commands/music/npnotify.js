@@ -7,10 +7,10 @@ exports.run = async (message) => { // npNotify column
 	else row = row.npNotify;
 
 	if (row === 'false') {
-		message.channel.send('Now playing notifications have been enabled. To disable them, run this command again.');
+		message.channel.send(message.__('message', { status: message.__('enabled') }));
 		row = 'true';
 	} else {
-		message.channel.send('Now playing notifications have been disabled. To enable them, run this command again.');
+		message.channel.send(message.__('message', { status: message.__('disabled') }));
 		row = 'false';
 	}
 

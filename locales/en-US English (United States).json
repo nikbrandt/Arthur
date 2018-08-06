@@ -340,6 +340,111 @@
 			"by": "By",
 			"of": "of",
 			"footer": "Requested by $tag"
+		},
+		"npnotify": {
+			"enabled": "enabled",
+			"disabled": "disabled",
+			"message": "Now playing notifications have been $status. To disable them, run this command again."
+		},
+		"pause": {
+			"no_music_playing": "There is no music playing.",
+			"already_paused": "The music is already paused. Use `resume` to resume playback.",
+			"paused": "Music paused."
+		},
+		"play": {
+			"error_getting_info": "I'm havin' trouble gettin' info for that video - `$err`\nreport this to my support server if you want it fixed. Or don't. I'm not the boss of you.",
+			"not_in_channel": [
+				"Hey man, I can't just play music through your speakers magically. Could you like.. connect to a voice channel?"
+			],
+			"no_song_specified": [
+				"What? Do you want me to just play some random song? You seriously think I'd do that? No. Choose your song."
+			],
+			"cant_join_channel": "I can't join the channel you're in. Rude. I wanted to join you, and play you some tunes. The channel I wanted to join wasn't joinable. Do you see this conflict of interests?",
+			"could_not_connect": "Could not connect to voice channel - `$err`\nTry again, if you will. Or go complain in the support server.",
+			"unavailable_in_us": "The video you were trying to play is unavailable in the US - sorry, I'm based there, and can't really do much about that. ~~just reupload the video or gimme a soundcloud link~~"
+		},
+		"queue": {
+			"no_music_queued": "There is no music queued. Add some with the `play` command.",
+			"only_multiple_pages": "There are only $pages pages in the queue.",
+			"only_one_page": "There is only one page in the queue.",
+			"footer": "Page $page of $maxPage | 1 Song Total | Requested by $name",
+			"footer_plural": "Page $page of $maxPage | $songs Songs Total | Requested by $name"
+		},
+		"remove": {
+			"nothing_playing": "I can't remove something from nothing, that breaks some rule of physics.. (There is no music playing)",
+			"no_args": "Y'all need to specify which song to remove (gimme a number thanks).",
+			"not_a_number": "Hey.. that's not a number.. (or you chose zero. my point still stands.)",
+			"negative_number": "there is no negative queue tho <:crazyeyes:359106555314044939>",
+			"current_song": "hey, use `skip`, don't remove the current song, that breaks things..",
+			"does_not_exist_yet": "C'mon, there aren't that many songs in the queue.. yet.",
+			"success": "Success! Song #$num has been removed from the queue.\n*someone might have wanted to hear that song, #Blame$name*"
+		},
+		"resume": {
+			"nothing_playing": "There is no music playing. How would I resume playback of nothing? :thinking:",
+			"already_playing": "Music is already playing. Use `pause` to pause playback.",
+			"resumed": "Music resumed."
+		},
+		"shuffle": {
+			"no_queue": "You want to shuffle the queue, but there is no queue! Queue some music with the `play` command.",
+			"too_small": "There's no point in shuffling a one or two song queue - it won't change the order at all. lul.",
+			"shuffled": "Music queue shuffled."
+		},
+		"skip": {
+			"skipped": "Song skipped. #Blame$user",
+			"no_music": "There's no music playing, so how exactly would I skip the current song? Are you insane?",
+			"force_command_flag": "-f",
+			"vote_skip_removed": "$user, Vote to skip removed.",
+			"vote_skip_registered": "$user, Vote registered. $votes more vote(s) until the song is skipped. ($part/$whole)$forceMessage",
+			"force_message": "*To force skip, add `-f` on the end of the command*"
+		},
+		"stop": {
+			"no_music": "I have successfully stopped the nonexistent music.. What were you trying to do?",
+			"stopped": "Music stopped. #Blame$user"
+		},
+		"unlike": {
+			"no_likes": "If you haven't liked any songs yet, it's quite challenging for me to unlike a song.",
+			"no_args": "Yes, I'll just pick the song you want. Y'know, because I have telepathic powers. (tell me which song to remove)",
+			"invalid_number": "Hey.. that's not a number.. (or you chose zero, my point still stands.)",
+			"negative_number": "There are no negative songs tho <:crazyeyes:359106555314044939>",
+			"too_high_number": "I'm sorry, but you just haven't liked that many songs yet.",
+			"no_voice_connection": "You have to tell me which song to unlike, lul.",
+			"song_not_liked": "Ey bud you haven't even liked this song yet - how would you unlike it?",
+			"song_unliked": "Song Unliked"
+		},
+		"help": {
+			"chat_flag": "-chat",
+			"arthur_help": "Arthur Help",
+			"large_embed": {
+				"invite": "Invite",
+				"support_server": "Support Server",
+				"tos": "TOS",
+				"description": "Made by Gymnophoria#8146\nWhen using commands, <> indicates a required argument and [] indicates an optional requirement. (Do not actually type these symbols.)",
+				"footer": "Type $prefix\u200bhelp <command> for a detailed description of the command"
+			},
+			"check_dms": "Check your DM's :mailbox_with_mail:",
+			"send_failed": "Message send failed. If you'd like to see the help in this channel, type `$prefix\u200bhelp -chat`.",
+			"invalid_command": "I do not have a `$command` command.",
+			"small_embed": {
+				"usage": "**Usage**:",
+				"aliases": "**Aliases**:",
+				"advanced": "Advanced",
+				"cooldown": "cooldown",
+				"server_cooldown": "server cooldown",
+				"requires_bot_perms": "Requires **bot perms**: ",
+				"requires_member_perms": "Requires additional **member perms**: ",
+				"footer": "Category: $category | <> is required, [] is optional"
+			}
+		},
+		"info": {
+			"title": "Arthur - Yet another Discord bot",
+			"description": "Just a bot with tons of.. average features.",
+			"author": "Author",
+			"help": "Help",
+			"info": "Info",
+			"info_value": "Language - Javascript\nNode $nodeVersion\nDiscord.js v$discordVersion\nUptime of $uptime"
+		},
+		"invite": {
+			"description": "Arthur can be invited with [this link]($invite). You need to have Manage Server or Admin permission to add the bot to a server."
 		}
 	},
 	"struct": {
@@ -348,7 +453,10 @@
 		},
 		"music": {
 			"now_playing": "Now Playing",
-			"length": "Length"
+			"added_to_queue": "Added to Queue",
+			"length": "Length",
+			"dj": "dj",
+			"music": "music"
 		}
 	},
 	"time": {

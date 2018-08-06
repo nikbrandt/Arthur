@@ -1,14 +1,10 @@
-const fs = require('fs');
-const ytdl = require('ytdl-core');
-const request = require('request');
-const search = require('youtube-search');
 const Music = require('../../struct/music.js');
 const config = require('../../../media/config.json');
 
 let add = async (message, id, type, client, first, loadMessage) => {
 	let title = first
-		? 'Now Playing'
-		: 'Added to Queue';
+		? i18n.get('struct.music.now_playing', message)
+		: i18n.get('struct.music.added_to_queue', message);
 
 	let obj;
 
@@ -16,7 +12,7 @@ let add = async (message, id, type, client, first, loadMessage) => {
 		obj = await Music.getInfo(type, id, message, client, title);
 	} catch (err) {
 		if (!message.guild.music.queue && message.guild.voiceConnection) message.guild.voiceConnection.disconnect();
-		return loadMessage.edit('I\'m havin\' trouble gettin\' info for that video - ' + err + '\n report this to my support server if you want it fixed. Or don\'t. I\'m not the boss of you.');
+		return loadMessage.edit(message.__('error_getting_info', { err }));
 	}
 
 	let queueObj = { type: type, person: message.author, id: id, meta: obj.meta, embed: obj.embed };
@@ -33,10 +29,10 @@ let add = async (message, id, type, client, first, loadMessage) => {
 };
 
 exports.run = async (message, args, suffix, client, perms) => {
-	if (!message.member.voiceChannel) return message.channel.send('Hey man, I can\'t just play music through your speakers magically. Could you like.. connect to a voice channel?').then(msg => { msg.delete(5000).catch(() => {}); });
+	if (!message.member.voiceChannel) return message.channel.send(message.__('not_in_channel'));
 	if (!args[0] && !message.attachments.size) {
 		if (message.guild.music && message.guild.music.playing === false) return client.commands.get('resume').run(message, 'yes', 'no', 'die', perms);
-		return message.channel.send('What? Do you want me to just play some random song? You seriously think I\'d do that? No. Choose your song.');
+		return message.channel.send(message.__('no_song_specified'));
 	}
 
 	/*
@@ -80,7 +76,7 @@ exports.run = async (message, args, suffix, client, perms) => {
 	let { type } = object;
 
 	if (!message.guild.music || !message.guild.music.queue) {
-		if (!message.member.voiceChannel.joinable) return loadMessage.edit('I can\'t join the channel you\'re in. Rude. I wanted to join you, and play you some tunes. Do you see this conflict of interests?');
+		if (!message.member.voiceChannel.joinable) return loadMessage.edit(message.__('cant_join_channel'));
 
 		message.guild.music = {};
 		let stop = false;
@@ -90,7 +86,7 @@ exports.run = async (message, args, suffix, client, perms) => {
 				if (message.guild.voiceConnection) {
 					clearInterval(errorInterval);
 					message.guild.voiceConnection.on('error', err => {
-						loadMessage.edit('Could not connect to voice channel - ' + err + '\nTry again, if you will.');
+						loadMessage.edit(message.__('could_not_connect', { err }));
 						stop = true;
 					});
 				}
@@ -98,7 +94,7 @@ exports.run = async (message, args, suffix, client, perms) => {
 			
 			await message.member.voiceChannel.join();
 		} catch (e) {
-			return loadMessage.edit('Could not connect to voice channel; ' + e.stack.split('\n')[0] + '\nYou should fix that. Or if that error doesn\'t really make sense, go complain to the dev.');
+			return loadMessage.edit(message.__('could_not_connect', { err: e.stack ? e.stack.split('\n')[0] : e }));
 		}
 		
 		if (stop) return;
@@ -107,10 +103,10 @@ exports.run = async (message, args, suffix, client, perms) => {
 
 		add(message, id, type, client, true, loadMessage).catch(() => {
 			message.guild.music = {};
-			return loadMessage.edit('The video you were trying to play is unavailable in the US - sorry, I\'m based there, and can\'t really do much about that. ~~just reupload the video or gimme a soundcloud link~~');
+			return loadMessage.edit(message.__('unavailable_in_us'));
 		});
 	} else add (message, id, type, client, false, loadMessage).catch(() => {
-		loadMessage.edit('The video you tried to add is unavailable in the US - sorry.');
+		loadMessage.edit(message.__('unavailable_in_us'));
 	});
 };
 

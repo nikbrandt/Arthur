@@ -10,9 +10,9 @@ function shuffle(array) { // Fisher-Yates shuffle, https://bost.ocks.org/mike/sh
 }
 
 exports.run = (message, args, suffix, client, permLevel) => {
-	if (!message.member.roles.find(r => r.name.toLowerCase() === 'dj') && !message.member.roles.find(r => r.name.toLowerCase() === 'music') && permLevel < 3) return;
-	if (!message.guild.music || !message.guild.music.queue) return message.channel.send('You want to shuffle the queue, but there is no queue! Queue some music with the `play` command.');
-	if (message.guild.music.queue.length < 3) return message.channel.send('There\'s no point in shuffling a one or two song queue - it won\'t change the order at all.');
+	if (!message.member.roles.find(r => r.name.toLowerCase() === 'dj') && !message.member.roles.find(r => r.name.toLowerCase() === 'music') && permLevel < 3) return message.react(':missingpermissions:407054344874229760').catch(() => {});
+	if (!message.guild.music || !message.guild.music.queue) return message.channel.send(message.__('no_queue'));
+	if (message.guild.music.queue.length < 3) return message.channel.send(message.__('too_small')); // Kappa
 
 	let queue = message.guild.music.queue;
 	let first = queue[0];
@@ -20,7 +20,7 @@ exports.run = (message, args, suffix, client, permLevel) => {
 	shuffled.unshift(first);
 
 	message.guild.music.queue = shuffled;
-	message.channel.send('Music queue shuffled.');
+	message.channel.send(message.__('shuffled'));
 };
 
 exports.config = {

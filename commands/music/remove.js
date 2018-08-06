@@ -1,17 +1,17 @@
 exports.run = (message, args, suffix, client, permLevel) => {
-	if (!message.guild.music || !message.guild.music.queue) return message.channel.send('There is no music playing.');
+	if (!message.guild.music || !message.guild.music.queue) return message.channel.send(message.__('nothing_playing'));
 
-	if (!args[0]) return message.channel.send('Ya\'ll needs to specify which song to remove (gimme a number)');
+	if (!args[0]) return message.channel.send(message.__('no_args'));
 	let num = parseInt(args[0]);
-	if (!num) return message.channel.send('Hey.. that\'s not a number.. (or you chose zero and that\'s also not a song number dumbo)');
-	if (num < 1) return message.channel.send('there is no negative queue tho <:crazyeyes:359106555314044939>');
-	if (num === 1) return message.channel.send('hey, use skip, don\'t remove the current song; that borks things..');
-	if (num > message.guild.music.queue.length) return message.channel.send('C\'mon, there aren\'t that many songs in the queue.. yet.');
+	if (!num) return message.channel.send(message.__('not_a_number'));
+	if (num < 1) return message.channel.send(message.__('negative_number'));
+	if (num === 1) return message.channel.send(message.__('current_song'));
+	if (num > message.guild.music.queue.length) return message.channel.send(message.__('does_not_exist_yet'));
 
 	if (!message.member.roles.find(r => r.name.toLowerCase() === 'dj') && !message.member.roles.find(r => r.name.toLowerCase() === 'music') && permLevel < 3 && message.guild.music.queue[num - 1].person.id !== message.author.id) return;
 
 	message.guild.music.queue.splice(num - 1, 1);
-	message.channel.send(`Success! Song #${num} has been removed from the queue.\n*someone might have wanted to hear that song, #Blame${message.member.displayName.replace(/@/g, '@\u200b').replace(/ /g, '')}*`);
+	message.channel.send(message.__('success', { num, name: message.member.displayName.replace(/@/g, '@\u200b').replace(/ /g, '') }));
 };
 
 exports.config = {
