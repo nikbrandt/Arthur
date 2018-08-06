@@ -9,7 +9,7 @@ function game (client) {
 		[ 'Invite me to your server with the "invite" command.', 'PLAYING' ],
 		[ `${client.guilds.size} servers do their things`, 'WATCHING' ],
 		[ `${client.users.size} users very closely`, 'WATCHING' ],
-		[ 'With the webshot command', 'PLAYING' ],
+		[ 'with the webshot command', 'PLAYING' ],
 		[ 'The lovely mp3 command', 'LISTENING' ],
 		[ 'what do i put here', 'PLAYING' ],
 		[ 'SOUNDCLOUD SUPPOOORRRRTTTT', 'LISTENING' ],
@@ -26,8 +26,9 @@ function game (client) {
 		[ 'mmm sexy polls i think', 'PLAYING' ],
 		[ 'you.', 'WATCHING' ],
 		[ 'the screams of.. uh.. nevermind..', 'LISTENING' ],
-		[ `simultaneously with all of you ;)`, 'PLAYING'],
-		[ 'the Earth burn as I hitch a ride with the Vogons', 'WATCHING']
+		[ `simultaneously with all of you ;)`, 'PLAYING' ],
+		[ 'the Earth burn as I hitch a ride with the Vogons', 'WATCHING' ],
+		[ 'Help translate Arthur! Join the support server and ask how you can.', 'PLAYING' ]
 	];
 
 	let array = games[Math.floor(Math.random() * games.length)];

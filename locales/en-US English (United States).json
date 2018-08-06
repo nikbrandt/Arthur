@@ -278,7 +278,8 @@
 				"It is *exceedingly* hard to download nothing at all and send it to you.",
 				"Convert *what* to mp3?"
 			],
-			"no_results": "The video you searched for does not exist.. rip"
+			"no_results": "The video you searched for does not exist.. rip",
+			"error": "Error converting song: `$err`\nPlease try again later."
 		},
 		"poll": {
 			"footer": "Command will cancel in 60 seconds. Type \"cancel\" to cancel now. Attempt 1 of 5.",
@@ -457,6 +458,21 @@
 			"length": "Length",
 			"dj": "dj",
 			"music": "music"
+		},
+		"message": {
+			"dm_help": "My prefix is `a.`; do `a.help` for help.",
+			"command_disabled": "This command is currently disabled. Join the support server for more information.",
+			"bot_missing_perms": "I lack the permissions(s) needed to run this command: $perms",
+			"user_missing_perms_emoji": ":missingpermissions:407054344874229760",
+			"user_cooldown": "Woah there, you're being waaay to spicy for me. Could you just chill? Wait another $time second(s), would ya?",
+			"guild_cooldown": "Dude, this guild is just being way too spicy. Some people need to seriously chill.. Wait another $time second(s), will ya?"
+		},
+		"askQuestion": {
+			"command_canceled": "Command canceled",
+			"did_not_respond_in_time": "You did not respond in time.",
+			"you_cancelled": "You cancelled the command.",
+			"too_many_attempts": "You took too many attempts.",
+			"loser_abbreviation": "L."
 		}
 	},
 	"time": {

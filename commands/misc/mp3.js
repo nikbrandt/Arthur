@@ -81,7 +81,16 @@ async function finish(id, message, client) {
 			});
 		})
 		.audioCodec('libmp3lame')
-		.save(`${__dirname}/../../../media/temp/${title}.mp3`);
+		.save(`${__dirname}/../../../media/temp/${title}.mp3`)
+		.on('error', err => {
+			let filePath = `../media/temp/${title}.mp3`;
+			if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+			client.processing.splice(index, 1);
+
+			msg.delete().catch(() => {});
+			
+			message.channel.send(message.__('error', { err }));
+		});
 }
 
 exports.run = async (message, args, suffix, client) => {

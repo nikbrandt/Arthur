@@ -23,6 +23,11 @@ module.exports = async (client, message) => {
 	let prefix;
 	let alexaPlay = false;
 
+	message.__ = (string, variables) => {
+		command = client.aliases.get(command) || command;
+		return i18n.get('commands.' + command + '.' + string, message, variables);
+	};
+	
 	if (client.test) prefix = config.testPrefix;
 	else if (message.guild) {
 		let row = await sql.get(`SELECT prefix, levels FROM guildOptions WHERE guildID = '${message.guild.id}'`);
@@ -35,7 +40,7 @@ module.exports = async (client, message) => {
 
 	if (!message.content.toLowerCase().startsWith(prefix) && !message.content.startsWith(`<@${client.user.id}>`) && !message.content.startsWith(`<@!${client.user.id}>`)) {
 		if (message.channel.type !== 'text') {
-			if (/^[^ ]*help$/i.test(message.content)) return message.channel.send('My prefix is `a.`; do `a.help` for help.');
+			if (/^[^ ]*help$/i.test(message.content)) return message.channel.send(i18n.get('struct.message.dm_help', message));
 
 			let authorID;
 
@@ -119,7 +124,7 @@ module.exports = async (client, message) => {
 	const cmdFile = client.commands.get(command) || client.commands.get(client.aliases.get(command));
 
 	if (!cmdFile) return;
-	if (!cmdFile.config.enabled) return message.channel.send('This command is currently disabled. Join the support server for more information.');
+	if (!cmdFile.config.enabled) return message.channel.send(i18n.get('struct.message.command_disabled', message));
 
 	let go = true;
 	let userGo = true;
@@ -140,27 +145,22 @@ module.exports = async (client, message) => {
 		})
 	}
 
-	if (!go) return message.channel.send(`I lack the permission(s) needed to run this command: ${missingPerms.join(', ')}`);
-	if (!userGo) return message.react(':missingpermissions:407054344874229760').catch(() => {});
+	if (!go) return message.channel.send(i18n.get('struct.message.bot_missing_perms', message, { perms: missingPerms.join(', ') }));
+	if (!userGo) return message.react(i18n.get('struct.message.user_missing_perms_emoji', message)).catch(() => {});
 
-	if (cmdFile.config.cooldown && cooldownObj[message.author.id] && cooldownObj[message.author.id][cmdFile.help.name] && Date.now() - cooldownObj[message.author.id][cmdFile.help.name] < cmdFile.config.cooldown) return message.channel.send(`Whoah there, you\'re being too spicy for me. Could you just chill? Wait another ${Math.ceil((cooldownObj[message.author.id][cmdFile.help.name] + cmdFile.config.cooldown - Date.now()) / 1000)} second(s), would ya?`);
+	if (cmdFile.config.cooldown && cooldownObj[message.author.id] && cooldownObj[message.author.id][cmdFile.help.name] && Date.now() - cooldownObj[message.author.id][cmdFile.help.name] < cmdFile.config.cooldown) return message.channel.send(i18n.get('struct.message.user_cooldown', message, { time: Math.ceil((cooldownObj[message.author.id][cmdFile.help.name] + cmdFile.config.cooldown - Date.now()) / 1000) }));
 	if (cmdFile.config.cooldown) {
 		if (cooldownObj[message.author.id]) cooldownObj[message.author.id][cmdFile.help.name] = Date.now();
 		else cooldownObj[message.author.id] = { [cmdFile.help.name]: Date.now() };
 	}
 
-	if (cmdFile.config.guildCooldown && message.guild && cooldownObj[message.guild.id] && cooldownObj[message.guild.id][cmdFile.help.name] && Date.now() - cooldownObj[message.guild.id][cmdFile.help.name] < cmdFile.config.guildCooldown) return message.channel.send(`Dude, this guild is just being way too spicy. Some people need to seriously chill.. Wait another ${Math.ceil((cooldownObj[message.guild.id][cmdFile.help.name] + cmdFile.config.guildCooldown - Date.now()) / 1000)} second(s), would ya?`);
+	if (cmdFile.config.guildCooldown && message.guild && cooldownObj[message.guild.id] && cooldownObj[message.guild.id][cmdFile.help.name] && Date.now() - cooldownObj[message.guild.id][cmdFile.help.name] < cmdFile.config.guildCooldown) return message.channel.send(i18n.get('struct.message.guild_cooldown', message, { time: Math.ceil((cooldownObj[message.guild.id][cmdFile.help.name] + cmdFile.config.guildCooldown - Date.now()) / 1000) }));
 	if (cmdFile.config.guildCooldown && message.guild) {
 		if (cooldownObj[message.guild.id]) cooldownObj[message.guild.id][cmdFile.help.name] = Date.now();
 		else cooldownObj[message.guild.id] = { [cmdFile.help.name]: Date.now() };
 	}
 
-	if (cmdFile.config.permLevel > perms) return message.react(':missingpermissions:407054344874229760').catch(() => {});
-	
-	message.__ = (string, variables) => {
-		command = client.aliases.get(command) || command;
-		return i18n.get('commands.' + command + '.' + string, message, variables);
-	};
+	if (cmdFile.config.permLevel > perms) return message.react(i18n.get('struct.message.user_missing_perms_emoji', message)).catch(() => {});
 
 	try {
 		console.log(`${moment().format('MM-DD H:mm:ss')} - Command ${command} being run, user id ${message.author.id}${message.guild ? `, guild id ${message.guild.id}` : ''}`);
