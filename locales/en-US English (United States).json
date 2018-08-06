@@ -295,7 +295,7 @@
 				"description": "How long would you like the poll to run for?\ne.g. `2d 8h 3m 14s` (maximum time of one week)"
 			},
 			"ended": "Ended",
-			"finished": "Poll finished",
+			"finished": "Poll finished: ",
 			"ends": "Ends"
 		},
 		"suggest": {

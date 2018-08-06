@@ -155,7 +155,7 @@ class i18n {
 	getLocale (resolvable) {
 		if (resolvable instanceof Message) {
 			if (this._userLocaleCache.has(resolvable.author.id)) return this._userLocaleCache.get(resolvable.author.id);
-			if (this._guildLocaleCache.has(resolvable.guild.id)) return this._guildLocaleCache.get(resolvable.guild.id);
+			if (resolvable.guild && this._guildLocaleCache.has(resolvable.guild.id)) return this._guildLocaleCache.get(resolvable.guild.id);
 		} else if (resolvable instanceof Guild) {
 			if (this._guildLocaleCache.has(resolvable.id)) return this._guildLocaleCache.get(resolvable.id);
 		} else if (resolvable instanceof User) {

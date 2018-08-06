@@ -73,7 +73,7 @@ function finish (messageID, client, locale) {
 	let total = calculateTotalResults(theseEmojis, emojiObject);
 	embed.description = finishedEmojiDescription(theseEmojis, emojiObject, obj.options, total);
 	embed.footer.text = i18n.getString('commands.poll.ended', locale);
-	embed.title = i18n.getString('commands.poll.finished' + ': ', locale) + embed.title;
+	embed.title = i18n.getString('commands.poll.finished', locale) + embed.title;
 	embed.color = 0x42f4a1;
 
 	obj.message.channel.send({ embed: obj.embed });
