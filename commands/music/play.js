@@ -31,7 +31,13 @@ let add = async (message, id, type, client, first, loadMessage) => {
 exports.run = async (message, args, suffix, client, perms) => {
 	if (!message.member.voiceChannel) return message.channel.send(message.__('not_in_channel'));
 	if (!args[0] && !message.attachments.size) {
-		if (message.guild.music && message.guild.music.playing === false) return client.commands.get('resume').run(message, 'yes', 'no', 'die', perms);
+		if (message.guild.music && message.guild.music.playing === false) {
+			message.__ = (string, variables) => {
+				return i18n.get('commands.resume.' + string, message, variables);
+			};
+			
+			return client.commands.get('resume').run(message, 'yes', 'no', 'die', perms);
+		}
 		return message.channel.send(message.__('no_song_specified'));
 	}
 
