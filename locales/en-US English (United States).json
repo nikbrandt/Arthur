@@ -25,7 +25,7 @@
 			]
 		},
 		"cat": {
-			"error": "There was an error. Join the support server if you need your cats ASAP.",
+			"error": "There was an error connecting to The Cat API. Join the support server if you need your cats ASAP.",
 			"embed_description": "Original image [here]($url)."
 		},
 		"dog": {

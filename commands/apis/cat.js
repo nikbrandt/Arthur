@@ -4,7 +4,13 @@ const { toJson } = require('xml2json');
 exports.run = (message) => {
 	request('http://thecatapi.com/api/images/get?format=xml', (err, response, body) => {
 		if (err) return message.channel.send(message.__('error'));
-		const json = JSON.parse(toJson(body));
+		let json;
+		
+		try {
+			json = JSON.parse(toJson(body));
+		} catch (e) {
+			return message.channel.send(message.__('error'))
+		}
 
 		message.channel.send({embed: {
 			description: message.__('embed_description', { url: json.response.data.images.image.source_url }),
