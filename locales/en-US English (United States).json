@@ -1,4 +1,13 @@
 {
+	"meta": {
+		"authors": [
+			"Gymnophoria#8146 (the bot's real dev)"
+		],
+		"version": "v1.0",
+		"wip": true,
+		"flag": "us",
+		"lang_en": "English (United States)"
+	},
 	"commands": {
 		"8ball": {
 			"answer": [
