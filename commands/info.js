@@ -24,7 +24,7 @@ exports.run = async (message, args, asdf, client) => {
 			},
 			{
 				name: message.__('info'),
-				value: message.__('info_value', { nodeVersion: process.version, discordVersion: Discord.version, uptime: moment.duration(client.uptime).humanize() })
+				value: message.__('info_value', { nodeVersion: process.version, discordVersion: Discord.version, uptime: moment.duration(process.uptime() * 1000).humanize() })
 			}
 		]
 	}});
