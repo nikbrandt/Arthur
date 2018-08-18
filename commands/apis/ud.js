@@ -1,10 +1,42 @@
 const request = require('request');
+const requestPromise = require('request-promise');
 
-const linkRegex = /\[.+]/g;
+const linkRegex = /\[(.+?)]/g;
+const inlineRegex = /\[([^[]*?)]?(\([^[]*?( ?"?[^[]*?)?)?([^)])$/;
 
-exports.run = (message, a, suffix) => {
+async function asyncForEach(array, callback) {
+	for (let index = 0; index < array.length; index++) {
+		await callback(array[index], index, array)
+	}
+}
+
+async function getDefinition (term) {
+	let body;
+	try {
+		body = await requestPromise(`http://api.urbandictionary.com/v0/define?term=${term}`);
+		body = JSON.parse(body);
+	} catch (e) {
+		return 'No definition found.';
+	}
+
+	if (!body || body.result_type === 'no_results' || !body.list || !body.list[0] || !body.list[0].definition) return 'No definition found.';
+	return sliceIfTooBig(body.list[0].definition.replace(linkRegex, '$1'), 100, true);
+}
+
+function sliceIfTooBig(string, num, elipsis, beautify) {
+	if (string.length > num) {
+		string = string.slice(0, -(string.length - num));
+		if (beautify) {
+			if (inlineRegex.test(string)) string = string.replace(inlineRegex, '$1');
+		}
+		if (elipsis) string = string + '...';
+	}
+	return string;
+}
+
+exports.run = async (message, a, suffix) => {
     if (message.guild && !message.channel.nsfw) return message.channel.send(message.__('nsfw'));
-    request(`http://api.urbandictionary.com/v0/${suffix ? `define?term=${suffix}` : 'random'}`, (err, resp, body) => {
+    request(`http://api.urbandictionary.com/v0/${suffix ? `define?term=${suffix}` : 'random'}`, async (err, resp, body) => {
         if (err) return message.channel.send(message.__('not_connected'));
 
         const hotBod = JSON.parse(body);
@@ -15,36 +47,36 @@ exports.run = (message, a, suffix) => {
 	    
 	    let definition = theChosenOne.definition;
 	    let defMatches = definition.match(linkRegex);
-	    if (defMatches) defMatches.forEach(match => {
-	    	definition = definition.replace(match, `${match}(https://www.urbandictionary.com/define.php?term=${encodeURIComponent(match.slice(1).slice(0, -1))})`);
+	    if (defMatches) await asyncForEach(defMatches, async match => {
+	    	let subDefinition = await getDefinition(encodeURIComponent(match.slice(1).slice(0, -1)));
+	    	definition = definition.replace(match, `${match}(https://www.urbandictionary.com/define.php?term=${encodeURIComponent(match.slice(1).slice(0, -1))} "${subDefinition}")`);
 	    });
 	    
 	    let example = theChosenOne.example;
 	    let exampleMatches = example.match(linkRegex);
-	    if (exampleMatches) exampleMatches.forEach(match => {
-	    	example = example.replace(match, `${match}(https://www.urbandictionary.com/define.php?term=${encodeURIComponent(match.slice(1).slice(0, -1))})`);
+	    if (exampleMatches) await asyncForEach(exampleMatches, async match => {
+	    	let subDefinition = await getDefinition(encodeURIComponent(match.slice(1).slice(0, -1)));
+	    	example = example.replace(match, `${match}(https://www.urbandictionary.com/define.php?term=${encodeURIComponent(match.slice(1).slice(0, -1))} "${subDefinition}")`);
 	    });
 	    
         message.channel.send({embed: {
-            color: 0x134FE6,
+            color: 0x0095d1,
             title: theChosenOne.word,
             url: theChosenOne.permalink,
             fields: [
                 {
                     name: message.__('definition'),
-                    value: definition,
-                    inline: true
+                    value: sliceIfTooBig(definition, 1021, true, true)
                 },
                 {
                     name: message.__('example'),
-                    value: '*' + example + '*',
-                    inline: true
+                    value: '*' + sliceIfTooBig(example, 1019, true, true) + '*'
                 }
             ],
             footer: {
                 text: message.__('footer', { author: theChosenOne.author, thumbsup: theChosenOne.thumbs_up, thumbsdown: theChosenOne.thumbs_down })
             }
-        }}).catch(() => { message.channel.send(message.__('catch')) });
+        }}).catch(e => { console.log(e); message.channel.send(message.__('catch')) });
     });
 };
 

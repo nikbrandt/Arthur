@@ -140,7 +140,7 @@
 			],
 			"definition": "Definition",
 			"example": "Example",
-			"footer": "Authored by $author | Ratings: +$thumbsup, -$thumbsdown",
+			"footer": "Authored by $author | Ratings: +$thumbsup, -$thumbsdown | Hover over links for definitions",
 			"catch": "The definition was probably too long to fit in a message, sorry, can't send it."
 		},
 		"webshot": {
