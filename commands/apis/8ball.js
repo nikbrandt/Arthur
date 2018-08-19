@@ -1,5 +1,5 @@
 exports.run = (message) => {
-	message.channel.send(message.__('answer'));
+	message.channel.send(':8ball: ' + message.__('answer'));
 };
 
 exports.config = {
