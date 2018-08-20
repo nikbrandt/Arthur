@@ -6,10 +6,8 @@
 		"version": "v1.0",
 		"wip": true,
 		"flag": "nl",
-		"lang_en": "Dutch (Netherlands)"
-	}
-},
-
+		"lang_en": "Dutch"
+	},
 	"commands": {
 		"8ball": {
 			"answer": [
@@ -166,7 +164,7 @@
 			"blacklisted_website": [
 				"Alsjeblieft niet..",
 				"n.. nee :(.",
-				"Daar maak ik geen screenshot van.. Absoluut niet.."
+				"Daar maak ik geen screenshot van.. Absoluut niet..",
 				"Ga zelf kijken."
 			],
 			"loading": [
@@ -225,7 +223,7 @@
 				"Jo maat, het staat aan! Laat de strijd naar de top maar beginnen!"
 			],
 			"leveling_disabled": [
-				"Levels zijn uitgezet."
+				"Levels zijn uitgezet.",
 				"Wat maak je me nou? Nu moet ik het weer uitzetten.. Dit kost wel allemaal moeite ja!"
 			]
 		},
@@ -514,13 +512,13 @@
 	},
 	"time": {
 		"abbreviations": {
-			"hours": "h",
+			"hours": "u",
 			"minutes": "m",
 			"seconds": "s"
 		},
 		"moment": {
-			"precise": "MMM Do YYYY [at] hh:mm A",
-			"time_only": "h:mm:ss A",
+			"precise": "MMM Do YYYY [om] HH:mm",
+			"time_only": "H:mm:ss A",
 			"date_only_nice": "MMMM Do, YYYY"
 		}
 	},
