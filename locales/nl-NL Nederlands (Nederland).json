@@ -8,4 +8,533 @@
 		"flag": "nl",
 		"lang_en": "Dutch (Netherlands)"
 	}
+},
+
+	"commands": {
+		"8ball": {
+			"answer": [
+				"Het is zeker.",
+				"Het is beslist.",
+				"Zonder twijfel.",
+				"Ja - absoluut.",
+				"Daar kan je op vertrouwen.",
+				"Zoals ik het zie, ja.",
+				"Vrij zeker.",
+				"Ziet er goed uit.",
+				"Ja.",
+				"De tekenen zeggen ja.",
+				"Antwoord is vaag, probeer opnieuw.",
+				"Vraag het later opnieuw.",
+				"Kan ik je beter nu niet zeggen.",
+				"Kan nu niet voorspellen.",
+				"Concentreer en vraag opnieuw.",
+				"Reken er maar niet op.",
+				"Mijn antwoord is nee.",
+				"Mijn bronnen zeggen nee.",
+				"Ziet er niet goed uit.",
+				"Zeer twijfelachtig."
+			]
+		},
+		"cat": {
+			"error": [
+				"Kon niet verbinder met de Cat API. Ga naar de support server als je onmiddelijk katten nodig bent.",
+				"De katten zijn verdwenen! Ga snel naar de support server om de katten terug te lokken."
+			],
+			"embed_description": "Originele afbeelding [hier]($url)."
+		},
+		"dog": {
+			"error": [
+				"Er is een probleem opgetreden. Ga naar de support server als je onmiddelijk honden nodig bent.",
+				"Dit is niet goed... De honden kunnen geen verbinding maken! Ga naar de support server om dit te melden.",
+				"Woef! Woef! Wo... Oh-oh, hij werkt niet meer! Ga naar de support server om je Woefers terug te krijgen!"
+			],
+			"embed_description": "Originele afbeelding [hier]($url)."
+		},
+		"math": {
+			"no_args": [
+				"Serieus? Je denkt dat ik niks kan uitrekenen? :clap:",
+				"Niks? Helemaal niks? Ik denk niet dat ik dat kan uitrekenen, sorry.",
+				"Wauw, dat is een mooie som! Maar ff serieus, je moet me toch wel iets geven om mee te rekenen."
+			],
+			"long_equation": "Je som is te lang... Doe het ff rustig aan vriend en bedenk een som die korter is dan 256 tekens.",
+			"error": "Je som klopt niet, tsk."
+		},
+		"mchistory": {
+			"no_args": [
+				"Oke, Hier is je gebruikersnaam geschiedenis:\n3. Ik_moet_een\n2. Naam_hebben_om\n1. Op_te_zoeken",
+				"Ik ben wel een gebruikersnaam nodig...",
+				"Ik uhm, tja... Ik werk beter als je een gebruikersnaam invult"
+			],
+			"long_name": [
+				"Konden gebruikersnamen maar zo lang zijn..",
+				"Zulke lange gebruikersnamen bestaan niet..."
+			],
+			"invalid_name": [
+
+				"Uhm, dat is niet een bestaande gebruikersnaam.",
+				"Ik denk niet dat ik hem ken...",
+				"Wie is dat?"
+			],
+			"invalid_page": "Dat is niet echt bepaald een bestaande paginanummer.",
+			"negative_page": "Negatieve pagina's? Serieus? Denk je dat ik in de toekomst kan kijken ofzo?!",
+			"no_body": "Er ging iets mis. Weet je zeker dat je dat goed spelde?",
+			"page_too_high": "Deze kerel heeft zijn naam nog niet vaak genoeg veranderd dat ik een pagina $page nodig ben. rip.",
+			"no_name_changes": [
+				"Eindelijk iemand die een naam kiest en er bij blijft...",
+				"Nooit zijn naam veranderd, sorry.",
+				"Niks te zien hier, loop maar snel door."
+			],
+			"embed_title": "Gebruikersnaam geschiedenis van $name",
+			"name": "Gebruikersnaam",
+			"date_changed": "Veranderd op",
+			"embed_footer": "Pagina $page van $maxPage | Eerste gebruikersnaam was $name"
+		},
+		"mcserver": {
+			"failed": {
+				"title": "Server offline of incorrect",
+				"description": "Sorry ¯\\_(ツ)_/¯",
+				"footer": "Als de server echt online is, probeer enable-query naar true te zetten in server.properties."
+			},
+			"no_args": [
+				"Vertel mij welke server ik moet opzoeken AUB.",
+				"Ik ben toch wel een server nodig om op te zoeken...",
+				"Echt, het is onmogelijk om de status van een server te vinden als je me geen server geeft."
+			],
+			"processing": "Verwerken..",
+			"embed": {
+				"title": "$hostname is online.",
+				"footer": "Port $port | $ping Ping | Protocol $protocol",
+				"players": "Spelers",
+				"version": "Versie"
+			}
+		},
+		"mcskin": {
+			"some_rando": [
+				"random gozer",
+				"Iemand die ik langs de weg vond"
+			],
+			"embed": {
+				"title": "$user's Skin (Klik voor NameMC link)",
+				"footer": "Render komt van Visage."
+			}
+		},
+		"strawpoll": {
+			"default_footer": "Command stopt in 15 seconden. Tiep \"cancel\" om nu te stoppen. Poging 1 van 5.",
+			"multiple_votes": "Meerdere stemmen",
+			"multiple_votes_description": "Mogen mensen meerdere keren stemmen? <__J__a/__N__ee>",
+			"duplication_checking": "Controleren op duplicaties",
+			"duplication_checking_description": "Hoe moet duplicatiecontrole worden afgehandeld?\n`normaal` voor IP controle, `permissief` voor internet cookie controle, `uitgeschakeld` voor geen controle.",
+			"captcha_description": "Moet er een Captcha controle worden toegevoegd? <__J__a/__N__ee>",
+			"no_title": [
+				"Er uhm.. moet wel een titel aan toegevoeg worden...",
+				"Het is zeer moeilijk een poll te maken zonder een titel..",
+				"Ga je een vraag stellen? Polls werken niet goed zonder een vraag."
+			],
+			"no_options": [
+				"je wil toch wel wat opties toevoegen om uit te kiezen?",
+				"Snap je hoe polls gemaakt worden? En wat de bedoeling is van polls? Zonder opties om uit te kiezen kom je nergens..."
+			],
+			"too_many_polls": "Ik ben een beetje moe... Ik heb te veel polls gemaakt het afgelopen uur. Probeer het later opnieuw, oke?",
+			"advanced": "gevorderd",
+			"advanced_abbreviation": "adv",
+			"advanced_abbreviation_ending": "",
+			"not_enough_options": "Minimaal twee opties opgeven AUB. Wat is überhaupt het nut van één optie? Serieus?!",
+			"too_many_options": "Ben je gek?! Wat moet je met meer dan 30 opties? Hoe dan ook, strollpoll.me accepteert dat niet, ik dus ook niet.",
+			"error": "Probleem tijdens het maken van je poll: $err\nMaak hier een melding van in de support server als je dit opgelost wil zien.",
+			"poll_created": "Poll gemaakt",
+			"it_can_be_accessed_here": "Je kan je poll [hier](https://www.strawpoll.me/$id) zien"
+		},
+		"ud": {
+			"nsfw": "Het urban Woordenboek is blijkbaar 18+. Ik weet het, het is irritant, ik probeer gewoon deze bot werkend te houden. (Je kan deze command alleen uitvoeren in een NSFW kanaal)",
+			"not_connected": "Urban Woordenboek werkt blijkbaar ff niet, geen idee waarom, riperoni in pepperoni.",
+			"no_results": [
+				"Uwe hoogheid, het Urban Woordenboek heeft geen definitie voor uw rare woord.",
+				"Je woord.. Of wat het ook is.. Bestaat niet in het Urban Woordenboek.",
+				"Nope. Zelfs het *urban woordenboek* kent dat woord niet.",
+				"Geen resultaten. Noppes. Nada. Rip."
+			],
+			"definition": "Definitie",
+			"example": "Voorbeeld",
+			"footer": "Geschreven door $author | Beoordelingen: +$thumbsup, -$thumbsdown | Hou je muis op de link voor de definitie",
+			"catch": "De definitie was blijkbaar te lang om in een bericht te sturen, sorry maar je zal google moeten gebruiken."
+		},
+		"webshot": {
+			"no_args": [
+				"Je moet me wel vertellen welke website ik een screenshot van moet maken..",
+				"Wat ik ook probeer, het is *onmogelijk* om een screenshot te maken van *helemaal niks*."
+			],
+			"blacklisted_website": [
+				"Alsjeblieft niet..",
+				"n.. nee :(.",
+				"Daar maak ik geen screenshot van.. Absoluut niet.."
+				"Ga zelf kijken."
+			],
+			"loading": [
+				"Laden..",
+				"Laden...",
+				"lAdEn.."
+			],
+			"timed_out": [
+				"Die website is te krachtig voor mij! Sorry, maar ik moet je screenshot annuleren, ik kan dit niet aan...",
+				"Deze website kan ik geen screenshot van maken. Het kost mij meer dan 30 seconden om dit te doen, sorry."
+			],
+			"unknown_error": "Onbekende fout: `$err`",
+			"invalid_url": "Hey, je moet me wel een *geldige* url geven, oke? Die gekkigheid kost je een 10 seconden afkoeltijd meneertje.",
+			"embed": {
+				"title": "Render van $url",
+				"description": "Website kan je [hier]($url) vinden\nIk ben niet verantwoordelijk over de inhoud van deze website.",
+				"footer": "Opgevraagd door $name"
+			}
+		},
+		"xkcd": {
+			"latest": "nieuwste",
+			"random": "willekeurig",
+			"negative_number": "Juist, want er bestaan ook echt negatieve stripverhalen...",
+			"comic_not_created": "Dat stripverhaal bestaat niet.. Nog niet."
+		},
+		"id": {
+			"user_does_not_exist": "Ik heb geen toegang tot die gebruiker of hij bestaat niet.. Sorry.",
+			"id_of": "ID van $name"
+		},
+		"reverse": {
+			"no_args": [
+				"Je moet me wel iets geven om om te keren, lol",
+				"Wat moet ik hier nerekmo?"
+			]
+		},
+		"stopwatch": {
+			"stopwatch_started": "Stopwatch gestart.",
+			"stopwatch_stopped": "Stopwatch gestopt. $time."
+		},
+		"leaderboard": {
+			"server": "server",
+			"guild": "guild",
+			"server_abbreviation": "s",
+			"global": "globaal",
+			"global_abbreviation": "g",
+			"invalid_page": "`$page` is geen geldige paginanummer.",
+			"negative_or_zero_page": "Er is geen pagina 0. En nee, ook geen negatieve pagina's.",
+			"not_enough_people": "Er is nog niet genoeg gebabbeld om pagina $page aan te maken.",
+			"footer": "Pagina $page van $maxPage$end",
+			"footer_rank": "Jij bent rang $rank op pagina $page",
+			"global_leaderboard": "Globale Scorebord"
+		},
+		"levels": {
+			"leveling_enabled": [
+				"Levels zijn aangezet.",
+				"Jo maat, het staat aan! Laat de strijd naar de top maar beginnen!"
+			],
+			"leveling_disabled": [
+				"Levels zijn uitgezet."
+				"Wat maak je me nou? Nu moet ik het weer uitzetten.. Dit kost wel allemaal moeite ja!"
+			]
+		},
+		"xp": {
+			"description": "**$xp** globaal XP$end",
+			"rank_on_page": "Rang **$rank**, op pagina **$page**.",
+			"guild_xp": "Guild XP",
+			"current_xp": "Huidig: **$current**$total\nLevel **$level**$rank",
+			"total": "Totaal",
+			"rank": "Rang",
+			"page": "Pagina",
+			"xp_to_level": "XP tot level"
+		},
+		"xpinfo": {
+			"leveling_system": "Level Systeem",
+			"description": "Arthur heeft een levels systeem dat je XP geeft en op een gegeven moment word je een lever hoger gewoon door te typen. Dit is $levels voor deze server en kan worden aan of uit worden gezet door een server manager met `$prefix\u200bleveling`.",
+			"enabled": "Ingeschakeld",
+			"disabled": "Uitgeschakeld",
+			"current_settings": "Huidige Instellingen",
+			"settings_message": "XP draait om **$base**, voor een bereik van **$min** tot **$max** XP per berichtje.\nXP word iedere **$seconds** seconden toegevoegd.\nOm level 1 te behalen ben je **$levelOne** XP nodig.\nElk level vereist **$mult**x meer XP dan de vorige.\nXP word tot maximaal **$maxMult**x vermenigvuldigt."
+		},
+		"blacklist": {
+			"blacklisted_users": "Geblokkerde Gebruikers",
+			"nothing_to_display": "Niks te zien hier, loop maar weer door.",
+			"invalid_user": [
+				"Heb je nou echt gewoon maar wat ingevuld? Deze persoon bestaat niet. Je kan geen mensfiguren blokkeren die niet bestaan. Dat werkt gewoon niet.",
+				"Wie? Ik uhm.. Kan niet vinden wie je probeert te blokkeren.",
+				"Dat mensenkind.. bestaat niet. rip.",
+				"Een echt persoon zou wel fijn zijn.",
+				"Ik kon niet vinden wie je zocht. Kan je het opnieuw proberen met iemand die daadwerkelijk ook *bestaat*?"
+			],
+			"self_blacklist": [
+				"Hey! Ik ga jou niet blokkeren van mij. Bedankt, maar nee dank je.",
+				"Je kan.. Je kan dat gewoon niet doen. Althans, dat laat ik je gewoon niet toe.",
+				"Serieus, cind je mij niet leuk? Wauw. Oke. Ik zie hoe het zit. Waarom verwijder je me gewoon dan niet als dat is wat je graag wil?",
+				"lol. nee."
+			],
+			"already_blacklisted": "Deze persoon is al geblokkerd.\nDoe `unblacklist $id` als je deze gap wil deblokkeren. Danku.",
+			"blacklisted": "**$tag** is geblokkeerd en kan Arthur niet meer gebruiken in deze server. Riperoni in pepperoni.\nMocht je hem ooit willen deblokkeren, doe `unblacklist $id`.\nFijne dag maat. :thumbsup:"
+		},
+		"guildlanguage": {
+			"current_language": "De taal hier is gezet naar $locale",
+			"list": "Talen die momenteel worden ondersteund:\n$locales\nAls je wil helpen met het vertalen van Arthur, neem dan contact op met Gymnophoria in de support server.",
+			"invalid_locale": "Ongeldige invoer. Kies uit deze dinkies: $locales. hoofdletter-GEVOELIG.",
+			"locale_set": "Server taal ingesteld."
+		},
+		"prefix": {
+			"current": [
+				"De prefix hier is `$prefix`.",
+				"Maat, doe een `$prefix` voor je command om hem te laten werken",
+				"Als je een `$prefix` voor mijn commands doet, moet alles tip top in orde zijn :thumbsup:"
+			],
+			"too_long": [
+				"Die prefix is een beetje te lang..",
+				"Dat is een beetje te lang voor mij. ~~That's what she said~~. Niet langer dan 10 tekens AUB.",
+				"Die moet je wel ff korter maken, zo'n lange prefix werkt niet."
+			],
+			"updated": "Server prefix geüpdated naar `$prefix`."
+		},
+		"unblacklist": {
+			"no_args": [
+				"Nou? Ga je nog kiezen wie je wil deblokkeren? Of ga je daar blijven ~~staan~~ zitten?",
+				"I'm on it. I'll unblacklist ` ` right away."
+			],
+			"self_blacklist": "Je bent duidelijk niet geblokkeerd als ik nog tegen je kan praten. Gaat het wel helemaal goed daar, vriend?",
+			"not_blacklisted": "Die persoon is niet geblokkeerd. Wat aardig van je, je geeft om de gappies waar het allemaal prima mee gaat.",
+			"unblacklisted": "Als magie, **$tag** kan mijn commands weer gebruiken. :tada:"
+		},
+		"language": {
+			"current": "De ingestelde taal hier is $locale",
+			"removed": "Taal verwijderd. Ik ga weer terug naar de server taal als die gezet is. Of ander naar Engels.",
+			"locale_set": "Taal ingesteld."
+		},
+		"mp3": {
+			"downloading": "Downloaden..",
+			"livestream": "Ah juist, je verwacht dat ik een livestream kan downloaden. Gewoon niet, bedankt.",
+			"too_long": "Ik heb een limiet gezet van $minutes minuten op liedjes; mijn CPU heeft zo zijn limiet en zo ook jouw tijd.",
+			"downloading_with_time": "Downloaden... Dit zal ongeveer **$seconds** seconden duren om om te zetten..",
+			"song_converted": "$user, je liedje is omgezet.",
+			"description": "Liedje is [hier]($url).\nOriginele video [hier](https://youtu.be/$id).\n$length",
+			"footer": "Opgevraagd door $tag | Bestand zal worden verwijderd na 48 uur.",
+			"no_args": [
+				"Ik kan niet niks downloaden..",
+				"Het is *extreem* moeilijk om niks te downloaden en naar je te sturen.",
+				"*Wat* moet ik precies omzetten naar mp3?"
+			],
+			"no_results": "De video die je zoekt bestaat niet.. rip",
+			"error": "Fout tijdens omzetten van het liedje: `$err`\nProbeer later opnieuw."
+		},
+		"poll": {
+			"footer": "Command wordt geannuleerd in 60 seconden. Type \"Annuleer\" om nu te annuleren. Poging 1 van 5.",
+			"title": {
+				"title": "Poll titel",
+				"description": "Wat wil je als Poll titel?"
+			},
+			"options": {
+				"title": "Poll keuzes",
+				"description": "Welke Poll keuzes wil je?\nSchrijf een `|` tussen de verschillende keuzes (onder je backspace).\nMaximaal 10 keuzes."
+			},
+			"time": {
+				"title": "Poll tijd",
+				"description": "Hoe lang wil je de Poll open hebben?\nbijv. `2d 8h 3m 14s` (Maximale tijd is 1 week)"
+			},
+			"ended": "Geëindigd",
+			"finished": "Poll voltooid: ",
+			"ends": "Eindigt"
+		},
+		"suggest": {
+			"no_args": "Dus je wil niks voorstellen? Helemaal niks? Echt waar? Nee, dat doen we niet.",
+			"success": "Bedankt voor je voorstel, deze wordt mogelijk ooit toegevoegd :thumbsup:$extra",
+			"check_support_server": "Ga naar de support server - $link - om te zien of je voorstel wordt geaccepteerd.",
+			"error": "Ik kon dit om een of andere reden niet aan mijn Trello toevoegen.. Klote man, dat is raar, zou je dit even willen rapporteren voor me op mijn support server? - $link\n```\n$err\n```"
+		},
+		"like": {
+			"no_song_specified": "Oke, als er geen muziek speelt, *hoe moet ik dan het huidige liedje liken*? Hm? Snap je dat dat niet werkt?",
+			"song_already_liked": "Mhm, dacht je echt dat ik je een liedje 2 keer liet liken? Nee. Het maakt mij geen ene reet uit hoe goed het liedje is, zorg maar dat je ~~alt~~ vriend het liedje een like geeft.",
+			"song_liked": "Song Geliked"
+		},
+		"liked": {
+			"no_likes": [
+				"Je hebt nog geen likes man..",
+				"Uh, je moet wel ff wat liedjes liken als je wil dat ik er een lijstje van maak, maat.",
+				"Je uhm... Je hebt nog geen een liedje een like gegeven.."
+			],
+			"invalid_page": "Eyy dat is geen paginanummer. Ik zou het fijn vinden als je mij een *echte* paginanummer geeft, bedankt.",
+			"negative_page": "Negatieve pagina's bestaan niet, oke? Denk maar aan een boek. Heeft een boek pagina -3? Dacht het niet he..",
+			"nonexistent_page": "'Die pagina bestaat nog niet. Ga heel veel liedjes een like geven, maak die pagina, ik geloof in je!",
+			"liked_songs": "$name$s liedjes met likes",
+			"footer": "Pagina $page van $maxPage | speel een liedje met een like met de command play liked <number>"
+		},
+		"likedlb": {
+			"like": "like",
+			"likes": "likes",
+			"top_liked_songs": "Top leuk gevonden Liedjes",
+			"footer": "Pagina $page van $maxPage | Speel een top liedje met de command play top <number>"
+		},
+		"loop": {
+			"no_music_playing": "Ah juist, Ik zal je lijst van 0 liedjes in een lus afspelen. (Speel wat muziek, dankuwel)",
+			"no_permissions": "Hey, jij hebt geen toegang om liedjes in een lus af te spelen, gekkerd",
+			"off": "Oke dan $name, lus is uitgezet, zoals u wenst.",
+			"on": "Lus staat aan, $name, veel plezier met het luisteren naar dezelfde liedjes *voor eeuwig*"
+		},
+		"nowplaying": {
+			"notify": "aankondigen",
+			"notify_abbreviation": "a",
+			"nothing_playing": "Huidig nummer: Het geluid van stilte",
+			"by": "Door",
+			"of": "van",
+			"footer": "Opgevraagd door $tag"
+		},
+		"npnotify": {
+			"enabled": "aangezet",
+			"disabled": "uitgezet",
+			"message": "Huidig nummer aankondigingen zijn momenteel $status. Om ze uit te zetten, doe dan deze command opnieuw."
+		},
+		"pause": {
+			"no_music_playing": "Er word geen muziek afgespeeld.",
+			"already_paused": "De muziek staat al op pauze. Gebruik `resume` om weer verder te gaan.",
+			"paused": "Muziek gepauzeerd."
+		},
+		"play": {
+			"error_getting_info": "Ik heb wat moeite met info te verzamelen van die video - `$err`\nRapporteer dit in mijn support server als je dit graag opgelost wil hebben. Of niet. Ik ben je baas niet.",
+			"not_in_channel": [
+				"Hey man, Ik kan geen muziek magisch door je speakers afspelen. Kan je misschien.. een spraak kanaal in kunnen gaan?"
+			],
+			"no_song_specified": [
+				"Wat? Wil je dat ik een willekeurig liedje afspeel? Denk je serieus dat ik dat zou doen? Nee. Kies je eigen liedje."
+			],
+			"cant_join_channel": "Ik kan niet in dat spraak kanaal komen. Wat gemeen. Ik wou bij je zijn, wat muziek voor je afpelen. Maar nee, het kanaal dat ik probeerde in te komen kan ik niet in komen. Zie je het probleem hier?",
+			"could_not_connect": "Kon niet verbinden met het spraak kanaal - `$err`\nProbeer opnieuw, als je dat wil. Of ga klagen in de support server.",
+			"unavailable_in_us": "De video die jij probeerde af te spelen is niet beschikbaar in Amerika - Sorry, ik werk vanuit Amerika.. Daar kan ik helaas niet veel aan doen. ~~Gewoon de video opnieuw uploaden of geef me een soundcloud link~~"
+		},
+		"queue": {
+			"no_music_queued": "Er staat geen muziek in de wachtrij. Voeg wat muziek toe met het `play` command.",
+			"only_multiple_pages": "Er zijn maar $pages pagina's in de wachtrij.",
+			"only_one_page": "Er staat maar 1 pagina in de wachtrij.",
+			"footer": "Pagina $page van $maxPage | 1 Liedje in totaal | Opgevraagd door $name",
+			"footer_plural": "Pagina $page van $maxPage | $songs Liedjes in totaal | Opgevraagd door $name"
+		},
+		"remove": {
+			"nothing_playing": "Ik kan niet niks van niks verwijderen, dat breekt vast wat natuurwetten.. (Er wordt geen muziek afgespeeld)",
+			"no_args": "Je moet me wel vertellen welke ik moet verwijderen (Geef me een nummer AUB).",
+			"not_a_number": "Hey.. Dat is geen nummer.. (Of je koos voor 0. Je snapt mijn punt wel.)",
+			"negative_number": "Er is geen negatieve wachtrij, gek <:crazyeyes:359106555314044939>",
+			"current_song": "hey, gebruik `skip`, verwijder niet het huidige liedje, dat breekt dingen..",
+			"does_not_exist_yet": "Zo veel liedjes zijn er niet in de wachtrij.. Nog niet in ieder gevakl.",
+			"success": "Gelukt! Liedje #$num is verwijderd uit de wachtrij.\n*Iemand had wel dat liedje toegevoegd met een reden, #SchuldVan$name*"
+		},
+		"resume": {
+			"nothing_playing": "Er wordt geen muziek afgespeeld. Hoe kan ik iets hervatten wat niet wordt afgespeeld? :thinking:",
+			"already_playing": "De muziek speelt al. Gebruik `pause` om het liedje te pauzeren.",
+			"resumed": "Muziek hervat."
+		},
+		"shuffle": {
+			"no_queue": "Je wil de wachtrij mixen, maar er is geen wachtrij! Voeg muziek toe aan de wachtrij met het `play` command.",
+			"too_small": "Het heeft gen nut om een wachtrij met maar 1 of 2 liedjes te mixen - het zal geen effect hebben op de volgorde. lol.",
+			"shuffled": "Muziek wachtrij gemixt."
+		},
+		"skip": {
+			"skipped": "Liedje overgeslagen. #SchuldVan$user",
+			"no_music": "Er wordt geen muziek afgespeelt, hoe moet ik dan het huidige liedje overslaan? Ben je gek?",
+			"force_command_flag": "-f",
+			"vote_skip_removed": "$user, stem om over te slaan verwijderd.",
+			"vote_skip_registered": "$user, stem geregistreerd. Nog $votes stem(men) nodig om het liedje over te slaan. ($part/$whole)$forceMessage",
+			"force_message": "*Om geforceerd over te slaan, voeg `-f` toe aan het einde van het `skip` command*"
+		},
+		"stop": {
+			"no_music": "Ik heb de niet bestaande muziek gestopt.. Wat probeerde je eigenlijk te doen?",
+			"stopped": "Muziek gestopt. #SchuldVan$user"
+		},
+		"unlike": {
+			"no_likes": "Als je nog geen een liedje een like hebt gegeven, is het zeer moeilijk voor mij om een like te verwijderen van een liedje.",
+			"no_args": "Ja hoor, ik kies het liedje dat je wil wel. Weet je, ik heb geen telepatische krachten. (vertel me welk liedje ik moet verwijderen)",
+			"invalid_number": "Hey.. dat is gen nummer.. (of je koos voor 0. Je snapt mijn punt wel.)",
+			"negative_number": "Negatieve liedjes bestaan niet <:crazyeyes:359106555314044939>",
+			"too_high_number": "Sorry hoor, maar je hebt nog niet zo veel liedjes een like gegeven.",
+			"no_voice_connection": "Je moet me wel vertellen van welk liedje ik je like moet verwijderen, lol.",
+			"song_not_liked": "Ey vriend, je hebt dit liedje nog geeneens een like gegeven - hoe wou je die like verwijderen dan?",
+			"song_unliked": "Like verwijderd van liedje"
+		},
+		"help": {
+			"chat_flag": "-chat",
+			"arthur_help": "Arthur Help",
+			"large_embed": {
+				"invite": "Uitnodiging",
+				"support_server": "Support Server",
+				"tos": "TOS",
+				"description": "Gemaakt door Gymnophoria#8146\nWanneer je een command gebruikt, <> staat vor een verplicht onderdeel en [] staat voor een optioneel onderdeel. (Je moet deze symbolen niet daadwerkelijk typen.)",
+				"footer": "Type $prefix\u200bhelp <command> voor een gedetaileerde omschrijving van de command"
+			},
+			"check_dms": "Kijk in je privéberichten :mailbox_with_mail:",
+			"send_failed": "Kon bericht niet sturen. Als je de help graag in dit kanaal wil zien, type dan `$prefix\u200bhelp -chat`.",
+			"invalid_command": "Het command `$command` bestaat niet. Althans, bij mij niet.",
+			"small_embed": {
+				"usage": "**Gebruik**:",
+				"aliases": "**Aliassen**:",
+				"advanced": "Geavanceerd",
+				"cooldown": "afkoeltijd",
+				"server_cooldown": "server afkoeltijd",
+				"requires_bot_perms": "Vereist **bot permissies**: ",
+				"requires_member_perms": "Vereist **leden permissies**: ",
+				"footer": "Categorie: $category | <> is vereist, [] is optioneel"
+			}
+		},
+		"info": {
+			"title": "Arthur - Gewoon nog ee nDiscord bot",
+			"description": "Gewoon een bot met heel veel.. gemiddelde functies.",
+			"author": "Autheur",
+			"help": "Help",
+			"info": "Info",
+			"info_value": "Codeertaal - Javascript\nNode $nodeVersion\nDiscord.js v$discordVersion\nTijd sinds laatste herstart $uptime"
+		},
+		"invite": {
+			"description": "Arthur kan worden uitgenodigd met [deze link]($invite). Je bent Server Beheerder of Admin rechten nodig om de bot toe te voegen aan een server."
+		}
+	},
+	"struct": {
+		"xp": {
+			"no_one_talked_yet": "Er heeft nog niemand in deze server iets gezegd."
+		},
+		"music": {
+			"now_playing": "Wordt nu afgespeeld",
+			"added_to_queue": "Toegevoegd aan de wachtrij",
+			"length": "Lengte",
+			"dj": "dj",
+			"music": "muziek"
+		},
+		"message": {
+			"dm_help": "Mijn voorvoegsel is `a.`; doe `a.help` voor hulp.",
+			"command_disabled": "Deze command is momenteel uitgeschakeld. Ga naar de support server voor meer informatie.",
+			"bot_missing_perms": "Om deze command uit te voeren, mis ik nog deze permissies: $perms",
+			"user_missing_perms_emoji": ":missingpermissions:407054344874229760",
+			"user_cooldown": "Ho is even, je gaat me een beetje te snel. Kan je ff chillen? Wacht nog even $time seconde(n), oke?",
+			"guild_cooldown": "Dude, deze server is echt gekkigheid. Sommige mensen moeten echt ff chill doen.. Wacht nog even $time seconde(n), oke?"
+		},
+		"askQuestion": {
+			"command_canceled": "Command geannuleerd",
+			"did_not_respond_in_time": "Je hebt niet op tijd gereageerd.",
+			"you_cancelled": "Je hebt de command geannuleerd.",
+			"too_many_attempts": "Je hebt te veel pogingen gedaan.",
+			"loser_abbreviation": "L."
+		},
+		"i18n": {
+			"response_not_found": "Antwoord niet gevonden. Dit wordt ZSM verholpen, probeer later opnieuw. Tekenreeksnaam ter referentie: `$string`."
+		}
+	},
+	"time": {
+		"abbreviations": {
+			"hours": "h",
+			"minutes": "m",
+			"seconds": "s"
+		},
+		"moment": {
+			"precise": "MMM Do YYYY [at] hh:mm A",
+			"time_only": "h:mm:ss A",
+			"date_only_nice": "MMMM Do, YYYY"
+		}
+	},
+	"booleans": {
+		"yesno": {
+			"abbreviations": {
+				"yes": "j",
+				"no": "n",
+				"yes_end": "a",
+				"no_end": "ee"
+			}
+		}
+	},
+	"parsing": {
+		"invalid_number": "Dat is geen geldig paginnummer."
+	}
 }
