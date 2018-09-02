@@ -3,7 +3,7 @@ const webshot = require('webshot');
 const moment = require('moment');
 const fs = require('fs');
 
-let nonobad = [ 'data:', 'file://', 'ip', 'goatse', 'porn', 'redtube', 'sex', 'rule34', 'amateur', 'cuckold', 'creampie', 'cum', 'jiz', 'milf', 'orgasm', 'orgy', 'threesome', 'ass', 'tit', 'dick', 'penis', 'despacito', 'pussy', 'fuck', 'finger', 'bang', 'hentai', 'yaoi', 'virgin', 'handjob', 'blowjob', 'xxx', 'milf' ];
+let nonobad = [ 'data:', 'file://', 'doom3.zoy.org', 'ip', 'goatse', 'porn', 'redtube', 'sex', 'rule34', 'amateur', 'cuckold', 'creampie', 'cum', 'jiz', 'milf', 'orgasm', 'orgy', 'threesome', 'ass', 'tit', 'dick', 'penis', 'despacito', 'pussy', 'fuck', 'finger', 'bang', 'hentai', 'yaoi', 'virgin', 'handjob', 'blowjob', 'xxx', 'milf' ];
 
 exports.run = async (message, args, s, client) => {
 	if (!args[0]) return message.channel.send(message.__('no_args'));
