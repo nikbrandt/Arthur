@@ -7,10 +7,10 @@ exports.run = (message, args, suffix, client) => {
 	let splitified = suffix.split('\n');
 	let channel = client.channels.get(config.trello.channel);
 
-	let attachments = message.attachments.array().map(a => a ? a.url : '');
+	let attachments = message.attachments.map(a => `[${a.filename}](${a.url})`);
 
 	let footer = attachments.length
-		? `Attached:\n${attachments.map(a => `[${a.filename}](${a.url})`).join('\n')}\n\n*Suggested by ${message.author.tag} (${message.author.id})*`
+		? `Attached:\n${attachments.join('\n')}\n\n*Suggested by ${message.author.tag} (${message.author.id})*`
 		: `*Suggested by ${message.author.tag} (${message.author.id})*`;
 
 	trello.addCard(splitified[0],
