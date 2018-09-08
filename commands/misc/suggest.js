@@ -32,7 +32,7 @@ exports.run = (message, args, suffix, client) => {
 				},
 				color: 0x00c140
 			},
-			files: attachments
+			files: message.attachments.map(a => { attachment: a.url, name: a.filename })
 		});
 
 		message.channel.send(message.__('success', { extra: message.guild && message.guild.name === 'Arthur Official Discord' ? '' : '\n' + message.__('check_support_server', { link: client.config.info.guildLink }) }));
