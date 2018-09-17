@@ -170,32 +170,36 @@ const Music = {
 			let type = 1;
 			let id;
 
+			message.__ = (string, variables) => {
+				return i18n.get('struct.music.' + string, message, variables);
+			};
+
 			if (message.attachments.size) {
 				type = 4;
 				id = message.attachments.first().url;
 
-				if (!id.endsWith('.mp3') && !id.endsWith('.ogg')) return reject('I only support playback of mp3\'s and oggs for now. Go ahead and type `a.suggest music in <file type> format pls` if you need another audio file type supported.');
-				if (message.attachments.first().filesize < 25000) return reject('Your file isn\'t powerful enough! I need one bigger than 25 KB, thanks.');
+				if (!id.endsWith('.mp3') && !id.endsWith('.ogg')) return reject(message.__('invalid_file_type'));
+				if (message.attachments.first().filesize < 25000) return reject(message.__('file_too_small'));
 
 				resolve( {
 					id: id,
 					type: type
 				} );
-			} else if (args[0] === 'liked' || args[0] === 'likes') {
+			} else if (args[0] === i18n.get('commands.likedlb.liked', message) || args[0] === i18n.get('commands.likedlb.likes', message)) {
 				let array = await sql.all(`SELECT type, id FROM musicLikes WHERE userID = '${message.author.id}'`);
-				if (!array || !array.length) return reject('If you haven\'t liked a song yet, it\'s quite challenging for me to play a liked song.');
+				if (!array || !array.length) return reject(message.__('no_liked_songs'));
 				let num;
 
-				if (args[1] === 'random') num = Math.ceil(Math.random() * array.length);
+				if (args[1] === message.__('random')) num = Math.ceil(Math.random() * array.length);
 				else {
-					if (!args[1]) return reject('Yes, I\'ll just pick the song you want. Y\'know, because I have telepathic powers. (tell me which song to play)');
+					if (!args[1]) return reject(message.__('no_song_specified'));
 					num = parseInt(args[1]);
-					if (!num) return reject('Hey.. that\'s not a number.. (or you chose zero, which really isn\'t a song number so yeah)');
-					if (num < 1) return reject('there is no negative song tho <:crazyeyes:359106555314044939>');
-					if (num > array.length) return reject('I\'m sorry, but you just haven\'t liked that many songs yet.');
+					if (!num) return reject(i18n.get('parsing.invalid_number', message));
+					if (num < 1) return reject(message.__('negative_number'));
+					if (num > array.length) return reject(message.__('number_too_large'));
 				}
 
-				if (!array[num - 1]) return reject('Not sure why, but I simply couldn\'t find that song. Huh.');
+				if (!array[num - 1]) return reject(message.__('could_not_find_song'));
 
 				type = array[num - 1].type;
 				id = array[num - 1].id;
@@ -204,21 +208,21 @@ const Music = {
 					id: id,
 					type: type
 				} );
-			} else if (args[0] === 'top') {
+			} else if (args[0] === message.__('top')) {
 				let array = await Music.likedArray();
 				let num;
 
-				if (args[1] === 'random') num = Math.ceil(Math.random() * array.length);
+				if (args[1] === message.__('random')) num = Math.ceil(Math.random() * array.length);
 				else {
-					if (!args[1]) return reject('Yes, I\'ll just pick the song you want. Y\'know, because I have telepathic powers. (tell me which song to play)');
+					if (!args[1]) return reject(message.__('no_song_specified'));
 					num = parseInt(args[1]);
-					if (!num) return reject('Hey.. that\'s not a number.. (or you chose zero, which really isn\'t a song number so yeah)');
-					if (num < 1) return reject('there is no negative song tho <:crazyeyes:359106555314044939>');
-					if (num > array.length) return reject('I\'m sorry, but there just aren\'t that many liked songs yet.');
+					if (!num) return reject(i18n.get('parsing.invalid_number', message));
+					if (num < 1) return reject(message.__('negative_number'));
+					if (num > array.length) return reject(message.__('number_too_large_lb'));
 				}
 
 				let obj = array[num - 1];
-				if (!obj) return reject('I couldn\'t find that song for some reason, I\'m sorry.');
+				if (!obj) return reject(message.__('could_not_find_song'));
 				type = obj.type;
 				id = obj.id;
 
@@ -226,13 +230,13 @@ const Music = {
 					id: id,
 					type: type
 				} );
-			} else if (args[0] === 'file') {
+			} else if (args[0] === message.__('file')) {
 				type = 3;
 				let files = fs.readdirSync('../media/sounds');
 				files = files.map(f => f.replace(/\.mp3/g, ''));
 
-				if (!args[1]) return reject(`Hey man, you have to tell me what file to play.. The current options are: ${files.map(f => '`' + f + '`').join(', ')}`);
-				if (!files.includes(args[1])) return reject(`Darn! That file doesn't exist. You can suggest to add it by DMing Gymnophoria#8146. The files you *can* play are as follows: ${files.map(f => '`' + f + '`').join(', ')}`);
+				if (!args[1]) return reject(message.__('no_file_specified', { files: files.map(f => '`' + f + '`').join(message.__('separator') + ' ') }));
+				if (!files.includes(args[1])) return reject(message.__('invalid_file', { files: files.map(f => '`' + f + '`').join(message.__('separator') + ' ') }));
 
 				id = args[1];
 
@@ -255,7 +259,7 @@ const Music = {
 					id, type
 				} );
 			} else if (args[0].endsWith('.mp3') || args[0].endsWith('.ogg')) {
-				if (!songRegex.test(args[0])) return reject('Please provide a valid URL. (mp3/ogg only supported, suggest more formats if needed)');
+				if (!songRegex.test(args[0])) return reject(message.__('invalid_url'));
 
 				type = 4;
 				id = args[0];
@@ -278,7 +282,7 @@ const Music = {
 						return reject(err);
 					});
 					
-					if (!result) return reject('No results found. Silly goose.');
+					if (!result) return reject(message.__('no_results'));
 
 					resolve ( {
 						id: result.permalink_url,
@@ -289,14 +293,14 @@ const Music = {
 				search(suffix, youtubeSearch, (err, results) => {
 					if (err || !results || !results[0]) {
 						return soundcloud.search(suffix).then(result => {
-							if (!result) return reject('The song you searched for does not exist on YouTube or SoundCloud.. rip');
+							if (!result) return reject(message.__('no_results'));
 							
 							resolve ( {
 								id: result.permalink_url,
 								type: 5
 							});
 						}).catch(() => {
-							reject('The song you searched for does not exist on YouTube or SoundCloud.. rip');
+							reject(message.__('no_results'));
 						});
 					}
 
@@ -313,21 +317,25 @@ const Music = {
 
 	getInfo: (type, id, message, client, title) => {
 		return new Promise(async (resolve, reject) => {
+			message.__ = (string, variables) => {
+				return i18n.get('struct.music.' + string, message, variables);
+			};
 
 			switch (type) {
 				case 1: // youtube
-					let info = await ytdl.getInfo(id).catch(err => {
-						return reject('There seems to have been an error retrieving info for that video - \n' + err.stack.split('\n')[0]);
+					let info = await ytdl.getInfo(id).catch(() => {
+						return reject(message.__('could_not_get_info'));
 					});
-					if (!info) return reject('I couldn\'t gather information on this video - this might be because it is not available in the US, sorry!');
-					if (info.livestream === '1' || info.live_playback === '1' || info.length_seconds > 7200 ) return reject(info.length_seconds > 7200 ? 'Hey there my dude that\'s a bit much, I don\'t wanna play a song longer than 2 hours for ya.' : 'Trying to play a livestream, eh? I can\'t do that, sorry.. ;-;');
+					if (!info) return reject(message.__('could_not_get_info'));
+					if (info.livestream === '1' || info.live_playback === '1' || info.length_seconds > 7200 ) return reject(info.length_seconds > 7200 ? message.__('song_too_long') : message.__('livestream'));
 
 					let secObj = secSpread(info.length_seconds);
+					let secString = `${secObj.h ? `${secObj.h}${i18n.get('time.abbreviations.hours', message)} ` : ''}${secObj.m ? `${secObj.m}${i18n.get('time.abbreviations.minutes', message)} ` : ''}${secObj.s}${i18n.get('time.abbreviations.seconds', message)}`;
 					resolve({
 						meta: {
 							url: `https://youtu.be/${id}`,
-							title: `${info.title} (${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s)`,
-							queueName: `[${info.title}](https://youtu.be/${id}) - ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`
+							title: `${info.title} (${secString})`,
+							queueName: `[${info.title}](https://youtu.be/${id}) - ${secString}`
 						},
 						embed: {
 							author: {
@@ -335,12 +343,12 @@ const Music = {
 								icon_url: info.author.avatar
 							},
 							color: 0xff0000,
-							description: `[${info.title}](https://youtu.be/${id})\nBy [${info.author.name}](${info.author.channel_url})\nLength: ${secObj.h ? `${secObj.h}h ` : ''}${secObj.m ? `${secObj.m}m ` : ''}${secObj.s}s`,
+							description: `[${info.title}](https://youtu.be/${id})\n${i18n.get('commands.nowplaying.by', message)} [${info.author.name}](${info.author.channel_url})\n${message.__('length')}: ${secString}`,
 							thumbnail: {
 								url: info.thumbnail_url
 							},
 							footer: {
-								text: `Requested by ${message.author.tag}`
+								text: i18n.get('commands.nowplaying.footer', message, { tag: message.author.tag })
 							}
 						},
 						ms: info.length_seconds * 1000
@@ -370,8 +378,8 @@ const Music = {
 				case 3: // sound effect
 					resolve({
 						meta: {
-							title: `Sound effect - ${id}`,
-							queueName: `Sound effect - ${id}`,
+							title: `${message.__('sound_effect')} - ${id}`,
+							queueName: `${message.__('sound_effect')} - ${id}`,
 							url: 'https://github.com/Gymnophoria/Arthur'
 						},
 						ms: 30000
@@ -380,7 +388,7 @@ const Music = {
 					break;
 				case 4: // custom file
 					let filename = id.match(songRegex)[1];
-					if (!filename) return reject('Could not parse URL, please provide a valid \'un.');
+					if (!filename) return reject(message.__('invalid_url'));
 
 					resolve({
 						meta: {
@@ -393,7 +401,7 @@ const Music = {
 							color: 0x7289DA,
 							description: `[${filename}](${id})`,
 							footer: {
-								text: `Added by ${message.author.tag} | Invalid URLs will be skipped`
+								text: message.__('file_footer', { tag: message.author.tag })
 							}
 						},
 						ms: 180000
@@ -402,20 +410,21 @@ const Music = {
 					break;
 				case 5: // soundcloud
 					let meta = await soundcloud.getInfo(id).catch(err => {
-						return reject (`I couldn't retrieve info for that song - ${err.stack ? err.stack.split('\n')[0] : err}`);
+						return reject (message.__('could_not_get_info'));
 					});
 					
-					if (!meta) return reject('I couldn\'t get info for the song. Odd. Try again? I dunno.');
+					if (!meta) return reject(message.__('could_not_get_info'));
 					
-					if (meta.duration > 7200000) return reject ('I\'d rather not play a song longer than two hours long, sorry.');
+					if (meta.duration > 7200000) return reject (message.__('song_too_long'));
 
 					let timeObj = secSpread(Math.round(meta.duration / 1000));
+					let timeString = `${timeObj.h ? `${timeObj.h}${i18n.get('time.abbreviations.hours', message)} ` : ''}${timeObj.m ? `${timeObj.m}${i18n.get('time.abbreviations.minutes', message)} ` : ''}${timeObj.s}${i18n.get('time.abbreviations.seconds', message)}`;
 
 					resolve ({
 						meta: {
 							url: id,
-							title: `${meta.title} (${timeObj.h ? `${timeObj.h}h ` : ''}${timeObj.m ? `${timeObj.m}m ` : ''}${timeObj.s}s)`,
-							queueName: `[${meta.title}](${id}) - ${timeObj.h ? `${timeObj.h}h ` : ''}${timeObj.m ? `${timeObj.m}m ` : ''}${timeObj.s}s`,
+							title: `${meta.title} (${timeString})`,
+							queueName: `[${meta.title}](${id}) - ${timeString}`,
 							id: meta.id
 						},
 						embed: {
@@ -424,12 +433,12 @@ const Music = {
 								icon_url: meta.user.avatar_url
 							},
 							color: 0xff8800,
-							description: `[${meta.title}](${id})\nBy ${meta.user.username}\nLength: ${timeObj.h ? `${timeObj.h}h ` : ''}${timeObj.m ? `${timeObj.m}m ` : ''}${timeObj.s}s`,
+							description: `[${meta.title}](${id})\n${i18n.get('commands.nowplaying.by', message)} ${meta.user.username}\n${message.__('length')}: ${timeString}`,
 							thumbnail: {
 								url: meta.artwork_url
 							},
 							footer: {
-								text: `Requested by ${message.author.tag}`
+								text: i18n.get('commands.nowplaying.footer', message, { tag: message.author.tag })
 							}
 						},
 						ms: meta.duration

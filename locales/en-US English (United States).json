@@ -334,6 +334,7 @@
 		"likedlb": {
 			"like": "like",
 			"likes": "likes",
+			"liked": "liked",
 			"top_liked_songs": "Top Liked Songs",
 			"footer": "Page $page of $maxPage | Play a top song with play top <number>"
 		},
@@ -459,14 +460,54 @@
 	},
 	"struct": {
 		"xp": {
-			"no_one_talked_yet": "No one in this server has talked yet."
+			"no_one_talked_yet": "No one in this server has talked yet.",
+			"level_up": "Nice job, $mention, you've achieved level **$level**!"
 		},
 		"music": {
 			"now_playing": "Now Playing",
 			"added_to_queue": "Added to Queue",
 			"length": "Length",
 			"dj": "dj",
-			"music": "music"
+			"music": "music",
+			"random": "random",
+			"top": "top",
+			"file": "file",
+			"sound_effect": "Sound effect",
+			"invalid_file_type": "I currently only support playback of mp3's and ogg's. Feel free to suggest more file types if you need 'em.",
+			"file_too_small": [
+				"Your file isn't powerful enough! I need one bigger than 25 KB, thanks.",
+				"That file is, hear me out, too small. Really. I'll need something greater than 25 KB. Thanks."
+			],
+			"no_liked_songs": "If you haven't liked a song yet, it's quite challenging for me to play a liked song.",
+			"no_song_specified": [
+				"Yeah, I'll just pick the song you want. Y'know, because I have telepathic powers. (tell me which song to play)",
+				"You didn't specify a song. You realize that, right? I can't play a song if you don't specify one."
+			],
+			"negative_number": "there is no negative song tho <:crazyeyes:359106555314044939>",
+			"number_too_large": "I'm sorry, but you just haven't liked that many songs yet. Go do that.",
+			"number_too_large_lb": "There really aren't that many liked songs yet. You could change that if you wanted..",
+			"could_not_find_song": "Not sure why, but I simply couldn't find that song. Huh.",
+			"no_file_specified": "Hey man, you have to tell me what file to play.. The current options are: $files",
+			"separator": ",",
+			"invalid_file": "That file uh.. doesn't exist. Feel free to suggest to add it. What you *can* play are as follows: $files",
+			"invalid_url": "Please provide a valid URL.",
+			"no_results": [
+				"The song you searched for could not be found.. rip",
+				"No results found. Silly goose.",
+				"Uhh.. Couldn't find anything by that term, sorry.",
+				"You sure that's a real song? ..or video?",
+				"Yeah. No. Couldn't find it. Sorry."
+			],
+			"could_not_get_info": [
+				"There seems to have been an error retrieving info for that video. Contact support if the issue persists.",
+				"I couldn't get info for that song. Odd. Try again? I dunno."
+			],
+			"song_too_long": [
+				"That's a bit excessive, okay? I don't really want to play a song longer than 2 hours for ya.",
+				"I'd rather not play a song longer than two hours long, sorry."
+			],
+			"livestream": "Trying to play a livestream, eh? Well, no, sorry.",
+			"file_footer": "Added by $tag. | Invalid URLs will be skipped."
 		},
 		"message": {
 			"dm_help": "My prefix is `a.`; do `a.help` for help.",
