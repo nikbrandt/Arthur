@@ -96,12 +96,13 @@ class i18n {
 	 * @returns {*}
 	 */
 	getString (string, locale, variables = {}, _originalLocale = 'en_US') {
-		const file = this._locales.get(locale);
+		let file = this._locales.get(locale);
 		if (!file) {
-			locale = 'en_US';
-			let error = new Error('Invalid locale.');
+			let error = new Error('Invalid locale: ' + locale);
 			errorLog('i18n error', error.stack, 42069);
 			console.error(error);
+			locale = 'en_US';
+			file = this._locales.get(locale);
 		}
 		
 		let retry = false;
