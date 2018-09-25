@@ -1,5 +1,7 @@
-process.env.BLUEBIRD_LONG_STACK_TRACES = 1; // best env variable practice right here
 global.Promise = require('bluebird');
+Promise.config({
+	longStackTraces: true
+});
 
 const sql = require('sqlite');
 const ArthurClient = require('./struct/ArthurClient');
