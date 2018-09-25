@@ -95,13 +95,13 @@ class i18n {
 	 * @param {string} [_originalLocale] The original locale used, if having to move to en-US
 	 * @returns {*}
 	 */
-	getString (string, locale, variables = {}, _originalLocale = 'en_US') {
+	getString (string, locale, variables = {}, _originalLocale = 'en-US') {
 		let file = this._locales.get(locale);
 		if (!file) {
 			let error = new Error('Invalid locale: ' + locale);
 			errorLog('i18n error', error.stack, 42069);
 			console.error(error);
-			locale = 'en_US';
+			locale = 'en-US';
 			file = this._locales.get(locale);
 		}
 		
