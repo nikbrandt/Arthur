@@ -170,7 +170,7 @@ const Music = {
 			let type = 1;
 			let id;
 
-			message.__ = (string, variables) => {
+			message._ = (string, variables) => {
 				return i18n.get('struct.music.' + string, message, variables);
 			};
 
@@ -178,8 +178,8 @@ const Music = {
 				type = 4;
 				id = message.attachments.first().url;
 
-				if (!id.endsWith('.mp3') && !id.endsWith('.ogg')) return reject(message.__('invalid_file_type'));
-				if (message.attachments.first().filesize < 25000) return reject(message.__('file_too_small'));
+				if (!id.endsWith('.mp3') && !id.endsWith('.ogg')) return reject(message._('invalid_file_type'));
+				if (message.attachments.first().filesize < 25000) return reject(message._('file_too_small'));
 
 				resolve( {
 					id: id,
@@ -187,19 +187,19 @@ const Music = {
 				} );
 			} else if (args[0] === i18n.get('commands.likedlb.liked', message) || args[0] === i18n.get('commands.likedlb.likes', message)) {
 				let array = await sql.all(`SELECT type, id FROM musicLikes WHERE userID = '${message.author.id}'`);
-				if (!array || !array.length) return reject(message.__('no_liked_songs'));
+				if (!array || !array.length) return reject(message._('no_liked_songs'));
 				let num;
 
-				if (args[1] === message.__('random')) num = Math.ceil(Math.random() * array.length);
+				if (args[1] === message._('random')) num = Math.ceil(Math.random() * array.length);
 				else {
-					if (!args[1]) return reject(message.__('no_song_specified'));
+					if (!args[1]) return reject(message._('no_song_specified'));
 					num = parseInt(args[1]);
 					if (!num) return reject(i18n.get('parsing.invalid_number', message));
-					if (num < 1) return reject(message.__('negative_number'));
-					if (num > array.length) return reject(message.__('number_too_large'));
+					if (num < 1) return reject(message._('negative_number'));
+					if (num > array.length) return reject(message._('number_too_large'));
 				}
 
-				if (!array[num - 1]) return reject(message.__('could_not_find_song'));
+				if (!array[num - 1]) return reject(message._('could_not_find_song'));
 
 				type = array[num - 1].type;
 				id = array[num - 1].id;
@@ -208,21 +208,21 @@ const Music = {
 					id: id,
 					type: type
 				} );
-			} else if (args[0] === message.__('top')) {
+			} else if (args[0] === message._('top')) {
 				let array = await Music.likedArray();
 				let num;
 
-				if (args[1] === message.__('random')) num = Math.ceil(Math.random() * array.length);
+				if (args[1] === message._('random')) num = Math.ceil(Math.random() * array.length);
 				else {
-					if (!args[1]) return reject(message.__('no_song_specified'));
+					if (!args[1]) return reject(message._('no_song_specified'));
 					num = parseInt(args[1]);
 					if (!num) return reject(i18n.get('parsing.invalid_number', message));
-					if (num < 1) return reject(message.__('negative_number'));
-					if (num > array.length) return reject(message.__('number_too_large_lb'));
+					if (num < 1) return reject(message._('negative_number'));
+					if (num > array.length) return reject(message._('number_too_large_lb'));
 				}
 
 				let obj = array[num - 1];
-				if (!obj) return reject(message.__('could_not_find_song'));
+				if (!obj) return reject(message._('could_not_find_song'));
 				type = obj.type;
 				id = obj.id;
 
@@ -230,13 +230,13 @@ const Music = {
 					id: id,
 					type: type
 				} );
-			} else if (args[0] === message.__('file')) {
+			} else if (args[0] === message._('file')) {
 				type = 3;
 				let files = fs.readdirSync('../media/sounds');
 				files = files.map(f => f.replace(/\.mp3/g, ''));
 
-				if (!args[1]) return reject(message.__('no_file_specified', { files: files.map(f => '`' + f + '`').join(message.__('separator') + ' ') }));
-				if (!files.includes(args[1])) return reject(message.__('invalid_file', { files: files.map(f => '`' + f + '`').join(message.__('separator') + ' ') }));
+				if (!args[1]) return reject(message._('no_file_specified', { files: files.map(f => '`' + f + '`').join(message._('separator') + ' ') }));
+				if (!files.includes(args[1])) return reject(message._('invalid_file', { files: files.map(f => '`' + f + '`').join(message._('separator') + ' ') }));
 
 				id = args[1];
 
@@ -259,7 +259,7 @@ const Music = {
 					id, type
 				} );
 			} else if (args[0].endsWith('.mp3') || args[0].endsWith('.ogg')) {
-				if (!songRegex.test(args[0])) return reject(message.__('invalid_url'));
+				if (!songRegex.test(args[0])) return reject(message._('invalid_url'));
 
 				type = 4;
 				id = args[0];
@@ -282,7 +282,7 @@ const Music = {
 						return reject(err);
 					});
 					
-					if (!result) return reject(message.__('no_results'));
+					if (!result) return reject(message._('no_results'));
 
 					resolve ( {
 						id: result.permalink_url,
@@ -293,14 +293,14 @@ const Music = {
 				search(suffix, youtubeSearch, (err, results) => {
 					if (err || !results || !results[0]) {
 						return soundcloud.search(suffix).then(result => {
-							if (!result) return reject(message.__('no_results'));
+							if (!result) return reject(message._('no_results'));
 							
 							resolve ( {
 								id: result.permalink_url,
 								type: 5
 							});
 						}).catch(() => {
-							reject(message.__('no_results'));
+							reject(message._('no_results'));
 						});
 					}
 
@@ -317,17 +317,17 @@ const Music = {
 
 	getInfo: (type, id, message, client, title) => {
 		return new Promise(async (resolve, reject) => {
-			message.__ = (string, variables) => {
+			message._ = (string, variables) => {
 				return i18n.get('struct.music.' + string, message, variables);
 			};
 
 			switch (type) {
 				case 1: // youtube
 					let info = await ytdl.getInfo(id).catch(() => {
-						return reject(message.__('could_not_get_info'));
+						return reject(message._('could_not_get_info'));
 					});
-					if (!info) return reject(message.__('could_not_get_info'));
-					if (info.livestream === '1' || info.live_playback === '1' || info.length_seconds > 7200 ) return reject(info.length_seconds > 7200 ? message.__('song_too_long') : message.__('livestream'));
+					if (!info) return reject(message._('could_not_get_info'));
+					if (info.livestream === '1' || info.live_playback === '1' || info.length_seconds > 7200 ) return reject(info.length_seconds > 7200 ? message._('song_too_long') : message._('livestream'));
 
 					let secObj = secSpread(info.length_seconds);
 					let secString = `${secObj.h ? `${secObj.h}${i18n.get('time.abbreviations.hours', message)} ` : ''}${secObj.m ? `${secObj.m}${i18n.get('time.abbreviations.minutes', message)} ` : ''}${secObj.s}${i18n.get('time.abbreviations.seconds', message)}`;
@@ -343,7 +343,7 @@ const Music = {
 								icon_url: info.author.avatar
 							},
 							color: 0xff0000,
-							description: `[${info.title}](https://youtu.be/${id})\n${i18n.get('commands.nowplaying.by', message)} [${info.author.name}](${info.author.channel_url})\n${message.__('length')}: ${secString}`,
+							description: `[${info.title}](https://youtu.be/${id})\n${i18n.get('commands.nowplaying.by', message)} [${info.author.name}](${info.author.channel_url})\n${message._('length')}: ${secString}`,
 							thumbnail: {
 								url: info.thumbnail_url
 							},
@@ -378,8 +378,8 @@ const Music = {
 				case 3: // sound effect
 					resolve({
 						meta: {
-							title: `${message.__('sound_effect')} - ${id}`,
-							queueName: `${message.__('sound_effect')} - ${id}`,
+							title: `${message._('sound_effect')} - ${id}`,
+							queueName: `${message._('sound_effect')} - ${id}`,
 							url: 'https://github.com/Gymnophoria/Arthur'
 						},
 						ms: 30000
@@ -388,7 +388,7 @@ const Music = {
 					break;
 				case 4: // custom file
 					let filename = id.match(songRegex)[1];
-					if (!filename) return reject(message.__('invalid_url'));
+					if (!filename) return reject(message._('invalid_url'));
 
 					resolve({
 						meta: {
@@ -401,7 +401,7 @@ const Music = {
 							color: 0x7289DA,
 							description: `[${filename}](${id})`,
 							footer: {
-								text: message.__('file_footer', { tag: message.author.tag })
+								text: message._('file_footer', { tag: message.author.tag })
 							}
 						},
 						ms: 180000
@@ -410,12 +410,12 @@ const Music = {
 					break;
 				case 5: // soundcloud
 					let meta = await soundcloud.getInfo(id).catch(err => {
-						return reject (message.__('could_not_get_info'));
+						return reject (message._('could_not_get_info'));
 					});
 					
-					if (!meta) return reject(message.__('could_not_get_info'));
+					if (!meta) return reject(message._('could_not_get_info'));
 					
-					if (meta.duration > 7200000) return reject (message.__('song_too_long'));
+					if (meta.duration > 7200000) return reject (message._('song_too_long'));
 
 					let timeObj = secSpread(Math.round(meta.duration / 1000));
 					let timeString = `${timeObj.h ? `${timeObj.h}${i18n.get('time.abbreviations.hours', message)} ` : ''}${timeObj.m ? `${timeObj.m}${i18n.get('time.abbreviations.minutes', message)} ` : ''}${timeObj.s}${i18n.get('time.abbreviations.seconds', message)}`;
@@ -433,7 +433,7 @@ const Music = {
 								icon_url: meta.user.avatar_url
 							},
 							color: 0xff8800,
-							description: `[${meta.title}](${id})\n${i18n.get('commands.nowplaying.by', message)} ${meta.user.username}\n${message.__('length')}: ${timeString}`,
+							description: `[${meta.title}](${id})\n${i18n.get('commands.nowplaying.by', message)} ${meta.user.username}\n${message._('length')}: ${timeString}`,
 							thumbnail: {
 								url: meta.artwork_url
 							},
