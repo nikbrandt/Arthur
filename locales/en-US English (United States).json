@@ -1,7 +1,8 @@
 {
 	"meta": {
 		"authors": [
-		  "Gymnophoria#8146 (the bot's real dev)"
+		  "Gymnophoria#8146 (the bot's real dev)",
+		  "Technocoder#9418"
 		],
 		"version": "v1.0",
 		"wip": true,
@@ -456,6 +457,11 @@
 		},
 		"invite": {
 			"description": "Arthur can be invited with [this link]($invite). You need to have Manage Server or Admin permission to add the bot to a server."
+		},
+	  	"dice": {
+			"invalid_number": "Hey.. that's not a number.. (or you think zero sided dice exist.)",
+		  	"negative_number": "The number of sides provided is the same number of brain cells you have",
+		  	"success_roll": "I rolled a:"
 		}
 	},
 	"struct": {
