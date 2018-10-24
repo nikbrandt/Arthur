@@ -31,7 +31,7 @@ async function finish(id, message, client) {
 	}
 
 	if (info.length_seconds > 1200) {
-		msg.edit(message.__('too_long', { mins: 20 })).catch(() => {});
+		msg.edit(message.__('too_long', { minutes: 20 })).catch(() => {});
 		return client.processing.splice(index, 1);
 	}
 
