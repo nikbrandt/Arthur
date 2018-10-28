@@ -35,13 +35,18 @@ function sliceIfTooBig(string, num, elipsis, beautify) {
 }
 
 exports.run = async (message, a, suffix) => {
-    if (message.guild && !message.channel.nsfw) return message.channel.send(message.__('nsfw'));
-    request(`http://api.urbandictionary.com/v0/${suffix ? `define?term=${suffix}` : 'random'}`, async (err, resp, body) => {
-        if (err) return message.channel.send(message.__('not_connected'));
-
-        const hotBod = JSON.parse(body);
-        if (!hotBod || hotBod.result_type === 'no_results') return message.channel.send(message.__('no_results'));
-        const theChosenOne = hotBod.list[0];
+	if (message.guild && !message.channel.nsfw) return message.channel.send(message.__('nsfw'));
+	request(`http://api.urbandictionary.com/v0/${suffix ? `define?term=${suffix}` : 'random'}`, async (err, resp, body) => {
+		if (err) return message.channel.send(message.__('not_connected'));
+	
+		let hotBod;
+		try {
+			hotBod = JSON.parse(body);
+		} catch (e) {
+			return message.channel.send(message.__('no_results'));
+		}
+		if (!hotBod || hotBod.result_type === 'no_results') return message.channel.send(message.__('no_results'));
+		const theChosenOne = hotBod.list[0];
 
 	    if (!theChosenOne) return message.channel.send(message.__('no_results'));
 	    
