@@ -14,14 +14,14 @@ exports.post = client => {
 	};
 
 	let pwOpts = {
-		uri: `https://bots.discord.pw/api/bots/${client.user.id}/stats`,
+		uri: `https://discord.bots.gg/api/v1/bots/${client.user.id}/stats`,
 		method: 'POST',
 		json: true,
 		headers: {
 			"Authorization": client.config.dbotsAuth.pw
 		},
 		body: {
-			"server_count": client.guilds.size
+			"guildCount": client.guilds.size
 		}
 	};
 
