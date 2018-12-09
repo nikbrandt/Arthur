@@ -461,7 +461,7 @@
 	  	"dice": {
 			"invalid_number": "Hey.. that's not a number.. (or you think zero sided dice exist.)",
 		  	"negative_number": "The number of sides provided is the same number of brain cells you have",
-		  	"success_roll": "I rolled a:"
+			"success_roll": "I rolled a **$num**."  
 		}
 	},
 	"struct": {

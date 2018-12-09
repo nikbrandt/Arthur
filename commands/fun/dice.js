@@ -8,13 +8,8 @@ exports.run = (message, args) => {
 	}
 
 	let diceRoll = Math.floor((Math.random() * numberOfSides) + 1);
-	let successMessage = message.__('success_roll');
-	message.channel.send({
-		embed: {
-			description: `${successMessage} ${diceRoll}`,
-			color: 0x00c140
-		}
-	});
+	let successMessage = message.__('success_roll', { num: diceRoll });
+	message.channel.send(successMessage);
 };
 
 exports.config = {
