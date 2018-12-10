@@ -460,7 +460,7 @@
 		},
 	  	"dice": {
 			"invalid_number": "Hey.. that's not a number.. (or you think zero sided dice exist.)",
-		  	"negative_number": "The number of sides provided is the same number of brain cells you have",
+		  	"negative_number": "The number of sides provided is the same as the number of brain cells you possess.",
 			"success_roll": "I rolled a **$num**."  
 		}
 	},
