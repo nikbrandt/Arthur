@@ -71,12 +71,12 @@ const Music = {
 
 			if (notify === 'true' && music.queue[0].embed && !first) {
 				let embed = music.queue[0].embed;
+				if (!embed.author) embed.author = {};
 				embed.author.name = i18n.get('struct.music.now_playing', guild);
 				music.textChannel.send({ embed }).then(msg => {
 					Music.addReactionCollector(msg, msg.client, music.queue[0].ms);
 				});
 			}
-
 			if (music.queue[0].type === 1) { // youtube
 				const stream = ytdl(music.queue[0].id, { quality: 'highestaudio' });
 				dispatcher = guild.voiceConnection.playStream(stream, { volume: 0.3, passes: 2, bitrate: 'auto' });
@@ -88,6 +88,10 @@ const Music = {
 				dispatcher.once('start', () => {
 					guild.voiceConnection.player.streamingData.pausedTime = 0;
 				});
+
+				dispatcher.on('error', err => {
+					console.warn(`error playing music: ${err}`);
+				});
 			} else if (music.queue[0].type === 4) { // from URL
 				let date = Date.now();
 				let rng = Math.floor(Math.random() * 10000);
@@ -98,13 +102,6 @@ const Music = {
 				}).pipe(fs.createWriteStream(file));
 
 				r.on('finish', () => {
-					let buffer = readChunk.sync(file, 0, 4);
-					if (!isThatAnMp3(buffer) && !orPerhapsOgg(buffer)) {
-						Music.next(guild);
-						fs.unlinkSync(file);
-						return;
-					}
-
 					const stream = fs.createReadStream(file);
 					dispatcher = guild.voiceConnection.playStream(stream, { volume: 0.3, passes: 2, bitrate: 'auto' });
 
@@ -115,6 +112,10 @@ const Music = {
 
 					dispatcher.once('start', () => {
 						guild.voiceConnection.player.streamingData.pausedTime = 0;
+					});
+
+					dispatcher.on('error', err => {
+						console.warn(`error playing music: ${err}`);
 					});
 				})
 			} else if (music.queue[0].type === 3) { // local file
@@ -127,6 +128,10 @@ const Music = {
 
 				dispatcher.once('start', () => {
 					guild.voiceConnection.player.streamingData.pausedTime = 0;
+				});
+
+				dispatcher.on('error', err => {
+					console.warn(`error playing music: ${err}`);
 				});
 			} else if (music.queue[0].type === 5) { // soundcloud
 				let id = Date.now() + guild.id;
@@ -148,6 +153,10 @@ const Music = {
 
 						dispatcher.once('start', () => {
 							guild.voiceConnection.player.streamingData.pausedTime = 0;
+						});
+
+						dispatcher.on('error', err => {
+							console.warn(`error playing music: ${err}`);
 						});
 					}, 100);
 				});

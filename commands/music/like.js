@@ -48,7 +48,7 @@ exports.run = async (message, args, suffix, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: ['goodshit', 'ilovethisfuckingsong', 'dudethissongishot', 'nicesong', 'godlysong', 'iwant', 'amazingsong']
+	aliases: ['goodshit', 'ilovethisfuckingsong', 'dudethissongishot', 'nicesong', 'godlysong', 'amazingsong']
 };
 
 exports.help = {
