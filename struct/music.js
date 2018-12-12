@@ -406,7 +406,9 @@ const Music = {
 							url: id
 						},
 						embed: {
-							title: title,
+							author: {
+								name: title
+							},
 							color: 0x7289DA,
 							description: `[${filename}](${id})`,
 							footer: {
