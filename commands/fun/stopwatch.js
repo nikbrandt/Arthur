@@ -1,4 +1,3 @@
-const Stopwatch = require('timer-stopwatch');
 const UserObject = {};
 
 function secSpread(sec, locale) {
@@ -11,16 +10,12 @@ function secSpread(sec, locale) {
 exports.run = (message, args, s, client, permLevel) => {
 	if (args[0] && permLevel === 10) return message.channel.send(`Stopwatch object:\n${UserObject}`);
 
-	if (!UserObject[message.author.id]) UserObject[message.author.id] = new Stopwatch();
-
-	let on = UserObject[message.author.id].startstop();
-
-	if (on) {
-		UserObject[message.author.id].reset();
-		UserObject[message.author.id].start();
+	if (!UserObject[message.author.id]) {
+		UserObject[message.author.id] = Date.now();
 		message.channel.send(message.__('stopwatch_started'));
 	} else {
-		message.channel.send(message.__('stopwatch_stopped', { time: secSpread(Math.ceil(UserObject[message.author.id].ms / 1000), i18n.getLocale(message)) }));
+		message.channel.send(message.__('stopwatch_stopped', { time: secSpread(Math.ceil( (Date.now() - UserObject[message.author.id] ) / 1000), i18n.getLocale(message)) }));
+		UserObject[message.author.id] = null;
 	}
 };
 
