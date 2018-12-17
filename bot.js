@@ -11,7 +11,8 @@ global.__basedir = __dirname;
 const client = new ArthurClient({
     fetchAllMembers: false,
     disabledEvents: ['TYPING_START'],
-	disableEveryone: true
+	disableEveryone: true,
+	messageCacheMaxSize: 10
 });
 
 sql.open('../media/db.sqlite').then(() => {
