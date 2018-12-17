@@ -9,8 +9,8 @@ const ArthurClient = require('./struct/ArthurClient');
 global.__basedir = __dirname;
 
 const client = new ArthurClient({
-    fetchAllMembers: false,
-    disabledEvents: ['TYPING_START'],
+	fetchAllMembers: false,
+	disabledEvents: ['TYPING_START'],
 	disableEveryone: true,
 	messageCacheMaxSize: 10
 });
