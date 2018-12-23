@@ -25,15 +25,6 @@ exports.run = (message, args, suffix) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	aliases: ['calc'],
 	cooldown: 2000,
 	perms: ['EMBED_LINKS']
-};
-
-exports.help = {
-	name: 'Math',
-	description: 'Evaluate math expressions and conversions.',
-	usage: 'math <expression>',
-	help: 'Evaluate math expressions or conversions.',
-	category: 'APIs'
 };

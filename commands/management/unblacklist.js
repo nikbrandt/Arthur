@@ -16,14 +16,5 @@ exports.run = async (message, args, suffix, client) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 3,
-	aliases: ['ubl']
-};
-
-exports.help = {
-	name: 'Unblacklist',
-	description: 'Unblacklist someone previously blacklisted from Arthur.',
-	usage: 'unblacklist <user resolvable>',
-	help: 'Unblacklist someone previously blacklisted from Arthur. User ID, tag, nickname, whatever.',
-	category: 'Server Management'
+	permLevel: 3
 };

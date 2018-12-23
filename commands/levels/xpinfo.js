@@ -22,14 +22,5 @@ exports.run = async (message, ar, sui, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: ['xi', 'xpi'],
 	perms: ['EMBED_LINKS']
-};
-
-exports.help = {
-	name: 'XP Info',
-	description: 'Gives information about Arthur\'s leveling system.',
-	usage: 'xpinfo',
-	help: 'Receive information on Arthur\'s leveling system, including whether or not it is disabled in the current guild and its current settings.',
-	category: 'Leveling and Profiles'
 };

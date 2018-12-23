@@ -75,15 +75,6 @@ exports.run = async (message, args, s, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	aliases: ['screenshot', 'ss'],
 	perms: ['ATTACH_FILES'],
 	cooldown: 10000
-};
-
-exports.help = {
-	name: 'Webshot',
-	description: 'Take a picture of a website.',
-	usage: 'webshot <website>',
-	help: 'Take a picture of a website.',
-	category: 'Other'
 };

@@ -43,14 +43,5 @@ exports.run = async (message, args) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: ['queueueue', 'queueue', 'que', 'qu', 'q'],
 	perms: ['EMBED_LINKS']
-};
-
-exports.help = {
-	name: 'Queue',
-	description: 'View the current queue',
-	usage: 'queue <page>',
-	help: 'View the current queue. View a different page if there are more than 10 songs.',
-	category: 'Music'
 };

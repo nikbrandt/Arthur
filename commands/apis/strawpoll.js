@@ -135,14 +135,5 @@ exports.run = async (message, args, suffix) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 1,
-	aliases: [ 'sp', 'straw' ]
-};
-
-exports.help = {
-	name: 'Strawpoll',
-	description: 'Create a strawpoll.',
-	usage: 'strawpoll <"title"> <option one|option two|etc..> [--adv or --advanced]',
-	help: 'Create a strawpoll on strawpoll.me.\nUsing the --adv flag allows configuration of advanced options:\nmultiple votes (default false)\nduplication checking (default IP checking\ncaptcha (default false)',
-	category: 'APIs'
+	permLevel: 1
 };

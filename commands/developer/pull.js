@@ -23,14 +23,5 @@ exports.run = (message, args, suffix, client) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 10,
-	aliases: [ 'gitpull' ]
-};
-
-exports.help = {
-	name: 'Git Pull',
-	description: 'Pull from GitHub and, optionally, reload commands.',
-	usage: 'pull [-r]',
-	help: 'Pull from GitHub and, if `-r` is specified, reload commands.',
-	category: 'Developer'
+	permLevel: 10
 };

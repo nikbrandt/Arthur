@@ -176,14 +176,5 @@ exports.run = (message, args, suffix, client) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 2,
-	aliases: []
-};
-
-exports.help = {
-	name: 'Command Stats',
-	description: 'View command stats of the bot.',
-	usage: 'stats [total/weekly/daily]',
-	help: 'View statistics on commands used, defaults to total.',
-	category: 'Developer'
+	permLevel: 2
 };

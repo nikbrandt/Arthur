@@ -15,14 +15,5 @@ exports.run = (message, a, s, c, permLevel) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 2,
-	aliases: []
-};
-
-exports.help = {
-	name: 'Loop',
-	description: 'Loops the current queue of music indefinitely.',
-	usage: 'loop',
-	help: 'Toggles looping the music queue',
-	category: 'Music'
+	permLevel: 2
 };

@@ -12,13 +12,4 @@ exports.run = (message, a, s, d, permLevel) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: [ 'go', 'continue' ]
-};
-
-exports.help = {
-	name: 'Resume',
-	description: 'Resume the currently playing song',
-	usage: 'resume',
-	help: 'Resume the current song. Requires "DJ" or "Music" role (or Mod+)',
-	category: 'Music'
 };

@@ -63,14 +63,5 @@ exports.run = async (message, args, s, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	aliases: [ 'mcs', 'server', 'minecraftserver' ],
 	perms: [ 'EMBED_LINKS', 'ATTACH_FILES' ]
-};
-
-exports.help = {
-	name: 'Minecraft Server',
-	description: 'Get information about a Minecraft server',
-	usage: 'mcserver <server IP>',
-	help: 'Get information such as players and MOTD from a Minecraft server.',
-	category: 'APIs'
 };

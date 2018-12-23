@@ -88,14 +88,5 @@ exports.run = async (message, args) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	aliases: [],
 	perms: ['EMBED_LINKS']
-};
-
-exports.help = {
-	name: 'Minecraft Name History',
-	description: 'View all the previous names of a Minecraft user.',
-	usage: 'mchistory <name/UUID> [page]',
-	help: 'View the previous names of a Minecraft user, by username or UUID.',
-	category: 'APIs'
 };

@@ -27,14 +27,5 @@ exports.run = (message) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	aliases: ['kitty', 'kat', 'kitten'],
 	perms: ['EMBED_LINKS']
-};
-
-exports.help = {
-	name: 'Cat',
-	description: 'Get a cat picture.',
-	usage: 'cat',
-	help: 'Get a cat picture from [The Cat API](http://thecatapi.com/).',
-	category: 'APIs'
 };

@@ -120,15 +120,6 @@ exports.run = async (message, args, suffix, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	aliases: [],
 	perms: ['EMBED_LINKS', 'ATTACH_FILES'],
 	cooldown: 10000
-};
-
-exports.help = {
-	name: 'Mp3',
-	description: 'Get an mp3 file of a YouTube video',
-	usage: 'mp3 <search term or url>',
-	help: 'Get an mp3 file of a YouTube video\'s audio.',
-	category: 'Other'
 };

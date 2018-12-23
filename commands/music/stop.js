@@ -11,13 +11,4 @@ exports.run = (message, a, s, d, permLevel) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: ['stfu', 'leave', 'gtfo']
-};
-
-exports.help = {
-	name: 'Stop',
-	description: 'Stop all music and leave the channel.',
-	usage: 'stop',
-	help: 'Stop all currently playing music and leave the channel. Requires "DJ" or "Music" role (or Mod+)',
-	category: 'Music'
 };

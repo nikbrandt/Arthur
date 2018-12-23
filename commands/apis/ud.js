@@ -87,14 +87,5 @@ exports.run = async (message, a, suffix) => {
 
 exports.config = {
     enabled: true,
-    permLevel: 1,
-    aliases: ['urbandictionary', 'urbandict']
-};
-    
-exports.help = {
-    name: 'Urban Dictionary',
-    description: 'Define a word or phrase using the glorious urban dictionary',
-    usage: 'ud <phrase>',
-    help: 'Define any word or phrase you so desire using the glorious power of the internet.',
-    category: 'APIs'
+    permLevel: 1
 };

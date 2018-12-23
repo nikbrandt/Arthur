@@ -4,14 +4,5 @@ exports.run = message => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 1,
-	aliases: []
-};
-
-exports.help = {
-	name: 'L',
-	description: 'L',
-	usage: 'L',
-	help: 'Post an L of Ls',
-	category: 'Fun'
+	permLevel: 1
 };

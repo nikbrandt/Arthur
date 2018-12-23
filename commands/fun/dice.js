@@ -14,14 +14,5 @@ exports.run = (message, args) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 1,
-	aliases: ['roll']
-};
-
-exports.help = {
-	name: 'Dice',
-	description: 'Rolls a dice',
-	usage: 'dice [number of sides]',
-	help: 'Ask Arthur to roll an arbitrarily sized dice',
-	category: 'Fun'
+	permLevel: 1
 };

@@ -74,14 +74,5 @@ exports.run = async (message, args, suffix, client, perms, prefix) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	aliases: ['h', 'halp', 'commands'],
 	perms: ['EMBED_LINKS']
-};
-
-exports.help = {
-	name: 'Help',
-	description: 'View the help menu.',
-	usage: 'help [command]',
-	help: 'View the entire help menu or just help for one command.',
-	category: 'Other'
 };

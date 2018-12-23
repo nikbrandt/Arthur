@@ -19,14 +19,5 @@ exports.run = async (message, args, s, c, permLevel) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 2,
-	aliases: ['setprefix']
-};
-
-exports.help = {
-	name: 'Prefix',
-	description: 'Set or view the server\'s prefix.',
-	usage: 'prefix [prefix]',
-	help: 'Set or view the server\'s current prefix for the bot.\nYou need **Manage Server** or **Administrator** permission to change the prefix.',
-category: 'Server Management'
+	permLevel: 2
 };

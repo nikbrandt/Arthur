@@ -25,14 +25,5 @@ exports.run = message => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	aliases: ['doggo', 'pupper', 'puppy', 'pup', 'woof', 'bark', 'doge'],
 	perms: ['EMBED_LINKS']
-};
-
-exports.help = {
-	name: 'Dog',
-	description: 'Get a free dog photo.',
-	usage: 'dog',
-	help: 'Get a photo of a dog.',
-	category: 'APIs'
 };

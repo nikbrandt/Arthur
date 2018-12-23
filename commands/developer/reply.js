@@ -28,14 +28,5 @@ exports.run = (message, args, suffix, client, permLevel) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 9,
-	aliases: []
-};
-
-exports.help = {
-	name: 'Reply',
-	description: 'Reply to the previous message sent to the bot',
-	usage: 'reply <message>',
-	help: 'Reply to the previous message sent to the bot.',
-	category: 'Developer'
+	permLevel: 9
 };

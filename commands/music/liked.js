@@ -35,13 +35,4 @@ exports.run = async (message, args) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: ['likedsongs', 'songlikes', 'likeslist', 'whatwasthatonesong', 'likes']
-};
-
-exports.help = {
-	name: 'Liked Songs',
-	description: 'View all your liked songs',
-	usage: 'liked [page]',
-	help: 'View all your previously liked songs. Play liked songs with `play liked <number>`.',
-	category: 'Music'
 };

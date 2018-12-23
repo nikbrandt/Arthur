@@ -47,14 +47,5 @@ exports.run = async (message, args, suffix, client) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 2,
-	aliases: ['goodshit', 'ilovethisfuckingsong', 'dudethissongishot', 'nicesong', 'godlysong', 'amazingsong']
-};
-
-exports.help = {
-	name: 'Like Song',
-	description: 'Like the currently playing song',
-	usage: 'like',
-	help: 'Likes the currently playing song. View all your likes with the `likes` command.',
-	category: 'Music'
+	permLevel: 2
 };
