@@ -2,7 +2,9 @@
 	"meta": {
 		"authors": [
 		  "Gymnophoria#8146 (the bot's real dev)",
-		  "Technocoder#9418"
+		  "Technocoder#9418",
+		  "GlitchMasta",
+		  "JRoy"
 		],
 		"version": "v1.0",
 		"wip": true,
@@ -514,8 +516,9 @@
 			],
 			"song_too_short": [
 				"Your video isn't powerful enough! I need one longer than 5 seconds, thanks.",
-                		"That video is, hear me out, too short. Really. I'll need something greater than 5 seconds. Thanks."
-			]
+                		"That video is, hear me out, too short. Really. I'll need one longer than 5 seconds. Thanks.",
+				"The video you selected has small dick energy, give me one longer than 5 seconds."
+			],
 			"livestream": "Trying to play a livestream, eh? Well, no, sorry.",
 			"file_footer": "Added by $tag. | Invalid URLs will be skipped."
 		},
