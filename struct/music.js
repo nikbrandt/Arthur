@@ -337,6 +337,7 @@ const Music = {
 					});
 					if (!info) return reject(message._('could_not_get_info'));
 					if (info.livestream === '1' || info.live_playback === '1' || info.length_seconds > 7200 ) return reject(info.length_seconds > 7200 ? message._('song_too_long') : message._('livestream'));
+					if (info.length_seconds < 5) return reject(message._("song_too_short"));
 
 					let secObj = secSpread(info.length_seconds);
 					let secString = `${secObj.h ? `${secObj.h}${i18n.get('time.abbreviations.hours', message)} ` : ''}${secObj.m ? `${secObj.m}${i18n.get('time.abbreviations.minutes', message)} ` : ''}${secObj.s}${i18n.get('time.abbreviations.seconds', message)}`;
