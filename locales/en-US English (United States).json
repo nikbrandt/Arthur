@@ -512,6 +512,10 @@
 				"That's a bit excessive, okay? I don't really want to play a song longer than 2 hours for ya.",
 				"I'd rather not play a song longer than two hours long, sorry."
 			],
+			"song_too_short": [
+				"Your video isn't powerful enough! I need one longer than 5 seconds, thanks.",
+                		"That video is, hear me out, too short. Really. I'll need something greater than 5 seconds. Thanks."
+			]
 			"livestream": "Trying to play a livestream, eh? Well, no, sorry.",
 			"file_footer": "Added by $tag. | Invalid URLs will be skipped."
 		},
