@@ -13,7 +13,11 @@ exports.run = async (message, args, suffix, client, perms, prefix) => {
 		let categories = {};
 		let fields = [];
 		commands.forEach((com, name) => {
-			if (args[0] === 'dev' && client.config.owners.includes(message.author.id) ? com.help.category !== 'Developer' : args[0] === 'eggs' && client.config.owners.includes(message.author.id) ? com.help.category !== 'Eggs' : com.help.category === 'Developer' || com.help.category === 'Eggs' || !com.help.category) return;
+			if (!com.help || !com.help.category) return;
+			if (args[0] === 'dev' && client.config.owners.includes(message.author.id) && com.help.category !== 'Developer') return;
+			else if (args[0] === 'eggs' && client.config.owners.includes(message.author.id) && com.help.category !== 'Eggs') return;
+			else if (com.help.category === 'Developer' || com.help.category === 'Eggs') return;
+			
 			if (!categories.hasOwnProperty(com.help.category)) categories[com.help.category] = [];
 			categories[com.help.category].push(`\u200b	${prefix}${name} - ${com.help.description}`);
 		});
