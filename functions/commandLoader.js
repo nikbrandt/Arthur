@@ -1,23 +1,27 @@
-const { Stopwatch } = require('node-stopwatch');
 const fs = require('fs');
 
 let count = 0;
+let i = -1;
 
 const loadCmd = (path, command, client) => {
-	console.log(`Loading ${command}..`);
 	let file = require(`${__dirname}/../commands/${path}`);
 	client.commands.set(command.replace(/.js/g, ''), file);
-	file.config.aliases.forEach(a => {
+	/*if (file.meta.aliases) file.meta.aliases.forEach(a => {
 		client.aliases.set(a, command.replace(/.js/g, ''));
-	});
+	});*/
 	count++;
-	console.log('Loaded.');
+	i++;
+	if (i % 10 === 0) {
+		console.log('');
+		process.stdout.write('   ');
+	}
+	process.stdout.write(`${command.slice(0, -3)} `);
 };
 
 const soundEffects = (client) => {
+	process.stdout.write('   ');
 	let effects = fs.readdirSync('../media/sounds');
 	effects.forEach(file => {
-		console.log(`Generating file for ${file}..`);
 		let basename = file.replace('.mp3', '');
 		client.commands.set(basename, {
 			run: (message, args, suffix, client) => {
@@ -43,7 +47,7 @@ const soundEffects = (client) => {
 			}
 		});
 		count++;
-		console.log('Done.');
+		process.stdout.write(file.slice(0, -4) + ' ');
 	})
 };
 
@@ -51,7 +55,7 @@ exports.loadCmd = loadCmd;
 
 module.exports = async client => {
 	let start = Date.now();
-	console.log('Loading commands..');
+	process.stdout.write('Loading commands..');
 	count = 0;
 
 	const files = fs.readdirSync(`${__dirname}/../commands`);
@@ -76,8 +80,12 @@ module.exports = async client => {
 		}
 	});
 
+	console.log();
+
 	console.log('Generating sound effect commands..');
 	soundEffects(client);
+
+	console.log();
 
 	console.log(`Success! Loaded ${count} commands in ${Date.now() - start} ms.\n`);
 	return [ count, Date.now() - start ];

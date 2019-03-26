@@ -24,7 +24,7 @@ module.exports = async (client, message) => {
 	let alexaPlay = false;
 
 	message.__ = (string, variables) => {
-		command = client.aliases.get(command) || command;
+		command = i18n.getCommandFileName(command, message) || command;
 		return i18n.get('commands.' + command + '.' + string, message, variables);
 	};
 	
@@ -121,7 +121,7 @@ module.exports = async (client, message) => {
 	}
 
 	const perms = client.permLevel(message);
-	const cmdFile = client.commands.get(command) || client.commands.get(client.aliases.get(command));
+	const cmdFile = client.commands.get(i18n.getCommandFileName(command, message)) || client.commands.get(command);
 
 	if (!cmdFile) return;
 	if (!cmdFile.config.enabled) return message.channel.send(i18n.get('struct.message.command_disabled', message));
@@ -162,6 +162,8 @@ module.exports = async (client, message) => {
 
 	if (cmdFile.config.permLevel > perms) return message.react(i18n.get('struct.message.user_missing_perms_emoji', message)).catch(() => {});
 
+	command = i18n.getCommandFileName(command, message) || command;
+	
 	try {
 		console.log(`${moment().format('MM-DD H:mm:ss')} - Command ${command} being run, user id ${message.author.id}${message.guild ? `, guild id ${message.guild.id}` : ''}`);
 		let resp = cmdFile.run(message, args, suffix, client, perms, prefix);

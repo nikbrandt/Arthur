@@ -27,7 +27,7 @@ class ArthurClient extends Client {
 		global.i18n = this.i18n;
 		
 		permLevel.pl(this);
-		findMember(this);
+		this.findMember = findMember;
 	}
 	
 	async init () {

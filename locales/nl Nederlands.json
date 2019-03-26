@@ -10,6 +10,9 @@
 	},
 	"commands": {
 		"8ball": {
+			"meta": {
+				"command": "doggeroni"
+			},
 			"answer": [
 				"Het is zeker.",
 				"Het is beslist.",

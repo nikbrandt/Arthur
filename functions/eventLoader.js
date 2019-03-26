@@ -32,16 +32,17 @@ exports.load = client => {
 	let start = Date.now();
 	let events = fs.readdirSync('./events');
 	console.log(`Loading ${events.length} events..`);
+	process.stdout.write('   ');
 
 	events.forEach(file => {
-		console.log(`Loading ${file}..`);
 		let eventName = file.split('.')[0];
 		let event = require(`../events/${file}`);
 
 		client.on(eventName, event.bind(null, client));
-		console.log('Loaded.');
+		process.stdout.write(`${file.slice(0, -3)} `);
 	});
 
+	console.log();
 	console.log(`Loaded ${events.length} events in ${Date.now() - start} ms.\n`);
 	
 	client.on('raw', async event => {
