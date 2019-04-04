@@ -51,6 +51,7 @@ function purgeEmptyVoiceConnections (client) {
 }
 
 module.exports = client => {
+	if (Date.now() - client.loadStart > 300000) return;
 	console.log(`\n${client.test ? 'Testbot' : 'Arthur'} has started! Currently in ${client.guilds.size} guilds, attempting to serve ${client.users.size} users. (${Date.now() - client.loadStart} ms)\n`);
 
 	if (!client.test) dbots.post(client);
