@@ -86,5 +86,6 @@ ${secString(secSpread(remainingTime), locale)} ${message.__('of')} ${secString(s
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	perms: ['EMBED_LINKS']
+	perms: ['EMBED_LINKS'],
+	category: 'music'
 };

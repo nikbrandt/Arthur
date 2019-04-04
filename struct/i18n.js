@@ -8,7 +8,7 @@ const localeDirectory = path.join(__dirname, '..', 'locales');
 const variableRegex = /\$[A-Za-z]+/g;
 
 class i18n {
-	constructor () {
+	constructor (client) {
 		this._guildLocaleCache = new Collection();
 		this._userLocaleCache = new Collection();
 		this._locales = new Collection();
@@ -32,7 +32,10 @@ class i18n {
 			let keys = Object.keys(obj);
 			Object.values(obj).forEach((val, i) => {
 				if (!val.meta) return;
-				aliases.set(val.meta.command, keys[i]);
+
+				if (!filename.includes('en-US')) aliases.set(val.meta.command, keys[i]);
+				else if (client.commands.get(keys[i]) && !client.commands.get(keys[i]).meta) client.commands.get(keys[i]).meta = val.meta;
+
 				if (val.meta.aliases) val.meta.aliases.forEach(alias => {
 					aliases.set(alias, keys[i]);
 				});
@@ -165,7 +168,7 @@ class i18n {
 
 	/**
 	 * Get a locale string for a guild, user, or message
-	 * @param {Message|Guild|User} resolvable
+	 * @param {Message|Guild|User|string} resolvable
 	 * @returns {string} locale The returned locale
 	 */
 	getLocale (resolvable) {
@@ -176,6 +179,8 @@ class i18n {
 			if (this._guildLocaleCache.has(resolvable.id)) return this._guildLocaleCache.get(resolvable.id);
 		} else if (resolvable instanceof User) {
 			if (this._userLocaleCache.has(resolvable.id)) return this._userLocaleCache.get(resolvable.id);
+		} else if (typeof resolvable === 'string') {
+			if (this._locales.has(resolvable)) return resolvable;
 		}
 
 		return 'en-US';
@@ -184,7 +189,7 @@ class i18n {
 	/**
 	 * Get a locale string
 	 * @param {string} string The string you would like to get
-	 * @param {Message|Guild|User} resolvable The resolvable object to get the locale from
+	 * @param {Message|Guild|User|string} resolvable The resolvable object to get the locale from
 	 * @param {object} [variables] Any variables to pass in
 	 * @returns {string} locale The returned locale
 	 */
@@ -195,10 +200,21 @@ class i18n {
 	/**
 	 * Get a command file name for a given language from a command or alias
 	 * @param {string} string Command or alias
-	 * @param {Message|Guild|User} resolvable Resolvable locale object
+	 * @param {Message|Guild|User|string} resolvable Resolvable locale object
 	 */
 	getCommandFileName(string, resolvable) {
 		return this._aliases.get(this.getLocale(resolvable)).get(string) || this._aliases.get('en-US').get(string);
+	}
+
+	/**
+	 * Get a command's meta in the given language (if possible), determined by a resolvable
+	 * @param {string} command The command to get meta for
+	 * @param {Message|Guild|User|string} resolvable Resolvable locale object
+	 */
+	getMeta(command, resolvable) {
+		let file = this._locales.get(this.getLocale(resolvable));
+		if (!file.commands[command] || !file.commands[command].meta) return undefined;
+		return file.commands[command].meta;
 	}
 }
 

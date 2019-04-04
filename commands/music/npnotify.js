@@ -21,5 +21,6 @@ exports.run = async (message) => { // npNotify column
 
 exports.config = {
 	enabled: true,
-	permLevel: 3
+	permLevel: 3,
+	category: 'music'
 };

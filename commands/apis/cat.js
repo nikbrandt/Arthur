@@ -27,5 +27,6 @@ exports.run = (message) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	perms: ['EMBED_LINKS']
+	perms: ['EMBED_LINKS'],
+	category: 'apis'
 };

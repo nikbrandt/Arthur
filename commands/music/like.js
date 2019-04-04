@@ -47,5 +47,6 @@ exports.run = async (message, args, suffix, client) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 2
+	permLevel: 2,
+	category: 'music'
 };

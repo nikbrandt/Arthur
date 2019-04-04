@@ -19,5 +19,6 @@ exports.run = async message => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 5
+	permLevel: 5,
+	category: 'server_management'
 };

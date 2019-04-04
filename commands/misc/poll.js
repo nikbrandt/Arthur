@@ -175,7 +175,8 @@ exports.run = async (message, a, s, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 3,
-	perms: [ 'EMBED_LINKS', 'ADD_REACTIONS' ]
+	perms: [ 'EMBED_LINKS', 'ADD_REACTIONS' ],
+	category: 'other'
 };
 
 exports.watch = watch;

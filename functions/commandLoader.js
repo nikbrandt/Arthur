@@ -36,14 +36,8 @@ const soundEffects = (client) => {
 				permLevel: 2,
 				aliases: [],
 				perms: ['EMBED_LINKS', 'SPEAK', 'CONNECT'],
-				guildCooldown: 1000
-			},
-			help: {
-				name: basename.charAt(0).toUpperCase() + basename.slice(1),
-				description: `Alias for \`play file ${basename}\``,
-				usage: basename,
-				help: `Alias for \`play file ${basename}\`. Plays the \`${basename}\` sound effect.`,
-				category: 'Sound Effects'
+				guildCooldown: 1000,
+				category: 'sound_effects'
 			}
 		});
 		count++;
@@ -53,7 +47,7 @@ const soundEffects = (client) => {
 
 exports.loadCmd = loadCmd;
 
-module.exports = async client => {
+module.exports = client => {
 	let start = Date.now();
 	process.stdout.write('Loading commands..');
 	count = 0;

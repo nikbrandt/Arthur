@@ -9,5 +9,6 @@ exports.run = async (message, a, s, client) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 10
+	permLevel: 10,
+	category: 'developer'
 };

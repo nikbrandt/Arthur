@@ -135,5 +135,6 @@ exports.run = async (message, args, suffix) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 1
+	permLevel: 1,
+	category: 'apis'
 };

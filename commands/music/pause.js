@@ -11,5 +11,6 @@ exports.run = (message, a, s, d, permLevel) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 2
+	permLevel: 2,
+	category: 'music'
 };

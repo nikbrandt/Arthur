@@ -120,5 +120,6 @@ exports.config = {
 	enabled: 'true',
 	permLevel: 2,
 	perms: ['EMBED_LINKS', 'SPEAK', 'CONNECT'],
-	guildCooldown: 1000
+	guildCooldown: 1000,
+	category: 'music'
 };

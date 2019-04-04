@@ -18,5 +18,6 @@ exports.run = (message, args, suffix, client, permLevel) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	perms: [ 'EMBED_LINKS' ]
+	perms: [ 'EMBED_LINKS' ],
+	category: 'developer'
 };

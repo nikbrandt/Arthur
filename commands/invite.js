@@ -10,5 +10,6 @@ exports.run = async (message, args, suffix, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	perms: ['EMBED_LINKS']
+	perms: ['EMBED_LINKS'],
+	category: 'other'
 };

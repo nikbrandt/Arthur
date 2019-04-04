@@ -43,5 +43,6 @@ exports.run = async (message, args) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	perms: ['EMBED_LINKS']
+	perms: ['EMBED_LINKS'],
+	category: 'music'
 };

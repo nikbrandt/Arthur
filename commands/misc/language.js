@@ -21,5 +21,6 @@ exports.run = async (message, args) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 1
+	permLevel: 1,
+	category: 'other'
 };

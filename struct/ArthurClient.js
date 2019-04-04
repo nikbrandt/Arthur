@@ -23,7 +23,10 @@ class ArthurClient extends Client {
 		this.commands = new Collection();
 		this.aliases = new Collection();
 		this.reactionCollectors = new Collection();
-		this.i18n = new i18n();
+
+		loadCommands(this);
+
+		this.i18n = new i18n(this);
 		global.i18n = this.i18n;
 		
 		permLevel.pl(this);
@@ -31,7 +34,6 @@ class ArthurClient extends Client {
 	}
 	
 	async init () {
-		loadCommands(this);
 		eventLoader.load(this);
 		await this.i18n.init();
 		

@@ -121,5 +121,6 @@ exports.config = {
 	enabled: true,
 	permLevel: 1,
 	perms: ['EMBED_LINKS', 'ATTACH_FILES'],
-	cooldown: 10000
+	cooldown: 10000,
+	category: 'other'
 };

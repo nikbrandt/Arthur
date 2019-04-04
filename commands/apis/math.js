@@ -26,5 +26,6 @@ exports.config = {
 	enabled: true,
 	permLevel: 1,
 	cooldown: 2000,
-	perms: ['EMBED_LINKS']
+	perms: ['EMBED_LINKS'],
+	category: 'apis'
 };

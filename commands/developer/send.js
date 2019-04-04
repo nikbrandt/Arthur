@@ -36,5 +36,6 @@ exports.run = (message, args, suffix, client) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 9
+	permLevel: 9,
+	category: 'developer'
 };
