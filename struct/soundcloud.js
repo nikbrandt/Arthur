@@ -23,7 +23,12 @@ function getInfo (url) {
 		request(`https://api.soundcloud.com/resolve.json?url=${encodeURIComponent(url)}&client_id=${clientID}`, (err, res, body) => {
 			if (err) return reject(err);
 
-			body = JSON.parse(body);
+			try {
+				body = JSON.parse(body);
+			} catch (e) {
+				return reject('Sound does not exist.');
+			}
+			
 			if (body.errors && body.errors[1].error_message.includes('404')) return reject('Sound does not exist.');
 			if (body.kind !== 'track') return reject('URL is not a sound file, rather a ' + body.kind + '.');
 
@@ -42,7 +47,12 @@ function search (term) {
 		request(`https://api.soundcloud.com/tracks?q=${encodeURIComponent(term)}&client_id=${clientID}`, (err, res, body) => {
 			if (err) return reject(err);
 
-			body = JSON.parse(body);
+			try {
+				body = JSON.parse(body);
+			} catch (e) {
+				return reject('I could not find any songs by that name.');
+			}
+			
 			if (body.length === 0) return reject('I could not find any songs by that name.');
 
 			resolve(body[1]);
