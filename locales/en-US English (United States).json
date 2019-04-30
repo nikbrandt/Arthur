@@ -284,7 +284,7 @@
 			"downloading_with_time": "Downloading... This should take about **$seconds** seconds to convert..",
 			"song_converted": "$user, your song is converted.",
 			"description": "Song is [here]($url).\nOriginal video [here](https://youtu.be/$id).\n$length",
-			"footer": "Requested by $tag | File will be deleted after 48 hours.",
+			"footer": "Requested by $tag | File will be deleted after first download.",
 			"no_args": [
 				"I can't download nothing..",
 				"It is *exceedingly* hard to download nothing at all and send it to you.",

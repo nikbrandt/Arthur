@@ -35,7 +35,7 @@ async function finish(id, message, client) {
 		return client.processing.splice(index, 1);
 	}
 
-	msg.edit(message.__('downloading_with_time', { seconds: (info.length_seconds / 15).toFixed(0) })).catch(() => {});
+	msg.edit(message.__('downloading_with_time', { seconds: Math.round((info.length_seconds / 24).toFixed(1)) * 10 })).catch(() => {});
 	let title = info.title.replace(/[^A-z0-9]/g, '_');
 
 	let ytdlStream = ytdl(id, { quality: 'highestaudio' });
@@ -47,7 +47,7 @@ async function finish(id, message, client) {
 		.audioBitrate(128)
 		.on('end', () => {
 			const options = {
-				url: 'https://uguu.se/api.php?d=upload-tool',
+				url: 'https://file.io',
 				method: 'POST',
 				headers: {
 					'User-Agent': 'Arthur Discord Bot (github.com/Gymnophoria/Arthur)'
@@ -65,10 +65,18 @@ async function finish(id, message, client) {
 
 				msg.delete().catch(() => {});
 
+				try {
+					body = JSON.parse(body);
+				} catch (e) {
+					return message.channel.send(message._('error', { err: e }));
+				}
+
+				if (err) message.channel.send(message.__('error', { err }));
+
 				message.channel.send(message.__('song_converted', { user: message.author.toString() }), {
 					embed: {
 						title: info.title,
-						description: message.__('description', { url: body, id, length: `${secObj.h ? `${secObj.h}${i18n.get('time.abbreviations.hours', message)} ` : ''}${secObj.m ? `${secObj.m}${i18n.get('time.abbreviations.minutes', message)} ` : ''}${secObj.s}${i18n.get('time.abbreviations.seconds', message)}` }),
+						description: message.__('description', { url: body.link, id, length: `${secObj.h ? `${secObj.h}${i18n.get('time.abbreviations.hours', message)} ` : ''}${secObj.m ? `${secObj.m}${i18n.get('time.abbreviations.minutes', message)} ` : ''}${secObj.s}${i18n.get('time.abbreviations.seconds', message)}` }),
 						thumbnail: {
 							url: info.thumbnail_url
 						},
