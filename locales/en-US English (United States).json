@@ -283,7 +283,7 @@
 			"too_long": "I've set a limit of $minutes minutes on songs; my CPU is limited and so is your time.",
 			"downloading_with_time": "Downloading... This should take about **$seconds** seconds to convert..",
 			"song_converted": "$user, your song is converted.",
-			"description": "Song is [here]($url).\nOriginal video [here](https://youtu.be/$id).\n$length",
+			"description": "Song is [here]($url).\nOriginal song [here]($songURL).\n$length",
 			"footer": "Requested by $tag | File will be deleted after first download.",
 			"no_args": [
 				"I can't download nothing..",
@@ -291,7 +291,8 @@
 				"Convert *what* to mp3?"
 			],
 			"no_results": "The video you searched for does not exist.. rip",
-			"error": "Error converting song: `$err`\nPlease try again later."
+			"error": "Error converting song: `$err`\nPlease try again later.",
+			"song_not_found": "Unfortunately, I couldn't find that song. You sure it exists?"
 		},
 		"poll": {
 			"footer": "Command will cancel in 60 seconds. Type \"cancel\" to cancel now. Attempt 1 of 5.",

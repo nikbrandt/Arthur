@@ -16,6 +16,7 @@ const soundcloud = module.exports = function soundcloud (id) {
 
 soundcloud.getInfo = getInfo;
 soundcloud.search = search;
+soundcloud.regex = soundcloudRegex;
 
 function getInfo (url) {
 	return new Promise((resolve, reject) => {
