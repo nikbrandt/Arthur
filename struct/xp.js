@@ -67,7 +67,7 @@ class XP {
 		if (row.total + add >= levels[level] && level + 1 > row.level) {
 			sql.run(`UPDATE xp SET level = ${level + 1} WHERE guildID = '${message.guild.id}' AND userID = '${message.author.id}'`);
 			sql.run(`UPDATE xp SET current = ${row.total + add - levels[level]} WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`);
-			message.channel.send(i18n.get('struct.xp.level_up', message.guild, { mention: message.author.toString(), level: level + 1})).catch(() => {});
+			if (guildRow.levelMessage === 'true') message.channel.send(i18n.get('struct.xp.level_up', message.guild, { mention: message.author.toString(), level: level + 1})).catch(() => {});
 		} else sql.run(`UPDATE xp SET current = ${row.current + add} WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`);
 
 		sql.run(`UPDATE xp SET total = ${row.total + add} WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`);

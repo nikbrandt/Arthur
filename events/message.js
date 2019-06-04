@@ -30,7 +30,7 @@ module.exports = async (client, message) => {
 	
 	if (client.test) prefix = config.testPrefix;
 	else if (message.guild) {
-		let row = await sql.get(`SELECT prefix, levels FROM guildOptions WHERE guildID = '${message.guild.id}'`);
+		let row = await sql.get(`SELECT prefix, levels, levelMessage FROM guildOptions WHERE guildID = '${message.guild.id}'`);
 		XP.addXP(message, row).catch(console.error);
 		if (row) prefix = row.prefix;
 		else prefix = config.prefix;
