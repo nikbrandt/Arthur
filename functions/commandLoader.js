@@ -1,4 +1,3 @@
-const { Stopwatch } = require('node-stopwatch');
 const fs = require('fs');
 
 let count = 0;
@@ -7,7 +6,7 @@ const loadCmd = (path, command, client) => {
 	console.log(`Loading ${command}..`);
 	let file = require(`${__dirname}/../commands/${path}`);
 	client.commands.set(command.replace(/.js/g, ''), file);
-	file.config.aliases.forEach(a => {
+	if (file.config && file.config.aliases) file.config.aliases.forEach(a => {
 		client.aliases.set(a, command.replace(/.js/g, ''));
 	});
 	count++;
