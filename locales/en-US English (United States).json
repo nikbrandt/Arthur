@@ -564,9 +564,9 @@
 			"meta": {
 				"command": "mp3",
 				"name": "Mp3",
-				"description": "Get an mp3 file of a YouTube video",
+				"description": "Get an mp3 file of a YouTube video or Soundcloud song",
 				"usage": "<search term or url>",
-				"help": "Get an mp3 file of a YouTube video's audio."
+				"help": "Get an mp3 file of the audio from a YouTube video or a Soundcloud song. Without a direct YouTube or Soundcloud URL, this command will search for the song on YouTube."
 			},
 			"downloading": "Downloading..",
 			"livestream": "Ah right, you expect me to download a livestream. Just no, thanks.",
