@@ -20,7 +20,19 @@ function statusUpdate (embed, restart, client) {
 }
 
 const errorLog = (error, stack, code) => {
-	if (!(process.argv[2] && process.argv[2] === 'test')) errorWebhookClient.send({ embeds: [ { title: error, description: stack, footer: { text: `Code ${code}` }, timestamp: new Date().toISOString(), color: 0xff0000 } ] }).catch(() => {});
+	code = 'Code ' + code;
+	if (process.argv[2] && process.argv[2] === 'test') code += ' | Testbot error';
+	errorWebhookClient.send({
+		embeds: [ {
+			title: error,
+			description: stack,
+			footer: { text: code },
+			timestamp: new Date().toISOString(),
+			color: 0xff0000
+		} ]
+	}).catch((e) => {
+		console.error('Error sending error webhook:\n', e.stack);
+	});
 };
 
 const rawEvents = {
@@ -104,6 +116,8 @@ exports.load = client => {
 		errorLog('Unhandled Rejection Error', err.stack, err.code);
 		console.error('Unhandled Promise Rejection at ', promise, ':\n', err);
 	});
+
+	client.errorLog = errorLog;
 };
 
 exports.statusUpdate = statusUpdate;

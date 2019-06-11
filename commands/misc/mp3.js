@@ -34,9 +34,19 @@ async function youtube(id, message, client) {
 	message.edit(message.__('downloading_with_time', { seconds: Math.round((info.length_seconds / 24).toFixed(1)) * 10 })).catch(() => {});
 	let title = info.title;
 
-	let ytdlStream = ytdl(id, { quality: 'highestaudio' });
+	let ytdlStream;
 
-	finish(ytdlStream, title, info.length_seconds, message, client, info.thumbnail_url, `https://youtu.be/${id}`);
+	try {
+		ytdlStream = ytdl(id, { quality: 'highestaudio' });
+	} catch (e) {
+		client.errorLog('Error retrieving ytdl stream in mp3', e.stack, e.code);
+		return message.edit(message.__('song_not_found')).catch(() => {});
+	}
+
+	finish(ytdlStream, title, info.length_seconds, message, client, info.thumbnail_url, `https://youtu.be/${id}`).catch((e) => {
+		client.errorLog('Error finishing mp3 from YT source', e.stack, e.code);
+		return message.edit(message.__('song_not_found')).catch(() => {});
+	});
 }
 
 async function finish(stream, title, length, message, client, thumbnail, url) {
@@ -75,6 +85,7 @@ async function finish(stream, title, length, message, client, thumbnail, url) {
 				try {
 					body = JSON.parse(body);
 				} catch (e) {
+					client.errorLog('Error parsing upload API body in mp3', e.stack, e.code);
 					return message.channel.send(message._('error', { err: e }));
 				}
 
@@ -103,7 +114,8 @@ async function finish(stream, title, length, message, client, thumbnail, url) {
 			client.processing.splice(index, 1);
 
 			msg.delete().catch(() => {});
-			
+
+			client.errorLog('Error converting to mp3', err.stack, err.code);
 			message.channel.send(message.__('error', { err }));
 		});
 }
@@ -157,8 +169,8 @@ exports.config = {
 
 exports.help = {
 	name: 'Mp3',
-	description: 'Get an mp3 file of a YouTube video',
+	description: 'Get an mp3 file of a YouTube video or Soundcloud song',
 	usage: 'mp3 <search term or url>',
-	help: 'Get an mp3 file of a YouTube video\'s audio.',
+	help: 'Get an mp3 file of the audio of a YouTube video or a Soundcloud song. Without a direct URL to YouTube or Soundcloud, this command will search YouTube for the song.',
 	category: 'Other'
 };

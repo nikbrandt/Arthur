@@ -46,7 +46,7 @@
     "webshot": "^0.18.0",
     "xml2json": "^0.11.2",
     "youtube-search": "^1.1.0",
-    "ytdl-core": "^0.24.0",
+    "ytdl-core": "^0.29.2",
     "zlib-sync": "^0.1.4"
   }
 }
