@@ -482,7 +482,7 @@
 			"top": "top",
 			"file": "file",
 			"sound_effect": "Sound effect",
-			"invalid_file_type": "I currently only support playback of mp3's and ogg's. Feel free to suggest more file types if you need 'em.",
+			"invalid_file_type": "I currently only support playback of the filetypes $filetypes. Feel free to suggest more file types if you need 'em.",
 			"file_too_small": [
 				"Your file isn't powerful enough! I need one bigger than 25 KB, thanks.",
 				"That file is, hear me out, too small. Really. I'll need something greater than 25 KB. Thanks."

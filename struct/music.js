@@ -1,17 +1,21 @@
 const fs = require('fs');
+const http = require('http');
+const https = require('https');
 const sql = require('sqlite');
 const ytdl = require('ytdl-core');
 const request = require('request');
-const isThatAnMp3 = require('is-mp3');
-const orPerhapsOgg = require('is-ogg');
-const readChunk = require('read-chunk');
+const fileType = require('file-type')
 const search = require('youtube-search');
 const soundcloud = require('./soundcloud');
 
 const YTRegex = /^(https?:\/\/)?(www\.|m\.|music\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/v\/|youtube\.com\/embed\/)([A-z0-9_-]{11})([&?].*)?$/;
 const soundcloudRegex = /^(https:\/\/)?soundcloud.com\/.+\/[^/]+$/;
-const songRegex = /^https?:\/\/.+\/([^/]+)\.(mp3|ogg)$/;
 const reactionFilter = reaction => ['👍', '⏩', '⏹', '🔁', '🎶'].includes(reaction.emoji.name);
+const streamOptions = { volume: 0.3, passes: 2, bitrate: 'auto' };
+
+const supportedFileTypes = [ 'mp3', 'ogg', 'aac', 'm4a', 'mp4', 'mov' ];
+const songRegex = new RegExp(`^https?:\\/\\/.+\\/([^/]+)\\.(${supportedFileTypes.join('|')})$`);
+const supportedFileTypesString = '`' + supportedFileTypes.join('`, `') + '`';
 
 function secSpread(sec) {
 	let hours = Math.floor(sec / 3600);
@@ -22,6 +26,36 @@ function secSpread(sec) {
 		m: mins,
 		s: secs
 	}
+}
+
+// returns Promise<boolean>, true if url links to valid file type, false otherwise
+function testIfValidFileType(url) {
+	return new Promise((resolve) => {
+		if (!url) return resolve(false);
+		else if (url.startsWith('https')) https.get(url, callback);
+		else if (url.startsWith('http')) http.get(url, callback);
+		else return resolve(false);
+
+		function callback(response) {
+			if (response.statusCode !== 200) return resolve(false);
+
+			let totalBytes = 0;
+			let chunkArray = [];
+
+			response.on('data', (chunk) => {
+				totalBytes += chunk.length;
+				chunkArray.push(chunk);
+
+				if (totalBytes >= fileType.minimumBytes) {
+					const section = Buffer.concat(chunkArray);
+					response.destroy();
+
+					const type = fileType(section);
+					return resolve(supportedFileTypes.includes(type.ext));
+				}
+			});
+		}
+	});
 }
 
 const Music = {
@@ -79,7 +113,7 @@ const Music = {
 			}
 			if (music.queue[0].type === 1) { // youtube
 				const stream = ytdl(music.queue[0].id, { quality: 'highestaudio' });
-				dispatcher = guild.voiceConnection.playStream(stream, { volume: 0.3, passes: 2, bitrate: 'auto' });
+				dispatcher = guild.voiceConnection.playStream(stream, streamOptions);
 
 				dispatcher.once('end', () => {
 					Music.next(guild);
@@ -91,6 +125,7 @@ const Music = {
 
 				dispatcher.on('error', err => {
 					console.warn(`error playing music: ${err}`);
+					guild.client.errorLog("Error playing music", err.stack ? err.stack : err, err.code);
 				});
 			} else if (music.queue[0].type === 4) { // from URL
 				let date = Date.now();
@@ -103,7 +138,7 @@ const Music = {
 
 				r.on('finish', () => {
 					const stream = fs.createReadStream(file);
-					dispatcher = guild.voiceConnection.playStream(stream, { volume: 0.3, passes: 2, bitrate: 'auto' });
+					dispatcher = guild.voiceConnection.playStream(stream, streamOptions);
 
 					dispatcher.once('end', () => {
 						fs.unlinkSync(file);
@@ -116,11 +151,12 @@ const Music = {
 
 					dispatcher.on('error', err => {
 						console.warn(`error playing music: ${err}`);
+						guild.client.errorLog("Error playing music", err.stack ? err.stack : err, err.code);
 					});
 				})
 			} else if (music.queue[0].type === 3) { // local file
 				const stream = fs.createReadStream(`../media/sounds/${music.queue[0].id}.mp3`);
-				dispatcher = guild.voiceConnection.playStream(stream, { volume: 0.3, passes: 2, bitrate: 'auto' });
+				dispatcher = guild.voiceConnection.playStream(stream, streamOptions);
 
 				dispatcher.once('end', () => {
 					Music.next(guild);
@@ -132,6 +168,7 @@ const Music = {
 
 				dispatcher.on('error', err => {
 					console.warn(`error playing music: ${err}`);
+					guild.client.errorLog("Error playing music", err.stack ? err.stack : err, err.code);
 				});
 			} else if (music.queue[0].type === 5) { // soundcloud
 				let id = Date.now() + guild.id;
@@ -141,7 +178,7 @@ const Music = {
 					setTimeout(() => {
 						let scStream = fs.createReadStream(`../media/temp/${id}.mp3`);
 						if (!guild.voiceConnection) return;
-						dispatcher = guild.voiceConnection.playStream(scStream, { volume: 0.3, passes: 2, bitrate: 'auto' });
+						dispatcher = guild.voiceConnection.playStream(scStream, streamOptions);
 
 						dispatcher.once('end', () => {
 							fs.unlinkSync(`../media/temp/${id}.mp3`);
@@ -157,6 +194,7 @@ const Music = {
 
 						dispatcher.on('error', err => {
 							console.warn(`error playing music: ${err}`);
+							guild.client.errorLog("Error playing music", err.stack ? err.stack : err, err.code);
 						});
 					}, 100);
 				});
@@ -187,8 +225,9 @@ const Music = {
 				type = 4;
 				id = message.attachments.first().url;
 
-				if (!id.endsWith('.mp3') && !id.endsWith('.ogg')) return reject(message._('invalid_file_type'));
+				if (!supportedFileTypes.some(fileType => id.toLowerCase().endsWith('.' + fileType))) return reject(message._('invalid_file_type', { filetypes: supportedFileTypesString }));
 				if (message.attachments.first().filesize < 25000) return reject(message._('file_too_small'));
+				if (!(await testIfValidFileType(id))) return reject(message._('invalid_file_type', { filetypes: supportedFileTypesString }));
 
 				resolve( {
 					id: id,
@@ -267,8 +306,9 @@ const Music = {
 				resolve ( {
 					id, type
 				} );
-			} else if (args[0].endsWith('.mp3') || args[0].endsWith('.ogg')) {
+			} else if (supportedFileTypes.some(fileType => args[0].toLowerCase().endsWith('.' + fileType))) {
 				if (!songRegex.test(args[0])) return reject(message._('invalid_url'));
+				if (!(await testIfValidFileType(args[0]))) return reject(message._('invalid_file_type', { filetypes: supportedFileTypesString }));
 
 				type = 4;
 				id = args[0];

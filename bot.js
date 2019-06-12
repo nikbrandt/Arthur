@@ -1,8 +1,3 @@
-global.Promise = require('bluebird');
-Promise.config({
-	longStackTraces: true
-});
-
 const sql = require('sqlite');
 const ArthurClient = require('./struct/ArthurClient');
 
