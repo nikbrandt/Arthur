@@ -15,7 +15,7 @@ exports.run = (message, args, suffix, client) => {
 	} else name = channel.tag;
 	
 	channel.send(suffix.slice(args[0].length + 1), { files: message.attachments.size ? message.attachments.array().map(f => f.url) : [] }).then(() => {
-		messageChannel.send({
+		if (message.channel.id === messageChannel.id) messageChannel.send({
 			embed: {
 				title: `Message to ${name}`,
 				description: suffix.slice(args[0].length + 1),
@@ -24,7 +24,7 @@ exports.run = (message, args, suffix, client) => {
 			files: message.attachments.size ? message.attachments.array().map(f => f.url) : []
 		});
 	}).catch(() => {
-		messageChannel.send({
+		if (message.channel.id === messageChannel.id) messageChannel.send({
 			embed: {
 				title: `Message to ${name} failed to send`,
 				description: suffix.slice(args[0].length + 1),

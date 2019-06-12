@@ -25,7 +25,7 @@ const errorLog = (error, stack, code) => {
 	errorWebhookClient.send({
 		embeds: [ {
 			title: error,
-			description: stack,
+			description: '```js\n' + stack + '```',
 			footer: { text: code },
 			timestamp: new Date().toISOString(),
 			color: 0xff0000
@@ -44,6 +44,8 @@ exports.load = client => {
 	let start = Date.now();
 	let events = fs.readdirSync('./events');
 	console.log(`Loading ${events.length} events..`);
+
+	client.errorLog = errorLog;
 
 	events.forEach(file => {
 		console.log(`Loading ${file}..`);
@@ -117,7 +119,11 @@ exports.load = client => {
 		console.error('Unhandled Promise Rejection at ', promise, ':\n', err);
 	});
 
-	client.errorLog = errorLog;
+	process.on('uncaughtException', err => {
+		console.error(err);
+		fs.writeFileSync(__basedir + '/../media/temp/crash.txt', err.code + '\n' + err.stack);
+		process.exit(err.code);
+	});
 };
 
 exports.statusUpdate = statusUpdate;
