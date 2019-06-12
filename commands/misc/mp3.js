@@ -86,7 +86,7 @@ async function finish(stream, title, length, message, client, thumbnail, url) {
 					body = JSON.parse(body);
 				} catch (e) {
 					client.errorLog('Error parsing upload API body in mp3', e.stack, e.code);
-					return message.channel.send(message._('error', { err: e }));
+					return message.channel.send(message.__('error', { err: e }));
 				}
 
 				if (err) message.channel.send(message.__('error', { err }));
