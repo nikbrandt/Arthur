@@ -35,7 +35,7 @@ exports.run = (message, args, suffix, client) => {
 			files: message.attachments.map(a => {return { attachment: a.url, name: a.filename }})
 		});
 
-		message.channel.send(message.__('success', { extra: message.guild && message.guild.name === 'Arthur Official Discord' ? '' : '\n' + message.__('check_support_server', { link: client.config.info.guildLink }) }));
+		message.channel.send(message.__('success', { extra: message.guild && message.guild.id === '304428345917964290' ? '' : '\n' + message.__('check_support_server', { link: client.config.info.guildLink }) }));
 	}).catch(err => {
 		message.channel.send(message.__('error', { link: client.config.info.guildLink, err }));
 	});
