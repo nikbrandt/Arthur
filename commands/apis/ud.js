@@ -13,7 +13,7 @@ async function asyncForEach(array, callback) {
 async function getDefinition (term) {
 	let body;
 	try {
-		body = await requestPromise(`http://api.urbandictionary.com/v0/define?term=${term}`);
+		body = await requestPromise(`http://api.urbandictionary.com/v0/define?term=${encodeURIComponent(term)}`);
 		body = JSON.parse(body);
 	} catch (e) {
 		return 'No definition found.';
@@ -36,7 +36,7 @@ function sliceIfTooBig(string, num, elipsis, beautify) {
 
 exports.run = async (message, a, suffix) => {
 	if (message.guild && !message.channel.nsfw) return message.channel.send(message.__('nsfw'));
-	request(`http://api.urbandictionary.com/v0/${suffix ? `define?term=${suffix}` : 'random'}`, async (err, resp, body) => {
+	request(`http://api.urbandictionary.com/v0/${suffix ? `define?term=${encodeURIComponent(suffix)}` : 'random'}`, async (err, resp, body) => {
 		if (err) return message.channel.send(message.__('not_connected'));
 	
 		let hotBod;
