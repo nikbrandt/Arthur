@@ -4,7 +4,7 @@ const sql = require('sqlite');
 
 module.exports = (client, guild) => {
 	// check for existence of guild settings in sql
-	sql.get(`SELECT guildID FROM guildOptions WHERE guildID = '${guild.id}`).then(row => {
+	sql.get(`SELECT guildID FROM guildOptions WHERE guildID = '${guild.id}'`).then(row => {
 		if (!!row) return; // if there are guild settings, don't send message
 
 		// create guild settings with default values
