@@ -6,9 +6,12 @@ const sql = require('sqlite');
 const { errorLog } = require('../functions/eventLoader');
 let cooldownObj = {};
 
+const emojiRegex = /^\s*<?(a)?:?(\w{2,32}):(\d{17,19})>?\s*$/;
+
 module.exports = async (client, message) => {
 	if (message.author.bot) return;
-	if (message.guild && message.channel.permissionsFor(message.guild.me) && !message.channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) return;
+	const botPerms = message.guild ? message.channel.permissionsFor(message.guild.me) : null;
+	if (message.guild && botPerms && !botPerms.has('SEND_MESSAGES')) return;
 	
 	let shouldIStayOrShouldIGo = await sql.get('SELECT * FROM hardBlacklist WHERE id = ? OR id = ?', [ message.author.id, message.guild ? message.guild.id : 'xd' ]);
 	if (shouldIStayOrShouldIGo && !config.owners.includes(message.author.id)) return;
@@ -21,6 +24,7 @@ module.exports = async (client, message) => {
 	if (message.author.melon === true) message.react('🍉').catch(() => {});
 
 	let prefix;
+	let humongoji = false;
 	let alexaPlay = false;
 
 	message.__ = (string, variables) => {
@@ -30,10 +34,12 @@ module.exports = async (client, message) => {
 	
 	if (client.test) prefix = config.testPrefix;
 	else if (message.guild) {
-		let row = await sql.get(`SELECT prefix, levels, levelMessage FROM guildOptions WHERE guildID = '${message.guild.id}'`);
+		let row = await sql.get(`SELECT prefix, levels, levelMessage, humongoji FROM guildOptions WHERE guildID = '${message.guild.id}'`);
 		XP.addXP(message, row).catch(console.error);
-		if (row) prefix = row.prefix;
-		else prefix = config.prefix;
+		if (row) {
+			prefix = row.prefix;
+			humongoji = row.humongoji === 'true';
+		} else prefix = config.prefix;
 	} else prefix = config.prefix;
 
 	prefix = prefix.toLowerCase();
@@ -99,6 +105,18 @@ module.exports = async (client, message) => {
 
 		if (message.channel.type !== 'text') return;
 		
+		const extractedEmojis = message.content.match(emojiRegex);
+		
+		if (humongoji && botPerms.has('ATTACH_FILES') && extractedEmojis) {
+			let text = '';
+			
+			if (botPerms.has('MANAGE_MESSAGES')) text = `Humongoji by \`${message.member.displayName}\``;
+			
+			message.channel.send(text, { files: [ message.guild.emojis.get(extractedEmojis[3]).url ] }).then(() => {
+				if (!!text) message.delete().catch(() => {});
+			});
+		}
+		
 		let alexaStringLower = message.content.toLowerCase();
 		let alexaString = Array.from(alexaStringLower);
 		alexaString = alexaString.filter(character => character.toLowerCase() !== character.toUpperCase());
@@ -132,7 +150,7 @@ module.exports = async (client, message) => {
 
 	if (cmdFile.config.perms && message.guild) {
 		cmdFile.config.perms.forEach(p => {
-			if (!message.channel.permissionsFor(message.guild.me) || !message.channel.permissionsFor(message.guild.me).has(p)) {
+			if (!botPerms || !botPerms.has(p)) {
 				go = false;
 				missingPerms.push(p.toLowerCase())
 			}
