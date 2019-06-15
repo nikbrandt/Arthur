@@ -115,7 +115,8 @@ const Music = {
 				const stream = ytdl(music.queue[0].id, { quality: 'highestaudio' });
 				dispatcher = guild.voiceConnection.playStream(stream, streamOptions);
 
-				dispatcher.once('end', () => {
+				dispatcher.once('end', reason => {
+					console.log('Dispatcher ended youtube playback with reason:\t', reason);
 					Music.next(guild);
 				});
 
@@ -142,6 +143,7 @@ const Music = {
 
 					dispatcher.once('end', () => {
 						fs.unlinkSync(file);
+						console.log('Dispatcher ended URL playback with reason:\t', reason);
 						Music.next(guild);
 					});
 
@@ -159,6 +161,7 @@ const Music = {
 				dispatcher = guild.voiceConnection.playStream(stream, streamOptions);
 
 				dispatcher.once('end', () => {
+					console.log('Dispatcher ended sound effect playback with reason:\t', reason);
 					Music.next(guild);
 				});
 
@@ -181,6 +184,7 @@ const Music = {
 						dispatcher = guild.voiceConnection.playStream(scStream, streamOptions);
 
 						dispatcher.once('end', () => {
+							console.log('Dispatcher ended soundcloud playback with reason:\t', reason);
 							fs.unlinkSync(`../media/temp/${id}.mp3`);
 							Music.next(guild);
 							setTimeout(() => {
