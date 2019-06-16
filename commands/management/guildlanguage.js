@@ -17,13 +17,5 @@ exports.run = async (message, args, suffix, client, permLevel) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: [ 'serverlanguage', 'serverlocale', 'serverlang', 'guildlang', 'guildlocale' ]
-};
-
-exports.help = {
-	name: 'Server Language',
-	description: 'Set the language of Arthur for your server. User settings overwrite.',
-	usage: 'guildlanguage [locale or "list"]',
-	help: 'Set the language of Arthur for your server. User settings will overwrite if present. To get a list of languages, type `guildlanguage list`. If a language is incomplete, it will use text from English until it is complete. To help translate Arthur, ask Gymnophoria in the support server (available in the info or help commands).\nRequires admin or manage server permissions to run.',
-	category: 'Server Management'
+	category: 'server_management'
 };

@@ -22,13 +22,5 @@ exports.run = async (message) => { // npNotify column
 exports.config = {
 	enabled: true,
 	permLevel: 3,
-	aliases: ['npn', 'nowplayingn', 'nowplayingnotify', 'npnotify']
-};
-
-exports.help = {
-	name: 'Now Playing Notify',
-	description: 'Send a message when a new song starts',
-	usage: 'nowplayingnotify',
-	help: 'Send a message in the chat where `a.play` was used last showing the currently playing song at the beginning of each song. Toggle with this command or `a.nowplaying notify`.',
-	category: 'Music'
+	category: 'music'
 };

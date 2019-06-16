@@ -86,14 +86,6 @@ ${secString(secSpread(remainingTime), locale)} ${message.__('of')} ${secString(s
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: ['playing', 'np'],
-	perms: ['EMBED_LINKS']
-};
-
-exports.help = {
-	name: 'Now Playing',
-	description: 'See what song is currently playing',
-	usage: 'nowplaying',
-	help: 'Get information about the currently playing song.',
-	category: 'Music'
+	perms: ['EMBED_LINKS'],
+	category: 'music'
 };

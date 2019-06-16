@@ -26,13 +26,5 @@ exports.run = (message, args, suffix, client, permLevel) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: []
-};
-
-exports.help = {
-	name: 'Shuffle',
-	description: 'Shuffle the current music queue',
-	usage: 'shuffle',
-	help: 'Shuffle the current music queue - cannot be undone.',
-	category: 'Music'
+	category: 'music'
 };

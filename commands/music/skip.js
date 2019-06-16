@@ -40,13 +40,5 @@ exports.run = (message, a, s, d, permLevel) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: ['next']
-};
-
-exports.help = {
-	name: 'Skip',
-	description: 'Skip the current song.',
-	usage: 'skip',
-	help: 'Skip the current song. Requires "DJ" or "Music" role (or Mod+)',
-	category: 'Music'
+	category: 'music'
 };

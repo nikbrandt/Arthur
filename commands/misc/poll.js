@@ -175,16 +175,8 @@ exports.run = async (message, a, s, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 3,
-	aliases: [ 'startpoll', 'createpoll', 'newpoll', 'ask', 'askquestion', 'multiplechoice', 'multiplechoicepoll' ],
-	perms: [ 'EMBED_LINKS', 'ADD_REACTIONS' ]
-};
-
-exports.help = {
-	name: 'Poll',
-	description: 'Start a poll',
-	usage: 'poll',
-	help: 'Start a poll. ',
-	category: 'Other'
+	perms: [ 'EMBED_LINKS', 'ADD_REACTIONS' ],
+	category: 'other'
 };
 
 exports.watch = watch;

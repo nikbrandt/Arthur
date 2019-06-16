@@ -32,13 +32,5 @@ exports.run = async (message, args) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: ['dislike']
-};
-
-exports.help = {
-	name: 'Unlike Song',
-	description: 'Unlike that one song you liked',
-	usage: 'unlike <song number>',
-	help: 'Unlike that one song you liked a while ago because you now realize it\'s not as good as you thought it was.',
-category: 'Music'
+	category: 'music'
 };

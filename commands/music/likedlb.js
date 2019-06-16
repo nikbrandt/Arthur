@@ -35,13 +35,5 @@ exports.run = async (message, args) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: ['likedleaderboard', 'likeslb', 'likelb', 'likeleaderboard', 'likesleaderboard', 'topsongs', 'songlb', 'songleaderboard', 'topliked', 'liketop', 'likedtop', 'likestop']
-};
-
-exports.help = {
-	name: 'Likes Leaderboard',
-	description: 'Get a list of the top liked songs.',
-	usage: 'likedlb [page]',
-	help: 'View the top liked songs of the bot.',
-	category: 'Music'
+	category: 'music'
 };

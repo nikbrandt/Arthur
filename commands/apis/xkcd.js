@@ -40,14 +40,6 @@ exports.run = async (message, args) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	aliases: [],
-	perms: ['EMBED_LINKS']
-};
-
-exports.help = {
-	name: 'xkcd',
-	description: 'Get a random, chosen, or latest xkcd comic.',
-	usage: 'xkcd [random/latest/number]',
-	help: 'Get a random, chosen, or the latest xkcd comic.',
-	category: 'APIs'
+	perms: ['EMBED_LINKS'],
+	category: 'apis'
 };

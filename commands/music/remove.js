@@ -17,13 +17,5 @@ exports.run = (message, args, suffix, client, permLevel) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: [ 'removesong' ]
-};
-
-exports.help = {
-	name: 'Remove',
-	description: 'Remove a song from the queue',
-	usage: 'remove <song #>',
-	help: 'Remove a song from the queue by it\'s number. You need "DJ", "Music", Mod+, or to have added the song yourself to be able remove it.',
-	category: 'Music'
+	category: 'music'
 };

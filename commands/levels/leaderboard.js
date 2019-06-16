@@ -61,14 +61,6 @@ exports.run = async (message, args, suffix, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: ['lb', 'lead', 'top'],
-	perms: ['EMBED_LINKS']
-};
-
-exports.help = {
-	name: 'Leaderboard',
-	description: 'Show the leaderboard for the current guild or global.',
-	usage: 'leaderboard [global/server] [page]',
-	help: 'Show either server or global leaderboard for XP. Select a page, if necessary.',
-	category: 'Leveling and Profiles'
+	perms: ['EMBED_LINKS'],
+	category: 'levels'
 };

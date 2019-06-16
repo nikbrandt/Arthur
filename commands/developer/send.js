@@ -37,13 +37,5 @@ exports.run = (message, args, suffix, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 9,
-	aliases: ['sendmessage']
-};
-
-exports.help = {
-	name: 'Send Message',
-	description: 'Send a message to someone by ID',
-	usage: 'send <id> <message>',
-	help: 'Send a message to someone through Arthur, by ID',
-	category: 'Developer'
+	category: 'developer'
 };

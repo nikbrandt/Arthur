@@ -9,21 +9,35 @@ const forEach = function (obj, loop) {
 
 exports.run = async (message, args, suffix, client, perms, prefix) => {
 	if (!args[0] || args[0] === 'dev' || args[0] === 'eggs' || args[0] === message.__('chat_flag')) {
-		let commands = client.commands.filter(c => c.config.permLevel <= perms === 1 ? 2 : perms);
+		let commands = client.commands.filter(c => c.config.permLevel <= (perms === 1 ? 2 : perms));
 		let categories = {};
 		let fields = [];
 		commands.forEach((com, name) => {
-			if (!com.help || !com.help.category) return;
-			if (args[0] === 'dev' && client.config.owners.includes(message.author.id) && com.help.category !== 'Developer') return;
-			else if (args[0] === 'eggs' && client.config.owners.includes(message.author.id) && com.help.category !== 'Eggs') return;
-			else if (com.help.category === 'Developer' || com.help.category === 'Eggs') return;
-			
-			if (!categories.hasOwnProperty(com.help.category)) categories[com.help.category] = [];
-			categories[com.help.category].push(`\u200b	${prefix}${name} - ${com.help.description}`);
+			let meta;
+			if (com.config.category === 'sound_effects') {
+				meta = {
+					command: name,
+					name: name.substring(0, 1).toUpperCase() + name.substring(1),
+					description: message.__('sound_effects.description', { name })
+				}
+			} else try {
+				meta = i18n.getMeta(name, message) || com.meta;
+			} catch (e) {
+				if (e !== `en-US locale missing string commands.${name}.meta`) console.error(e);
+			}
+			if (!meta) return;
+
+			if (args[0] === 'dev' && client.config.owners.includes(message.author.id) && com.config.category !== 'Developer') return;
+			else if (args[0] === 'eggs' && client.config.owners.includes(message.author.id) && com.config.category !== 'Eggs') return;
+			else if (com.config.category === 'Developer' || com.config.category === 'Eggs') return;
+
+			if (!categories.hasOwnProperty(com.config.category)) categories[com.config.category] = [];
+			categories[com.config.category].push(`\u200b	${prefix}${meta.command} - ${meta.description}`);
 		});
+
 		forEach(categories, (coms, cat) => {
 			fields.push({
-				name: cat,
+				name: message.__(`categories.${cat}`),
 				value: coms.join('\n'),
 				inline: true
 			});
@@ -53,15 +67,31 @@ exports.run = async (message, args, suffix, client, perms, prefix) => {
 			}
 		} else message.author.send({embed}).catch(() => {});
 	} else {
-		let command = client.commands.get(args[0]) || client.commands.get(client.aliases.get(args[0]));
+		let name = i18n.getCommandFileName(args[0], message) || args[0];
+		let command = client.commands.get(name);
 		if (!command) return message.channel.send(message.__('invalid_command', { command: args[0] }));
-		
+
+		let meta;
+
+		if (command.config.category === 'sound_effects') {
+			meta = {
+				name: name.substring(0, 1).toUpperCase() + name.substring(1),
+				help: message.__('sound_effects.help', { name })
+			}
+		} else try {
+			meta = i18n.getMeta(name, message) || command.meta;
+		} catch (e) {
+			if (e !== `en-US locale missing string commands.${name}.meta`) console.error(e);
+		}
+
+		if (!meta) return message.channel.send(message.__('invalid_command', { command: args[0] }));
+
 		message.channel.send({embed: {
 			color: 0x00c140,
 			fields: [
 				{
-					name: command.help.name,
-					value: `${command.help.help}\n${message.__('small_embed.usage')} \`${prefix}${command.help.usage}\`${command.config.aliases && command.config.aliases.length > 0 ? `\n${message.__('small_embed.aliases')} ${command.config.aliases.join(', ')}` : ''}`,
+					name: meta.name,
+					value: `${meta.help}\n${message.__('small_embed.usage')} \`${prefix}${name}${meta.usage ? meta.usage : ""}\`${meta.aliases && meta.aliases.length > 0 ? `\n${message.__('small_embed.aliases')} ${meta.aliases.join(', ')}` : ''}`,
 					inline: true
 				},
 				{
@@ -70,7 +100,7 @@ exports.run = async (message, args, suffix, client, perms, prefix) => {
 					inline: true
 				}
 			],
-			footer: {text: message.__('small_embed.footer', { category: command.help.category }) }
+			footer: {text: message.__('small_embed.footer', { category: message.__(`categories.${command.config.category}`) }) }
 		}});
 	}
 };
@@ -78,14 +108,6 @@ exports.run = async (message, args, suffix, client, perms, prefix) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	aliases: ['h', 'halp', 'commands'],
-	perms: ['EMBED_LINKS']
-};
-
-exports.help = {
-	name: 'Help',
-	description: 'View the help menu.',
-	usage: 'help [command]',
-	help: 'View the entire help menu or just help for one command.',
-	category: 'Other'
+	perms: ['EMBED_LINKS'],
+	category: 'other'
 };

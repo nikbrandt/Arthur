@@ -44,13 +44,5 @@ exports.run = (message, args, suffix, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	aliases: ['suggestion', 'iwant']
-};
-
-exports.help = {
-	name: 'Suggest',
-	description: 'Suggest a command or feature to be added to Arthur.',
-	usage: 'suggest <suggestion>',
-	help: 'Suggest something to be added to Arthur, preferably in English.',
-	category: 'Other'
+	category: 'other'
 };

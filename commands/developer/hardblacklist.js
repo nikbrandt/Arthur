@@ -33,13 +33,5 @@ exports.run = async (message, args, suffix, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 9,
-	aliases: [ 'fuckoff', 'hardbl', 'hbl' ]
-};
-
-exports.help = {
-	name: 'Hard Blacklist',
-	description: 'Blacklist a user or guild from using Arthur altogether.',
-	usage: 'hardblacklist ',
-	help: 'Blacklist a user or guild from using Arthur altogether. THE BAN HAMMER HAS SPOKEN.\nAll messages will get a missingpermissions x lul',
-	category: 'Developer'
+	category: 'developer'
 };

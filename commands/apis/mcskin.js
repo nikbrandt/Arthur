@@ -42,14 +42,6 @@ exports.run = async (message, args) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	aliases: ['minecraftskin', 'skin', 'mskin'],
-	perms: ['EMBED_LINKS']
-};
-
-exports.help = {
-	name: 'Minecraft Skin',
-	description: 'Get the skin of a Minecraft player',
-	usage: 'mcskin <username/UUID>',
-	help: 'Get the skin of a Minecraft player.',
-	category: 'APIs'
+	perms: ['EMBED_LINKS'],
+	category: 'apis'
 };

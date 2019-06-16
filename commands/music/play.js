@@ -119,15 +119,7 @@ exports.run = async (message, args, suffix, client, perms) => {
 exports.config = {
 	enabled: 'true',
 	permLevel: 2,
-	aliases: [],
 	perms: ['EMBED_LINKS', 'SPEAK', 'CONNECT'],
-	guildCooldown: 1000
-};
-
-exports.help = {
-	name: 'Play',
-	description: 'Play a song or add it to the queue',
-	usage: 'play <song name/youtube or soundcloud url/file url/file/top/liked> [extra params]',
-	help: 'Play a song or add one to the queue. Only supports songs playable in the US.',
-	category: 'Music'
+	guildCooldown: 1000,
+	category: 'music'
 };

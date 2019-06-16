@@ -33,14 +33,6 @@ exports.run = async (message, args, asdf, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	aliases: ['bot'],
-	perms: ['EMBED_LINKS']
-};
-
-exports.help = {
-	name: 'Info',
-	description: 'View information about Arthur.',
-	usage: 'info',
-	help: 'It\'s really just info about the bot.',
-	category: 'Other'
+	perms: ['EMBED_LINKS'],
+	category: 'other'
 };

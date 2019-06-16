@@ -77,13 +77,5 @@ exports.run = (message, args, suffix, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: []
-};
-
-exports.help = {
-	name: 'Hug',
-	description: 'Hug Arthur (or someone else)',
-	usage: 'hug [person]',
-	help: 'Hug someone, whether it be Arthur or that guy that wants a hug.',
-	category: 'Fun'
+	category: 'fun'
 };

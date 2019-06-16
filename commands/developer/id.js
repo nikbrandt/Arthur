@@ -18,14 +18,6 @@ exports.run = (message, args, suffix, client, permLevel) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	aliases: [],
-	perms: [ 'EMBED_LINKS' ]
-};
-
-exports.help = {
-	name: 'ID',
-	description: 'Get a user\'s Discord Snowflake ID',
-	usage: 'id <partial or full Discord tag>',
-	help: 'Get a user\'s Discord Snowflake ID.',
-	category: 'Developer'
+	perms: [ 'EMBED_LINKS' ],
+	category: 'developer'
 };

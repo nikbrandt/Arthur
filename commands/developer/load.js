@@ -10,13 +10,5 @@ exports.run = async (message, a, s, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 10,
-	aliases: ['loadcmds']
-};
-
-exports.help = {
-	name: 'Load Commands',
-	description: 'Reloads all commands into memory.',
-	usage: 'load <command>',
-	help: 'Loads all commands into memory. ',
-	category: 'Developer'
+	category: 'developer'
 };

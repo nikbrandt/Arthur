@@ -10,14 +10,6 @@ exports.run = async (message, args, suffix, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	aliases: ['inv'],
-	perms: ['EMBED_LINKS']
-};
-
-exports.help = {
-	name: 'Invite',
-	description: 'Invite Arthur to your server.',
-	usage: 'invite',
-	help: 'Get an invite link for Arthur.',
-	category: 'Other'
+	perms: ['EMBED_LINKS'],
+	category: 'other'
 };

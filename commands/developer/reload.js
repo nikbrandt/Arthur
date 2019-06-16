@@ -57,13 +57,5 @@ exports.run = (message, args, suffix, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 10,
-	aliases: []
-};
-
-exports.help = {
-	name: 'Reload Command',
-	description: 'Reload a command from Arthur.',
-	usage: 'reload <command>',
-	help: 'Seriously, you\'re just reloading a command..',
-	category: 'Developer'
+	category: 'developer'
 };

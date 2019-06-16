@@ -25,13 +25,5 @@ exports.run = (message, args, suffix, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 10,
-	aliases: ['kys', 'die']
-};
-
-exports.help = {
-	name: 'Restart',
-	description: 'Restart the bot',
-	usage: 'restart',
-	help: 'How hard is to comprehend? Restart. The. Bot.',
-	category: 'Developer'
+	category: 'developer'
 };

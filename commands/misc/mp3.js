@@ -162,15 +162,7 @@ exports.run = async (message, args, suffix, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	aliases: [],
 	perms: ['EMBED_LINKS', 'ATTACH_FILES'],
-	cooldown: 10000
-};
-
-exports.help = {
-	name: 'Mp3',
-	description: 'Get an mp3 file of a YouTube video or Soundcloud song',
-	usage: 'mp3 <search term or url>',
-	help: 'Get an mp3 file of the audio of a YouTube video or a Soundcloud song. Without a direct URL to YouTube or Soundcloud, this command will search YouTube for the song.',
-	category: 'Other'
+	cooldown: 10000,
+	category: 'other'
 };

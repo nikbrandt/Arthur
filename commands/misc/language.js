@@ -22,13 +22,5 @@ exports.run = async (message, args) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	aliases: [ 'locale', 'lang' ]
-};
-
-exports.help = {
-	name: 'Language',
-	description: 'Change the language of Arthur for yourself. Overrides server language.',
-	usage: 'language [locale, "list", or "none"]',
-	help: 'Changes the language of Arthur for yourself. Will override server language. `language list` will provide a list of languages. An incomplete language will use parts of English. To help translate, join the support server and ask about translating.',
-	category: 'Other'
+	category: 'other'
 };

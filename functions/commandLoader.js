@@ -1,22 +1,24 @@
 const fs = require('fs');
 
 let count = 0;
+let i = -1;
 
 const loadCmd = (path, command, client) => {
-	console.log(`Loading ${command}..`);
 	let file = require(`${__dirname}/../commands/${path}`);
 	client.commands.set(command.replace(/.js/g, ''), file);
-	if (file.config && file.config.aliases) file.config.aliases.forEach(a => {
-		client.aliases.set(a, command.replace(/.js/g, ''));
-	});
 	count++;
-	console.log('Loaded.');
+	i++;
+	if (i % 10 === 0) {
+		console.log('');
+		process.stdout.write('   ');
+	}
+	process.stdout.write(`${command.slice(0, -3)} `);
 };
 
 const soundEffects = (client) => {
+	process.stdout.write('   ');
 	let effects = fs.readdirSync('../media/sounds');
 	effects.forEach(file => {
-		console.log(`Generating file for ${file}..`);
 		let basename = file.replace('.mp3', '');
 		client.commands.set(basename, {
 			run: (message, args, suffix, client) => {
@@ -31,26 +33,20 @@ const soundEffects = (client) => {
 				permLevel: 2,
 				aliases: [],
 				perms: ['EMBED_LINKS', 'SPEAK', 'CONNECT'],
-				guildCooldown: 1000
-			},
-			help: {
-				name: basename.charAt(0).toUpperCase() + basename.slice(1),
-				description: `Alias for \`play file ${basename}\``,
-				usage: basename,
-				help: `Alias for \`play file ${basename}\`. Plays the \`${basename}\` sound effect.`,
-				category: 'Sound Effects'
+				guildCooldown: 1000,
+				category: 'sound_effects'
 			}
 		});
 		count++;
-		console.log('Done.');
+		process.stdout.write(file.slice(0, -4) + ' ');
 	})
 };
 
 exports.loadCmd = loadCmd;
 
-module.exports = async client => {
+module.exports = client => {
 	let start = Date.now();
-	console.log('Loading commands..');
+	process.stdout.write('Loading commands..');
 	count = 0;
 
 	const files = fs.readdirSync(`${__dirname}/../commands`);
@@ -75,8 +71,12 @@ module.exports = async client => {
 		}
 	});
 
+	console.log();
+
 	console.log('Generating sound effect commands..');
 	soundEffects(client);
+
+	console.log();
 
 	console.log(`Success! Loaded ${count} commands in ${Date.now() - start} ms.\n`);
 	return [ count, Date.now() - start ];

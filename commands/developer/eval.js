@@ -69,13 +69,5 @@ exports.run = async (message, args, suffix, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 10,
-	aliases: []
-};
-
-exports.help = {
-	name: 'Eval',
-	description: 'Evaluate a thing. Confuse everyone.',
-	usage: 'eval <statement>',
-	help: 'C\'mon, you know how to use this.',
-	category: 'Developer'
+	category: 'developer'
 };

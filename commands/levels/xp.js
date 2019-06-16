@@ -48,14 +48,6 @@ exports.run = async (message, args, suffix, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	aliases: ['rank'],
-	perms: ['EMBED_LINKS']
-};
-
-exports.help = {
-	name: 'XP',
-	description: 'Show your current XP and level',
-	usage: 'xp',
-	help: 'Show current, total, and global XP, your current level, and how close you are to leveling up.',
-	category: 'Leveling and Profiles'
+	perms: ['EMBED_LINKS'],
+	category: 'levels'
 };

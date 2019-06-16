@@ -22,13 +22,5 @@ exports.run = (message, args, s, client, permLevel) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	aliases: []
-};
-
-exports.help = {
-	name: 'Stopwatch',
-	description: 'Time something with your dandy stopwatch',
-	usage: 'stopwatch',
-	help: 'Start or stop your stopwatch.',
-	category: 'Fun'
+	category: 'fun'
 };

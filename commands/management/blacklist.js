@@ -27,13 +27,5 @@ exports.run = async (message, args, suffix, client) => {
 exports.config = {
 	enabled: true,
 	permLevel: 3,
-	aliases: ['bl']
-};
-
-exports.help = {
-	name: 'Blacklist User',
-	description: 'Blacklist a user from using Arthur in your server.',
-	usage: 'blacklist <user resolvable>',
-	help: 'Blacklist a user from using Arthur on your server. Give me a user ID, mention, or tag (username#0000).\nArthur will not interact with this user in any way, other than like.. notice that they\'re in a voice channel',
-	category: 'Server Management'
+	category: 'server_management'
 };
