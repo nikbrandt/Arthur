@@ -29,17 +29,21 @@ class i18n {
 
 			let aliases = new Collection();
 			let obj = this._locales.get(args[0]).commands;
-			let keys = Object.keys(obj);
-			Object.values(obj).forEach((val, i) => {
-				if (!val.meta) return;
+			
+			if (obj) {
+				let keys = Object.keys(obj);
+				Object.values(obj).forEach((val, i) => {
+					if (!val.meta) return;
 
-				if (!filename.includes('en-US')) aliases.set(val.meta.command, keys[i]);
-				else if (client.commands.get(keys[i]) && !client.commands.get(keys[i]).meta) client.commands.get(keys[i]).meta = val.meta;
+					if (!filename.includes('en-US')) aliases.set(val.meta.command, keys[i]);
+					else if (client.commands.get(keys[i]) && !client.commands.get(keys[i]).meta) client.commands.get(keys[i]).meta = val.meta;
 
-				if (val.meta.aliases) val.meta.aliases.forEach(alias => {
-					aliases.set(alias, keys[i]);
+					if (val.meta.aliases) val.meta.aliases.forEach(alias => {
+						aliases.set(alias, keys[i]);
+					});
 				});
-			});
+			}
+			
 			this._aliases.set(args[0], aliases);
 
 			this._localeNames.set(args.shift(), args.join(' '));
