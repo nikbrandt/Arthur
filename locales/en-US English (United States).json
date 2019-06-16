@@ -573,15 +573,16 @@
 			"too_long": "I've set a limit of $minutes minutes on songs; my CPU is limited and so is your time.",
 			"downloading_with_time": "Downloading... This should take about **$seconds** seconds to convert..",
 			"song_converted": "$user, your song is converted.",
-			"description": "Song is [here]($url).\nOriginal video [here](https://youtu.be/$id).\n$length",
-			"footer": "Requested by $tag | File will be deleted after 48 hours.",
+			"description": "Song is [here]($url).\nOriginal song [here]($songURL).\n$length",
+			"footer": "Requested by $tag | File will be deleted after first download.",
 			"no_args": [
 				"I can't download nothing..",
 				"It is *exceedingly* hard to download nothing at all and send it to you.",
 				"Convert *what* to mp3?"
 			],
 			"no_results": "The video you searched for does not exist.. rip",
-			"error": "Error converting song: `$err`\nPlease try again later."
+			"error": "Error converting song: `$err`\nPlease try again later.",
+			"song_not_found": "Unfortunately, I couldn't find that song. You sure it exists?"
 		},
 		"poll": {
 			"meta": {
@@ -989,7 +990,7 @@
 			"top": "top",
 			"file": "file",
 			"sound_effect": "Sound effect",
-			"invalid_file_type": "I currently only support playback of mp3's and ogg's. Feel free to suggest more file types if you need 'em.",
+			"invalid_file_type": "I currently only support playback of the filetypes $filetypes. Feel free to suggest more file types if you need 'em.",
 			"file_too_small": [
 				"Your file isn't powerful enough! I need one bigger than 25 KB, thanks.",
 				"That file is, hear me out, too small. Really. I'll need something greater than 25 KB. Thanks."

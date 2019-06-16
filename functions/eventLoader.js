@@ -20,7 +20,19 @@ function statusUpdate (embed, restart, client) {
 }
 
 const errorLog = (error, stack, code) => {
-	if (!(process.argv[2] && process.argv[2] === 'test')) errorWebhookClient.send({ embeds: [ { title: error, description: stack, footer: { text: `Code ${code}` }, timestamp: new Date().toISOString(), color: 0xff0000 } ] }).catch(() => {});
+	code = 'Code ' + code;
+	if (process.argv[2] && process.argv[2] === 'test') code += ' | Testbot error';
+	errorWebhookClient.send({
+		embeds: [ {
+			title: error,
+			description: '```js\n' + stack + '```',
+			footer: { text: code },
+			timestamp: new Date().toISOString(),
+			color: 0xff0000
+		} ]
+	}).catch((e) => {
+		console.error('Error sending error webhook:\n', e.stack);
+	});
 };
 
 const rawEvents = {
@@ -33,6 +45,8 @@ exports.load = client => {
 	let events = fs.readdirSync('./events');
 	console.log(`Loading ${events.length} events..`);
 	process.stdout.write('   ');
+
+	client.errorLog = errorLog;
 
 	events.forEach(file => {
 		let eventName = file.split('.')[0];
@@ -76,7 +90,7 @@ exports.load = client => {
 
 	client.on('error', err => {
 		console.error('Client error\n', err);
-		errorLog('Discord.JS Client Error', err.stack, err.code);
+		errorLog('Discord.JS Client Error', err, err.code);
 	});
 
 	client.on('reconnecting', () => {
@@ -104,6 +118,12 @@ exports.load = client => {
 	process.on('unhandledRejection', (err, promise) => {
 		errorLog('Unhandled Rejection Error', err.stack, err.code);
 		console.error('Unhandled Promise Rejection at ', promise, ':\n', err);
+	});
+
+	process.on('uncaughtException', err => {
+		console.error(err);
+		fs.writeFileSync(__basedir + '/../media/temp/crash.txt', err.code + '\n' + err.stack);
+		process.exit(err.code);
 	});
 };
 

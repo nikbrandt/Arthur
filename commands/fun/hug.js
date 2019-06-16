@@ -1,4 +1,4 @@
-const Canvas = require('canvas');
+const { createCanvas, Image } = require('canvas');
 const fs = require('fs');
 const request = require('request');
 
@@ -11,8 +11,7 @@ exports.run = (message, args, suffix, client) => {
 		else receiverURL = obj.user.displayAvatarURL;
 	} else receiverURL = 'https://i.imgur.com/PO6OvAH.png';
 
-	const Image = Canvas.Image,
-		canvas = new Canvas(300, 350),
+	const canvas = createCanvas(300, 350),
 		ctx = canvas.getContext('2d');
 
 	let counter = 0;
@@ -49,11 +48,11 @@ exports.run = (message, args, suffix, client) => {
 	function complete() {
 		if (counter !== 3) return;
 
-		let backgroundImage = new Image;
+		let backgroundImage = new Image();
 		backgroundImage.src = backgroundImageFile;
 		ctx.drawImage(backgroundImage, 0, 0);
 
-		let receiverImage = new Image;
+		let receiverImage = new Image();
 		receiverImage.src = receiverImageFile;
 		ctx.save();
 		ctx.translate(35, 20);
@@ -61,7 +60,7 @@ exports.run = (message, args, suffix, client) => {
 		ctx.drawImage(receiverImage, 0, 0, 110, 110);
 		ctx.restore();
 
-		let giverImage = new Image;
+		let giverImage = new Image();
 		giverImage.src = giverImageFile;
 		ctx.save();
 		ctx.translate(155, 15);

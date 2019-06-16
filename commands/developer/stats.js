@@ -1,6 +1,9 @@
-const Canvas = require('canvas');
+const { createCanvas, registerFont } = require('canvas');
 const moment = require('moment');
 const os = require('os');
+
+registerFont('../media/fonts/Roboto-Light.ttf', { family: 'RobotoLight' });
+registerFont('../media/fonts/Roboto-Medium.ttf', { family: 'RobotoMedium' });
 
 function sort (array) {
 	array.sort((a, b) => {
@@ -55,8 +58,7 @@ exports.run = (message, args, suffix, client) => {
 
 	let barMaxHeight = 275;
 
-	const Font = Canvas.Font,
-		canvas = new Canvas(1050, 450),
+	const canvas = createCanvas(1050, 450),
 		ctx = canvas.getContext('2d');
 
 	let barWidth = Math.floor(700 / commandsArray.length);
@@ -66,8 +68,6 @@ exports.run = (message, args, suffix, client) => {
 	let accent = '#00c140';
 
 	ctx.fillStyle = accent; // add fonts, set color
-	ctx.addFont(new Font('RobotoLight', '../media/fonts/Roboto-Light.ttf'));
-	ctx.addFont(new Font('RobotoMedium', '../media/fonts/Roboto-Medium.ttf'));
 	ctx.font = `${barWidth}px RobotoLight`;
 
 	for (let i = 0; i < commandsArray.length; i++) { // generate each bar of graph w/ command name

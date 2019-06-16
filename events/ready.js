@@ -118,4 +118,22 @@ module.exports = client => {
 			})
 		});
 	}).catch(console.error);
+
+	const crashPath = require('path').join(__basedir, '..', 'media', 'temp', 'crash.txt');
+	if (fs.existsSync(crashPath)) fs.readFile(crashPath, 'utf8', (err, data) => {
+		if (err) {
+			console.error('Error loading previous error:\n', err);
+			return client.errorLog('Error loading previous error', err.stack, err.code);
+		}
+
+		let datarray = data.split('\n');
+		const code = datarray.shift();
+		const stack = datarray.join('\n');
+
+		client.errorLog('Previous crash error', stack, code);
+
+		fs.unlink(crashPath, err => {
+			if (err) console.error('Could not delete previous crash.txt file:\n', err.stack);
+		});
+	});
 };

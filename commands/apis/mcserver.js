@@ -61,7 +61,7 @@ exports.run = async (message, args, s, client) => {
 };
 
 exports.config = {
-	enabled: true,
+	enabled: false,
 	permLevel: 1,
 	perms: [ 'EMBED_LINKS', 'ATTACH_FILES' ],
 	category: 'apis'

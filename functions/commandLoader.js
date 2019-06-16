@@ -6,9 +6,6 @@ let i = -1;
 const loadCmd = (path, command, client) => {
 	let file = require(`${__dirname}/../commands/${path}`);
 	client.commands.set(command.replace(/.js/g, ''), file);
-	/*if (file.meta.aliases) file.meta.aliases.forEach(a => {
-		client.aliases.set(a, command.replace(/.js/g, ''));
-	});*/
 	count++;
 	i++;
 	if (i % 10 === 0) {
