@@ -166,16 +166,16 @@ module.exports = async (client, message) => {
 	if (!go) return message.channel.send(i18n.get('struct.message.bot_missing_perms', message, { perms: missingPerms.join(', ') }));
 	if (!userGo) return message.react(i18n.get('struct.message.user_missing_perms_emoji', message)).catch(() => {});
 
-	if (cmdFile.config.cooldown && cooldownObj[message.author.id] && cooldownObj[message.author.id][cmdFile.help.name] && Date.now() - cooldownObj[message.author.id][cmdFile.help.name] < cmdFile.config.cooldown) return message.channel.send(i18n.get('struct.message.user_cooldown', message, { time: Math.ceil((cooldownObj[message.author.id][cmdFile.help.name] + cmdFile.config.cooldown - Date.now()) / 1000) }));
+	if (cmdFile.config.cooldown && cooldownObj[message.author.id] && cooldownObj[message.author.id][cmdFile] && Date.now() - cooldownObj[message.author.id][cmdFile] < cmdFile.config.cooldown) return message.channel.send(i18n.get('struct.message.user_cooldown', message, { time: Math.ceil((cooldownObj[message.author.id][cmdFile] + cmdFile.config.cooldown - Date.now()) / 1000) }));
 	if (cmdFile.config.cooldown) {
-		if (cooldownObj[message.author.id]) cooldownObj[message.author.id][cmdFile.help.name] = Date.now();
-		else cooldownObj[message.author.id] = { [cmdFile.help.name]: Date.now() };
+		if (cooldownObj[message.author.id]) cooldownObj[message.author.id][cmdFile] = Date.now();
+		else cooldownObj[message.author.id] = { [cmdFile]: Date.now() };
 	}
 
-	if (cmdFile.config.guildCooldown && message.guild && cooldownObj[message.guild.id] && cooldownObj[message.guild.id][cmdFile.help.name] && Date.now() - cooldownObj[message.guild.id][cmdFile.help.name] < cmdFile.config.guildCooldown) return message.channel.send(i18n.get('struct.message.guild_cooldown', message, { time: Math.ceil((cooldownObj[message.guild.id][cmdFile.help.name] + cmdFile.config.guildCooldown - Date.now()) / 1000) }));
+	if (cmdFile.config.guildCooldown && message.guild && cooldownObj[message.guild.id] && cooldownObj[message.guild.id][cmdFile] && Date.now() - cooldownObj[message.guild.id][cmdFile] < cmdFile.config.guildCooldown) return message.channel.send(i18n.get('struct.message.guild_cooldown', message, { time: Math.ceil((cooldownObj[message.guild.id][cmdFile] + cmdFile.config.guildCooldown - Date.now()) / 1000) }));
 	if (cmdFile.config.guildCooldown && message.guild) {
-		if (cooldownObj[message.guild.id]) cooldownObj[message.guild.id][cmdFile.help.name] = Date.now();
-		else cooldownObj[message.guild.id] = { [cmdFile.help.name]: Date.now() };
+		if (cooldownObj[message.guild.id]) cooldownObj[message.guild.id][cmdFile] = Date.now();
+		else cooldownObj[message.guild.id] = { [cmdFile]: Date.now() };
 	}
 
 	if (cmdFile.config.permLevel > perms) return message.react(i18n.get('struct.message.user_missing_perms_emoji', message)).catch(() => {});

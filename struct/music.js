@@ -111,6 +111,7 @@ const Music = {
 					Music.addReactionCollector(msg, msg.client, music.queue[0].ms);
 				});
 			}
+			
 			if (music.queue[0].type === 1) { // youtube
 				const stream = ytdl(music.queue[0].id, { quality: 'highestaudio' });
 				dispatcher = guild.voiceConnection.playStream(stream, streamOptions);
@@ -141,7 +142,7 @@ const Music = {
 					const stream = fs.createReadStream(file);
 					dispatcher = guild.voiceConnection.playStream(stream, streamOptions);
 
-					dispatcher.once('end', () => {
+					dispatcher.once('end', reason => {
 						fs.unlinkSync(file);
 						console.log('Dispatcher ended URL playback with reason:\t', reason);
 						Music.next(guild);
@@ -160,7 +161,7 @@ const Music = {
 				const stream = fs.createReadStream(`../media/sounds/${music.queue[0].id}.mp3`);
 				dispatcher = guild.voiceConnection.playStream(stream, streamOptions);
 
-				dispatcher.once('end', () => {
+				dispatcher.once('end', reason => {
 					console.log('Dispatcher ended sound effect playback with reason:\t', reason);
 					Music.next(guild);
 				});
@@ -183,7 +184,7 @@ const Music = {
 						if (!guild.voiceConnection) return;
 						dispatcher = guild.voiceConnection.playStream(scStream, streamOptions);
 
-						dispatcher.once('end', () => {
+						dispatcher.once('end', reason => {
 							console.log('Dispatcher ended soundcloud playback with reason:\t', reason);
 							fs.unlinkSync(`../media/temp/${id}.mp3`);
 							Music.next(guild);
