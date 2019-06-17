@@ -91,7 +91,7 @@ exports.run = async (message, args, suffix, client, perms, prefix) => {
 			fields: [
 				{
 					name: meta.name,
-					value: `${meta.help}\n${message.__('small_embed.usage')} \`${prefix}${name}${meta.usage ? meta.usage : ""}\`${meta.aliases && meta.aliases.length > 0 ? `\n${message.__('small_embed.aliases')} ${meta.aliases.join(', ')}` : ''}`,
+					value: `${meta.help}\n${message.__('small_embed.usage')} \`${prefix}${name}${meta.usage ? " " + meta.usage : ""}\`${meta.aliases && meta.aliases.length > 0 ? `\n${message.__('small_embed.aliases')} ${meta.aliases.join(', ')}` : ''}`,
 					inline: true
 				},
 				{

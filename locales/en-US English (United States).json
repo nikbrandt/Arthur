@@ -958,6 +958,21 @@
 				"help": "Hug someone, whether it be Arthur or that guy that wants a hug."
 			}
 		},
+		"humongoji": {
+			"meta": {
+				"command": "humongoji",
+				"aliases": [ 
+					"wumbowumboji", 
+					"bigmoji", 
+					"hugemoji"
+				],
+				"name": "Toggle Humongoji",
+				"description": "Enable or disable humongojis in a guild. They're wumbojis, but better.",
+				"help": "Wumbojis are bigger emojis that appear when an emoji is in a message by itself. See the [changelog](https://blog.discordapp.com/2016-4-29-change-log-a6451dfbaac8) for when they were added. Humongojis (this feature) are even *bigger* emojis that will appear in the same scenario, where Arthur will show the emoji image in full glorious HD.\nIf Arthur has the MANAGE_MESSAGES permission, the original message will also be deleted. Humongojis are disabled by default."
+			},
+			"enabled": "Humongojis have been enabled for this server. Enjoy.",
+			"disabled": "As sad as it is for the users of your server, humongojis have been disabled. Riperoni."
+		},
 		"l": {
 			"meta": {
 				"command": "l",
@@ -970,9 +985,26 @@
 			"meta": {
 				"command": "lenny",
 				"name": "Lenny",
+				"usage": "[text]",
 				"description": "( ͡° ͜ʖ ͡°)",
 				"help": "( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°)"
 			}
+		},
+		"owoify": {
+			"meta": {
+				"command": "owoify",
+				"aliases": [
+					"owo",
+					"uwu",
+					"uwuify"
+				],
+				"name": "Owoify",
+				"description": "Owoify some text",
+				"usage": "<text>",
+				"help": "Owoify some text. Yeah. What even.",
+				"category": "Fun"
+			},
+			"no_text": "I can't owoify nothing! Give me some text."
 		}
 	},
 	"struct": {
