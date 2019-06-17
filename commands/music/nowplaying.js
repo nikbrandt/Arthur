@@ -26,7 +26,7 @@ exports.run = (message, args, s, client, permLevel) => {
 
 	if (!message.guild.music || !message.guild.music.queue) return message.channel.send(message.__('nothing_playing'));
 
-	const locale = i18n.getLocale(message);
+	const locale = i18n.getLocaleCode(message);
 	
 	if (message.guild.music.queue[0].type === 1) { // YouTube video
 		ytdl.getInfo(message.guild.music.queue[0].id).then(info => {

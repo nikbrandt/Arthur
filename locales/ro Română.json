@@ -3,9 +3,11 @@
 		"authors": [
 		  "Tudor#3877"
 		],
-		"version": "v1.0",
-		"wip": true,
 		"flag": "ro",
-		"lang_en": "Romanian"
+		"translations": {
+			"en-US": "Romanian, Romania",
+			"nl": "Roemeens, Roemenië",
+			"ro": "Română"
+		}
 	}
 }

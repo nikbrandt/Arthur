@@ -1,15 +1,17 @@
 {
 	"meta": {
 		"authors": [
-		  "Gymnophoria#8146 (the bot's real dev)",
+		  "Gymnophoria#8146",
 		  "Technocoder#9418",
 		  "GlitchMasta",
 		  "JRoy"
 		],
-		"version": "v1.0",
-		"wip": true,
 		"flag": "us",
-		"lang_en": "English (United States)"
+		"translations": {
+			"en-US": "English, US",
+			"nl": "Engels, VS",
+			"ro": "Engleză, Statele Unite"
+		}
 	},
 	"commands": {
 		"8ball": {
@@ -503,7 +505,7 @@
 				"name": "Server Language",
 				"description": "Set the language of Arthur for your server. User settings overwrite.",
 				"usage": "[locale or \"list\"]",
-				"help": "Set the language of Arthur for your server. User settings will overwrite if present. To get a list of languages, type `guildlanguage list`. If a language is incomplete, it will use text from English until it is complete. To help translate Arthur, ask Gymnophoria in the support server (available in the info or help commands).\nRequires admin or manage server permissions to run."
+				"help": "Set the language of Arthur for your server. User settings will overwrite if present. To get a list of languages, type `languages`. If a language is incomplete, it will use text from English for missing translations. To help translate Arthur, ask Gymnophoria in the support server (available in the info or help commands).\nRequires admin or manage server permissions to run."
 
 			},
 			"current_language": "This server's language is $locale",
@@ -554,11 +556,36 @@
 				"name": "Language",
 				"description": "Change the language of Arthur for yourself. Overrides server language.",
 				"usage": "[locale, \"list\", or \"none\"]",
-				"help": "Changes the language of Arthur for yourself. Will override server language. `language list` will provide a list of languages. An incomplete language will use parts of English. To help translate, join the support server and ask about translating."
+				"help": "Changes the language of Arthur for yourself. Will override server language. `languages` will provide a list of languages. An incomplete language will use English where there is no translation. To help translate, join the support server and ask about translating."
 			},
 			"current": "Your language is currently $locale",
 			"removed": "Locale removed. Defaulting to server locale if set, or English.",
 			"locale_set": "Locale set."
+		},
+		"languages": {
+			"meta": {
+				"command": "languages",
+				"aliases": [ "listlanguages", "locales", "langs" ],
+				"name": "List Languages",
+				"description": "List all languages that Arthur has available.",
+				"help": "Lists all languages that Arthur has available, in addition to how completely translated the language is. Languages that are not completely translated will use English where there is no available translation. Help translate Arthur by asking in the support server."
+			},
+			"percent_complete": "$percent% complete.",
+			"languages": "Languages",
+			"description": "Languages that have not been fully translated will use English where translations are missing. To help translate, join the support server. For more info about a language, use the `langinfo` command."
+		},
+		"langinfo": {
+			"meta": {
+				"command": "langinfo",
+				"aliases": [ "languageinfo" ],
+				"usage": "<language code or name>",
+				"name": "Language Info",
+				"description": "Get detailed information about a language.",
+				"help": "Get detailed information about a language that Arthur has. Use a locale code (e.g. `en-US`). Get a list of all languages, with less detail, with the `languages` command."
+			},
+			"no_language_specified": "I can't really get information about a specific language if you don't provide me with said specific language. You can get a list of the available languages with the `languages` command. Cheers.",
+			"locale_not_found": "I couldn't find the locale you specified. Make sure you're using the language code (e.g. `en-US`), not the full language name. For a list of languages, use the `languages` command.",
+			"description": "**Author(s)**: $authors\n**Complete**: $percent%\n**Language code**: `$code`"
 		},
 		"mp3": {
 			"meta": {
@@ -900,7 +927,8 @@
 				"music": "Music",
 				"developer": "Developer",
 				"eggs": "Eggs",
-				"sound_effects": "Sound Effects"
+				"sound_effects": "Sound Effects",
+				"i18n": "Internationalization"
 			},
 			"sound_effects": {
 				"description": "Alias for `play file $name`",

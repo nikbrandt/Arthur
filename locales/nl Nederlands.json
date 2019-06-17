@@ -3,10 +3,12 @@
 		"authors": [
 			"Dutchy#6127"
 		],
-		"version": "v1.0",
-		"wip": true,
 		"flag": "nl",
-		"lang_en": "Dutch"
+		"translations": {
+			"en-US": "Dutch",
+			"nl": "Nederlands",
+			"ro": "Olandeză"
+		}
 	},
 	"commands": {
 		"8ball": {

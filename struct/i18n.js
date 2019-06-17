@@ -8,11 +8,11 @@ const localeDirectory = path.join(__dirname, '..', 'locales');
 const variableRegex = /\$[A-Za-z]+/g;
 
 class i18n {
-	constructor (client) {
+	constructor(client) {
 		this._guildLocaleCache = new Collection();
 		this._userLocaleCache = new Collection();
-		this._locales = new Collection();
-		this._localeNames = new Collection();
+		this._locales = new Collection(); // original locale files, mapped by locale code
+		this._localeNames = new Collection(); // short locale => full locale name (e.g. `en-US` => `English (United States)`)
 		this._aliases = new Collection(); // collection of collections: language code => [ alias => english command name ]
 		
 		let files = fs.readdirSync(localeDirectory);
@@ -48,9 +48,16 @@ class i18n {
 
 			this._localeNames.set(args.shift(), args.join(' '));
 		});
+		
+		let englishLocaleStrings = i18n._countLocaleStrings(this._locales.get('en-US')) - i18n._countLocaleStrings(this._locales.get('en-US').meta);
+		
+		this._locales.forEach((locale, code) => {
+			locale.meta.percentComplete = i18n._calculatedLocaleProgress(code, locale, englishLocaleStrings);
+			locale.meta.lang = this._localeNames.get(code);
+		});
 	}
 	
-	async init () {
+	async init() {
 		console.log('Caching guild and user locale settings..');
 		
 		const guildResults = await sql.all('SELECT guildID, locale FROM guildOptions');
@@ -70,43 +77,88 @@ class i18n {
 		});
 		console.log('User locale settings cached.\n');
 	}
-	
-	getLocales () {
-		return this._localeNames.keyArray();
-	}
-	
-	getLocaleNames () {
-		return Array.from(this._localeNames.values());
-	}
-	
-	_handleLocaleResult (result) {
+
+	_handleLocaleResult(result) {
 		if (!result || !result.locale) return 'English (United States) | en-US';
 		else return this._localeNames.get(result.locale) + ' | ' + result.locale;
 	}
 	
-	async getGuildLocaleString (id) {
+	// count how many locale strings are in the given object. arrays are considered ONE locale string.
+	static _countLocaleStrings(object) {
+		let values = Object.values(object);
+		let count = 0;
+		
+		for (let val in values) {
+			val = values[val];
+			if (i18n._isObject(val)) count += this._countLocaleStrings(val);
+			else if (typeof val === 'string' || val instanceof Array) count++;
+		}
+		
+		return count;
+	}
+	
+	// courtesy of https://stackoverflow.com/questions/8511281/check-if-a-value-is-an-object-in-javascript#comment25634071_14706877
+	static _isObject(obj) {
+		return obj === Object(obj) && Object.prototype.toString.call(obj) !== '[object Array]';
+	}
+	
+	// calculate how complete a locale is (in comparison to English - English will return 100)
+	static _calculatedLocaleProgress(code, locale, englishLocaleStringCount) {
+		if (code === 'en-US') return 100;
+		
+		let localeStringCount = i18n._countLocaleStrings(locale) - i18n._countLocaleStrings(locale.meta);
+		
+		return (localeStringCount / englishLocaleStringCount * 100).toFixed(1);
+	}
+	
+	// get locale (file/object) from locale code
+	getLocale(code) {
+		return this._locales.get(code);
+	}
+	
+	getLocales() {
+		return this._localeNames.keyArray();
+	}
+	
+	getLocaleNames() {
+		return Array.from(this._localeNames.values());
+	}
+	
+	// returns collection of all locales, with locale codes as keys and locale meta as values
+	getAllLocaleMeta() {
+		let output = new Collection();
+		
+		this._localeNames.keyArray().forEach(code => {
+			let { meta } = this._locales.get(code);
+			output.set(code, meta);
+		});
+		
+		return output;
+	}
+	
+	async getGuildLocaleString(id) {
 		let result = await sql.get('SELECT locale FROM guildOptions WHERE guildID = ?', [ id ]);
 		return this._handleLocaleResult(result);
 	}
 	
-	async setGuildLocale (id, locale) {
+	async setGuildLocale(id, locale) {
 		await sql.run(`INSERT OR IGNORE INTO guildOptions (guildID) VALUES ('${id}')`);
 		await sql.run(`UPDATE guildOptions SET locale = '${locale}' WHERE guildID = '${id}';`);
 		this._guildLocaleCache.set(id, locale);
 	}
 	
-	async getUserLocaleString (id) {
+	async getUserLocaleString(id) {
 		let result = await sql.get('SELECT locale FROM userOptions WHERE userID = ?', [ id ]);
 		return this._handleLocaleResult(result);
 	}
 	
-	async setUserLocale (id, locale) {
+	async setUserLocale(id, locale) {
 		await sql.run(`INSERT OR IGNORE INTO userOptions (userID) VALUES ('${id}')`);
 		await sql.run(`UPDATE userOptions SET locale = '${locale}' WHERE userID = '${id}'`);
 		this._userLocaleCache.set(id, locale);
 	}
 	
-	async removeUserLocale (id) {
+	async removeUserLocale(id) {
 		await sql.run(`UPDATE userOptions SET locale = null WHERE userID = '${id}'`);
 		this._userLocaleCache.delete(id);
 	}
@@ -118,7 +170,7 @@ class i18n {
 	 * @param {string} [_originalLocale] The original locale used, if having to move to en-US
 	 * @returns {*}
 	 */
-	getString (string, locale, variables = {}, _originalLocale = 'en-US') {
+	getString(string, locale, variables = {}, _originalLocale = 'en-US') {
 		let file = this._locales.get(locale);
 		if (!file) {
 			let error = new Error('Invalid locale: ' + locale);
@@ -175,7 +227,7 @@ class i18n {
 	 * @param {Message|Guild|User|string} resolvable
 	 * @returns {string} locale The returned locale
 	 */
-	getLocale (resolvable) {
+	getLocaleCode(resolvable) {
 		if (resolvable instanceof Message) {
 			if (this._userLocaleCache.has(resolvable.author.id)) return this._userLocaleCache.get(resolvable.author.id);
 			if (resolvable.guild && this._guildLocaleCache.has(resolvable.guild.id)) return this._guildLocaleCache.get(resolvable.guild.id);
@@ -197,8 +249,8 @@ class i18n {
 	 * @param {object} [variables] Any variables to pass in
 	 * @returns {string} locale The returned locale
 	 */
-	get (string, resolvable, variables) {
-		return this.getString(string, this.getLocale(resolvable), variables);
+	get(string, resolvable, variables) {
+		return this.getString(string, this.getLocaleCode(resolvable), variables);
 	}
 
 	/**
@@ -207,7 +259,7 @@ class i18n {
 	 * @param {Message|Guild|User|string} resolvable Resolvable locale object
 	 */
 	getCommandFileName(string, resolvable) {
-		return this._aliases.get(this.getLocale(resolvable)).get(string) || this._aliases.get('en-US').get(string);
+		return this._aliases.get(this.getLocaleCode(resolvable)).get(string) || this._aliases.get('en-US').get(string);
 	}
 
 	/**
@@ -216,7 +268,7 @@ class i18n {
 	 * @param {Message|Guild|User|string} resolvable Resolvable locale object
 	 */
 	getMeta(command, resolvable) {
-		let file = this._locales.get(this.getLocale(resolvable));
+		let file = this._locales.get(this.getLocaleCode(resolvable));
 		if (!file.commands[command] || !file.commands[command].meta) return undefined;
 		return file.commands[command].meta;
 	}
