@@ -1,7 +1,7 @@
 const Music = require('../../struct/music');
 
 function skip (message) {
-	if (message.guild.voiceConnection) message.guild.voiceConnection.dispatcher.end();
+	if (message.guild.voiceConnection) message.guild.voiceConnection.dispatcher.end('User skipped song');
 	else message.guild.music = {};
 	message.channel.send(message.__('skipped', { user: message.member.displayName.replace(/@/g, '@\u200b').replace(/ /g, '') }));
 }
