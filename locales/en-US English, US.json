@@ -753,7 +753,7 @@
 				"command": "pause",
 				"name": "Pause",
 				"description": "Pause the currently playing song",
-				"help": "Pause the current song. Requires \"DJ\" or \"Music\" role (or Mod+)"
+				"help": "Pause the current song. Requires \"@@struct.music.dj\" or \"@@struct.music.music\" role (or the below permissions)"
 			},
 			"no_music_playing": "There is no music playing.",
 			"already_paused": "The music is already paused. Use `@@resume` to resume playback.",
@@ -802,7 +802,7 @@
 				"name": "Remove",
 				"description": "Remove a song from the queue",
 				"usage": "<song number>",
-				"help": "Remove a song from the queue by it's number. You need \"DJ\", \"Music\", Mod+, or to have added the song yourself to be able remove it."
+				"help": "Remove a song from the queue by it's number. You need \"@@struct.music.dj\", \"@@struct.music.music\", the below permissions, or to have added the song yourself to be able remove it."
 			},
 			"nothing_playing": "I can't remove something from nothing, that breaks some rule of physics.. (There is no music playing)",
 			"no_args": "Y'all need to specify which song to remove (gimme a number thanks).",
@@ -818,7 +818,7 @@
 				"aliases": [ "go", "continue" ],
 				"name": "Resume",
 				"description": "Resume the currently playing song",
-				"help": "Resume the current song. Requires \"DJ\" or \"Music\" role (or Mod+)"
+				"help": "Resume the current song. Requires \"@@struct.music.dj\" or \"@@struct.music.music\" role (or the below permissions)"
 			},
 			"nothing_playing": "There is no music playing. How would I resume playback of nothing? :thinking:",
 			"already_playing": "Music is already playing. Use `@@pause` to pause playback.",
@@ -843,7 +843,7 @@
 				],
 				"name": "Skip",
 				"description": "Skip the current song.",
-				"help": "Skip the current song. Requires \"DJ\" or \"Music\" role (or Mod+)"
+				"help": "Skip the current song. Requires \"@@struct.music.dj\" or \"@@struct.music.music\" role (or the below permisssions)"
 			},
 			"skipped": "Song skipped. #Blame$user",
 			"no_music": "There's no music playing, so how exactly would I skip the current song? Are you insane?",
@@ -860,7 +860,7 @@
 				],
 				"name": "Stop",
 				"description": "Stop all music and leave the channel.",
-				"help": "Stop all currently playing music and leave the channel. Requires \"DJ\" or \"Music\" role (or Mod+)"
+				"help": "Stop all currently playing music and leave the channel. Requires \"@@struct.music.dj\" or \"@@struct.music.music\" role (or the below permissions)"
 			},
 			"no_music": "I have successfully stopped the nonexistent music.. What were you trying to do?",
 			"stopped": "Music stopped. #Blame$user"
@@ -1044,8 +1044,8 @@
 			"now_playing": "Now Playing",
 			"added_to_queue": "Added to Queue",
 			"length": "Length",
-			"dj": "dj",
-			"music": "music",
+			"dj": "DJ",
+			"music": "Music",
 			"random": "random",
 			"top": "top",
 			"file": "file",

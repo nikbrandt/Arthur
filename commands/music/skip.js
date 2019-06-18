@@ -10,7 +10,7 @@ exports.run = (message, a, s, d, permLevel) => {
 	if (!message.guild.music || !message.guild.music.queue) return message.channel.send(message.__('no_music'));
 
 	let canForceSkip = false;
-	if (message.member.roles.some(r => r.name.toLowerCase() === 'dj') || message.member.roles.some(r => r.name.toLowerCase() === 'music') || permLevel > 3 || message.guild.music.queue[0].person.id === message.author.id) canForceSkip = true;
+	if (message.member.roles.some(r => r.name.toLowerCase() === i18n.get('struct.music.dj', message).toLowerCase()) || message.member.roles.some(r => r.name.toLowerCase() === i18n.get('struct.music.music', message).toLowerCase()) || permLevel > 3 || message.guild.music.queue[0].person.id === message.author.id) canForceSkip = true;
 
 	if (a[0] === message.__('force_command_flag') && canForceSkip) return skip(message);
 
