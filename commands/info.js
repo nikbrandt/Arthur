@@ -19,7 +19,7 @@ exports.run = async (message, args, asdf, client) => {
 			},
 			{
 				name: message.__('help'),
-				value: '@Arthur help',
+				value: '@Arthur ' + i18n.get('commands.help.meta.command', message),
 				inline: true
 			},
 			{

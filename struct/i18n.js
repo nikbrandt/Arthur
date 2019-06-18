@@ -6,6 +6,7 @@ const { Collection, Message, Guild, User } = require('discord.js');
 const { errorLog } = require('../functions/eventLoader');
 const localeDirectory = path.join(__dirname, '..', 'locales');
 const variableRegex = /\$[A-Za-z]+/g;
+const localVariableRegex = /@@[A-Za-z_.]+/g;
 
 class i18n {
 	constructor(client) {
@@ -162,6 +163,42 @@ class i18n {
 		await sql.run(`UPDATE userOptions SET locale = null WHERE userID = '${id}'`);
 		this._userLocaleCache.delete(id);
 	}
+	
+	// inserts supplied variables into a string - variables are in the format $variable
+	// for example, if variables is { pie: 'perhaps' } and the string says 'i like $pie', the output will be 'i like perhaps'
+	static _insertVariables(variables, string) {
+		if (!variableRegex.test(string)) return string;
+		
+		let matches = string.match(variableRegex);
+
+		matches.forEach(match => {
+			const variable = variables[match.slice(1)];
+			string = string.replace(match, variable);
+		});
+
+		return string;
+	}
+	
+	// insert inner variables (that is, variables starting with @@ that reference variables inside the locale file, not externally supplied variables)
+	// will assume it is in format commands.<variable>.meta.command, otherwise it will attempt <variable> format
+	// e.g. passing in @@language will return the string at commands.language.meta.command, yet passing @@struct.xp.level_up will get just that
+	_insertInnerVariables(string, locale, code) {
+		if (!localVariableRegex.test(string)) return string;
+		
+		let matches = string.match(localVariableRegex);
+		
+		matches.forEach(match => {
+			let variable = match.slice(2);
+
+			if (locale && locale.commands && locale.commands[variable] && locale.commands[variable].meta) return string = string.replace(match, locale.commands[variable].meta.command);
+			let result = this.getString(variable, code);
+			
+			if (result) string = string.replace(match, result);
+			else string = string.replace(match, variable);
+		});
+		
+		return string
+	}
 
 	/**
 	 * @param {string} string 
@@ -169,6 +206,9 @@ class i18n {
 	 * @param {object} [variables] An object containing all variables used in the string.
 	 * @param {string} [_originalLocale] The original locale used, if having to move to en-US
 	 * @returns {*}
+	 * 
+	 * @@ is used for commands or other inner-variables (e.g. @@help will get the translation of the help command)
+	 * $ is used for variables, passed in via the variables object
 	 */
 	getString(string, locale, variables = {}, _originalLocale = 'en-US') {
 		let file = this._locales.get(locale);
@@ -209,15 +249,11 @@ class i18n {
 			errorLog('i18n error', error.stack, 69);
 			console.error(`Locale string ${string} returning ${selection}`);
 		}
+		
 		if (selection instanceof Array) selection = selection[Math.floor(Math.random() * selection.length)];
 		
-		if (!variableRegex.test(selection)) return selection;
-		let matches = selection.match(variableRegex);
-		
-		matches.forEach(match => {
-			const variable = variables[match.slice(1)];
-			selection = selection.replace(match, variable);
-		});
+		selection = i18n._insertVariables(variables, selection);
+		selection = this._insertInnerVariables(selection, file, locale);
 		
 		return selection;
 	}
@@ -268,9 +304,16 @@ class i18n {
 	 * @param {Message|Guild|User|string} resolvable Resolvable locale object
 	 */
 	getMeta(command, resolvable) {
-		let file = this._locales.get(this.getLocaleCode(resolvable));
+		let localeCode = this.getLocaleCode(resolvable);
+		let file = this._locales.get(localeCode);
 		if (!file.commands[command] || !file.commands[command].meta) return undefined;
-		return file.commands[command].meta;
+		let meta = file.commands[command].meta;
+		
+		Object.keys(meta).forEach(key => {
+			meta[key] = this._insertInnerVariables(meta[key], file, localeCode);
+		});
+		
+		return meta;
 	}
 }
 

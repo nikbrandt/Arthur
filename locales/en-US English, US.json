@@ -465,7 +465,7 @@
 				"help": "Receive information on Arthur's leveling system, including whether or not it is disabled in the current guild and its current settings."
 			},
 			"leveling_system": "Leveling System",
-			"description": "Arthur has a leveling system that will give you XP and eventually level you up while you type messages. This is $levels for this server and can be toggled by a server manager with `$prefix\u200bleveling`.",
+			"description": "Arthur has a leveling system that will give you XP and eventually level you up while you type messages. This is $levels for this server and can be toggled by a server manager with `$prefix@@levels`.",
 			"enabled": "enabled",
 			"disabled": "disabled",
 			"current_settings": "Current Settings",
@@ -495,8 +495,8 @@
 				"Seriously, you don't like me that much? Wow. Alright. I see how it is. Why don't you just kick me then, if that's how it's going to be?",
 				"lol. no."
 			],
-			"already_blacklisted": "This person is already blacklisted.\nGo ahead and run `unblacklist $id` if you don't want them blacklisted anymore. Thanks.",
-			"blacklisted": "**$tag** has been blacklisted from usage of Arthur in this server. Riperoni in pepperoni.\nShould you want to unblacklist them, run `unblacklist $id`.\nHave a good day. :thumbsup:"
+			"already_blacklisted": "This person is already blacklisted.\nGo ahead and run `@@unblacklist $id` if you don't want them blacklisted anymore. Thanks.",
+			"blacklisted": "**$tag** has been blacklisted from usage of Arthur in this server. Riperoni in pepperoni.\nShould you want to unblacklist them, run `@@unblacklist $id`.\nHave a good day. :thumbsup:"
 		},
 		"guildlanguage": {
 			"meta": {
@@ -504,13 +504,12 @@
 				"aliases": [ "serverlanguage", "serverlocale", "serverlang", "guildlang", "guildlocale" ],
 				"name": "Server Language",
 				"description": "Set the language of Arthur for your server. User settings overwrite.",
-				"usage": "[locale or \"list\"]",
-				"help": "Set the language of Arthur for your server. User settings will overwrite if present. To get a list of languages, type `languages`. If a language is incomplete, it will use text from English for missing translations. To help translate Arthur, ask Gymnophoria in the support server (available in the info or help commands).\nRequires admin or manage server permissions to run."
+				"usage": "[locale]",
+				"help": "Set the language of Arthur for your server. User settings will overwrite if present. To get a list of languages, use the `@@languages` command. If a language is incomplete, it will use text from English for missing translations. To help translate Arthur, ask Gymnophoria in the support server (available in the info or help commands)."
 
 			},
 			"current_language": "This server's language is $locale",
-			"list": "Currently supported locales:\n$locales\nIf you'd like to help translate arthur, contact Gymnophoria in the support server.",
-			"invalid_locale": "Invalid locale string. Must be one of $locales. case-SENSITIVE.",
+			"invalid_locale": "Invalid locale string. Must be one of $locales. case-SENSITIVE. For a list of all languages, use the `@@languages` command.",
 			"locale_set": "Server locale set."
 		},
 		"prefix": {
@@ -555,9 +554,10 @@
 				"aliases": [ "locale", "lang" ],
 				"name": "Language",
 				"description": "Change the language of Arthur for yourself. Overrides server language.",
-				"usage": "[locale, \"list\", or \"none\"]",
-				"help": "Changes the language of Arthur for yourself. Will override server language. `languages` will provide a list of languages. An incomplete language will use English where there is no translation. To help translate, join the support server and ask about translating."
+				"usage": "[locale or \"@@commands.language.none\"]",
+				"help": "Changes the language of Arthur for yourself. Will override server language. The `@@languages` command will provide a list of languages. An incomplete language will use English where there is no translation. To help translate, join the support server and ask about translating."
 			},
+			"none": "none",
 			"current": "Your language is currently $locale",
 			"removed": "Locale removed. Defaulting to server locale if set, or English.",
 			"locale_set": "Locale set."
@@ -572,7 +572,7 @@
 			},
 			"percent_complete": "$percent% complete.",
 			"languages": "Languages",
-			"description": "Languages that have not been fully translated will use English where translations are missing. To help translate, join the support server. For more info about a language, use the `langinfo` command."
+			"description": "Languages that have not been fully translated will use English where translations are missing. To help translate, join the support server. For more info about a language, use the `@@langinfo` command."
 		},
 		"langinfo": {
 			"meta": {
@@ -581,10 +581,10 @@
 				"usage": "<language code or name>",
 				"name": "Language Info",
 				"description": "Get detailed information about a language.",
-				"help": "Get detailed information about a language that Arthur has. Use a locale code (e.g. `en-US`). Get a list of all languages, with less detail, with the `languages` command."
+				"help": "Get detailed information about a language that Arthur has. Use a locale code (e.g. `en-US`). Get a list of all languages, with less detail, with the `@@languages` command."
 			},
-			"no_language_specified": "I can't really get information about a specific language if you don't provide me with said specific language. You can get a list of the available languages with the `languages` command. Cheers.",
-			"locale_not_found": "I couldn't find the locale you specified. Make sure you're using the language code (e.g. `en-US`), not the full language name. For a list of languages, use the `languages` command.",
+			"no_language_specified": "I can't really get information about a specific language if you don't provide me with said specific language. You can get a list of the available languages with the `@@languages` command. Cheers.",
+			"locale_not_found": "I couldn't find the locale you specified. Make sure you're using the language code (e.g. `en-US`), not the full language name. For a list of languages, use the `@@languages` command.",
 			"description": "**Author(s)**: $authors\n**Complete**: $percent%\n**Language code**: `$code`"
 		},
 		"mp3": {
@@ -686,7 +686,7 @@
 			"negative_page": "Negative pages don't exist, okay? Think of a book. Does said book have a page -3? I didn't think so.",
 			"nonexistent_page": "'That page doesn't exist yet. Go like a ton of songs, make that page, I believe in you!",
 			"liked_songs": "$name$s Liked Songs",
-			"footer": "Page $page of $maxPage | Play a liked song with play liked <number>"
+			"footer": "Page $page of $maxPage | Play a liked song with @@play @@commands.likedlb.liked <number>"
 		},
 		"likedlb": {
 			"meta": {
@@ -703,7 +703,7 @@
 			"likes": "likes",
 			"liked": "liked",
 			"top_liked_songs": "Top Liked Songs",
-			"footer": "Page $page of $maxPage | Play a top song with play top <number>"
+			"footer": "Page $page of $maxPage | Play a top song with @@play @@struct.music.top <number>"
 		},
 		"loop": {
 			"meta": {
@@ -746,7 +746,7 @@
 			},
 			"enabled": "enabled",
 			"disabled": "disabled",
-			"message": "Now playing notifications have been $status. To disable them, run this command again."
+			"message": "Now playing notifications have been $status."
 		},
 		"pause": {
 			"meta": {
@@ -756,7 +756,7 @@
 				"help": "Pause the current song. Requires \"DJ\" or \"Music\" role (or Mod+)"
 			},
 			"no_music_playing": "There is no music playing.",
-			"already_paused": "The music is already paused. Use `resume` to resume playback.",
+			"already_paused": "The music is already paused. Use `@@resume` to resume playback.",
 			"paused": "Music paused."
 		},
 		"play": {
@@ -789,7 +789,7 @@
 				"usage": "<page>",
 				"help": "View the current queue. View a different page if there are more than 10 songs."
 			},
-			"no_music_queued": "There is no music queued. Add some with the `play` command.",
+			"no_music_queued": "There is no music queued. Add some with the `@@play` command.",
 			"only_multiple_pages": "There are only $pages pages in the queue.",
 			"only_one_page": "There is only one page in the queue.",
 			"footer": "Page $page of $maxPage | 1 Song Total | Requested by $name",
@@ -808,7 +808,7 @@
 			"no_args": "Y'all need to specify which song to remove (gimme a number thanks).",
 			"not_a_number": "Hey.. that's not a number.. (or you chose zero. my point still stands.)",
 			"negative_number": "there is no negative queue tho <:crazyeyes:359106555314044939>",
-			"current_song": "hey, use `skip`, don't remove the current song, that breaks things..",
+			"current_song": "hey, use `@@skip`, don't remove the current song, that breaks things..",
 			"does_not_exist_yet": "C'mon, there aren't that many songs in the queue.. yet.",
 			"success": "Success! Song #$num has been removed from the queue.\n*someone might have wanted to hear that song, #Blame$name*"
 		},
@@ -821,7 +821,7 @@
 				"help": "Resume the current song. Requires \"DJ\" or \"Music\" role (or Mod+)"
 			},
 			"nothing_playing": "There is no music playing. How would I resume playback of nothing? :thinking:",
-			"already_playing": "Music is already playing. Use `pause` to pause playback.",
+			"already_playing": "Music is already playing. Use `@@pause` to pause playback.",
 			"resumed": "Music resumed."
 		},
 		"shuffle": {
@@ -831,7 +831,7 @@
 				"description": "Shuffle the current music queue",
 				"help": "Shuffle the current music queue - cannot be undone."
 			},
-			"no_queue": "You want to shuffle the queue, but there is no queue! Queue some music with the `play` command.",
+			"no_queue": "You want to shuffle the queue, but there is no queue! Queue some music with the `@@play` command.",
 			"too_small": "There's no point in shuffling a one or two song queue - it won't change the order at all. lul.",
 			"shuffled": "Music queue shuffled."
 		},
@@ -850,7 +850,7 @@
 			"force_command_flag": "-f",
 			"vote_skip_removed": "$user, Vote to skip removed.",
 			"vote_skip_registered": "$user, Vote registered. $votes more vote(s) until the song is skipped. ($part/$whole)$forceMessage",
-			"force_message": "*To force skip, add `-f` on the end of the command*"
+			"force_message": "*To force skip, add `@@commands.skip.force_command_flag` on the end of the command*"
 		},
 		"stop": {
 			"meta": {
@@ -903,10 +903,10 @@
 				"support_server": "Support Server",
 				"tos": "TOS",
 				"description": "Made by Gymnophoria#8146\nWhen using commands, <> indicates a required argument and [] indicates an optional requirement. (Do not actually type these symbols.)",
-				"footer": "Type $prefix\u200bhelp <command> for a detailed description of the command"
+				"footer": "Type $prefix@@help <command> for a detailed description of the command"
 			},
 			"check_dms": "Check your DM's :mailbox_with_mail:",
-			"send_failed": "Message send failed. If you'd like to see the help in this channel, type `$prefix\u200bhelp -chat`.",
+			"send_failed": "Message send failed. If you'd like to see the help in this channel, type `$prefix@@help @@commands.help.chat_flag`.",
 			"invalid_command": "I do not have a(n) `$command` command.",
 			"small_embed": {
 				"usage": "**Usage**:",
@@ -931,8 +931,8 @@
 				"i18n": "Internationalization"
 			},
 			"sound_effects": {
-				"description": "Alias for `play file $name`",
-				"help": "Alias for `play file $name`. Plays the $name sound effect."
+				"description": "Alias for `@@play @@struct.music.file $name`",
+				"help": "Alias for `@@play @@struct.music.file $name`. Plays the $name sound effect."
 			}
 		},
 		"info": {
@@ -943,7 +943,7 @@
 				],
 				"name": "Info",
 				"description": "View information about Arthur.",
-				"help": "It's really just info about the bot."
+				"help": "View information about Arthur."
 			},
 			"title": "Arthur - Yet another Discord bot",
 			"description": "Just a bot with tons of.. average features.",
@@ -1067,7 +1067,7 @@
 			"no_file_specified": "Hey man, you have to tell me what file to play.. The current options are: $files",
 			"separator": ",",
 			"invalid_file": "That file uh.. doesn't exist. Feel free to suggest to add it. What you *can* play are as follows: $files",
-			"invalid_url": "Please provide a valid URL.",
+			"invalid_url": "Please provide a valid URL (that links to a valid file type).",
 			"no_results": [
 				"The song you searched for could not be found.. rip",
 				"No results found. Silly goose.",
