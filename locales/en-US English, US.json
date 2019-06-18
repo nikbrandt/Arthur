@@ -167,8 +167,8 @@
 				"aliases": [ "sp", "straw" ],
 				"name": "Strawpoll",
 				"description": "Create a strawpoll.",
-				"usage": "<\"title\"> <option one|option two|etc..> [--adv or --advanced]",
-				"help": "Create a strawpoll on strawpoll.me.\nUsing the --adv flag allows configuration of advanced options:\nmultiple votes (default false)\nduplication checking (default IP checking\ncaptcha (default false)"
+				"usage": "<\"title\"> <option one|option two|etc..> [--@@commands.strawpoll.advanced_abbreviation or --@@commands.strawpoll.advanced]",
+				"help": "Create a strawpoll on strawpoll.me.\nUsing the --@@commands.strawpoll.advanced_abbreviation flag allows configuration of advanced options:\nmultiple votes (default false)\nduplication checking (default IP checking)\ncaptcha (default false)"
 			},
 			"default_footer": "Command will be canceled in 15 seconds. Type \"cancel\" to cancel now. Attempt 1 of 5.",
 			"multiple_votes": "Multiple votes",
@@ -509,7 +509,7 @@
 
 			},
 			"current_language": "This server's language is $locale",
-			"invalid_locale": "Invalid locale string. Must be one of $locales. case-SENSITIVE. For a list of all languages, use the `@@languages` command.",
+			"invalid_locale": "Invalid locale string. Must be one of $locales. For a list of all languages, use the `@@languages` command.",
 			"locale_set": "Server locale set."
 		},
 		"prefix": {

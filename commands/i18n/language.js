@@ -4,10 +4,17 @@ exports.run = async (message, args) => {
 		return message.channel.send(message.__('current', { locale }));
 	}
 
-	if (args[0] === message.__('none')) {
+	if (args[0].toLowerCase() === message.__('none')) {
 		await i18n.removeUserLocale(message.author.id);
 		return message.channel.send(message.__('removed'));
 	}
+
+	let indexOfDash = args[0].indexOf('-');
+
+	if (indexOfDash > 0) args[0] = args[0].substring(0, indexOfDash).toLowerCase() + args[0].substring(indexOfDash).toUpperCase();
+	else args[0] = args[0].toLowerCase();
+
+	args[0] = args[0].trim();
 	
 	let locales = i18n.getLocales();
 	
