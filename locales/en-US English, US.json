@@ -682,9 +682,21 @@
 				"You're gonna need to like some songs if ya want me to display some liked songs.",
 				"You uh.. You haven't liked a song yet.."
 			],
-			"invalid_page": "Eyy that's not a page number, I'd love it if you'd supply me with a *real* page number, thanks.",
-			"negative_page": "Negative pages don't exist, okay? Think of a book. Does said book have a page -3? I didn't think so.",
-			"nonexistent_page": "'That page doesn't exist yet. Go like a ton of songs, make that page, I believe in you!",
+			"invalid_page": [
+				"Eyy that's not a page number, I'd love it if you'd supply me with a *real* page number, thanks.",
+				"That's, uh, not a page number. Give me a real one, perhaps?",
+				"You'll need to supply me with a valid page number before I'll supply you with a valid page."
+			],
+			"negative_page": [
+				"Negative pages don't exist, okay? Think of a book. Does said book have a page -3? I didn't think so.",
+				"We're still living in three dimensions, as far as I know. I can't generate negative pages."
+			],
+			"nonexistent_page": [
+				"That page doesn't exist yet. Go like a ton of songs, make that page, I believe in you!",
+				"You have supplied me with a page that doesn't exist, unfortunately. Perhaps give me one that does? Thanks.",
+				"That page, well, it doesn't exist, as sad as that is. Would you be willing to supply me with one that does? Thanks.",
+				"The page number you've supplied leads to no page at all. However, if you're dedicated enough, that page could exist one day."
+			],
 			"liked_songs": "$name$s Liked Songs",
 			"footer": "Page $page of $maxPage | Play a liked song with @@play @@commands.likedlb.liked <number>"
 		},
@@ -729,7 +741,12 @@
 			},
 			"notify": "notify",
 			"notify_abbreviation": "n",
-			"nothing_playing": "Now playing: The sound of silence",
+			"nothing_playing": [
+				"Now playing: The sound of silence",
+				"There's nothing playing. Nothing at all. Okay?",
+				"Now playing: The voices in your head.",
+				"Nothing is playing. Go play something. I believe in you."
+			],
 			"by": "By",
 			"of": "of",
 			"footer": "Requested by $tag"
@@ -769,10 +786,15 @@
 			},
 			"error_getting_info": "I'm havin' trouble gettin' info for that video - `$err`\nreport this to my support server if you want it fixed. Or don't. I'm not the boss of you.",
 			"not_in_channel": [
-				"Hey man, I can't just play music through your speakers magically. Could you like.. connect to a voice channel?"
+				"Hey man, I can't just play music through your speakers magically. Could you like.. connect to a voice channel?",
+				"You'll have to connect to a voice channel before I can play music, my dude.",
+				"Play music where? Likely in a voice channel, right? Right. Now connect to one, so I can play you some music.",
+				"You're not connected to a voice channel, so how do I know which voice channel to connect to?"
 			],
 			"no_song_specified": [
-				"What? Do you want me to just play some random song? You seriously think I'd do that? No. Choose your song."
+				"What? Do you want me to just play some random song? You seriously think I'd do that? No. Choose your song.",
+				"Play... what? Choose a song, I believe in you. The internet is a vast and wild place.",
+				"Throughout this crazy thing we call the \"Internet\" there are many, many songs. Now choose one to play, please."
 			],
 			"cant_join_channel": "I can't join the channel you're in. Rude. I wanted to join you, and play you some tunes. The channel I wanted to join wasn't joinable. Do you see this conflict of interests?",
 			"could_not_connect": "Could not connect to voice channel - `$err`\nTry again, if you will. Or go complain in the support server.",
@@ -1096,8 +1118,18 @@
 			"command_disabled": "This command is currently disabled. Join the support server for more information.",
 			"bot_missing_perms": "I lack the permissions(s) needed to run this command: $perms",
 			"user_missing_perms_emoji": ":missingpermissions:407054344874229760",
-			"user_cooldown": "Woah there, you're being waaay too spicy for me. Could you just chill? Wait another $time second(s), would ya?",
-			"guild_cooldown": "Dude, this guild is just being way too spicy. Some people need to seriously chill.. Wait another $time second(s), will ya?"
+			"user_cooldown": [
+				"Woah there, you're being waaay too spicy for me. Could you just chill? Wait another $time second(s), would ya?",
+				"That's a little too fast for me. Could you perhaps wait another $time second(s), and try again?",
+				"Chillax, bro. Try again in $time second(s).",
+				"That's enough. Too fast. C'mon. Slow down. Wait $time second(s), okay? Shouldn't be too hard."
+			],
+			"guild_cooldown": [
+				"Dude, this server is just being way too spicy. Some people need to seriously chill.. Wait another $time second(s), will ya?",
+				"Tell your fellow server people (or possibly yourself) to slow down, okay? Another $time second(s) before you can use this command, alright?",
+				"It'll be another $time second(s) before this server can use this command again, sorry.",
+				"Y'all are too fast. Try again in $time second(s), thanks."
+			]
 		},
 		"askQuestion": {
 			"command_canceled": "Command canceled",
