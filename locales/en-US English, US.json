@@ -1108,6 +1108,12 @@
 		},
 		"i18n": {
 			"response_not_found": "Response not found. This will be fixed ASAP, try again later. String name, for reference: `$string`."
+		},
+		"soundcloud": {
+			"invalid_url": "Invalid URL.",
+			"sound_nonexistant": "Sound does not exist.",
+			"invalid_type": "URL is not a sound file, rather a $type.",
+			"no_search_results": "I couldn't find any songs by that name."
 		}
 	},
 	"time": {
