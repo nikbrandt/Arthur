@@ -96,7 +96,7 @@ exports.run = async (message, args, suffix, client, perms, prefix) => {
 				},
 				{
 					name: message.__('small_embed.advanced'),
-					value: `${command.config.cooldown ? '**' + Math.round(command.config.cooldown / 1000) + i18n.get('time.abbreviations.seconds', message) + '** ' + message.__('small_embed.cooldown') + '\n' : ''}${command.config.guildCooldown ? '**' + Math.round(command.config.guildCooldown / 1000) + i18n.get('time.abbreviations.seconds', message) + '** ' + message.__('small_embed.server_cooldown') + '\n' : ''}${permLevel.numMapping[command.config.permLevel]}\n${command.config.perms ? message.__('small_embed.requires_bot_perms') + command.config.perms.join(', ').toLowerCase() + '\n' : ''}${command.config.userPerms ? message.__('small_embed.requires_member_perms') + command.config.userPerms.join(', ').toLowerCase() : ''}`,
+					value: `${command.config.cooldown ? '**' + Math.round(command.config.cooldown / 1000) + i18n.get('time.abbreviations.seconds', message) + '** ' + message.__('small_embed.cooldown') + '\n' : ''}${command.config.guildCooldown ? '**' + Math.round(command.config.guildCooldown / 1000) + i18n.get('time.abbreviations.seconds', message) + '** ' + message.__('small_embed.server_cooldown') + '\n' : ''}${permLevel.numMapping[command.config.permLevel]}\n${command.config.perms ? message.__('small_embed.requires_bot_perms') + i18n.getPermsString(command.config.perms, message) + '\n' : ''}${command.config.userPerms ? message.__('small_embed.requires_member_perms') + i18n.getPermsString(command.config.userPerms, message) : ''}`,
 					inline: true
 				}
 			],

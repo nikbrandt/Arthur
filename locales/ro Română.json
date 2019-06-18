@@ -9,5 +9,14 @@
 			"nl": "Roemeens, Roemenië",
 			"ro": "Română"
 		}
+	},
+	"permissions": {
+		"MANAGE_SERVER": "Gestionează server-ul",
+		"ADMINISTRATOR": "Administrator",
+		"EMBED_LINKS": "Încorporează link-uri",
+		"ATTACH_FILES": "Atașează fișiere",
+		"ADD_REACTIONS": "Adaugă reacții",
+		"SPEAK": "Vorbește",
+		"CONNECT": "Conectează-te"
 	}
 }

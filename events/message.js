@@ -152,7 +152,7 @@ module.exports = async (client, message) => {
 		cmdFile.config.perms.forEach(p => {
 			if (!botPerms || !botPerms.has(p)) {
 				go = false;
-				missingPerms.push(p.toLowerCase())
+				missingPerms.push(p)
 			}
 		});
 	}
@@ -163,7 +163,7 @@ module.exports = async (client, message) => {
 		})
 	}
 
-	if (!go) return message.channel.send(i18n.get('struct.message.bot_missing_perms', message, { perms: missingPerms.join(', ') }));
+	if (!go) return message.channel.send(i18n.get('struct.message.bot_missing_perms', message, { perms: i18n.getPermsString(missingPerms, message) }));
 	if (!userGo) return message.react(i18n.get('struct.message.user_missing_perms_emoji', message)).catch(() => {});
 
 	if (cmdFile.config.cooldown && cooldownObj[message.author.id] && cooldownObj[message.author.id][cmdFile] && Date.now() - cooldownObj[message.author.id][cmdFile] < cmdFile.config.cooldown) return message.channel.send(i18n.get('struct.message.user_cooldown', message, { time: Math.ceil((cooldownObj[message.author.id][cmdFile] + cmdFile.config.cooldown - Date.now()) / 1000) }));

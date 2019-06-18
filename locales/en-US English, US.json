@@ -960,7 +960,7 @@
 				"description": "Invite Arthur to your server.",
 				"help": "Get an invite link for Arthur."
 			},
-			"description": "Arthur can be invited with [this link]($invite). You need to have Manage Server or Admin permission to add the bot to a server."
+			"description": "Arthur can be invited with [this link]($invite). You need to have @@permissions.MANAGE_SERVER or @@permissions.ADMINISTRATOR permission to add the bot to a server."
 		},
 	  	"dice": {
 			"meta": {
@@ -1134,5 +1134,14 @@
 	},
 	"parsing": {
 		"invalid_number": "That's not a valid number."
+	},
+	"permissions": {
+		"MANAGE_SERVER": "Manage server",
+		"ADMINISTRATOR": "Administrator",
+		"EMBED_LINKS": "Embed links",
+		"ATTACH_FILES": "Attach files",
+		"ADD_REACTIONS": "Add reactions",
+		"SPEAK": "Speak",
+		"CONNECT": "Connect"
 	}
 }

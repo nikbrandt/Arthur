@@ -315,6 +315,18 @@ class i18n {
 		
 		return meta;
 	}
+	
+	// Convert a permissions array to a nicer looking permissions string in the local language
+	// e.g. [ 'MANAGE_SERVER', 'EMBED_LINKS' ] => 'Manage Server, Embed Links'
+	getPermsString(permsArray, resolvable) {
+		let localeCode = this.getLocaleCode(resolvable);
+		
+		permsArray.forEach((perm, i) => {
+			permsArray[i] = this.getString(`permissions.${perm}`, localeCode);
+		});
+		
+		return permsArray.join(', ');
+	}
 }
 
 module.exports = i18n;

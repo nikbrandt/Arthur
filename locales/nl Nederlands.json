@@ -536,5 +536,14 @@
 	},
 	"parsing": {
 		"invalid_number": "Dat is geen geldig paginnummer."
+	},
+	"permissions": {
+		"MANAGE_SERVER": "Server beheren",
+		"ADMINISTRATOR": "Beheerder",
+		"EMBED_LINKS": "Ingesloten links",
+		"ATTACH_FILES": "Bestanden bijvoegen",
+		"ADD_REACTIONS": "Ledereen noemen",
+		"SPEAK": "Spreken",
+		"CONNECT": "Verbinden"
 	}
 }
