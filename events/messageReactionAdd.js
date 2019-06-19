@@ -1,4 +1,4 @@
-const { emojis } = require('../commands/misc/poll');
+const { emojis } = require('../commands/fun/poll');
 
 module.exports = (client, reaction, user) => {
 	if (!reaction) return;

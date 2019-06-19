@@ -4,6 +4,9 @@ const moment = require('moment');
 exports.run = async (message, args, asdf, client) => {
 	const invite = await client.generateInvite(client.config.info.invitePerms);
 
+	let locale = i18n.getLocaleCode(message);
+	if (locale === 'en-US') locale = 'en';
+
 	message.channel.send({embed: {
 		author: {
 			name: message.__('title'),
@@ -24,7 +27,7 @@ exports.run = async (message, args, asdf, client) => {
 			},
 			{
 				name: message.__('info'),
-				value: message.__('info_value', { nodeVersion: process.version, discordVersion: Discord.version, uptime: moment.duration(process.uptime() * 1000).humanize() })
+				value: message.__('info_value', { nodeVersion: process.version, discordVersion: Discord.version, uptime: moment.duration(process.uptime() * 1000).locale(locale).humanize() })
 			}
 		]
 	}});
