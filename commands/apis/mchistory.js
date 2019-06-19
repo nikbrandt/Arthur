@@ -50,10 +50,13 @@ exports.run = async (message, args) => {
 	let index = json.length - (page * 10 - 10);
 	let reversed = rever.slice(page * 10 - 10, page * 10);
 
+	let locale = i18n.getLocaleCode(message);
+	if (locale === 'en-US') locale = 'en';
+
 	for (let object of reversed) {
-		if (index !== json.length && index !== 1) {
+		if (index !== json.length && index >= 1) {
 			nameArray.push(`${index}. ${object.name}  \u200b`);
-			dateArray.push(moment(object.changedToAt).utc().format(i18n.get('time.moment.precise', message)));
+			dateArray.push(moment(object.changedToAt).locale(locale).utc().format(i18n.get('time.moment.precise', message)));
 		}
 		index--;
 	}

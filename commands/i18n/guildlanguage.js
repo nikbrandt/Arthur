@@ -3,11 +3,16 @@ exports.run = async (message, args, suffix, client, permLevel) => {
 		let locale = await i18n.getGuildLocaleString(message.guild.id);
 		return message.channel.send(message.__('current_language', { locale }));
 	}
+
+	let indexOfDash = args[0].indexOf('-');
+
+	if (indexOfDash > 0) args[0] = args[0].substring(0, indexOfDash).toLowerCase() + args[0].substring(indexOfDash).toUpperCase();
+	else args[0] = args[0].toLowerCase();
+
+	args[0] = args[0].trim();
 	
 	let locales = i18n.getLocales();
-	let localeNames = i18n.getLocaleNames();
 	
-	if (args[0] === 'list') return message.channel.send(message.__('list', { locales: locales.map((locale, i) => `\`${locale}\` | ${localeNames[i]}`).join('\n') }));
 	if (!locales.includes(args[0])) return message.channel.send(message.__('invalid_locale', { locales: locales.map(locale => '`' + locale + '`').join(', ') }));
 	
 	await i18n.setGuildLocale(message.guild.id, args[0]);
@@ -17,5 +22,5 @@ exports.run = async (message, args, suffix, client, permLevel) => {
 exports.config = {
 	enabled: true,
 	permLevel: 2,
-	category: 'server_management'
+	category: 'i18n'
 };

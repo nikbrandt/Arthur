@@ -18,20 +18,20 @@ soundcloud.getInfo = getInfo;
 soundcloud.search = search;
 soundcloud.regex = soundcloudRegex;
 
-function getInfo (url) {
+function getInfo (url, localeResolvable) {
 	return new Promise((resolve, reject) => {
-		if (!soundcloudRegex.test(url)) return reject('Invalid URL');
+		if (!soundcloudRegex.test(url)) return reject(i18n.get('struct.soundcloud.invalid_url', localeResolvable));
 		request(`https://api.soundcloud.com/resolve.json?url=${encodeURIComponent(url)}&client_id=${clientID}`, (err, res, body) => {
 			if (err) return reject(err);
 
 			try {
 				body = JSON.parse(body);
 			} catch (e) {
-				return reject('Sound does not exist.');
+				return reject(i18n.get('struct.soundcloud.sound_nonexistant', localeResolvable));
 			}
 			
-			if (body.errors && body.errors[1].error_message.includes('404')) return reject('Sound does not exist.');
-			if (body.kind !== 'track') return reject('URL is not a sound file, rather a ' + body.kind + '.');
+			if (body.errors && body.errors[1].error_message.includes('404')) return reject(i18n.get('struct.soundcloud.sound_nonexistant', localeResolvable));
+			if (body.kind !== 'track') return reject(i18n.get('struct.soundcloud.invalid_type', localeResolvable, { type: body.kind }));
 
 			resolve(body);
 		});
@@ -41,9 +41,10 @@ function getInfo (url) {
 /**
  * Search for a song
  * @param term
+ * @param localeResolvable
  * @returns {Promise<object>}
  */
-function search (term) {
+function search (term, localeResolvable) {
 	return new Promise((resolve, reject) => {
 		request(`https://api.soundcloud.com/tracks?q=${encodeURIComponent(term)}&client_id=${clientID}`, (err, res, body) => {
 			if (err) return reject(err);
@@ -51,10 +52,10 @@ function search (term) {
 			try {
 				body = JSON.parse(body);
 			} catch (e) {
-				return reject('I could not find any songs by that name.');
+				return reject(i18n.get('struct.soundcloud.no_search_results', localeResolvable));
 			}
 			
-			if (body.length === 0) return reject('I could not find any songs by that name.');
+			if (body.length === 0) return reject(i18n.get('struct.soundcloud.no_search_results', localeResolvable));
 
 			resolve(body[1]);
 		});

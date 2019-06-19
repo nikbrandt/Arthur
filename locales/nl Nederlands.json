@@ -3,10 +3,12 @@
 		"authors": [
 			"Dutchy#6127"
 		],
-		"version": "v1.0",
-		"wip": true,
 		"flag": "nl",
-		"lang_en": "Dutch"
+		"translations": {
+			"en-US": "Dutch",
+			"nl": "Nederlands",
+			"ro": "Olandeză"
+		}
 	},
 	"commands": {
 		"8ball": {
@@ -534,5 +536,14 @@
 	},
 	"parsing": {
 		"invalid_number": "Dat is geen geldig paginnummer."
+	},
+	"permissions": {
+		"MANAGE_SERVER": "Server beheren",
+		"ADMINISTRATOR": "Beheerder",
+		"EMBED_LINKS": "Ingesloten links",
+		"ATTACH_FILES": "Bestanden bijvoegen",
+		"ADD_REACTIONS": "Ledereen noemen",
+		"SPEAK": "Spreken",
+		"CONNECT": "Verbinden"
 	}
 }

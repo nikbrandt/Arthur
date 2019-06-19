@@ -14,7 +14,7 @@ exports.run = (message, args, s, client, permLevel) => {
 		UserObject[message.author.id] = Date.now();
 		message.channel.send(message.__('stopwatch_started'));
 	} else {
-		message.channel.send(message.__('stopwatch_stopped', { time: secSpread(Math.ceil( (Date.now() - UserObject[message.author.id] ) / 1000), i18n.getLocale(message)) }));
+		message.channel.send(message.__('stopwatch_stopped', { time: secSpread(Math.ceil( (Date.now() - UserObject[message.author.id] ) / 1000), i18n.getLocaleCode(message)) }));
 		UserObject[message.author.id] = null;
 	}
 };

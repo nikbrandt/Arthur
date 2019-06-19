@@ -4,15 +4,20 @@ exports.run = async (message, args) => {
 		return message.channel.send(message.__('current', { locale }));
 	}
 
-	if (args[0] === 'none') {
+	if (args[0].toLowerCase() === message.__('none')) {
 		await i18n.removeUserLocale(message.author.id);
 		return message.channel.send(message.__('removed'));
 	}
+
+	let indexOfDash = args[0].indexOf('-');
+
+	if (indexOfDash > 0) args[0] = args[0].substring(0, indexOfDash).toLowerCase() + args[0].substring(indexOfDash).toUpperCase();
+	else args[0] = args[0].toLowerCase();
+
+	args[0] = args[0].trim();
 	
 	let locales = i18n.getLocales();
-	let localeNames = i18n.getLocaleNames();
 	
-	if (args[0] === 'list') return message.channel.send(i18n.get('commands.guildlanguage.list', message, { locales: locales.map((locale, i) => `\`${locale}\` | ${localeNames[i]}`).join('\n') }));
 	if (!locales.includes(args[0])) return message.channel.send(i18n.get('commands.guildlanguage.invalid_locale', message, { locales: locales.map(locale => '`' + locale + '`').join(', ') }));
 
 	await i18n.setUserLocale(message.author.id, args[0]);
@@ -22,5 +27,5 @@ exports.run = async (message, args) => {
 exports.config = {
 	enabled: true,
 	permLevel: 1,
-	category: 'other'
+	category: 'i18n'
 };

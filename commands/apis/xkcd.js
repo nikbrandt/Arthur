@@ -2,7 +2,10 @@ const request = require('request-promise');
 const moment = require('moment');
 
 function send (message, json) {
-	let timeString = moment(`${json.month}-${json.day}-${json.year}`, 'M-D-YYYY').format(i18n.get('time.moment.date_only_nice', message));
+	let locale = i18n.getLocaleCode(message);
+	if (locale === 'en-US') locale = 'en';
+
+	let timeString = moment(`${json.month}-${json.day}-${json.year}`, 'M-D-YYYY').locale(locale).format(i18n.get('time.moment.date_only_nice', message));
 
 	message.channel.send({embed: {
 		title: json.title,

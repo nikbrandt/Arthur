@@ -1,5 +1,5 @@
 const { statusUpdate } = require('../functions/eventLoader');
-const { watch } = require('../commands/misc/poll');
+const { watch } = require('../commands/fun/poll');
 const dbots = require('../functions/dbots');
 const sql = require('sqlite');
 const fs = require('fs');

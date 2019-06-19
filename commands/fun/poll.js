@@ -44,7 +44,7 @@ async function addReactions (message, number) {
 }
 
 function watch (message, options, endDate, client, embed) {
-	const locale = i18n.getLocale(message.guild);
+	const locale = i18n.getLocaleCode(message.guild);
 	
 	client.reactionCollectors.set(message.id, {
 		message: message,

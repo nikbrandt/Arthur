@@ -3,9 +3,20 @@
 		"authors": [
 		  "Tudor#3877"
 		],
-		"version": "v1.0",
-		"wip": true,
 		"flag": "ro",
-		"lang_en": "Romanian"
+		"translations": {
+			"en-US": "Romanian, Romania",
+			"nl": "Roemeens, Roemenië",
+			"ro": "Română"
+		}
+	},
+	"permissions": {
+		"MANAGE_SERVER": "Gestionează server-ul",
+		"ADMINISTRATOR": "Administrator",
+		"EMBED_LINKS": "Încorporează link-uri",
+		"ATTACH_FILES": "Atașează fișiere",
+		"ADD_REACTIONS": "Adaugă reacții",
+		"SPEAK": "Vorbește",
+		"CONNECT": "Conectează-te"
 	}
 }

@@ -18,7 +18,7 @@ exports.run = async (message, args, suffix, client) => {
 		}
 		
 		let rank = await XP.guildRank(message.member);
-		let list = await XP.guildLeaderboard(guildID, page, client, i18n.getLocale(message));
+		let list = await XP.guildLeaderboard(guildID, page, client, i18n.getLocaleCode(message));
 		if (!list) return message.channel.send(message.__('not_enough_people', { page }));
 		let guild = client.guilds.get(guildID);
 		
