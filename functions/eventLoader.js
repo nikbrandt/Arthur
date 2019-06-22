@@ -74,6 +74,8 @@ exports.load = client => {
 		const emojiKey = (data.emoji.id) ? `${data.emoji.name}:${data.emoji.id}` : data.emoji.name;
 		const reaction = message.reactions.get(emojiKey);
 
+		if (!reaction || !reaction.message) return;
+
 		client.emit(rawEvents[event.t], reaction, user);
 	});
 
