@@ -3,7 +3,7 @@
 		"authors": [
 		  "Gymnophoria#8146",
 		  "Technocoder#9418",
-		  "GlitchMasta",
+		  "GlitchMasta47",
 		  "JRoy"
 		],
 		"flag": "us",
@@ -439,7 +439,7 @@
 			"meta": {
 				"command": "xp",
 				"aliases": [
-					"rank"
+					"rank", "level"
 				],
 				"name": "XP",
 				"description": "Show your current XP and level",
@@ -911,7 +911,7 @@
 			"meta": {
 				"command": "help",
 				"aliases": [
-					"h", "halp", "commands"
+					"h", "halp", "commands", "helpme", "helpmeimlosingbraincells", "helpmeiamlosingbraincells"
 				],
 				"name": "Help",
 				"description": "View the help menu.",
