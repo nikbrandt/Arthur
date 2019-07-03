@@ -115,7 +115,7 @@ const Music = {
 			}
 			
 			if (music.queue[0].type === 1) { // youtube
-				const stream = await ytdlDiscord(music.queue[0].id, { quality: 'highestaudio' });
+				const stream = await ytdlDiscord(music.queue[0].id);
 				dispatcher = guild.voiceConnection.playOpusStream(stream, streamOptions);
 
 				dispatcher.once('end', reason => {
@@ -514,22 +514,9 @@ const Music = {
 
 		const collector = message.createReactionCollector(reactionFilter, { time: time ? time + 10000 : 600000 });
 
-		try {
-			await message.react('👍');
-			await message.react('⏩');
-			await message.react('⏹');
-			await message.react('🔁');
-			await message.react('🎶');
-		} catch (e) {
-			return;
-		}
-
 		collector.on('collect', async reaction => {
 			let user = reaction.users.filter(user => user.id !== client.user.id).first();
 			if (!user) return;
-
-			// .then(() => {console.log('removed reaction')}).catch(e => console.error);
-			// console.log(user);
 
 			let fakeMessage = message;
 			fakeMessage.author = user;
@@ -578,6 +565,14 @@ const Music = {
 				console.error('failed to remove reaction; \n' + err.stack);
 			})
 		});
+
+		try {
+			await message.react('👍');
+			await message.react('⏩');
+			await message.react('⏹');
+			await message.react('🔁');
+			await message.react('🎶');
+		} catch (e) {}
 	}
 };
 
