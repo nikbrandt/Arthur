@@ -27,9 +27,9 @@ exports.run = async (message, args, suffix, client, perms, prefix) => {
 			}
 			if (!meta) return;
 
-			if (args[0] === 'dev' && client.config.owners.includes(message.author.id) && com.config.category !== 'Developer') return;
-			else if (args[0] === 'eggs' && client.config.owners.includes(message.author.id) && com.config.category !== 'Eggs') return;
-			else if (com.config.category === 'Developer' || com.config.category === 'Eggs') return;
+			if (args[0] === 'dev' && client.config.owners.includes(message.author.id) && com.config.category !== 'developer') return;
+			else if (args[0] === 'eggs' && client.config.owners.includes(message.author.id) && com.config.category !== 'eggs') return;
+			else if (com.config.category === 'developer' || com.config.category === 'eggs') return;
 
 			if (!categories.hasOwnProperty(com.config.category)) categories[com.config.category] = [];
 			categories[com.config.category].push(`\u200b	${prefix}${meta.command} - ${meta.description}`);
