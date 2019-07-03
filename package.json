@@ -41,6 +41,7 @@
     "xml2json": "^0.11.2",
     "youtube-search": "^1.1.4",
     "ytdl-core": "^0.29.2",
+    "ytdl-core-discord": "^1.0.3",
     "zlib-sync": "^0.1.4"
   }
 }

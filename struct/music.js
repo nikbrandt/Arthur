@@ -4,8 +4,10 @@ const https = require('https');
 const sql = require('sqlite');
 const ytdl = require('ytdl-core');
 const request = require('request');
-const fileType = require('file-type')
+const fileType = require('file-type');
 const search = require('youtube-search');
+const ytdlDiscord = require('ytdl-core-discord');
+
 const soundcloud = require('./soundcloud');
 
 const YTRegex = /^(https?:\/\/)?(www\.|m\.|music\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/v\/|youtube\.com\/embed\/)([A-z0-9_-]{11})([&?].*)?$/;
@@ -95,7 +97,7 @@ const Music = {
 
 		guild.music = music;
 
-		setTimeout(() => {
+		setTimeout(async () => {
 			let dispatcher;
 
 			if (!guild.voiceConnection) {
@@ -113,8 +115,8 @@ const Music = {
 			}
 			
 			if (music.queue[0].type === 1) { // youtube
-				const stream = ytdl(music.queue[0].id, { quality: 'highestaudio' });
-				dispatcher = guild.voiceConnection.playStream(stream, streamOptions);
+				const stream = await ytdlDiscord(music.queue[0].id, { quality: 'highestaudio' });
+				dispatcher = guild.voiceConnection.playOpusStream(stream, streamOptions);
 
 				dispatcher.once('end', reason => {
 					console.log('Dispatcher ended youtube playback with reason:\t', reason);
