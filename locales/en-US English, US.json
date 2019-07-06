@@ -498,6 +498,17 @@
 			"already_blacklisted": "This person is already blacklisted.\nGo ahead and run `@@unblacklist $id` if you don't want them blacklisted anymore. Thanks.",
 			"blacklisted": "**$tag** has been blacklisted from usage of Arthur in this server. Riperoni in pepperoni.\nShould you want to unblacklist them, run `@@unblacklist $id`.\nHave a good day. :thumbsup:"
 		},
+		"levelmessages": {
+			"meta": {
+				"command": "levelmessages",
+				"aliases": [ "levelmessage", "levelingmessages", "levelingmessage", "lm", "levelupmessage", "levelupmessages" ],
+				"name": "Leveling Messages",
+				"description": "Toggle level up messages for your server.",
+				"help": "Toggle level up messages for your server. By default, level up messages are enabled. Without this command, people will only know of their level in the server using the `@@leaderboard` or `@@xp` commands."
+			},
+			"enabled": "Level up messages have been enabled for your server.",
+			"disabled": "Those pesky level up messages have been disabled for your server."
+		},
 		"guildlanguage": {
 			"meta": {
 				"command": "guildlanguage",
