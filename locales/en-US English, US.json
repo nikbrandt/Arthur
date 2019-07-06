@@ -674,7 +674,12 @@
 				"help": "Likes the currently playing song. View all your likes with the `likes` command."
 			},
 			"no_song_specified": "Alright so if there's no music playing *how am I gonna like the currently playing song*? Eh? You see how that doesn't work?",
-			"song_already_liked": "Mhm, you think I'm gonna let you like a song twice. No. I don't care how good it is, go get your ~~alt~~ friend to like it.",
+			"song_already_liked": [
+				"Mhm, you think I'm gonna let you like a song twice. No. I don't care how good it is, go get your ~~alt~~ friend to like it.",
+				"Bud, you've already liked this song. Ya can't like it twice.",
+				"You've already liked that song. Go away.",
+				"Must be a nifty song. Regardless of how nifty it is, you can't like it twice, sorry."
+			],
 			"song_liked": "Song Liked"
 		},
 		"liked": {
@@ -878,12 +883,17 @@
 				"description": "Skip the current song.",
 				"help": "Skip the current song. Requires \"@@struct.music.dj\" or \"@@struct.music.music\" role (or the below permisssions)"
 			},
-			"skipped": "Song skipped. #Blame$user",
+			"skipped": [
+				"Song skipped. #Blame$user",
+				"Song skipped. blame $user.",
+				"Song skipped. dammit, $user!",
+				"$user, you've skipped the song. Nice, I guess."
+			],
 			"no_music": "There's no music playing, so how exactly would I skip the current song? Are you insane?",
 			"force_command_flag": "-f",
 			"vote_skip_removed": "$user, Vote to skip removed.",
 			"vote_skip_registered": "$user, Vote registered. $votes more vote(s) until the song is skipped. ($part/$whole)$forceMessage",
-			"force_message": "*To force skip, add `@@commands.skip.force_command_flag` on the end of the command*"
+			"force_message": "*To force skip, add `@@commands.skip.force_command_flag` to the end of the command*"
 		},
 		"stop": {
 			"meta": {
@@ -896,7 +906,11 @@
 				"help": "Stop all currently playing music and leave the channel. Requires \"@@struct.music.dj\" or \"@@struct.music.music\" role (or the below permissions)"
 			},
 			"no_music": "I have successfully stopped the nonexistent music.. What were you trying to do?",
-			"stopped": "Music stopped. #Blame$user"
+			"stopped": [
+				"Music stopped. #Blame$user",
+				"Thanks to $user, music has stopped playback.",
+				"Music has been stopped. *thanks to $user, smh*"
+			]
 		},
 		"unlike": {
 			"meta": {
@@ -1118,8 +1132,7 @@
 			],
 			"song_too_short": [
 				"Your video isn't powerful enough! I need one longer than 5 seconds, thanks.",
-                		"That video is, hear me out, too short. Really. I'll need one longer than 5 seconds. Thanks.",
-				"The video you selected has small dick energy, give me one longer than 5 seconds."
+				"That video is, hear me out, too short. Really. I'll need one longer than 5 seconds. Thanks."
 			],
 			"livestream": "Trying to play a livestream, eh? Well, no, sorry.",
 			"file_footer": "Added by $tag. | Invalid URLs will be skipped."
