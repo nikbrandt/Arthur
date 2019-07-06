@@ -4,7 +4,7 @@ exports.run = async message => {
 	let row = await sql.get(`SELECT humongoji FROM guildOptions WHERE guildID = '${message.guild.id}'`);
 
 	if (!row) {
-		sql.run(`INSERT INTO guildOptions (guildID, levels) VALUES (?, ?)`, [message.guild.id, 'true']);
+		sql.run(`INSERT INTO guildOptions (guildID, humongoji) VALUES (?, ?)`, [message.guild.id, 'true']);
 		return message.channel.send(message.__('enabled'));
 	}
 
