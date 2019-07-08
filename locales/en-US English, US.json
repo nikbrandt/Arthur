@@ -1024,6 +1024,20 @@
 		  	"negative_number": "The number of sides provided is the same as the number of brain cells you possess.",
 			"success_roll": "I rolled a **$num**."  
 		},
+		"endpoll": {
+			"meta": {
+				"command": "endpoll",
+				"name": "End poll",
+				"description": "End a currently started poll early",
+				"usage": "<poll message ID>",
+				"help": "End a currently started poll early using the poll message ID.\nIf you want to start a poll, use the `@@poll` command.\nTo get the poll message ID, turn on developer mode in your discord settings (in the appearance pane), go to the message of the poll (the one Arthur sent with reactions), open the message settings (right click, the three dots, or a long tap depending on platform) and choose \"Copy ID.\" Use this ID in conjunction with this command to end a poll early."
+			},
+			"no_args": "You're gonna have to provide me with the message ID of the poll you'd like to send. Alright? Use `@@help @@endpoll` for details.",
+			"invalid_args": "Please provide a valid message ID. Use `@@help @@endpoll` for further details.",
+			"invalid_poll": "You provided an ID of a poll that no longer exists or never existed, unfortunately. Can't end it. Sorry.",
+			"wrong_guild": "You want to stop a poll in another server? Really? That's like *high* level mischief. N.. no, sorry.",
+			"finished": "You've successfully ended the poll early. Nice."
+		},
 		"hug": {
 			"meta": {
 				"command": "hug",

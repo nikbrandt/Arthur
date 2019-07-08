@@ -51,16 +51,23 @@ function watch (message, options, endDate, client, embed) {
 		number: options.length,
 		options: options,
 		embed: embed,
-		locale: locale
+		locale: locale,
+		finish: finishThisInstance
 	});
+	
+	function finishThisInstance() {
+		finish(message.id, client, locale);
+	}
 
 	setTimeout(() => {
-		finish(message.id, client, locale)
+		finishThisInstance();
 	}, endDate - Date.now());
 }
 
 function finish (messageID, client, locale) {
 	let obj = client.reactionCollectors.get(messageID);
+	if (!obj) return;
+	
 	let theseEmojis = emojis.slice(0, obj.options.length);
 	let emojiObject = {};
 	let { embed } = obj;
@@ -79,6 +86,7 @@ function finish (messageID, client, locale) {
 	obj.message.channel.send({ embed: obj.embed });
 	obj.message.delete().catch(() => {});
 	sql.run('DELETE FROM pollReactionCollectors WHERE messageID = ?', [obj.message.id]).catch(console.log);
+	client.reactionCollectors.delete(messageID);
 }
 
 function finishedEmojiDescription (emojiArray, emojiObject, options, total) {
