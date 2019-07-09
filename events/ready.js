@@ -50,9 +50,10 @@ function cleanProcesses(client) {
 			|| !connection.guild
 			|| !connection.guild.music
 			|| !connection.guild.music.queue
-		) connection.disconnect().catch(() => {
-			if (connection.channel) connection.channel.leave().catch(() => {});
-		});
+		) {
+			connection.disconnect();
+			connection.channel.leave();
+		}
 	});
 	
 	client.processing.forEach((item, i) => {
