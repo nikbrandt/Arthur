@@ -1,8 +1,10 @@
+const moment = require('moment');
+const sql = require('sqlite');
+const fs = require('fs');
+
 const { statusUpdate } = require('../functions/eventLoader');
 const { watch } = require('../commands/fun/poll');
 const dbots = require('../functions/dbots');
-const sql = require('sqlite');
-const fs = require('fs');
 
 function game (client) {
 	let games = [
@@ -41,12 +43,23 @@ function writeStats (client) {
 	fs.writeFileSync('../media/stats/weekly.json', JSON.stringify(client.weeklyStatsObject));
 }
 
-function purgeEmptyVoiceConnections (client) {
-	let connections = client.voiceConnections;
-	if (connections.size === 0) return;
-
-	connections.forEach(conn => {
-		if (!conn.channel.guild.music || !conn.channel.guild.music.queue) conn.disconnect();
+function cleanProcesses(client) {
+	client.voiceConnections.forEach(connection => {
+		if (!connection.channel
+			|| connection.channel.members.size < 2
+			|| !connection.guild
+			|| !connection.guild.music
+			|| !connection.guild.music.queue
+		) connection.disconnect().catch(() => {
+			if (connection.channel) connection.channel.leave().catch(() => {});
+		});
+	});
+	
+	client.processing.forEach((item, i) => {
+		if (typeof item !== 'string') return;
+		
+		let start = moment(item.split(' - ')[0], 'h:mm:ss A').valueOf();
+		if (Date.now() - start > 600000) client.processing.splice(i, 1); // 600000 ms = 10 minutes
 	});
 }
 
@@ -73,7 +86,7 @@ module.exports = client => {
 	}, 120000);
 
 	client.setInterval(() => {
-		purgeEmptyVoiceConnections(client);
+		cleanProcesses(client);
 	}, 600000);
 
 	if (!client.test) {
