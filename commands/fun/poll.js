@@ -139,6 +139,7 @@ exports.run = async (message, a, s, client) => {
 	let options;
 	let time;
 	let embedMessage;
+	let err;
 
 	try {
 		let titleObj = await askWithCondition(message.channel, titleEmbed, message.author.id, undefined, 1, undefined, titleCondition);
@@ -149,8 +150,10 @@ exports.run = async (message, a, s, client) => {
 		time = timeObj.response;
 		embedMessage = timeObj.message;
 	} catch (e) {
-		return e;
+		err = e;
 	}
+	
+	if (err) return;
 
 	options = options.split('|');
 	options.forEach((op, i) => {
