@@ -33,7 +33,7 @@ exports.run = (message) => {
 
 exports.config = {
 	enabled: true,
-	permLevel: 0,
+	permLevel: 1,
 	perms: [ 'EMBED_LINKS' ],
 	category: 'fun'
 };
