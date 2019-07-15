@@ -2,4 +2,3 @@ node_modules
 .idea
 .DS_Store
 commands/developer/test.js
-commands/eggs
