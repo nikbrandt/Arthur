@@ -164,10 +164,10 @@
 		"meme": {
 			"meta": {
 				"command": "meme",
-				"aliases": [ "meemee", "maymay" ],
+				"aliases": [ "meemee", "maymay", "meem" ],
 				"name": "Meme",
 				"description": "Get a random meme.",
-				"help": "Get a random picture from random subreddits."
+				"help": "Get a random picture from random meme subreddits."
 			},
 			"error": "There was an error connecting to Reddit. Join the support server if you need your memes ASAP."
 		},
