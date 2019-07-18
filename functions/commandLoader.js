@@ -3,8 +3,12 @@ const fs = require('fs');
 let count = 0;
 let i = -1;
 
-const loadCmd = (path, command, client) => {
-	let file = require(`${__dirname}/../commands/${path}`);
+const loadCmd = (path, command, client, reload) => {
+	let commandPath = `${__dirname}/../commands/${path}`;
+	
+	if (reload) delete require.cache[require.resolve(commandPath)];
+	let file = require(commandPath);
+	
 	client.commands.set(command.replace(/.js/g, ''), file);
 	count++;
 	i++;
@@ -44,7 +48,7 @@ const soundEffects = (client) => {
 
 exports.loadCmd = loadCmd;
 
-module.exports = client => {
+module.exports = (client, reload) => {
 	let start = Date.now();
 	process.stdout.write('Loading commands..');
 	count = 0;
@@ -57,7 +61,7 @@ module.exports = client => {
 				let dFiles = fs.readdirSync(`${__dirname}/../commands/${f}`).filter(fi => fs.statSync(`${__dirname}/../commands/${f}/${fi}`).isFile());
 				dFiles.forEach(dF => {
 					try {
-						loadCmd(`${f}/${dF}`, dF, client);
+						loadCmd(`${f}/${dF}`, dF, client, reload);
 					} catch (err) {
 						console.error(`Error loading ${f}/${dF}:\n${err.stack ? err.stack : err}`);
 					}

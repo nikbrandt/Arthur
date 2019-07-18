@@ -116,6 +116,12 @@ const Music = {
 			
 			if (music.queue[0].type === 1) { // youtube
 				const stream = await ytdlDiscord(music.queue[0].id);
+
+				if (!guild.voiceConnection) {
+					guild.music = {};
+					return;
+				}
+				
 				dispatcher = guild.voiceConnection.playOpusStream(stream, streamOptions);
 
 				dispatcher.once('end', reason => {
