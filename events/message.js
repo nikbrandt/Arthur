@@ -112,7 +112,7 @@ module.exports = async (client, message) => {
 			
 			if (botPerms.has('MANAGE_MESSAGES')) text = `Humongoji by \`${message.member.displayName}\``;
 			
-			message.channel.send(text, { files: [ message.guild.emojis.get(extractedEmojis[3]).url ] }).then(() => {
+			message.channel.send(text, { files: [ `https://cdn.discordapp.com/emojis/${extractedEmojis[3]}` ] }).then(() => {
 				if (!!text) message.delete().catch(() => {});
 			});
 		}
