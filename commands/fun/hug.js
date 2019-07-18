@@ -26,7 +26,7 @@ exports.run = async (message, args, suffix, client) => {
 	ctx.restore();
 	
 	ctx.translate(155, 15);
-	ctx.rotate(6 * Math.PI / 180);
+	ctx.rotate(-352 * Math.PI / 180);
 	ctx.drawImage(giverImage, 0, 0, 110, 110);
 
 	message.channel.send({ files: [{ attachment: canvas.toBuffer(), name: 'hug.png' }] });
