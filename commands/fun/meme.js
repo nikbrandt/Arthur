@@ -1,6 +1,6 @@
 const request = require('request');
 
-const MAX_AGE = 1000 * 60 * 60; // maximum subreddit cache age, in ms
+const MAX_AGE = 1000 * 60 * 15; // maximum subreddit cache age, in ms
 const subreddits = [ 'hmmm', 'dankmemes', 'memes', 'funny', 'deepfriedmemes', 'dadjokes', 'wholesomememes', 'meirl', 'me_irl', '2meirl4meirl' ];
 
 // two properties:
