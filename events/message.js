@@ -2,6 +2,7 @@ const config = require('../../media/config.json');
 const moment = require('moment');
 const XP = require('../struct/xp.js');
 const sql = require('sqlite');
+const https = require('https');
 
 const { errorLog } = require('../functions/eventLoader');
 let cooldownObj = {};
@@ -32,8 +33,10 @@ module.exports = async (client, message) => {
 		return i18n.get('commands.' + command + '.' + string, message, variables);
 	};
 	
-	if (client.test) prefix = config.testPrefix;
-	else if (message.guild) {
+	if (client.test) {
+		prefix = config.testPrefix;
+		humongoji = true;
+	} else if (message.guild) {
 		let row = await sql.get(`SELECT prefix, levels, levelMessage, humongoji FROM guildOptions WHERE guildID = '${message.guild.id}'`);
 		XP.addXP(message, row).catch(console.error);
 		if (row) {
@@ -112,9 +115,22 @@ module.exports = async (client, message) => {
 			
 			if (botPerms.has('MANAGE_MESSAGES')) text = `Humongoji by \`${message.member.displayName}\``;
 			
-			message.channel.send(text, { files: [ `https://cdn.discordapp.com/emojis/${extractedEmojis[3]}` ] }).then(() => {
-				if (!!text) message.delete().catch(() => {});
+			let options = {
+				method: 'HEAD',
+				host: 'cdn.discordapp.com',
+				port: 443,
+				path: `/emojis/${extractedEmojis[3]}`
+			};
+			
+			let req = https.request(options, res => {
+				let filetype = res.headers['content-type'].match(/image\/([a-z]+)/)[1];
+				
+				message.channel.send(text, { files: [ `https://cdn.discordapp.com/emojis/${extractedEmojis[3]}.${filetype}` ] }).then(() => {
+					if (!!text) message.delete().catch(() => {});
+				});
 			});
+			
+			req.end();
 		}
 		
 		let alexaStringLower = message.content.toLowerCase();
