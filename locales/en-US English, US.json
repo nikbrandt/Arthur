@@ -122,7 +122,7 @@
 				"aliases": [ "mcs", "server", "minecraftserver" ],
 				"name": "Minecraft Server",
 				"description": "Get information about a Minecraft server",
-				"usage": "<server IP>",
+				"usage": "<server IP>[:server port]",
 				"help": "Get information such as players and MOTD from a Minecraft server."
 			},
 			"failed": {
@@ -138,7 +138,7 @@
 			"processing": "Processing..",
 			"embed": {
 				"title": "$hostname is online.",
-				"footer": "Port $port | $ping Ping | Protocol $protocol",
+				"footer": "Port $port | Protocol $protocol",
 				"players": "Players",
 				"version": "Version"
 			}
