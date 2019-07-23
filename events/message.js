@@ -35,7 +35,7 @@ module.exports = async (client, message) => {
 	
 	if (client.test) {
 		prefix = config.testPrefix;
-		humongoji = true;
+		humongoji = false;
 	} else if (message.guild) {
 		let row = await sql.get(`SELECT prefix, levels, levelMessage, humongoji FROM guildOptions WHERE guildID = '${message.guild.id}'`);
 		XP.addXP(message, row).catch(console.error);

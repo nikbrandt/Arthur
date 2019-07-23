@@ -31,6 +31,7 @@
     "libsodium-wrappers": "^0.7.4",
     "moment": "^2.24.0",
     "ms": "^2.1.2",
+    "node-ipc": "^9.1.1",
     "node-opus": "^0.2.7",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",

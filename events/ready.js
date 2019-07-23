@@ -5,6 +5,7 @@ const fs = require('fs');
 const { statusUpdate } = require('../functions/eventLoader');
 const { watch } = require('../commands/fun/poll');
 const dbots = require('../functions/dbots');
+const ipc = require('../struct/ipc');
 
 function game (client) {
 	let games = [
@@ -69,6 +70,7 @@ module.exports = client => {
 	console.log(`\n${client.test ? 'Testbot' : 'Arthur'} has started! Currently in ${client.guilds.size} guilds, attempting to serve ${client.users.size} users. (${Date.now() - client.loadStart} ms)\n`);
 
 	if (!client.test) dbots.post(client);
+	/*if (!client.test)*/ ipc(client);
 
 	client.owner = client.users.get(client.config.owners[0]);
 	client.recentMessages = {};
