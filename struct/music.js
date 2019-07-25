@@ -6,7 +6,6 @@ const ytdl = require('ytdl-core');
 const request = require('request');
 const fileType = require('file-type');
 const search = require('youtube-search');
-const ytdlDiscord = require('ytdl-core-discord');
 
 const soundcloud = require('./soundcloud');
 
@@ -115,14 +114,14 @@ const Music = {
 			}
 			
 			if (music.queue[0].type === 1) { // youtube
-				const stream = await ytdlDiscord(music.queue[0].id);
+				const stream = ytdl(music.queue[0].id, { quality: 'highestaudio' });
 
 				if (!guild.voiceConnection) {
 					guild.music = {};
 					return;
 				}
 				
-				dispatcher = guild.voiceConnection.playOpusStream(stream, streamOptions);
+				dispatcher = guild.voiceConnection.playStream(stream, streamOptions);
 
 				dispatcher.once('end', reason => {
 					console.log('Dispatcher ended youtube playback with reason:\t', reason);

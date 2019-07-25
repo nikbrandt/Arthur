@@ -4,8 +4,8 @@ const sql = require('sqlite');
 const Queue = require('../../ipc/structures/Queue');
 
 ipc.config.id = 'bot';
-ipc.config.retry = 1500;
-//ipc.config.silent = true;
+ipc.config.retry = 5000;
+ipc.config.silent = true;
 
 let queue = new Queue();
 let ipcClient;
