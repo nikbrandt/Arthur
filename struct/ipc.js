@@ -25,6 +25,7 @@ let ipcObject = client => {
 			let output = undefined;
 			let error = undefined;
 			let time = undefined;
+			
 			switch (type) {
 				case 'guild': {
 					let guild = client.guilds.get(id);
@@ -50,6 +51,7 @@ let ipcObject = client => {
 						sql.all(`SELECT * FROM guildUserBlacklist WHERE guildID = '${id}'`)
 					]);
 
+					time = 60 * 10;
 					output = {
 						channels: guild.channels.map(deconstructChannel),
 						iconURL: guild.iconURL,
@@ -61,6 +63,7 @@ let ipcObject = client => {
 
 					break;
 				}
+				
 				case 'music': {
 					let guild = client.guilds.get('id');
 					
@@ -75,7 +78,8 @@ let ipcObject = client => {
 						error = 'Guild is not playing music';
 						break;
 					}
-					
+
+					time = -1;
 					output = {
 						playing: music.playing,
 						textChannel: deconstructChannel(music.textChannel),
@@ -91,10 +95,12 @@ let ipcObject = client => {
 
 					break;
 				}
+				
 				case 'stats': {
 					error = 'Stats should be sent through an interval and retrieved from the server cache.';
 					break;
 				}
+				
 				case 'locale': {
 					let locale = i18n.getLocale(id);
 					
@@ -103,11 +109,14 @@ let ipcObject = client => {
 						break;
 					}
 					
+					time = 60 * 10;
 					output = locale;
 					
 					break;
 				}
+				
 				case 'commands': {
+					time = 60 * 60 * 6;
 					output = client.commands.map((command, commandName) => {
 						let config = JSON.parse(JSON.stringify(command.config));
 						config.name = commandName;
@@ -117,6 +126,7 @@ let ipcObject = client => {
 					
 					break;
 				}
+				
 				case 'userInfo': {
 					let user = await client.fetchUser(id);
 					
@@ -137,18 +147,22 @@ let ipcObject = client => {
 
 					output = partialUser;
 					
+					time = 30;
 					break;
 				}
+				
 				case 'guildXP': {
 					if (!client.guilds.has(id)) {
 						error = 'Could not find guild with ID provided';
 						break;
 					}
-					
+
+					time = 15;					
 					output = await sql.all(`SELECT * FROM xp WHERE guildID = '${id}'`);
 
 					break;
 				}
+				
 				default: {
 					error = 'Unrecognized type.';
 					break;
