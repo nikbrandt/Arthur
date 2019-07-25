@@ -182,7 +182,7 @@ const Music = {
 					guild.client.errorLog("Error playing music", err.stack ? err.stack : err, err.code);
 				});
 			} else if (music.queue[0].type === 5) { // soundcloud
-				let id = Date.now() + guild.id;
+				let id = '' + Date.now() + guild.id;
 				let writeStream = soundcloud(music.queue[0].meta.id).pipe(fs.createWriteStream(`../media/temp/${id}.mp3`));
 
 				writeStream.on('finish', () => {
