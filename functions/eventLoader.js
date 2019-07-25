@@ -7,7 +7,7 @@ const fs = require('fs');
 let lastHeartbeat = Date.now();
 
 function statusUpdate (embed, restart, client) {
-	if (!client.test) statusWebhookClient.send({ embeds: [ embed ] }).then(() => {
+	if (!(process.argv[2] && process.argv[2] === 'test')) statusWebhookClient.send({ embeds: [ embed ] }).then(() => {
 		if (restart) setTimeout(() => {
 			if (Date.now() - lastHeartbeat > 45000 || (client && client.ws.lastHeartbeatAck === false)) process.exit(0);
 			else statusUpdate({
