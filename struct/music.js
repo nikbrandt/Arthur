@@ -81,7 +81,7 @@ const Music = {
 		if (!first) {
 			if (music.loop) {
 				let first = music.queue[0];
-				if (first.voteskips) first.voteskips = undefined;
+				if (first.voteSkips) first.voteSkips = undefined;
 				music.queue.push(first);
 			}
 

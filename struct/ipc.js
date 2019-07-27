@@ -1,14 +1,12 @@
 const ipc = require('node-ipc');
 const sql = require('sqlite');
 
-const Queue = require('../../ipc/structures/Queue');
-
 ipc.config.id = 'bot';
 ipc.config.retry = 5000;
 ipc.config.silent = true;
 
-let queue = new Queue();
 let ipcClient;
+let validOptions;
 
 let ipcObject = client => {
 	ipc.connectTo('ipcServer', () => {
@@ -48,7 +46,7 @@ let ipcObject = client => {
 					await sql.run('INSERT OR IGNORE INTO guildOptions (guildID) VALUES (?)', [id]);
 					let [options, userBlacklist] = await Promise.all([
 						sql.get(`SELECT * FROM guildOptions WHERE guildID = '${id}'`),
-						sql.all(`SELECT * FROM guildUserBlacklist WHERE guildID = '${id}'`)
+						sql.all(`SELECT userBlacklist FROM guildUserBlacklist WHERE guildID = '${id}'`)
 					]);
 
 					time = 60 * 10;
@@ -87,7 +85,11 @@ let ipcObject = client => {
 							let { type, id, meta, person } = obj;
 							
 							return {
-								type, id, meta,
+								type, id,
+								meta: {
+									title: meta.title,
+									url: meta.url
+								},
 								person: deconstructUser(person)
 							}
 						})
@@ -127,7 +129,7 @@ let ipcObject = client => {
 					break;
 				}
 				
-				case 'userInfo': {
+				case 'user': {
 					let user = await client.fetchUser(id);
 					
 					if (!user) {
@@ -142,7 +144,7 @@ let ipcObject = client => {
 					]);
 					
 					let partialUser = deconstructUser(user);
-					if (options) partialUser.options = options;
+					partialUser.options = options;
 					if (xp) partialUser.xp = xp;
 
 					output = partialUser;
@@ -178,6 +180,148 @@ let ipcObject = client => {
 				time
 			})
 		});
+		
+		ipcClient.on('post', async data => {
+			let { request, type, action, id, params } = data;
+			let error;
+			
+			switch (type) {
+				case 'guild': {
+					if (!params) {
+						error = 'No params specified.';
+						break;
+					}
+					
+					let guild = client.guilds.get(id);
+					
+					if (!guild) {
+						error = 'Invalid guild ID.';
+						break;
+					}
+					
+					switch (action) {
+						case 'updateOptions': {
+							if (!validOptions) validOptions = (await sql.all('PRAGMA table_info(guildOptions)')).map(opt => opt.name);
+							let options = Object.keys(params);
+							let vals = Object.values(params);
+							
+							if (options.some(option => !validOptions.includes(option))) {
+								error = 'Invalid option supplied';
+								break;
+							}
+							
+							let questionArray = [];
+							let inputArray = [];
+							
+							options.forEach((option, i) => {
+								questionArray.push('? = ?');
+								inputArray.push(option, vals[i]);
+							});
+							
+							try {
+								await sql.run(`UPDATE guildOptions SET ${questionArray.join(', ')} WHERE guildID = ${id}`, inputArray);
+							} catch (e) {
+								console.error('Sqlite error while updating guildOptions in IPC module:\n', e);
+								error = 'Sqlite error.'
+							}
+							
+							break;
+						}
+						case 'blacklistUser': {
+							
+							
+							break;
+						}
+						case 'unblacklistUser': {
+							
+							
+							break;
+						}
+						default:
+							error = 'Invalid action.';
+							break;
+					}
+					
+					break;
+				}
+				case 'music': {
+					switch (action) {
+						case 'togglePausePlay': {
+							
+							
+							break;
+						}
+						case 'addToQueue': {
+							
+							
+							break;
+						}
+						case 'stop': {
+							
+							
+							break;
+						}
+						case 'skip': {
+							
+							
+							break;
+						}
+						case 'likeToggle': {
+							
+							
+							break;
+						}
+						case 'loop': {
+							
+							
+							break;
+						}
+						case 'remove': {
+							
+							
+							break;
+						}
+						case 'shuffle': {
+							
+							
+							break;
+						}
+						case 'move': {
+							
+							
+							break;
+						}
+						default:
+							error = 'Invalid action.';
+							break;
+					}
+					
+					break;
+				}
+				case 'user': {
+					switch (action) {
+						case 'updateOptions': {
+							
+							
+							break;
+						}
+						default:
+							error = 'Invalid action.';
+							break;
+					}
+					
+					break;
+				}
+				default:
+					error = 'Type provided does not have actions.';
+					break;
+			}
+			
+			let out = { request };
+			if (error) out.error = error;
+			
+			ipcClient.emit('postResponse', out);
+		});
 	});
 };
 
@@ -196,9 +340,9 @@ function deconstructChannel(channel) {
 }
 
 function deconstructUser(user) {
-	let { avatarURL, id, username, discriminator } = user;
+	let { displayAvatarURL, id, username, discriminator } = user;
 	
-	return { avatarURL, id, username, discriminator };
+	return { displayAvatarURL, id, username, discriminator };
 }
 
 module.exports = ipcObject;
