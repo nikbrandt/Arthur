@@ -144,7 +144,7 @@ class i18n {
 	
 	async setGuildLocale(id, locale) {
 		await sql.run(`INSERT OR IGNORE INTO guildOptions (guildID) VALUES ('${id}')`);
-		await sql.run(`UPDATE guildOptions SET locale = '${locale}' WHERE guildID = '${id}';`);
+		await sql.run(`UPDATE guildOptions SET locale = ? WHERE guildID = '${id}';`, [ locale ]);
 		this._guildLocaleCache.set(id, locale);
 	}
 	
@@ -155,7 +155,7 @@ class i18n {
 	
 	async setUserLocale(id, locale) {
 		await sql.run(`INSERT OR IGNORE INTO userOptions (userID) VALUES ('${id}')`);
-		await sql.run(`UPDATE userOptions SET locale = '${locale}' WHERE userID = '${id}'`);
+		await sql.run(`UPDATE userOptions SET locale = ? WHERE userID = '${id}'`, [ locale ]);
 		this._userLocaleCache.set(id, locale);
 	}
 	

@@ -13,7 +13,7 @@ exports.run = async (message, args, s, c, permLevel) => {
 
 		message.channel.send(message.__('updated', { prefix: args[0] }));
 		if (!row) sql.run(`INSERT INTO guildOptions (guildID, prefix) VALUES (?, ?)`, [message.guild.id, args[0]]);
-		else sql.run(`UPDATE guildOptions SET prefix = '${args[0]}' WHERE guildID = '${message.guild.id}'`);
+		else sql.run(`UPDATE guildOptions SET prefix = ? WHERE guildID = '${message.guild.id}'`, [ args[0] ]);
 	}
 };
 
