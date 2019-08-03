@@ -21,12 +21,14 @@ function secSpread(sec) {
 
 async function youtube(id, message, client) {
 	let info;
+	
 	try {
 		info = await ytdl.getInfo(id);
 	} catch (e) {
 		return message.edit(message.__('song_not_found')).catch(() => {});
 	}
-
+	
+	if (!info) return message.edit(message.__('song_not_found')).catch(() => {});
 
 	if (info.livestream) return message.edit(message.__('livestream')).catch(() => {});
 	if (info.length_seconds > 1200) return message.edit(message.__('too_long', { minutes: 20 })).catch(() => {});
@@ -37,7 +39,7 @@ async function youtube(id, message, client) {
 	let ytdlStream;
 
 	try {
-		ytdlStream = ytdl(id, { quality: 'highestaudio' });
+		ytdlStream = ytdl.downloadFromInfo(info, { quality: 'highestaudio' });
 	} catch (e) {
 		client.errorLog('Error retrieving ytdl stream in mp3', e.stack, e.code);
 		return message.edit(message.__('song_not_found')).catch(() => {});
