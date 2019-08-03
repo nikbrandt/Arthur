@@ -2,7 +2,6 @@ const request = require('request');
 const webshot = require('webshot');
 const { RichEmbed } = require('discord.js');
 const moment = require('moment');
-const fs = require('fs');
 
 const dataRegex = /^data:image\/([a-z]+);base64,/;
 const { errorLog } = require('../../functions/eventLoader');
@@ -86,10 +85,6 @@ exports.run = async (message, args, s, client) => {
 
 			message.channel.send({embed}).then(() => {
 				msg.delete().catch(() => {});
-				try {
-					client.processing.splice(index, 1);
-					fs.unlinkSync(fileLocation);
-				} catch (e) {}
 			});
 		})
 	});
