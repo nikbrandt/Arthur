@@ -393,6 +393,12 @@ const Music = {
 
 					let secObj = secSpread(info.length_seconds);
 					let secString = `${secObj.h ? `${secObj.h}${i18n.get('time.abbreviations.hours', message)} ` : ''}${secObj.m ? `${secObj.m}${i18n.get('time.abbreviations.minutes', message)} ` : ''}${secObj.s}${i18n.get('time.abbreviations.seconds', message)}`;
+					let thumbnail;
+					
+					try {
+						thumbnail = info.thumbnail_url || info.player_response.videoDetails.thumbnail.thumbnails[0].url
+					} catch (e) { }
+					
 					resolve({
 						meta: {
 							url: `https://youtu.be/${id}`,
@@ -407,7 +413,7 @@ const Music = {
 							color: 0xff0000,
 							description: `[${info.title}](https://youtu.be/${id})\n${i18n.get('commands.nowplaying.by', message)} [${info.author.name}](${info.author.channel_url})\n${message._('length')}: ${secString}`,
 							thumbnail: {
-								url: info.thumbnail_url
+								url: thumbnail
 							},
 							footer: {
 								text: i18n.get('commands.nowplaying.footer', message, { tag: message.author.tag })
