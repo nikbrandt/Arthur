@@ -48,10 +48,12 @@ function cleanProcesses(client) {
 	client.voiceConnections.forEach(connection => {
 		if (!connection.channel
 			|| connection.channel.members.size < 2
-			|| !connection.guild
-			|| !connection.guild.music
-			|| !connection.guild.music.queue
+			|| !connection.channel.guild
+			|| !connection.channel.guild.music
+			|| !connection.channel.guild.music.queue
 		) {
+			if (connection.channel.guild && connection.channel.guild.music) connection.channel.guild.music = {};
+			
 			connection.disconnect();
 			connection.channel.leave();
 		}
