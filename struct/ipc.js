@@ -99,7 +99,7 @@ let ipcObject = client => {
 				}
 				
 				case 'stats': {
-					error = 'Stats should be sent through an interval and retrieved from the server cache.';
+					error = 'Stats should be sent through an interval and retrieved from the server cache';
 					break;
 				}
 				
@@ -166,7 +166,7 @@ let ipcObject = client => {
 				}
 				
 				default: {
-					error = 'Unrecognized type.';
+					error = 'Unrecognized type';
 					break;
 				}
 			}
@@ -188,14 +188,13 @@ let ipcObject = client => {
 			switch (type) {
 				case 'guild': {
 					if (!params) {
-						error = 'No params specified.';
+						error = 'No params specified';
 						break;
 					}
 					
 					let guild = client.guilds.get(id);
-					
 					if (!guild) {
-						error = 'Invalid guild ID.';
+						error = 'Invalid guild ID';
 						break;
 					}
 					
@@ -222,32 +221,79 @@ let ipcObject = client => {
 								await sql.run(`UPDATE guildOptions SET ${questionArray.join(', ')} WHERE guildID = ${id}`, inputArray);
 							} catch (e) {
 								console.error('Sqlite error while updating guildOptions in IPC module:\n', e);
-								error = 'Sqlite error.'
+								error = 'Sqlite error'
 							}
 							
 							break;
 						}
 						case 'blacklistUser': {
+							let user = client.users.get(params.userID) || await client.fetchUser(params.userID);
+							if (!user) {
+								error = 'Invalid user ID';
+								break;
+							}
 							
+							let users = await sql.all(`SELECT userID FROM guildUserBlacklist WHERE guildID = '${id}'`);
+							if (!users.some(obj => obj.userID === params.userID)) await sql.run(`INSERT INTO guildUserBlacklist (guildID, userID) VALUES (?, ?)`, [ id, userID ]);
 							
 							break;
 						}
 						case 'unblacklistUser': {
+							let users = await sql.all(`SELECT userID FROM guildUserBlacklist WHERE guildID = '${id}'`);
+							if (!users.some(obj => obj.userID === params.userID)) {
+								error = 'User is not blacklsited';
+								break;
+							}
 							
+							await sql.run(`DELETE FROM guildUserBlacklist WHERE userID = ? AND guildID = ?`, [ params.userID, id ]);
 							
 							break;
 						}
 						default:
-							error = 'Invalid action.';
+							error = 'Invalid action';
 							break;
 					}
 					
 					break;
 				}
 				case 'music': {
+					if (!params) {
+						error = 'No params specified';
+						break;
+					}
+
+					let guild = client.guilds.get(id);
+					if (!guild) {
+						error = 'Invalid guild ID';
+						break;
+					}
+					
+					if (!params.userID) {
+						error = 'No user ID specified';
+						break;
+					}
+					
+					let member;
+					try {
+						member = guild.members.get(params.userID) || await guild.fetchMember(params.userID);
+					} catch (e) {}
+					if (!member) {
+						error = 'Invalid user ID';
+						break;
+					}
+					
+					if (!guild.music || !guild.music.queue) {
+						error = 'No music is playing in guild';
+						break;
+					} // TODO: Implement the rest of the actions
+					// TODO: On every music action, send a message to the music textChannel (music.textChannel) with the action performed and who performed it
+					
 					switch (action) {
 						case 'togglePausePlay': {
+							if (guild.music.playing) guild.voiceConnection.dispatcher.pause();
+							else guild.voiceConnection.dispatcher.resume();
 							
+							guild.music.playing = !guild.music.playing;
 							
 							break;
 						}
@@ -292,7 +338,7 @@ let ipcObject = client => {
 							break;
 						}
 						default:
-							error = 'Invalid action.';
+							error = 'Invalid action';
 							break;
 					}
 					
@@ -306,14 +352,14 @@ let ipcObject = client => {
 							break;
 						}
 						default:
-							error = 'Invalid action.';
+							error = 'Invalid action';
 							break;
 					}
 					
 					break;
 				}
 				default:
-					error = 'Type provided does not have actions.';
+					error = 'Type provided does not have actions';
 					break;
 			}
 			
