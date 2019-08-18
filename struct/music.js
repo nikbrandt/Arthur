@@ -97,8 +97,6 @@ const Music = {
 		guild.music = music;
 
 		setTimeout(async () => {
-			let dispatcher;
-
 			if (!guild.voiceConnection) {
 				guild.music = {};
 				return;
@@ -113,103 +111,114 @@ const Music = {
 				});
 			}
 			
-			if (music.queue[0].type === 1) { // youtube
-				const stream = ytdl(music.queue[0].id, { quality: 'highestaudio' });
-
-				if (!guild.voiceConnection) {
-					guild.music = {};
-					return;
-				}
-				
-				dispatcher = guild.voiceConnection.playStream(stream, streamOptions);
-
-				dispatcher.once('end', reason => {
-					console.log('Dispatcher ended youtube playback with reason:\t', reason);
-					Music.next(guild);
-				});
-
-				dispatcher.once('start', () => {
-					guild.voiceConnection.player.streamingData.pausedTime = 0;
-				});
-
-				dispatcher.on('error', err => {
-					console.warn(`error playing music: ${err}`);
-					guild.client.errorLog("Error playing music", err.stack ? err.stack : err, err.code);
-				});
-			} else if (music.queue[0].type === 4) { // from URL
-				let date = Date.now();
-				let rng = Math.floor(Math.random() * 10000);
-				let file = `../media/temp/${rng}-${date}.${music.queue[0].id.match(/\.([^.]+)$/)[1]}`;
-
-				const r = request(music.queue[0].id, (err) => {
-					if (err) return Music.next(guild);
-				}).pipe(fs.createWriteStream(file));
-
-				r.on('finish', () => {
-					const stream = fs.createReadStream(file);
-					dispatcher = guild.voiceConnection.playStream(stream, streamOptions);
-
+			switch (music.queue[0].type) {
+				case 1: { // youtube
+					const stream = ytdl(music.queue[0].id, { quality: 'highestaudio' });
+	
+					if (!guild.voiceConnection) {
+						guild.music = {};
+						return;
+					}
+					
+					let dispatcher = guild.voiceConnection.playStream(stream, streamOptions);
+	
 					dispatcher.once('end', reason => {
-						fs.unlinkSync(file);
-						console.log('Dispatcher ended URL playback with reason:\t', reason);
+						console.log('Dispatcher ended youtube playback with reason:\t', reason);
 						Music.next(guild);
 					});
-
+	
 					dispatcher.once('start', () => {
 						guild.voiceConnection.player.streamingData.pausedTime = 0;
 					});
-
+	
 					dispatcher.on('error', err => {
 						console.warn(`error playing music: ${err}`);
 						guild.client.errorLog("Error playing music", err.stack ? err.stack : err, err.code);
 					});
-				})
-			} else if (music.queue[0].type === 3) { // local file
-				const stream = fs.createReadStream(`../media/sounds/${music.queue[0].id}.mp3`);
-				dispatcher = guild.voiceConnection.playStream(stream, streamOptions);
-
-				dispatcher.once('end', reason => {
-					console.log('Dispatcher ended sound effect playback with reason:\t', reason);
-					Music.next(guild);
-				});
-
-				dispatcher.once('start', () => {
-					guild.voiceConnection.player.streamingData.pausedTime = 0;
-				});
-
-				dispatcher.on('error', err => {
-					console.warn(`error playing music: ${err}`);
-					guild.client.errorLog("Error playing music", err.stack ? err.stack : err, err.code);
-				});
-			} else if (music.queue[0].type === 5) { // soundcloud
-				let id = '' + Date.now() + guild.id;
-				let writeStream = soundcloud(music.queue[0].meta.id).pipe(fs.createWriteStream(`../media/temp/${id}.mp3`));
-
-				writeStream.on('finish', () => {
-					setTimeout(() => {
-						let scStream = fs.createReadStream(`../media/temp/${id}.mp3`);
-						if (!guild.voiceConnection) return;
-						dispatcher = guild.voiceConnection.playStream(scStream, streamOptions);
-
+					
+					break;
+				}
+				case 4: { // from URL
+					let date = Date.now();
+					let rng = Math.floor(Math.random() * 10000);
+					let file = `../media/temp/${rng}-${date}.${music.queue[0].id.match(/\.([^.]+)$/)[1]}`;
+	
+					const r = request(music.queue[0].id, (err) => {
+						if (err) return Music.next(guild);
+					}).pipe(fs.createWriteStream(file));
+	
+					r.on('finish', () => {
+						const stream = fs.createReadStream(file);
+						let dispatcher = guild.voiceConnection.playStream(stream, streamOptions);
+	
 						dispatcher.once('end', reason => {
-							console.log('Dispatcher ended soundcloud playback with reason:\t', reason);
-							fs.unlinkSync(`../media/temp/${id}.mp3`);
+							fs.unlinkSync(file);
+							console.log('Dispatcher ended URL playback with reason:\t', reason);
 							Music.next(guild);
-							setTimeout(() => {
-								if (guild.voiceConnection && !guild.voiceConnection.dispatcher) Music.next(guild);
-							}, 10000);
 						});
-
+	
 						dispatcher.once('start', () => {
 							guild.voiceConnection.player.streamingData.pausedTime = 0;
 						});
-
+	
 						dispatcher.on('error', err => {
 							console.warn(`error playing music: ${err}`);
 							guild.client.errorLog("Error playing music", err.stack ? err.stack : err, err.code);
 						});
-					}, 100);
-				});
+					});
+					
+					break;
+				}
+				case 3: { // local file
+					const stream = fs.createReadStream(`../media/sounds/${music.queue[0].id}.mp3`);
+					let dispatcher = guild.voiceConnection.playStream(stream, streamOptions);
+	
+					dispatcher.once('end', reason => {
+						console.log('Dispatcher ended sound effect playback with reason:\t', reason);
+						Music.next(guild);
+					});
+	
+					dispatcher.once('start', () => {
+						guild.voiceConnection.player.streamingData.pausedTime = 0;
+					});
+	
+					dispatcher.on('error', err => {
+						console.warn(`error playing music: ${err}`);
+						guild.client.errorLog("Error playing music", err.stack ? err.stack : err, err.code);
+					});
+					
+					break;
+				}
+				case 5: { // soundcloud
+					let id = '' + Date.now() + guild.id;
+					let writeStream = soundcloud(music.queue[0].meta.id).pipe(fs.createWriteStream(`../media/temp/${id}.mp3`));
+	
+					writeStream.on('finish', () => {
+						setTimeout(() => {
+							let scStream = fs.createReadStream(`../media/temp/${id}.mp3`);
+							if (!guild.voiceConnection) return;
+							dispatcher = guild.voiceConnection.playStream(scStream, streamOptions);
+	
+							dispatcher.once('end', reason => {
+								console.log('Dispatcher ended soundcloud playback with reason:\t', reason);
+								fs.unlinkSync(`../media/temp/${id}.mp3`);
+								Music.next(guild);
+								setTimeout(() => {
+									if (guild.voiceConnection && !guild.voiceConnection.dispatcher) Music.next(guild);
+								}, 10000);
+							});
+	
+							dispatcher.once('start', () => {
+								guild.voiceConnection.player.streamingData.pausedTime = 0;
+							});
+	
+							dispatcher.on('error', err => {
+								console.warn(`error playing music: ${err}`);
+								guild.client.errorLog("Error playing music", err.stack ? err.stack : err, err.code);
+							});
+						}, 100);
+					});
+				}
 			}
 		}, 50);
 	},
