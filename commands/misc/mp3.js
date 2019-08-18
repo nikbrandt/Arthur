@@ -55,6 +55,7 @@ async function finish(stream, title, length, message, client, thumbnail, url) {
 	title = title.replace(/[^A-z0-9]/g, '_');
 
 	let index = client.processing.length;
+	let filePath = `${__dirname}/../../../media/temp/${message.id}.mp3`;
 	client.processing.push(moment().format('h:mm:ss A') + ' - MP3');
 
 	let msg = await message.channel.send(message.__('downloading'));
@@ -72,15 +73,24 @@ async function finish(stream, title, length, message, client, thumbnail, url) {
 					'User-Agent': 'Arthur Discord Bot (github.com/Gymnophoria/Arthur)'
 				},
 				formData: {
-					"file": fs.createReadStream(`../media/temp/${title}.mp3`),
-					"name": title + '.mp3'
+					file: {
+						value: fs.createReadStream(filePath),
+						options: {
+							filename: title + '.mp3'
+						}
+					}
 				}
 			};
 
 			request(options, (err, res, body) => {
-				let filePath = `../media/temp/${title}.mp3`;
 				if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
 				client.processing.splice(index, 1);
+				
+				if (err) {
+					console.log(err);
+					console.log(body);
+					return message.channel.send(message.__('error', { err }));
+				}
 
 				msg.delete().catch(() => {});
 
@@ -109,9 +119,8 @@ async function finish(stream, title, length, message, client, thumbnail, url) {
 			});
 		})
 		.audioCodec('libmp3lame')
-		.save(`${__dirname}/../../../media/temp/${title}.mp3`)
+		.save(filePath)
 		.on('error', err => {
-			let filePath = `../media/temp/${title}.mp3`;
 			if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
 			client.processing.splice(index, 1);
 
