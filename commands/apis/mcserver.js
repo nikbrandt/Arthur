@@ -58,14 +58,18 @@ exports.run = async (message, args, s, client) => {
 
 		webshot(html, fileLocation, {siteType: 'html', windowSize: { width: 700, height: 85 }, customCSS }, err => {
 			let iconBase64 = body.icon;
-			let iconFilename = 'icon.' + iconBase64.match(dataRegex)[1];
-			iconBase64 = iconBase64.replace(dataRegex, '');
-			let iconBuffer = Buffer.from(iconBase64, 'base64');
+			let iconFilename;
+			let files = [];
 			
-			let files = [ { attachment: iconBuffer, name: iconFilename } ];
+			if (iconBase64) {
+				iconFilename = 'icon.' + iconBase64.match(dataRegex)[1];
+				iconBase64 = iconBase64.replace(dataRegex, '');
+				let iconBuffer = Buffer.from(iconBase64, 'base64');
+				files.push({ attachment: iconBuffer, name: iconFilename });
+			}
 			
 			const embed = new RichEmbed()
-				.setAuthor(message.__('embed.title', { hostname: body.hostname }), `attachment://${iconFilename}`)
+				.setAuthor(message.__('embed.title', { hostname: body.hostname }), (iconFilename ? `attachment://${iconFilename}` : undefined))
 				.setFooter(message.__('embed.footer', { port: body.port, protocol: body.protocol }))
 				.addField(message.__('embed.players'), `${body.players.online}/${body.players.max}`, true)
 				.addField(message.__('embed.version'), body.version.replace(/§./g, ''), true)
