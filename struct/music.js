@@ -6,6 +6,7 @@ const ytdl = require('ytdl-core');
 const request = require('request');
 const fileType = require('file-type');
 const search = require('youtube-search');
+const discord = require('discord.js');
 
 const soundcloud = require('./soundcloud');
 
@@ -407,7 +408,9 @@ const Music = {
 					try {
 						thumbnail = info.thumbnail_url || info.player_response.videoDetails.thumbnail.thumbnails[0].url
 					} catch (e) { }
-					
+
+					info.title = discord.Util.escapeMarkdown(info.title);
+					info.author.name = discord.Util.escapeMarkdown(info.author.name);
 					resolve({
 						meta: {
 							url: `https://youtu.be/${id}`,
@@ -430,28 +433,7 @@ const Music = {
 						},
 						ms: info.length_seconds * 1000
 					});
-
 					break;
-				/*case 2: // uploaded file
-					filename = id.match(discordRegex)[1];
-
-					resolve({
-						meta: {
-							title: filename,
-							queueName: `[${filename}](${id})`,
-							url: id
-						},
-						embed: {
-							title: title,
-							color: 0x7289DA,
-							description: `[${filename}](${id}) has been added to the queue.\n*If mp3/ogg file is fake, it will simply be skipped*`,
-							footer: {
-								text: `Requested by ${message.author.tag}`
-							}
-						}
-					});
-
-					break;*/
 				case 3: // sound effect
 					resolve({
 						meta: {
@@ -466,6 +448,7 @@ const Music = {
 				case 4: // custom file
 					let filename = id.match(songRegex)[1];
 					if (!filename) return reject(message._('invalid_url'));
+					filename = discord.Util.escapeMarkdown(filename);
 
 					resolve({
 						meta: {
@@ -493,12 +476,13 @@ const Music = {
 					});
 					
 					if (!meta) return reject(message._('could_not_get_info'));
-					
 					if (meta.duration > 7200000) return reject (message._('song_too_long'));
 
 					let timeObj = secSpread(Math.round(meta.duration / 1000));
 					let timeString = `${timeObj.h ? `${timeObj.h}${i18n.get('time.abbreviations.hours', message)} ` : ''}${timeObj.m ? `${timeObj.m}${i18n.get('time.abbreviations.minutes', message)} ` : ''}${timeObj.s}${i18n.get('time.abbreviations.seconds', message)}`;
 
+					meta.title = discord.Util.escapeMarkdown(meta.title);
+					meta.user.username = discord.Util.escapeMarkdown(meta.user.username);
 					resolve ({
 						meta: {
 							url: id,
@@ -522,7 +506,6 @@ const Music = {
 						},
 						ms: meta.duration
 					});
-
 					break;
 			}
 		});
