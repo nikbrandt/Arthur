@@ -1030,9 +1030,12 @@
 				"usage": "[number of sides]",
 				"help": "Ask Arthur to roll an arbitrarily sized dice"
 			},
-			"invalid_number": "Hey.. that's not a number.. (or you think zero sided dice exist.)",
-		  	"negative_number": "The number of sides provided is the same as the number of brain cells you possess.",
-			"success_roll": "I rolled a **$num**."  
+			"invalid_number": "Hey.. that's not a number..",
+			"invalid_sides": "Hey.. that's not a number.. (or you think zero sided dice exist.)",
+		  	"negative_number": "The number provided is the same as the number of brain cells you possess.",
+			"excessive_rolls": "I can't roll that many dice and neither can you!",
+			"success_roll": "I rolled a **$result**.",
+			"success_roll_multiple": "I rolled\n> $roll\nresulting in a **$result**."
 		},
 		"endpoll": {
 			"meta": {
