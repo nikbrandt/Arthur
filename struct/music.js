@@ -6,7 +6,7 @@ const ytdl = require('ytdl-core');
 const request = require('request');
 const fileType = require('file-type');
 const search = require('youtube-search');
-const discord = require('discord.js');
+const Discord = require('discord.js');
 
 const soundcloud = require('./soundcloud');
 
@@ -409,8 +409,8 @@ const Music = {
 						thumbnail = info.thumbnail_url || info.player_response.videoDetails.thumbnail.thumbnails[0].url
 					} catch (e) { }
 
-					info.title = discord.Util.escapeMarkdown(info.title);
-					info.author.name = discord.Util.escapeMarkdown(info.author.name);
+					info.title = Discord.Util.escapeMarkdown(info.title);
+					info.author.name = Discord.Util.escapeMarkdown(info.author.name);
 					resolve({
 						meta: {
 							url: `https://youtu.be/${id}`,
@@ -448,7 +448,7 @@ const Music = {
 				case 4: // custom file
 					let filename = id.match(songRegex)[1];
 					if (!filename) return reject(message._('invalid_url'));
-					filename = discord.Util.escapeMarkdown(filename);
+					filename = Discord.Util.escapeMarkdown(filename);
 
 					resolve({
 						meta: {
@@ -481,8 +481,8 @@ const Music = {
 					let timeObj = secSpread(Math.round(meta.duration / 1000));
 					let timeString = `${timeObj.h ? `${timeObj.h}${i18n.get('time.abbreviations.hours', message)} ` : ''}${timeObj.m ? `${timeObj.m}${i18n.get('time.abbreviations.minutes', message)} ` : ''}${timeObj.s}${i18n.get('time.abbreviations.seconds', message)}`;
 
-					meta.title = discord.Util.escapeMarkdown(meta.title);
-					meta.user.username = discord.Util.escapeMarkdown(meta.user.username);
+					meta.title = Discord.Util.escapeMarkdown(meta.title);
+					meta.user.username = Discord.Util.escapeMarkdown(meta.user.username);
 					resolve ({
 						meta: {
 							url: id,
