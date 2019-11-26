@@ -35,14 +35,23 @@ exports.run = (message, args) => {
 	if (rollCount > maximumRolls)
 		return message.channel.send(message.__('excessive_rolls'));
 
+	let summationArray = [];
 	let summation = 0;
 	for (let i = 0; i < rollCount; i++) {
-		let diceRoll = Math.floor((Math.random() * numberOfSides) + 1) + additive;
-		summation += diceRoll;
+		let num = Math.floor((Math.random() * numberOfSides) + 1);
+		summationArray.push(num);
+		summation += num;
 	}
-
-	let successMessage = message.__('success_roll', {result: summation});
-	message.channel.send(successMessage);
+	
+	if (additive > 0) summation += additive;
+	
+	let successMessage;
+	if (additive === 0 && rollCount === 1) successMessage = message.__('success_roll', { result: summation });
+	else if (additive === 0) successMessage = message.__('success_roll_multiple', { roll: '**' + summationArray.join('** + **') + '**', result: summation });
+	else successMessage = message.__('success_roll_multiple', { roll: '(**' + summationArray.join('** + **') + '**) + **' + additive + '**', result: summation });
+	
+	if (successMessage.length > 2000) message.channel.send(message.__('success_roll', { result: summation }));
+	else message.channel.send(successMessage);
 };
 
 exports.config = {
