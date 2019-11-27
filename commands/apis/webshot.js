@@ -7,7 +7,7 @@ let nonobad = [ 'data:', 'file://', 'doom3.zoy.org', 'ip', 'goatse', 'porn', 're
 
 exports.run = async (message, args, s, client) => {
 	if (!args[0]) return message.channel.send(message.__('no_args'));
-	if (nonobad.some(i => args[0].toLowerCase().includes(i))) return message.channel.send(message.__('blacklisted_website'));
+	if (nonobad.some(i => args[0].toLowerCase().includes(i)) && message.author.id !== client.owner.id) return message.channel.send(message.__('blacklisted_website'));
 	let index = client.processing.length;
 	client.processing.push(moment().format('h:mm:ss A') + ' - Webshot');
 	let date = Date.now();
