@@ -41,7 +41,7 @@
     "webshot": "github:thatmarcel/node-webshot",
     "xml2json": "^0.11.2",
     "youtube-search": "^1.1.4",
-    "ytdl-core": "^0.29.5",
+    "ytdl-core": "^1.0.3",
     "zlib-sync": "^0.1.5"
   }
 }
