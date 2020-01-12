@@ -51,10 +51,12 @@ function getSubredditMeme(subreddit) {
 	});
 }
 
-exports.run = (message) => {
-	let randomSubreddit = subreddits[Math.floor(Math.random() * subreddits.length)];
+exports.run = (message, args) => {
+	let subreddit = args[0] && subreddits.includes(args[0].toLowerCase())
+		? args[0].toLowerCase()
+		: subreddits[Math.floor(Math.random() * subreddits.length)];
 	
-	getSubredditMeme(randomSubreddit).then(meme => {
+	getSubredditMeme(subreddit).then(meme => {
 		message.channel.send({embed: {
 				title: meme.title,
 				url: 'https://reddit.com' + meme.reddit,
@@ -63,7 +65,7 @@ exports.run = (message) => {
 				},
 				color: 0x00c140,
 				footer: {
-					text: `Posted by u/${meme.author} on r/${randomSubreddit}`
+					text: `Posted by u/${meme.author} on r/${subreddit}`
 				}
 			}})
 	}).catch(() => {
