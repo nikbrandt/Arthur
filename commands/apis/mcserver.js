@@ -34,15 +34,7 @@ exports.run = async (message, args, s, client) => {
 	client.processing.push(moment().format('h:mm:ss A') + ' - MC Server/Webshot');
 	let msg = await message.channel.send(message.__('processing'));
 	
-	let indexOfColon = args[0].indexOf(':');
-	let port = '';
-	let domain = args[0];
-	if (indexOfColon >= 0) {
-		port = `/${args[0].substring(indexOfColon + 1)}`;
-		domain = args[0].substring(0, indexOfColon);
-	}
-	
-	request(`https://api.mcsrvstat.us/2/${domain}${port}`, (err, response, body) => {
+	request(`https://api.mcsrvstat.us/2/${args[0]}`, (err, response, body) => {
 		if (err || !body) return failed({embed: failedEmbed}, msg, client, index);
 		
 		try {
@@ -69,7 +61,7 @@ exports.run = async (message, args, s, client) => {
 			}
 			
 			const embed = new RichEmbed()
-				.setAuthor(message.__('embed.title', { hostname: body.hostname }), (iconFilename ? `attachment://${iconFilename}` : undefined))
+				.setAuthor(message.__('embed.title', { hostname: args[0].indexOf(':') > -1 ? args[0].substring(0, args[0].indexOf(':')) : args[0] }), (iconFilename ? `attachment://${iconFilename}` : undefined))
 				.setFooter(message.__('embed.footer', { port: body.port, protocol: body.protocol }))
 				.addField(message.__('embed.players'), `${body.players.online}/${body.players.max}`, true)
 				.addField(message.__('embed.version'), body.version.replace(/§./g, ''), true)
