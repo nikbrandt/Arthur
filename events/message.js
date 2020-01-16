@@ -113,7 +113,7 @@ module.exports = async (client, message) => {
 		if (humongoji && botPerms.has('ATTACH_FILES') && extractedEmojis) {
 			let text = '';
 			
-			if (botPerms.has('MANAGE_MESSAGES')) text = `Humongoji by \`${message.member.displayName}\``;
+			if (botPerms.has('MANAGE_MESSAGES')) text = `\`${extractedEmojis[2]}\` ${i18n.get('commands.nowplaying.by', message).toLowerCase()} \`${message.member.displayName}\``;
 			
 			let options = {
 				method: 'HEAD',
