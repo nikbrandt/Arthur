@@ -1,6 +1,8 @@
 function owoify(text) {
 	text = text.replace(/[lr]/g, 'w');
 	text = text.replace(/u/g, 'uw');
+	text = text.replace(/[LR]/g, 'W');
+	text = text.replace(/U/g, 'UW');
 	return text;
 }
 
