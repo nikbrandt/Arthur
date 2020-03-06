@@ -410,7 +410,7 @@ const Music = {
 					} catch (e) { }
 
 					info.title = Discord.Util.escapeMarkdown(info.title);
-					info.author.name = Discord.Util.escapeMarkdown(info.author.name);
+					info.author.name = info.author.name ? Discord.Util.escapeMarkdown(info.author.name) : undefined;
 					resolve({
 						meta: {
 							url: `https://youtu.be/${id}`,
