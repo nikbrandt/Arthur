@@ -4,7 +4,7 @@ const trello = new Trello(config.trello.key, config.trello.token);
 
 exports.run = (message, args, suffix, client) => {
 	if (!args[0]) return message.channel.send(message.__('no_args'));
-	let channel = client.channels.get(config.trello.channel);
+	let channel = client.channels.cache.get(config.trello.channel);
 
 	let splitified = suffix.split('\n');
 	if (splitified[0].length > 256) {
@@ -32,7 +32,7 @@ exports.run = (message, args, suffix, client) => {
 				description: splitified[1] ? splitified.slice(1).join('\n') : undefined,
 				footer: {
 					text: `Suggested by ${message.author.tag}`,
-					icon_url: message.author.displayAvatarURL
+					icon_url: message.author.displayAvatarURL()
 				},
 				color: 0x00c140
 			},

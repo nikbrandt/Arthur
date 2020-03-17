@@ -14,7 +14,7 @@ module.exports = (client, reaction, user) => {
 	let total = 0;
 
 	reactions.forEach(reaction => {
-		if (reaction.users.has(user.id)) total++;
+		if (reaction.users.cache.has(user.id)) total++;
 	});
 
 	if (total > 1) reaction.remove(user).catch(() => {});

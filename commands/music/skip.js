@@ -1,7 +1,7 @@
 const Music = require('../../struct/music');
 
 function skip (message) {
-	if (message.guild.voiceConnection) message.guild.voiceConnection.dispatcher.end('User skipped song');
+	if (message.guild.voiceConnection) message.guild.voiceConnection.dispatcher.destroy('User skipped song');
 	else message.guild.music = {};
 	message.channel.send(message.__('skipped', { user: message.member.displayName.replace(/@/g, '@\u200b').replace(/ /g, '') }));
 }
@@ -10,7 +10,7 @@ exports.run = (message, a, s, d, permLevel) => {
 	if (!message.guild.music || !message.guild.music.queue) return message.channel.send(message.__('no_music'));
 
 	let canForceSkip = false;
-	if (message.member.roles.some(r => r.name.toLowerCase() === i18n.get('struct.music.dj', message).toLowerCase()) || message.member.roles.some(r => r.name.toLowerCase() === i18n.get('struct.music.music', message).toLowerCase()) || permLevel > 3 || message.guild.music.queue[0].person.id === message.author.id) canForceSkip = true;
+	if (message.member.roles.cache.some(r => r.name.toLowerCase() === i18n.get('struct.music.dj', message).toLowerCase()) || message.member.roles.some(r => r.name.toLowerCase() === i18n.get('struct.music.music', message).toLowerCase()) || permLevel > 3 || message.guild.music.queue[0].person.id === message.author.id) canForceSkip = true;
 
 	if (a[0] === message.__('force_command_flag') && canForceSkip) return skip(message);
 
@@ -25,7 +25,7 @@ exports.run = (message, a, s, d, permLevel) => {
 	}
 	else message.guild.music.queue[0].voteSkips = [ message.author.id ];
 
-	let skipNum = Math.round((message.guild.voiceConnection.channel.members.size - 1) / 2);
+	let skipNum = Math.round((message.guild.voiceConnection.channel.members.cache.size - 1) / 2);
 	if (message.guild.music.queue[0].voteSkips.length >= skipNum) return skip(message);
 
 	message.channel.send(message.__('vote_skip_registered', { 

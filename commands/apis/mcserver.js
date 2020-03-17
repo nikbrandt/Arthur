@@ -1,6 +1,6 @@
 const request = require('request');
 const webshot = require('webshot');
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const moment = require('moment');
 
 const dataRegex = /^data:image\/([a-z]+);base64,/;
@@ -60,7 +60,7 @@ exports.run = async (message, args, s, client) => {
 				files.push({ attachment: iconBuffer, name: iconFilename });
 			}
 			
-			const embed = new RichEmbed()
+			const embed = new MessageEmbed()
 				.setAuthor(message.__('embed.title', { hostname: args[0].indexOf(':') > -1 ? args[0].substring(0, args[0].indexOf(':')) : args[0] }), (iconFilename ? `attachment://${iconFilename}` : undefined))
 				.setFooter(message.__('embed.footer', { port: body.port, protocol: body.protocol }))
 				.addField(message.__('embed.players'), `${body.players.online}/${body.players.max}`, true)

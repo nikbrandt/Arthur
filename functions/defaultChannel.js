@@ -1,5 +1,5 @@
 module.exports = guild => {
-	let textChannels = guild.channels.filter(g => g.type === 'text');
+	let textChannels = guild.channels.cache.filter(g => g.type === 'text');
 	if (textChannels.size < 1) return undefined;
 	
 	return textChannels.find(c => c.name === 'general') ||

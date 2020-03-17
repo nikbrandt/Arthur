@@ -29,7 +29,7 @@ let add = async (message, id, type, client, first, loadMessage) => {
 };
 
 exports.run = async (message, args, suffix, client, perms) => {
-	if (!message.member.voiceChannel) return message.channel.send(message.__('not_in_channel'));
+	if (!message.member.voice.channel) return message.channel.send(message.__('not_in_channel'));
 	if (!args[0] && !message.attachments.size) {
 		if (message.guild.music && message.guild.music.playing === false) {
 			message.__ = (string, variables) => {
@@ -82,7 +82,7 @@ exports.run = async (message, args, suffix, client, perms) => {
 	let { type } = object;
 
 	if (!message.guild.music || !message.guild.music.queue) {
-		if (!message.member.voiceChannel.joinable) return loadMessage.edit(message.__('cant_join_channel'));
+		if (!message.member.voice.channel.joinable) return loadMessage.edit(message.__('cant_join_channel'));
 
 		message.guild.music = {};
 		let stop = false;
@@ -98,7 +98,7 @@ exports.run = async (message, args, suffix, client, perms) => {
 				}
 			}, 500);
 			
-			await message.member.voiceChannel.join();
+			await message.member.voice.channel.join();
 		} catch (e) {
 			return loadMessage.edit(message.__('could_not_connect', { err: e.stack ? e.stack.split('\n')[0] : e }));
 		}

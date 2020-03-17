@@ -60,12 +60,12 @@ module.exports = async (client, message) => {
 				client.lastRecentMessageID += 1;
 			}
 
-			client.channels.get(config.messageLogChannel).send(
+			client.channels.cache.get(config.messageLogChannel).send(
 				{
 					embed: {
 						author: {
 							name: `Message from ${message.author.tag} | ID ${authorID}`,
-							icon_url: message.author.displayAvatarURL
+							icon_url: message.author.displayAvatarURL()
 						},
 						color: 0x418cf4,
 						description: message.content
@@ -88,12 +88,12 @@ module.exports = async (client, message) => {
 				client.lastRecentMessageID += 1;
 			}
 
-			client.channels.get(config.messageLogChannel).send(
+			client.channels.cache.get(config.messageLogChannel).send(
 				{
 					embed: {
 						author: {
 							name: `Mention from ${message.author.tag} | ID ${authorID}`,
-							icon_url: message.author.displayAvatarURL
+							icon_url: message.author.displayAvatarURL()
 						},
 						color: 0x418cf4,
 						description: message.content

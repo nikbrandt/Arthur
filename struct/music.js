@@ -13,7 +13,7 @@ const soundcloud = require('./soundcloud');
 const YTRegex = /^(https?:\/\/)?(www\.|m\.|music\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/v\/|youtube\.com\/embed\/)([A-z0-9_-]{11})([&?].*)?$/;
 const soundcloudRegex = /^(https:\/\/)?soundcloud.com\/.+\/[^/]+$/;
 const reactionFilter = reaction => ['👍', '⏩', '⏹', '🔁', '🎶'].includes(reaction.emoji.name);
-const streamOptions = { volume: 0.3, passes: 2, bitrate: 'auto' };
+const streamOptions = { volume: false, passes: 2, bitrate: 'auto', highWaterMark: 50 };
 
 const supportedFileTypes = [ 'mp3', 'ogg', 'aac', 'm4a', 'mp4', 'mov', 'flac', 'ac3', 'wav' ];
 const songRegex = new RegExp(`^https?:\\/\\/.+\\/([^/]+)\\.(${supportedFileTypes.join('|')})$`);
@@ -63,7 +63,7 @@ function testIfValidFileType(url) {
 const Music = {
 	/**
 	 * Play the next song in the queue
-	 * @param {Guild} guild The guild to play a song in
+	 * @param {Discord.Guild} guild The guild to play a song in
 	 * @param {boolean} [first] Whether or not this is the first song
 	 * @returns {Promise<void>}
 	 */
@@ -121,9 +121,9 @@ const Music = {
 						return;
 					}
 					
-					let dispatcher = guild.voiceConnection.playStream(stream, streamOptions);
+					let dispatcher = guild.voiceConnection.play(stream, streamOptions);
 	
-					dispatcher.once('end', reason => {
+					dispatcher.once('finish', reason => {
 						console.log('Dispatcher ended youtube playback with reason:\t', reason);
 						Music.next(guild);
 					});
@@ -150,9 +150,9 @@ const Music = {
 	
 					r.on('finish', () => {
 						const stream = fs.createReadStream(file);
-						let dispatcher = guild.voiceConnection.playStream(stream, streamOptions);
+						let dispatcher = guild.voiceConnection.play(stream, streamOptions);
 	
-						dispatcher.once('end', reason => {
+						dispatcher.once('finish', reason => {
 							fs.unlinkSync(file);
 							console.log('Dispatcher ended URL playback with reason:\t', reason);
 							Music.next(guild);
@@ -172,9 +172,9 @@ const Music = {
 				}
 				case 3: { // local file
 					const stream = fs.createReadStream(`../media/sounds/${music.queue[0].id}.mp3`);
-					let dispatcher = guild.voiceConnection.playStream(stream, streamOptions);
+					let dispatcher = guild.voiceConnection.play(stream, streamOptions);
 	
-					dispatcher.once('end', reason => {
+					dispatcher.once('finish', reason => {
 						console.log('Dispatcher ended sound effect playback with reason:\t', reason);
 						Music.next(guild);
 					});
@@ -198,9 +198,9 @@ const Music = {
 						setTimeout(() => {
 							let scStream = fs.createReadStream(`../media/temp/${id}.mp3`);
 							if (!guild.voiceConnection) return;
-							dispatcher = guild.voiceConnection.playStream(scStream, streamOptions);
+							let dispatcher = guild.voiceConnection.play(scStream, streamOptions);
 	
-							dispatcher.once('end', reason => {
+							dispatcher.once('finish', reason => {
 								console.log('Dispatcher ended soundcloud playback with reason:\t', reason);
 								fs.unlinkSync(`../media/temp/${id}.mp3`);
 								Music.next(guild);
@@ -523,7 +523,7 @@ const Music = {
 
 			let fakeMessage = message;
 			fakeMessage.author = user;
-			fakeMessage.member = await message.guild.fetchMember(user);
+			fakeMessage.member = await message.guild.members.cache.fetch(user);
 			let permLevel = client.permLevel(fakeMessage);
 
 			switch (reaction.emoji.name) {

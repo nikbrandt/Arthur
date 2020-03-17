@@ -99,14 +99,14 @@ exports.run = (message, args, suffix, client) => {
 
 	curWidth = 100; // show guild/user amounts
 	ctx.font = '50px RobotoMedium';
-	ctx.fillText(client.guilds.size.toString(), curWidth, 70);
-	curWidth += ctx.measureText(client.guilds.size.toString()).width;
+	ctx.fillText(client.guilds.cache.size.toString(), curWidth, 70);
+	curWidth += ctx.measureText(client.guilds.cache.size.toString()).width;
 	ctx.font = '50px RobotoLight';
 	ctx.fillText(' servers     ', curWidth, 70);
 	curWidth += ctx.measureText(' servers     ').width;
 	ctx.font = '50px RobotoMedium';
-	ctx.fillText(client.users.size.toString(), curWidth, 70);
-	curWidth += ctx.measureText(client.users.size.toString()).width;
+	ctx.fillText(client.users.cache.size.toString(), curWidth, 70);
+	curWidth += ctx.measureText(client.users.cache.size.toString()).width;
 	ctx.font = '50px RobotoLight';
 	ctx.fillText(' users', curWidth, 70);
 

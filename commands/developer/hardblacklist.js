@@ -6,12 +6,12 @@ exports.run = async (message, args, suffix, client) => {
 	
 	let user;
 	try {
-		user = client.users.get(args[0]) || await client.fetchUser(args[0]);
+		user = await client.users.fetch(args[0]);
 	} catch (e) { 
 		user = undefined;
 	}
 	
-	let guild = client.guilds.get(args[0]);
+	let guild = client.guilds.cache.get(args[0]);
 	
 	if (!user && !guild) return message.channel.send('Could not find user or guild by that ID. rip');
 	
