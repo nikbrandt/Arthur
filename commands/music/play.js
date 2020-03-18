@@ -11,7 +11,7 @@ let add = async (message, id, type, client, first, loadMessage) => {
 	try {
 		obj = await Music.getInfo(type, id, message, client, title);
 	} catch (err) {
-		if (!message.guild.music.queue && message.guild.voiceConnection) message.guild.voiceConnection.disconnect();
+		if (!message.guild.music.queue && message.guild.voice) message.guild.voice.connection.disconnect();
 		return loadMessage.edit(message.__('error_getting_info', { err }));
 	}
 
@@ -29,7 +29,7 @@ let add = async (message, id, type, client, first, loadMessage) => {
 };
 
 exports.run = async (message, args, suffix, client, perms) => {
-	if (!message.member.voiceChannel) return message.channel.send(message.__('not_in_channel'));
+	if (!message.member.voice.channel) return message.channel.send(message.__('not_in_channel'));
 	if (!args[0] && !message.attachments.size) {
 		if (message.guild.music && message.guild.music.playing === false) {
 			message.__ = (string, variables) => {
@@ -74,7 +74,7 @@ exports.run = async (message, args, suffix, client, perms) => {
 	try {
 		object = await Music.parseMessage(message, args, suffix, client);
 	} catch (err) {
-		if (message.guild.voiceConnection && !message.guild.music && !message.guild.music.queue[0]) message.guild.voiceConnection.disconnect().catch(() => {});
+		if (message.guild.voice && !message.guild.music && !message.guild.music.queue[0]) message.guild.voice.connection.disconnect().catch(() => {});
 		return loadMessage.edit(err);
 	}
 
@@ -82,23 +82,23 @@ exports.run = async (message, args, suffix, client, perms) => {
 	let { type } = object;
 
 	if (!message.guild.music || !message.guild.music.queue) {
-		if (!message.member.voiceChannel.joinable) return loadMessage.edit(message.__('cant_join_channel'));
+		if (!message.member.voice.channel.joinable) return loadMessage.edit(message.__('cant_join_channel'));
 
 		message.guild.music = {};
 		let stop = false;
 
 		try {
 			let errorInterval = setInterval(() => {
-				if (message.guild.voiceConnection) {
+				if (message.guild.voice) {
 					clearInterval(errorInterval);
-					message.guild.voiceConnection.on('error', err => {
+					message.guild.voice.connection.on('error', err => {
 						loadMessage.edit(message.__('could_not_connect', { err }));
 						stop = true;
 					});
 				}
 			}, 500);
 			
-			await message.member.voiceChannel.join();
+			await message.member.voice.channel.join();
 		} catch (e) {
 			return loadMessage.edit(message.__('could_not_connect', { err: e.stack ? e.stack.split('\n')[0] : e }));
 		}

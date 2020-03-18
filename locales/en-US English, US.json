@@ -1011,7 +1011,7 @@
 		},
 		"invite": {
 			"meta": {
-				"command": "info",
+				"command": "invite",
 				"aliases": ["inv"],
 				"name": "Invite",
 				"description": "Invite Arthur to your server.",

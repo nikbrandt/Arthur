@@ -20,13 +20,13 @@ exports.run = async (message, args, suffix, client) => {
 		let rank = await XP.guildRank(message.member);
 		let list = await XP.guildLeaderboard(guildID, page, client, i18n.getLocaleCode(message));
 		if (!list) return message.channel.send(message.__('not_enough_people', { page }));
-		let guild = client.guilds.get(guildID);
+		let guild = client.guilds.cache.get(guildID);
 		
 		message.channel.send({embed: {
 			color: 0x8356ff,
 			author: {
 				name: guild.name,
-				icon_url: guild.iconURL
+				icon_url: guild.iconURL()
 			},
 			footer: { text: message.__('footer', { page, maxPage: list.max, end: !!rank ? ' | ' + message.__('footer_rank', { rank: rank.rank, page: rank.page }) : '' }) },
 			description: list.array.join('\n')
@@ -49,7 +49,7 @@ exports.run = async (message, args, suffix, client) => {
 		message.channel.send({embed: {
 			author: {
 				name: message.__('global_leaderboard'),
-				icon_url: client.user.avatarURL
+				icon_url: client.user.displayAvatarURL()
 			},
 			color: 0x8356ff,
 			footer: { text: message.__('footer', { page: pg, maxPage: gList.max, end: !!gRank ? ' | ' + message.__('footer_rank', { rank: gRank.rank, page: gRank.page }) : '' })},

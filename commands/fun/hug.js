@@ -5,7 +5,7 @@ exports.run = async (message, args, suffix, client) => {
 
 	if (args[0]) {
 		let obj = client.findMember(message, suffix);
-		if (obj) receiverURL = obj.user.displayAvatarURL;
+		if (obj) receiverURL = obj.user.displayAvatarURL({ format: 'png' });
 	}
 
 	const canvas = createCanvas(300, 350);
@@ -13,7 +13,7 @@ exports.run = async (message, args, suffix, client) => {
 
 	let [ receiverImage, giverImage, backgroundImage ] = await Promise.all([
 		loadImage(receiverURL),
-		loadImage(message.author.displayAvatarURL),
+		loadImage(message.author.displayAvatarURL({ format: 'png' })),
 		loadImage('../media/images/hug.png')
 	]);
 	

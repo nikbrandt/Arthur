@@ -26,7 +26,7 @@ let ipcObject = client => {
 			
 			switch (type) {
 				case 'guild': {
-					let guild = client.guilds.get(id);
+					let guild = client.guilds.cache.get(id);
 
 					if (!guild) {
 						error = 'Could not find guild with ID provided';
@@ -51,8 +51,8 @@ let ipcObject = client => {
 
 					time = 60 * 10;
 					output = {
-						channels: guild.channels.map(deconstructChannel),
-						iconURL: guild.iconURL,
+						channels: guild.channels.cache.map(deconstructChannel),
+						iconURL: guild.iconURL(),
 						name: guild.name,
 						id: id,
 						options: options,
@@ -63,7 +63,7 @@ let ipcObject = client => {
 				}
 				
 				case 'music': {
-					let guild = client.guilds.get('id');
+					let guild = client.guilds.cache.get('id');
 					
 					if (!guild) {
 						error = 'Could not find guild with ID provided';
@@ -130,7 +130,7 @@ let ipcObject = client => {
 				}
 				
 				case 'user': {
-					let user = await client.fetchUser(id);
+					let user = await client.users.fetch(id);
 					
 					if (!user) {
 						error = 'Could not find user with ID provided';
@@ -154,7 +154,7 @@ let ipcObject = client => {
 				}
 				
 				case 'guildXP': {
-					if (!client.guilds.has(id)) {
+					if (!client.guilds.cache.has(id)) {
 						error = 'Could not find guild with ID provided';
 						break;
 					}
@@ -192,7 +192,7 @@ let ipcObject = client => {
 						break;
 					}
 					
-					let guild = client.guilds.get(id);
+					let guild = client.guilds.cache.get(id);
 					if (!guild) {
 						error = 'Invalid guild ID';
 						break;
@@ -227,7 +227,7 @@ let ipcObject = client => {
 							break;
 						}
 						case 'blacklistUser': {
-							let user = client.users.get(params.userID) || await client.fetchUser(params.userID);
+							let user = await client.users.fetch(params.userID);
 							if (!user) {
 								error = 'Invalid user ID';
 								break;
@@ -262,7 +262,7 @@ let ipcObject = client => {
 						break;
 					}
 
-					let guild = client.guilds.get(id);
+					let guild = client.guilds.cache.get(id);
 					if (!guild) {
 						error = 'Invalid guild ID';
 						break;
@@ -275,7 +275,7 @@ let ipcObject = client => {
 					
 					let member;
 					try {
-						member = guild.members.get(params.userID) || await guild.fetchMember(params.userID);
+						member = await guild.members.fetch(params.userID);
 					} catch (e) {}
 					if (!member) {
 						error = 'Invalid user ID';
@@ -290,8 +290,8 @@ let ipcObject = client => {
 					
 					switch (action) {
 						case 'togglePausePlay': {
-							if (guild.music.playing) guild.voiceConnection.dispatcher.pause();
-							else guild.voiceConnection.dispatcher.resume();
+							if (guild.music.playing) guild.voice.connection.dispatcher.pause(true);
+							else guild.voice.connection.dispatcher.resume();
 							
 							guild.music.playing = !guild.music.playing;
 							
@@ -386,7 +386,8 @@ function deconstructChannel(channel) {
 }
 
 function deconstructUser(user) {
-	let { displayAvatarURL, id, username, discriminator } = user;
+	let { id, username, discriminator } = user;
+	let displayAvatarURL = user.displayAvatarURL();
 	
 	return { displayAvatarURL, id, username, discriminator };
 }

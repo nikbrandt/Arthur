@@ -10,12 +10,12 @@ module.exports = (client, reaction, user) => {
 	let currentEmojis = emojis.slice(0, obj.number);
 	if (!currentEmojis.includes(reaction.emoji.name)) return;
 
-	let reactions = reaction.message.reactions.filter(reaction => currentEmojis.includes(reaction.emoji.name));
+	let reactions = reaction.message.reactions.cache.filter(reaction => currentEmojis.includes(reaction.emoji.name));
 	let total = 0;
 
 	reactions.forEach(reaction => {
-		if (reaction.users.has(user.id)) total++;
+		if (reaction.users.cache.has(user.id)) total++;
 	});
 
-	if (total > 1) reaction.remove(user).catch(() => {});
+	if (total > 1) reaction.users.remove(user).catch(() => {});
 };

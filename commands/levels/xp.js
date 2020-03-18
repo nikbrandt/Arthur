@@ -21,7 +21,7 @@ exports.run = async (message, args, suffix, client) => {
 	message.channel.send({embed: {
 		author: {
 			name: mem.displayName + '\'s XP',
-			icon_url: mem.user.avatarURL
+			icon_url: mem.user.displayAvatarURL()
 		},
 		color: 0x8356ff,
 		description: message.__('description', { xp: xpObj.global, end: gRank ? ' - ' + message.__('rank_on_page', { rank: gRank.rank, page: gRank.page }) : '' }),

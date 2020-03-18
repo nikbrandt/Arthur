@@ -8,7 +8,7 @@ exports.run = (message, args, suffix, client, permLevel) => {
 	if (num === 1) return message.channel.send(message.__('current_song'));
 	if (num > message.guild.music.queue.length) return message.channel.send(message.__('does_not_exist_yet'));
 
-	if (!message.member.roles.find(r => r.name.toLowerCase() === i18n.get('struct.music.dj', message).toLowerCase()) && !message.member.roles.find(r => r.name.toLowerCase() === i18n.get('struct.music.music', message).toLowerCase()) && permLevel < 3 && message.guild.music.queue[num - 1].person.id !== message.author.id) return;
+	if (!message.member.roles.cache.find(r => r.name.toLowerCase() === i18n.get('struct.music.dj', message).toLowerCase()) && !message.member.roles.cache.find(r => r.name.toLowerCase() === i18n.get('struct.music.music', message).toLowerCase()) && permLevel < 3 && message.guild.music.queue[num - 1].person.id !== message.author.id) return;
 
 	message.guild.music.queue.splice(num - 1, 1);
 	message.channel.send(message.__('success', { num, name: message.member.displayName.replace(/@/g, '@\u200b').replace(/ /g, '') }));

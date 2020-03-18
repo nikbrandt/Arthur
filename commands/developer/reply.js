@@ -1,7 +1,7 @@
 exports.run = (message, args, suffix, client, permLevel) => {
 	if (!args[0] && !message.attachments.size) return message.channel.send('yes, i\'ll send nothing. bravo.');
 
-	let channel = client.channels.get('304441662724243457');
+	let channel = client.channels.cache.get('304441662724243457');
 	let user = client.lastMessage;
 	if (!user) return message.channel.send('ive restarted since the last person sent a message, ffs');
 	message.delete().catch(() => {});

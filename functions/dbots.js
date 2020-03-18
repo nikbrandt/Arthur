@@ -9,7 +9,7 @@ exports.post = client => {
 			"Authorization": client.config.dbotsAuth.org.bot
 		},
 		body: {
-			"server_count": client.guilds.size
+			"server_count": client.guilds.cache.size
 		}
 	};
 
@@ -21,7 +21,7 @@ exports.post = client => {
 			"Authorization": client.config.dbotsAuth.pw
 		},
 		body: {
-			"guildCount": client.guilds.size
+			"guildCount": client.guilds.cache.size
 		}
 	};
 

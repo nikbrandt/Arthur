@@ -126,7 +126,7 @@ class XP {
 		let startNum = page * 5 - 4;
 
 		for (let entry of entries) {
-			let user = await client.fetchUser(entry.userID);
+			let user = await client.users.fetch(entry.userID);
 			pageArray.push(`${emojiForNumber(startNum)} ${startNum === 1 ? '**' : ''} ${user.username} | Level ${entry.level} | ${entry.total} xp${startNum === 1 ? '**' : ''}`);
 			startNum++;
 		}
@@ -160,7 +160,7 @@ class XP {
 		let startNum = page * 5 - 4;
 
 		for (let entry of entries) {
-			let user = await client.fetchUser(entry.userID);
+			let user = await client.users.fetch(entry.userID);
 			pageArray.push(`${emojiForNumber(startNum)} ${startNum === 1 ? '**' : ''} ${user.username} | ${entry.global} xp${startNum === 1 ? '**' : ''}`);
 			startNum++;
 		}

@@ -63,16 +63,16 @@ exports.load = client => {
 		if (!rawEvents.hasOwnProperty(event.t)) return;
 		
 		const { d: data } = event;
-		const user = client.users.get(data.user_id); // or client.fetchUser when fetchAllMembers is off
-		const channel = client.channels.get(data.channel_id); // || await user.createDM(); if using DM reactions
+		const user = await client.users.fetch(data.user_id);
+		const channel = client.channels.cache.get(data.channel_id); // || await user.createDM(); if using DM reactions
 		
-		if (!channel || channel.messages.has(data.message_id)) return;
+		if (!channel || channel.messages.cache.has(data.message_id)) return;
 		
-		const message = await channel.fetchMessage(data.message_id).catch(() => {});
+		const message = await channel.messages.fetch(data.message_id).catch(() => {});
 		if (!message) return;
 
 		const emojiKey = (data.emoji.id) ? `${data.emoji.name}:${data.emoji.id}` : data.emoji.name;
-		const reaction = message.reactions.get(emojiKey);
+		const reaction = await message.reactions.cache.get(emojiKey).fetch();
 
 		if (!reaction || !reaction.message) return;
 
@@ -80,14 +80,20 @@ exports.load = client => {
 	});
 
 	client.on('debug', d => {
+		if (d.startsWith('[VOICE')) return;
+		
 		if (d.includes('Session invalidated')) statusUpdate({
 			title: 'Session Invalidated',
 			timestamp: new Date().toISOString(),
 			color: 0xf47742,
 		}, true);
 		
-		if (d.includes('eartbeat')) lastHeartbeat = Date.now();
-		else console.log(d);
+		if (d.includes('eartbeat')) {
+			lastHeartbeat = Date.now();
+			return;
+		}
+		
+		console.log(d);
 	});
 
 	client.on('error', err => {
@@ -95,18 +101,24 @@ exports.load = client => {
 		errorLog('Discord.JS Client Error', err, err.code);
 	});
 
-	client.on('reconnecting', () => {
+	client.on('shardReconnecting', id => {
 		statusUpdate({
 			title: 'Reconnecting',
+			footer: {
+				text: `Shard ${id}`
+			},
 			timestamp: new Date().toISOString(),
 			color: 0xfff53a
 		});
 	});
 
-	client.on('resume', num => {
+	client.on('resume', (num, id) => {
 		statusUpdate({
 			title: 'Resumed',
 			description: `${num} events replayed.`,
+			footer: {
+				text: `Shard ${id}`
+			},
 			timestamp: new Date().toISOString(),
 			color: 0x39ffb0
 		});

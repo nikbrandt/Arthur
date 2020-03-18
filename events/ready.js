@@ -10,8 +10,8 @@ const ipc = require('../struct/ipc');
 function game (client) {
 	let games = [
 		[ 'Invite me to your server with the "invite" command.', 'PLAYING' ],
-		[ `${client.guilds.size} servers do their things`, 'WATCHING' ],
-		[ `${client.users.size} users very closely`, 'WATCHING' ],
+		[ `${client.guilds.cache.size} servers do their things`, 'WATCHING' ],
+		[ `${client.users.cache.size} users very closely`, 'WATCHING' ],
 		[ 'with the webshot command', 'PLAYING' ],
 		[ 'The lovely mp3 command', 'LISTENING' ],
 		[ 'what do i put here', 'PLAYING' ],
@@ -45,7 +45,7 @@ function writeStats (client) {
 }
 
 function cleanProcesses(client) {
-	client.voiceConnections.forEach(connection => {
+	client.voice.connections.forEach(connection => {
 		if (!connection.channel
 			|| connection.channel.members.size < 2
 			|| !connection.channel.guild
@@ -69,12 +69,12 @@ function cleanProcesses(client) {
 
 module.exports = client => {
 	if (Date.now() - client.loadStart > 300000) return;
-	console.log(`\n${client.test ? 'Testbot' : 'Arthur'} has started! Currently in ${client.guilds.size} guilds, attempting to serve ${client.users.size} users. (${Date.now() - client.loadStart} ms)\n`);
+	console.log(`\n${client.test ? 'Testbot' : 'Arthur'} has started! Currently in ${client.guilds.cache.size} guilds, attempting to serve ${client.users.cache.size} users. (${Date.now() - client.loadStart} ms)\n`);
 
 	if (!client.test) dbots.post(client);
 	/*if (!client.test)*/ ipc(client);
 
-	client.owner = client.users.get(client.config.owners[0]);
+	client.owner = client.users.cache.get(client.config.owners[0]);
 	client.recentMessages = {};
 	client.lastRecentMessageID = 0;
 
@@ -127,9 +127,9 @@ module.exports = client => {
 		});
 
 		parsed.forEach(obj => {
-			let channel = client.channels.get(obj.channelID);
+			let channel = client.channels.cache.get(obj.channelID);
 			if (!channel) return sql.run('DELETE FROM pollReactionCollectors WHERE messageID = ?', [obj.messageID]).catch(console.log);
-			channel.fetchMessage(obj.messageID).then(msg => {
+			channel.messages.fetch(obj.messageID).then(msg => {
 				watch(msg, obj.options, obj.endDate, client, obj.embed);
 			}).catch(() => {
 				sql.run('DELETE FROM pollReactionCollectors WHERE messageID = ?', [obj.messageID]).catch(console.log);

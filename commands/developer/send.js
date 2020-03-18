@@ -3,13 +3,13 @@ exports.run = (message, args, suffix, client) => {
 	if (!args[1] && !message.attachments.size) return message.channel.send('Right. And what, exactly, are you sending?');
 	message.delete().catch(() => {});
 
-	let messageChannel = client.channels.get('304441662724243457');
+	let messageChannel = client.channels.cache.get('304441662724243457');
 	let name;
 
-	let channel = client.users.get(Object.keys(client.recentMessages)[Object.values(client.recentMessages).indexOf(args[0])]);
-	if (!channel) channel = client.users.get(args[0]);
+	let channel = client.users.cache.get(Object.keys(client.recentMessages)[Object.values(client.recentMessages).indexOf(args[0])]);
+	if (!channel) channel = client.users.cache.get(args[0]);
 	if (!channel) {
-		channel = client.channels.get(args[0]);
+		channel = client.channels.cache.get(args[0]);
 		if (!channel) return message.channel.send('That\'s not a valid ID, sorry.');
 		name = `${channel.name} in ${channel.guild.name}`
 	} else name = channel.tag;

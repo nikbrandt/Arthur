@@ -1,47 +1,49 @@
 {
-  "name": "arthur",
-  "version": "0.1.0",
-  "description": "A discord bot, probs a rewrite of Marvin",
-  "main": "bot.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "discord",
-    "bot",
-    "discord.js",
-    "arthur",
-    "marvin"
-  ],
-  "author": "Gymnophoria",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Gymnophoria/Arthur.git"
-  },
-  "license": "MIT",
-  "dependencies": {
-    "@discordjs/uws": "^11.149.1",
-    "bufferutil": "^4.0.1",
-    "canvas": "^2.6.1",
-    "discord.js": "^11.6.2",
-    "erlpack": "github:discordapp/erlpack",
-    "file-type": "^12.4.2",
-    "fluent-ffmpeg": "^2.1.2",
-    "hoek": "^5.0.4",
-    "libsodium-wrappers": "^0.7.6",
-    "moment": "^2.24.0",
-    "ms": "^2.1.2",
-    "node-ipc": "^9.1.1",
-    "node-opus": "^0.2.9",
-    "request": "^2.88.2",
-    "request-promise": "^4.2.5",
-    "sqlite": "^3.0.3",
-    "sqlite3": "^4.1.1",
-    "trello": "^0.9.1",
-    "webshot": "github:thatmarcel/node-webshot",
-    "xml2json": "^0.11.2",
-    "youtube-search": "^1.1.4",
-    "ytdl-core": "^2.0.0",
-    "zlib-sync": "^0.1.6"
-  }
+	"name": "arthur",
+	"version": "0.1.0",
+	"description": "A discord bot, probably a rewrite of Marvin",
+	"main": "bot.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [
+		"discord",
+		"bot",
+		"discord.js",
+		"arthur",
+		"marvin"
+	],
+	"author": "Gymnophoria",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Gymnophoria/Arthur.git"
+	},
+	"license": "MIT",
+	"dependencies": {
+		"@discordjs/opus": "^0.1.0",
+		"@discordjs/uws": "^11.149.1",
+		"bufferutil": "^4.0.1",
+		"canvas": "^2.6.1",
+		"capture-website": "^0.8.1",
+		"discord.js": "^12.0.2",
+		"erlpack": "github:discordapp/erlpack",
+		"file-type": "^12.4.2",
+		"fluent-ffmpeg": "^2.1.2",
+		"hoek": "^5.0.4",
+		"libsodium-wrappers": "^0.7.6",
+		"moment": "^2.24.0",
+		"ms": "^2.1.2",
+		"node-expat": "^2.3.18",
+		"node-ipc": "^9.1.1",
+		"request": "^2.88.2",
+		"request-promise": "^4.2.5",
+		"sqlite": "^3.0.3",
+		"sqlite3": "^4.1.1",
+		"trello": "^0.9.1",
+		"utf-8-validate": "^5.0.2",
+		"xml2json": "^0.11.2",
+		"youtube-search": "^1.1.4",
+		"ytdl-core": "^2.0.0",
+		"zlib-sync": "^0.1.6"
+	}
 }
