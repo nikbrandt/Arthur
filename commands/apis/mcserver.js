@@ -1,7 +1,7 @@
 const request = require('request');
-const webshot = require('webshot');
 const { MessageEmbed } = require('discord.js');
 const moment = require('moment');
+const captureWebsite = require('capture-website');
 
 const dataRegex = /^data:image\/([a-z]+);base64,/;
 const { errorLog } = require('../../functions/eventLoader');
@@ -34,7 +34,7 @@ exports.run = async (message, args, s, client) => {
 	client.processing.push(moment().format('h:mm:ss A') + ' - MC Server/Webshot');
 	let msg = await message.channel.send(message.__('processing'));
 	
-	request(`https://api.mcsrvstat.us/2/${args[0]}`, (err, response, body) => {
+	request(`https://api.mcsrvstat.us/2/${args[0]}`, async (err, response, body) => {
 		if (err || !body) return failed({embed: failedEmbed}, msg, client, index);
 		
 		try {
@@ -45,10 +45,14 @@ exports.run = async (message, args, s, client) => {
 
 		if (!body.online) return failed({embed: failedEmbed}, msg, client, index);
 		
-		let fileLocation = `../media/temp/${message.id}.png`;
+		let fileLocation = `${__basedir}/../media/temp/${message.id}.png`;
 		let html = body.motd.html.join('<br>').replace(/ {2}/g, '&nbsp;&nbsp;');
-
-		webshot(html, fileLocation, {siteType: 'html', windowSize: { width: 700, height: 85 }, customCSS }, err => {
+		
+		let captureError = false;
+		
+		captureWebsite.file(html, fileLocation, { input: 'html', width: 700, height: 85, styles: [ customCSS ] }).catch(error => {
+			captureError = error;
+		}).then(() => {
 			let iconBase64 = body.icon;
 			let iconFilename;
 			let files = [];
@@ -67,9 +71,9 @@ exports.run = async (message, args, s, client) => {
 				.addField(message.__('embed.version'), body.version.replace(/§./g, ''), true)
 				.setColor(0x00c140);
 			
-			if (err) {
-				console.log('mcserver command error while rendering webshot - rip\n', err);
-				errorLog('mcserver command failed while getting webshot', err.stack, err.code);
+			if (captureError) {
+				console.log('mcserver command error while rendering webshot - rip\n', captureError);
+				errorLog('mcserver command failed while getting webshot', captureError.stack, captureError.code);
 				embed.setDescription('```\n' + body.motd.clean.join('\n') + '```');
 			} else {
 				files.push({ attachment: fileLocation, name: 'motd.png' });

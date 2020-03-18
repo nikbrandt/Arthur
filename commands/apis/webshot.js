@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const webshot = require('webshot');
+const captureWebsite = require('capture-website');
 const moment = require('moment');
 const fs = require('fs');
 
@@ -14,16 +14,11 @@ exports.run = async (message, args, s, client) => {
 	let sent = false;
 
 	let options = {
-		windowSize: {
-			width: 1920,
-			height: 1080
-		},
-		shotSize: {
-			width: 'window',
-			height: 'all'
-		},
+		width: 1920,
+		height: 1080,
+		fullPage: true,
 		cookies: [],
-		timeout: 30000
+		timeout: 30 // add beforeScreenshot to filter out IP or something
 	};
 
 	let msg;
@@ -42,8 +37,12 @@ exports.run = async (message, args, s, client) => {
 			client.processing.splice(index, 1);
 		}
 	}, 35000); // if webshot not complete in 35 seconds, cancel operation.
+	
+	let err = false;
 
-	webshot(args[0], `../media/temp/${date}-${message.author.id}.png`, options, err => {
+	captureWebsite.file(args[0], `../media/temp/${date}-${message.author.id}.png`, options).catch(error => {
+		err = error;
+	}).then(() => {
 		if (cancel) return;
 
 		if (err) {
