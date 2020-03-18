@@ -40,6 +40,8 @@ exports.run = async (message, args, s, client) => {
 	
 	let err = false;
 
+	if (!args[0].startsWith('http')) args[0] = 'https://' + args[0];
+
 	captureWebsite.file(args[0], `../media/temp/${date}-${message.author.id}.png`, options).catch(error => {
 		err = error;
 	}).then(() => {

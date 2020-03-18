@@ -11,7 +11,7 @@ const customCSS = `
 @font-face { font-family: 'Minecraftia'; src: url('../media/fonts/Minecraft-Italic.ttf') format('truetype'); font-weight: normal; font-style: italic; }
 @font-face { font-family: 'Minecraftia'; src: url('../media/fonts/Minecraft-Bold.ttf') format('truetype'); font-weight: bold; font-style: normal; }
 @font-face { font-family: 'Minecraftia'; src: url('../media/fonts/Minecraft-BoldItalic.ttf') format('truetype'); font-weight: bold; font-style: italic; }
-* { font-size: 24px; font-family: Minecraftia, Minecraft, sans-serif }
+* { font-size: 30px; font-family: Minecraftia, Minecraft, sans-serif }
 `;
 
 function failed (messageOptions, msg, client, index) {
@@ -45,12 +45,12 @@ exports.run = async (message, args, s, client) => {
 
 		if (!body.online) return failed({embed: failedEmbed}, msg, client, index);
 		
-		let fileLocation = `${__basedir}/../media/temp/${message.id}.png`;
+		let fileLocation = `../media/temp/${message.id}.png`;
 		let html = body.motd.html.join('<br>').replace(/ {2}/g, '&nbsp;&nbsp;');
 		
 		let captureError = false;
 		
-		captureWebsite.file(html, fileLocation, { input: 'html', width: 700, height: 85, styles: [ customCSS ] }).catch(error => {
+		captureWebsite.file(html, fileLocation, { inputType: 'html', width: 700, height: 85, styles: [ customCSS ], defaultBackground: false }).catch(error => {
 			captureError = error;
 		}).then(() => {
 			let iconBase64 = body.icon;
