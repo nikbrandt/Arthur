@@ -31,9 +31,7 @@ exports.run = (message, args, s, client, permLevel) => {
 	if (message.guild.music.queue[0].type === 1) { // YouTube video
 		ytdl.getInfo(message.guild.music.queue[0].id).then(info => {
 			let secObj = secSpread(info.length_seconds);
-
-			let data = message.guild.voice.connection.player.streamingData;
-			let remainingTime = Math.round((Date.now() - (data.startTime - data.pausedTime)) / 1000);
+			let ellapsedTime = Math.round(message.guild.voice.connection.dispatcher.totalStreamTime / 1000);
 
 			message.channel.send({
 				embed: {
@@ -44,7 +42,7 @@ exports.run = (message, args, s, client, permLevel) => {
 					color: 0xff0000,
 					description: `[${info.title}](https://www.youtu.be/${message.guild.music.queue[0].id})
 ${message.__('by')} [${info.author.name}](${info.author.channel_url})
-${secString(secSpread(remainingTime), locale)} ${message.__('of')} ${secString(secObj, locale)}`,
+${secString(secSpread(ellapsedTime), locale)} ${message.__('of')} ${secString(secObj, locale)}`,
 					thumbnail: {
 						url: info.iurlhq
 					},
@@ -53,7 +51,7 @@ ${secString(secSpread(remainingTime), locale)} ${message.__('of')} ${secString(s
 					}
 				}
 			}).then(msg => {
-				Music.addReactionCollector(msg, client, remainingTime * 1000);
+				Music.addReactionCollector(msg, client, ellapsedTime * 1000);
 			});
 		});
 	} else if (message.guild.music.queue[0].type === 5) { // soundcloud

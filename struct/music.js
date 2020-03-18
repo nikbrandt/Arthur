@@ -123,8 +123,7 @@ const Music = {
 					
 					let dispatcher = guild.voice.connection.play(stream, streamOptions);
 	
-					dispatcher.once('finish', reason => {
-						console.log('Dispatcher ended youtube playback with reason:\t', reason);
+					dispatcher.once('finish', () => {
 						Music.next(guild);
 					});
 	
@@ -135,6 +134,7 @@ const Music = {
 					dispatcher.on('error', err => {
 						console.warn(`error playing music: ${err}`);
 						guild.client.errorLog("Error playing music", err.stack ? err.stack : err, err.code);
+						Music.next(guild);
 					});
 					
 					break;
@@ -152,9 +152,8 @@ const Music = {
 						const stream = fs.createReadStream(file);
 						let dispatcher = guild.voice.connection.play(stream, streamOptions);
 	
-						dispatcher.once('finish', reason => {
+						dispatcher.once('finish', () => {
 							fs.unlinkSync(file);
-							console.log('Dispatcher ended URL playback with reason:\t', reason);
 							Music.next(guild);
 						});
 	
@@ -165,6 +164,7 @@ const Music = {
 						dispatcher.on('error', err => {
 							console.warn(`error playing music: ${err}`);
 							guild.client.errorLog("Error playing music", err.stack ? err.stack : err, err.code);
+							Music.next(guild);
 						});
 					});
 					
@@ -174,8 +174,7 @@ const Music = {
 					const stream = fs.createReadStream(`../media/sounds/${music.queue[0].id}.mp3`);
 					let dispatcher = guild.voice.connection.play(stream, streamOptions);
 	
-					dispatcher.once('finish', reason => {
-						console.log('Dispatcher ended sound effect playback with reason:\t', reason);
+					dispatcher.once('finish', () => {
 						Music.next(guild);
 					});
 	
@@ -186,6 +185,7 @@ const Music = {
 					dispatcher.on('error', err => {
 						console.warn(`error playing music: ${err}`);
 						guild.client.errorLog("Error playing music", err.stack ? err.stack : err, err.code);
+						Music.next(guild);
 					});
 					
 					break;
@@ -200,8 +200,7 @@ const Music = {
 							if (!guild.voice) return;
 							let dispatcher = guild.voice.connection.play(scStream, streamOptions);
 	
-							dispatcher.once('finish', reason => {
-								console.log('Dispatcher ended soundcloud playback with reason:\t', reason);
+							dispatcher.once('finish', () => {
 								fs.unlinkSync(`../media/temp/${id}.mp3`);
 								Music.next(guild);
 								setTimeout(() => {
@@ -216,6 +215,7 @@ const Music = {
 							dispatcher.on('error', err => {
 								console.warn(`error playing music: ${err}`);
 								guild.client.errorLog("Error playing music", err.stack ? err.stack : err, err.code);
+								Music.next(guild);
 							});
 						}, 100);
 					});
@@ -523,7 +523,7 @@ const Music = {
 
 			let fakeMessage = message;
 			fakeMessage.author = user;
-			fakeMessage.member = await message.guild.members.cache.fetch(user);
+			fakeMessage.member = message.guild.members.cache.get(user.id) || await message.guild.members.fetch(user);
 			let permLevel = client.permLevel(fakeMessage);
 
 			switch (reaction.emoji.name) {
