@@ -12,7 +12,7 @@ exports.pl = client => {
 			let admin = message.guild.roles.cache.find(r => r.name.toLowerCase().includes('admin'));
 			if (mod && message.member.roles.cache.has(mod.id)) permLevel = 3;
 			if (message.member.permissions.has('MANAGE_GUILD')) permLevel = 4;
-			if ((admin && message.member.roles.cache.has(admin.id)) || message.member.hasPermission('ADMINISTRATOR')) permLevel = 5;
+			if ((admin && message.member.roles.cache.has(admin.id)) || message.member.permissions.has('ADMINISTRATOR')) permLevel = 5;
 		} catch (e) {}
 		
 		if (message.author.id === message.guild.ownerID) permLevel = 6;

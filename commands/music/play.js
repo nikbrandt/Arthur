@@ -11,7 +11,7 @@ let add = async (message, id, type, client, first, loadMessage) => {
 	try {
 		obj = await Music.getInfo(type, id, message, client, title);
 	} catch (err) {
-		if (!message.guild.music.queue && message.guild.voiceConnection) message.guild.voiceConnection.disconnect();
+		if (!message.guild.music.queue && message.guild.voice) message.guild.voice.connection.disconnect();
 		return loadMessage.edit(message.__('error_getting_info', { err }));
 	}
 
@@ -74,7 +74,7 @@ exports.run = async (message, args, suffix, client, perms) => {
 	try {
 		object = await Music.parseMessage(message, args, suffix, client);
 	} catch (err) {
-		if (message.guild.voiceConnection && !message.guild.music && !message.guild.music.queue[0]) message.guild.voiceConnection.disconnect().catch(() => {});
+		if (message.guild.voice && !message.guild.music && !message.guild.music.queue[0]) message.guild.voice.connection.disconnect().catch(() => {});
 		return loadMessage.edit(err);
 	}
 
@@ -89,9 +89,9 @@ exports.run = async (message, args, suffix, client, perms) => {
 
 		try {
 			let errorInterval = setInterval(() => {
-				if (message.guild.voiceConnection) {
+				if (message.guild.voice) {
 					clearInterval(errorInterval);
-					message.guild.voiceConnection.on('error', err => {
+					message.guild.voice.connection.on('error', err => {
 						loadMessage.edit(message.__('could_not_connect', { err }));
 						stop = true;
 					});

@@ -32,7 +32,7 @@ exports.run = (message, args, s, client, permLevel) => {
 		ytdl.getInfo(message.guild.music.queue[0].id).then(info => {
 			let secObj = secSpread(info.length_seconds);
 
-			let data = message.guild.voiceConnection.player.streamingData;
+			let data = message.guild.voice.connection.player.streamingData;
 			let remainingTime = Math.round((Date.now() - (data.startTime - data.pausedTime)) / 1000);
 
 			message.channel.send({
@@ -57,7 +57,7 @@ ${secString(secSpread(remainingTime), locale)} ${message.__('of')} ${secString(s
 			});
 		});
 	} else if (message.guild.music.queue[0].type === 5) { // soundcloud
-		let data = message.guild.voiceConnection.player.streamingData;
+		let data = message.guild.voice.connection.player.streamingData;
 		let remainingTime = Math.round((Date.now() - (data.startTime - data.pausedTime)) / 1000);
 
 		let embed = message.guild.music.queue[0].embed;

@@ -75,7 +75,7 @@ const Music = {
 		let music = guild.music;
 
 		if (!music.queue) {
-			if (guild.voiceConnection) guild.voiceConnection.disconnect();
+			if (guild.voice) guild.voice.connection.disconnect();
 			return;
 		}
 
@@ -90,7 +90,7 @@ const Music = {
 		}
 
 		if (music.queue.length === 0) {
-			if (guild.voiceConnection) guild.voiceConnection.disconnect();
+			if (guild.voice) guild.voice.connection.disconnect();
 			guild.music = {};
 			return;
 		}
@@ -98,7 +98,7 @@ const Music = {
 		guild.music = music;
 
 		setTimeout(async () => {
-			if (!guild.voiceConnection) {
+			if (!guild.voice) {
 				guild.music = {};
 				return;
 			}
@@ -116,12 +116,12 @@ const Music = {
 				case 1: { // youtube
 					const stream = ytdl(music.queue[0].id, { quality: 'highestaudio' });
 	
-					if (!guild.voiceConnection) {
+					if (!guild.voice) {
 						guild.music = {};
 						return;
 					}
 					
-					let dispatcher = guild.voiceConnection.play(stream, streamOptions);
+					let dispatcher = guild.voice.connection.play(stream, streamOptions);
 	
 					dispatcher.once('finish', reason => {
 						console.log('Dispatcher ended youtube playback with reason:\t', reason);
@@ -129,7 +129,7 @@ const Music = {
 					});
 	
 					dispatcher.once('start', () => {
-						guild.voiceConnection.player.streamingData.pausedTime = 0;
+						guild.voice.connection.player.streamingData.pausedTime = 0;
 					});
 	
 					dispatcher.on('error', err => {
@@ -150,7 +150,7 @@ const Music = {
 	
 					r.on('finish', () => {
 						const stream = fs.createReadStream(file);
-						let dispatcher = guild.voiceConnection.play(stream, streamOptions);
+						let dispatcher = guild.voice.connection.play(stream, streamOptions);
 	
 						dispatcher.once('finish', reason => {
 							fs.unlinkSync(file);
@@ -159,7 +159,7 @@ const Music = {
 						});
 	
 						dispatcher.once('start', () => {
-							guild.voiceConnection.player.streamingData.pausedTime = 0;
+							guild.voice.connection.player.streamingData.pausedTime = 0;
 						});
 	
 						dispatcher.on('error', err => {
@@ -172,7 +172,7 @@ const Music = {
 				}
 				case 3: { // local file
 					const stream = fs.createReadStream(`../media/sounds/${music.queue[0].id}.mp3`);
-					let dispatcher = guild.voiceConnection.play(stream, streamOptions);
+					let dispatcher = guild.voice.connection.play(stream, streamOptions);
 	
 					dispatcher.once('finish', reason => {
 						console.log('Dispatcher ended sound effect playback with reason:\t', reason);
@@ -180,7 +180,7 @@ const Music = {
 					});
 	
 					dispatcher.once('start', () => {
-						guild.voiceConnection.player.streamingData.pausedTime = 0;
+						guild.voice.connection.player.streamingData.pausedTime = 0;
 					});
 	
 					dispatcher.on('error', err => {
@@ -197,20 +197,20 @@ const Music = {
 					writeStream.on('finish', () => {
 						setTimeout(() => {
 							let scStream = fs.createReadStream(`../media/temp/${id}.mp3`);
-							if (!guild.voiceConnection) return;
-							let dispatcher = guild.voiceConnection.play(scStream, streamOptions);
+							if (!guild.voice) return;
+							let dispatcher = guild.voice.connection.play(scStream, streamOptions);
 	
 							dispatcher.once('finish', reason => {
 								console.log('Dispatcher ended soundcloud playback with reason:\t', reason);
 								fs.unlinkSync(`../media/temp/${id}.mp3`);
 								Music.next(guild);
 								setTimeout(() => {
-									if (guild.voiceConnection && !guild.voiceConnection.dispatcher) Music.next(guild);
+									if (guild.voice && !guild.voice.connection.dispatcher) Music.next(guild);
 								}, 10000);
 							});
 	
 							dispatcher.once('start', () => {
-								guild.voiceConnection.player.streamingData.pausedTime = 0;
+								guild.voice.connection.player.streamingData.pausedTime = 0;
 							});
 	
 							dispatcher.on('error', err => {
@@ -248,7 +248,7 @@ const Music = {
 				id = message.attachments.first().url;
 
 				if (!supportedFileTypes.some(fileType => id.toLowerCase().endsWith('.' + fileType))) return reject(message._('invalid_file_type', { filetypes: supportedFileTypesString }));
-				if (message.attachments.first().filesize < 25000) return reject(message._('file_too_small'));
+				if (message.attachments.first().size < 25000) return reject(message._('file_too_small'));
 				if (!(await testIfValidFileType(id))) return reject(message._('invalid_file_type', { filetypes: supportedFileTypesString }));
 
 				resolve( {
@@ -518,7 +518,7 @@ const Music = {
 		const collector = message.createReactionCollector(reactionFilter, { time: time ? time + 10000 : 600000 });
 
 		collector.on('collect', async reaction => {
-			let user = reaction.users.filter(user => user.id !== client.user.id).first();
+			let user = reaction.users.cache.filter(user => user.id !== client.user.id).first();
 			if (!user) return;
 
 			let fakeMessage = message;
@@ -564,7 +564,7 @@ const Music = {
 					break;
 			}
 
-			reaction.remove(user).catch(err => {
+			reaction.users.remove(user).catch(err => {
 				console.error('failed to remove reaction; \n' + err.stack);
 			})
 		});

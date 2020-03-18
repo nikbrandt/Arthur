@@ -1,7 +1,7 @@
 const Music = require('../../struct/music');
 
 function skip (message) {
-	if (message.guild.voiceConnection) message.guild.voiceConnection.dispatcher.destroy('User skipped song');
+	if (message.guild.voice) message.guild.voice.connection.dispatcher.destroy('User skipped song');
 	else message.guild.music = {};
 	message.channel.send(message.__('skipped', { user: message.member.displayName.replace(/@/g, '@\u200b').replace(/ /g, '') }));
 }
@@ -25,7 +25,7 @@ exports.run = (message, a, s, d, permLevel) => {
 	}
 	else message.guild.music.queue[0].voteSkips = [ message.author.id ];
 
-	let skipNum = Math.round((message.guild.voiceConnection.channel.members.cache.size - 1) / 2);
+	let skipNum = Math.round((message.guild.voice.connection.channel.members.size - 1) / 2);
 	if (message.guild.music.queue[0].voteSkips.length >= skipNum) return skip(message);
 
 	message.channel.send(message.__('vote_skip_registered', { 

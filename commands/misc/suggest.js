@@ -13,7 +13,7 @@ exports.run = (message, args, suffix, client) => {
 		splitified.splice(1, 0, extra);
 	}
 
-	let attachments = message.attachments.map(a => `[${a.filename}](${a.url})`);
+	let attachments = message.attachments.map(a => `[${a.name}](${a.url})`);
 
 	let footer = attachments.length
 		? `Attached:\n${attachments.join('\n')}\n\n*Suggested by ${message.author.tag} (${message.author.id})*`
@@ -36,7 +36,7 @@ exports.run = (message, args, suffix, client) => {
 				},
 				color: 0x00c140
 			},
-			files: message.attachments.map(a => {return { attachment: a.url, name: a.filename }})
+			files: message.attachments.map(a => {return { attachment: a.url, name: a.name }})
 		});
 
 		message.channel.send(message.__('success', { extra: message.guild && message.guild.id === '304428345917964290' ? '' : '\n' + message.__('check_support_server', { link: client.config.info.guildLink }) }));

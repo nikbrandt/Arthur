@@ -290,8 +290,8 @@ let ipcObject = client => {
 					
 					switch (action) {
 						case 'togglePausePlay': {
-							if (guild.music.playing) guild.voiceConnection.dispatcher.pause(true);
-							else guild.voiceConnection.dispatcher.resume();
+							if (guild.music.playing) guild.voice.connection.dispatcher.pause(true);
+							else guild.voice.connection.dispatcher.resume();
 							
 							guild.music.playing = !guild.music.playing;
 							

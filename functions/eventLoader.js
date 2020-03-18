@@ -80,14 +80,20 @@ exports.load = client => {
 	});
 
 	client.on('debug', d => {
+		if (d.startsWith('[VOICE')) return;
+		
 		if (d.includes('Session invalidated')) statusUpdate({
 			title: 'Session Invalidated',
 			timestamp: new Date().toISOString(),
 			color: 0xf47742,
 		}, true);
 		
-		if (d.includes('eartbeat')) lastHeartbeat = Date.now();
-		else console.log(d);
+		if (d.includes('eartbeat')) {
+			lastHeartbeat = Date.now();
+			return;
+		}
+		
+		console.log(d);
 	});
 
 	client.on('error', err => {

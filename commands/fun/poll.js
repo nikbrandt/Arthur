@@ -64,7 +64,7 @@ function watch (message, options, endDate, client, embed) {
 	}, endDate - Date.now());
 }
 
-function finish (messageID, client, locale) {
+async function finish (messageID, client, locale) {
 	let obj = client.reactionCollectors.get(messageID);
 	if (!obj) return;
 	
@@ -72,10 +72,14 @@ function finish (messageID, client, locale) {
 	let emojiObject = {};
 	let { embed } = obj;
 
-	obj.message.reactions.forEach(reaction => {
-		if (!theseEmojis.includes(reaction.emoji.name)) return;
-		emojiObject[reaction.emoji.name] = reaction.count - 1;
-	});
+	await Promise.all(obj.message.reactions.cache.map(reaction => {
+		return new Promise(async resolve => {
+			await reaction.users.fetch();
+			if (!theseEmojis.includes(reaction.emoji.name)) return resolve();
+			emojiObject[reaction.emoji.name] = reaction.users.cache.size - 1;
+			resolve();
+		});
+	}));
 
 	let total = calculateTotalResults(theseEmojis, emojiObject);
 	embed.description = finishedEmojiDescription(theseEmojis, emojiObject, obj.options, total);

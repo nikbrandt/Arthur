@@ -47,7 +47,7 @@ function writeStats (client) {
 function cleanProcesses(client) {
 	client.voice.connections.forEach(connection => {
 		if (!connection.channel
-			|| connection.channel.members.cache.size < 2
+			|| connection.channel.members.size < 2
 			|| !connection.channel.guild
 			|| !connection.channel.guild.music
 			|| !connection.channel.guild.music.queue
@@ -69,7 +69,7 @@ function cleanProcesses(client) {
 
 module.exports = client => {
 	if (Date.now() - client.loadStart > 300000) return;
-	console.log(`\n${client.test ? 'Testbot' : 'Arthur'} has started! Currently in ${client.guilds.size} guilds, attempting to serve ${client.users.cache.size} users. (${Date.now() - client.loadStart} ms)\n`);
+	console.log(`\n${client.test ? 'Testbot' : 'Arthur'} has started! Currently in ${client.guilds.cache.size} guilds, attempting to serve ${client.users.cache.size} users. (${Date.now() - client.loadStart} ms)\n`);
 
 	if (!client.test) dbots.post(client);
 	/*if (!client.test)*/ ipc(client);

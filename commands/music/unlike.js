@@ -14,7 +14,7 @@ exports.run = async (message, args) => {
 		if (num < 1) return message.channel.send(message.__('negative_number'));
 		if (num > rows.length) return message.channel.send(message.__('too_high_number'));
 	} else {
-		if (!message.guild.voiceConnection) return message.channel.send(message.__('no_voice_connection'));
+		if (!message.guild.voice) return message.channel.send(message.__('no_voice_connection'));
 		let index = rows.findIndex(o => o.id === message.guild.music.queue[0].id);
 		if (index === -1) return message.channel.send(message.__('song_not_liked'));
 		num = index + 1;

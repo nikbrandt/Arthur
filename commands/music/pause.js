@@ -4,7 +4,7 @@ exports.run = (message, a, s, d, permLevel) => {
 
 	if (message.guild.music.playing === false) return message.channel.send(message.__('already_paused'));
 
-	message.guild.voiceConnection.dispatcher.pause(true);
+	message.guild.voice.connection.dispatcher.pause(true);
 	message.guild.music.playing = false;
 	message.channel.send(message.__('paused'));
 };

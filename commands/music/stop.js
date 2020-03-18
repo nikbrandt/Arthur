@@ -4,7 +4,7 @@ exports.run = (message, a, s, d, permLevel) => {
 	if (!message.guild.music || !message.guild.music.queue) return message.channel.send(message.__('no_music'));
 
 	message.channel.send(message.__('stopped', { user: message.member.displayName.replace(/@/g, '@\u200b').replace(/ /g, '') }));
-	if (message.guild.voiceConnection) message.guild.voiceConnection.disconnect();
+	if (message.guild.voice) message.guild.voice.connection.disconnect();
 	message.guild.music = {};
 };
 

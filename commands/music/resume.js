@@ -4,7 +4,7 @@ exports.run = (message, a, s, d, permLevel) => {
 
 	if (message.guild.music.playing === true) return message.channel.send(message.__('already_playing'));
 
-	message.guild.voiceConnection.dispatcher.resume();
+	message.guild.voice.connection.dispatcher.resume();
 	message.guild.music.playing = true;
 	message.channel.send(message.__('resumed'));
 };
