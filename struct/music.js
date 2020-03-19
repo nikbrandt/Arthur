@@ -98,7 +98,7 @@ const Music = {
 		guild.music = music;
 
 		setTimeout(async () => {
-			if (!guild.voice) {
+			if (!guild.voice || !guild.voice.connection) {
 				guild.music = {};
 				return;
 			}
@@ -116,7 +116,7 @@ const Music = {
 				case 1: { // youtube
 					const stream = ytdl(music.queue[0].id, { quality: 'highestaudio' });
 	
-					if (!guild.voice) {
+					if (!guild.voice || !guild.voice.connection) {
 						guild.music = {};
 						return;
 					}

@@ -1,13 +1,13 @@
 const Music = require('../../struct/music');
 
 function skip (message) {
-	if (message.guild.voice) message.guild.voice.connection.dispatcher.end();
+	if (message.guild.voice && message.guild.voice.connection) message.guild.voice.connection.dispatcher.end();
 	else message.guild.music = {};
 	message.channel.send(message.__('skipped', { user: message.member.displayName.replace(/@/g, '@\u200b').replace(/ /g, '') }));
 }
 
 exports.run = (message, a, s, d, permLevel) => {
-	if (!message.guild.music || !message.guild.music.queue) return message.channel.send(message.__('no_music'));
+	if (!message.guild.music || !message.guild.music.queue || !message.guild.voice || !message.guild.voice.connection) return message.channel.send(message.__('no_music'));
 
 	let canForceSkip = false;
 	if (message.member.roles.cache.some(r => r.name.toLowerCase() === i18n.get('struct.music.dj', message).toLowerCase()) || message.member.roles.cache.some(r => r.name.toLowerCase() === i18n.get('struct.music.music', message).toLowerCase()) || permLevel > 3 || message.guild.music.queue[0].person.id === message.author.id) canForceSkip = true;
