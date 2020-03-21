@@ -20,7 +20,6 @@ function statusUpdate (embed, restart, client) {
 }
 
 const errorLog = (error, stack, code) => {
-	code = 'Code ' + code;
 	if (process.argv[2] && process.argv[2] === 'test') return; //code += ' | Testbot error';
 	errorWebhookClient.send({
 		embeds: [ {

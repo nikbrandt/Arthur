@@ -75,7 +75,7 @@ const Music = {
 		let music = guild.music;
 
 		if (!music.queue) {
-			if (guild.voice) guild.voice.connection.disconnect();
+			if (guild.voice && guild.voice.connection) guild.voice.connection.disconnect();
 			return;
 		}
 
@@ -90,7 +90,7 @@ const Music = {
 		}
 
 		if (music.queue.length === 0) {
-			if (guild.voice) guild.voice.connection.disconnect();
+			if (guild.voice && guild.voice.connection) guild.voice.connection.disconnect();
 			guild.music = {};
 			return;
 		}
@@ -103,6 +103,8 @@ const Music = {
 				return;
 			}
 
+			console.log(`In guild ${guild.id} playing type ${music.queue[0].type} with id ${music.queue[0].id}`);
+			
 			if (notify === 'true' && music.queue[0].embed && !first) {
 				let embed = music.queue[0].embed;
 				if (!embed.author) embed.author = {};
@@ -133,7 +135,7 @@ const Music = {
 	
 					dispatcher.on('error', err => {
 						console.warn(`error playing music: ${err}`);
-						guild.client.errorLog("Error playing music", err.stack ? err.stack : err, err.code);
+						guild.client.errorLog("Error playing music from YouTube", err.stack ? err.stack : err, `Video ID ${music.queue[0].id}`);
 						Music.next(guild);
 					});
 					
@@ -163,7 +165,7 @@ const Music = {
 	
 						dispatcher.on('error', err => {
 							console.warn(`error playing music: ${err}`);
-							guild.client.errorLog("Error playing music", err.stack ? err.stack : err, err.code);
+							guild.client.errorLog("Error playing music from URL", err.stack ? err.stack : err, music.queue[0].id);
 							Music.next(guild);
 						});
 					});
@@ -184,7 +186,7 @@ const Music = {
 	
 					dispatcher.on('error', err => {
 						console.warn(`error playing music: ${err}`);
-						guild.client.errorLog("Error playing music", err.stack ? err.stack : err, err.code);
+						guild.client.errorLog("Error playing music from local file", err.stack ? err.stack : err, music.queue[0].id);
 						Music.next(guild);
 					});
 					
@@ -214,7 +216,7 @@ const Music = {
 	
 							dispatcher.on('error', err => {
 								console.warn(`error playing music: ${err}`);
-								guild.client.errorLog("Error playing music", err.stack ? err.stack : err, err.code);
+								guild.client.errorLog("Error playing music from Soundcloud", err.stack ? err.stack : err, `Soundcloud ID ${music.queue[0].id}`);
 								Music.next(guild);
 							});
 						}, 100);
