@@ -69,8 +69,8 @@ const Music = {
 	 */
 	next: async (guild, first) => {
 		let notify = await sql.get(`SELECT npNotify FROM guildOptions WHERE guildID = '${guild.id}'`);
-		if (!notify) notify = 'false';
-		else notify = notify.npNotify;
+		if (!notify) notify = false;
+		else notify = notify.npNotify === 'true';
 
 		let music = guild.music;
 
@@ -105,7 +105,7 @@ const Music = {
 
 			console.log(`In guild ${guild.id} playing type ${music.queue[0].type} with id ${music.queue[0].id}`);
 			
-			if (notify === 'true' && music.queue[0].embed && !first) {
+			if (notify && music.queue[0].embed && !first) {
 				let embed = music.queue[0].embed;
 				if (!embed.author) embed.author = {};
 				embed.author.name = i18n.get('struct.music.now_playing', guild);
@@ -135,7 +135,7 @@ const Music = {
 	
 					dispatcher.on('error', err => {
 						console.warn(`error playing music: ${err}`);
-						guild.client.errorLog("Error playing music from YouTube", err.stack ? err.stack : err, `Video ID ${music.queue[0].id}`);
+						guild.client.errorLog("Error playing music from YouTube", err.stack ? err.stack : err, `Video ID ${music.queue[0].id} after ${Math.round(dispatcher.totalStreamTime / 1000)} seconds`);
 						Music.next(guild);
 					});
 					
@@ -165,7 +165,7 @@ const Music = {
 	
 						dispatcher.on('error', err => {
 							console.warn(`error playing music: ${err}`);
-							guild.client.errorLog("Error playing music from URL", err.stack ? err.stack : err, music.queue[0].id);
+							guild.client.errorLog("Error playing music from URL", err.stack ? err.stack : err, `After ${Math.round(dispatcher.totalStreamTime / 1000)} seconds, URL:` + music.queue[0].id);
 							Music.next(guild);
 						});
 					});
@@ -186,7 +186,7 @@ const Music = {
 	
 					dispatcher.on('error', err => {
 						console.warn(`error playing music: ${err}`);
-						guild.client.errorLog("Error playing music from local file", err.stack ? err.stack : err, music.queue[0].id);
+						guild.client.errorLog("Error playing music from local file", err.stack ? err.stack : err, `File ${music.queue[0].id} after ${Math.round(dispatcher.totalStreamTime / 1000)} seconds`);
 						Music.next(guild);
 					});
 					
@@ -216,7 +216,7 @@ const Music = {
 	
 							dispatcher.on('error', err => {
 								console.warn(`error playing music: ${err}`);
-								guild.client.errorLog("Error playing music from Soundcloud", err.stack ? err.stack : err, `Soundcloud ID ${music.queue[0].id}`);
+								guild.client.errorLog("Error playing music from Soundcloud", err.stack ? err.stack : err, `Soundcloud ID ${music.queue[0].id} after ${Math.round(dispatcher.totalStreamTime / 1000)} seconds`);
 								Music.next(guild);
 							});
 						}, 100);

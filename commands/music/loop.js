@@ -4,13 +4,8 @@ exports.run = (message, a, s, c, permLevel) => {
 
 	let cleanName = message.member.displayName.replace(/@/g, '@\u200b').replace(/ /g, '');
 	
-	if (message.guild.music.loop) {
-		message.guild.music.loop = false;
-		message.channel.send(message.__('off', { name: cleanName }));
-	} else {
-		message.guild.music.loop = true;
-		message.channel.send(message.__('on', { name: cleanName }));
-	}
+	message.guild.music.loop = !message.guild.music.loop;
+	message.channel.send(message.__(message.guild.music.loop ? 'on' : 'off', { name: cleanName }));
 };
 
 exports.config = {

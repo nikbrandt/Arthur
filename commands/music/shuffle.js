@@ -15,8 +15,8 @@ exports.run = (message, args, suffix, client, permLevel) => {
 	if (message.guild.music.queue.length < 3) return message.channel.send(message.__('too_small')); // Kappa
 
 	let queue = message.guild.music.queue;
-	let first = queue[0];
-	let shuffled = shuffle(queue.slice(1));
+	let first = queue.shift();
+	let shuffled = shuffle(queue);
 	shuffled.unshift(first);
 
 	message.guild.music.queue = shuffled;
@@ -28,3 +28,5 @@ exports.config = {
 	permLevel: 2,
 	category: 'music'
 };
+
+exports.shuffle = shuffle;
