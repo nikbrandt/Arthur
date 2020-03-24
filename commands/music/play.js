@@ -1,5 +1,6 @@
 const Music = require('../../struct/music.js');
 const config = require('../../../media/config.json');
+const sql = require('sqlite');
 
 let add = async (message, id, type, client, first, loadMessage, ipc) => {
 	let title = first
@@ -91,7 +92,7 @@ exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 
 	if (message.guild.music && message.guild.music.queue) {
 		try {
-			return await add(message, id, type, client, false, loadMessage, true);
+			return await add(message, id, type, client, false, loadMessage, ipc);
 		} catch (e) {
 			return ipc ? message.__('unavailable_in_us') : loadMessage.edit(message.__('unavailable_in_us'));
 		}
@@ -123,7 +124,7 @@ exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 	message.guild.music.playing = true;
 
 	try {
-		return await add(message, id, type, client, true, loadMessage);
+		return await add(message, id, type, client, true, loadMessage, ipc);
 	} catch(e) {
 		message.guild.music = {};
 		return ipc ? e : loadMessage.edit(message.__('unavailable_in_us'));
