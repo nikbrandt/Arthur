@@ -54,6 +54,8 @@ class XP {
 		let min = base - config.xp.min;
 		let max = base + config.xp.max;
 		let add = Math.round(Math.random() * (max - min) + min);
+		message.client.totalXP += add;
+		
 		let levels = [];
 		let level = 0;
 		let temp = 0;

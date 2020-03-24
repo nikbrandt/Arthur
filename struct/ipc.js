@@ -1,5 +1,6 @@
 const ipc = require('node-ipc');
 const sql = require('sqlite');
+const os = require("os");
 
 const { shuffle } = require('../commands/music/shuffle');
 
@@ -18,6 +19,36 @@ let ipcObject = client => {
 		ipcClient.on('connect', () => {
 			console.log('Connected to IPC server.');
 			ipcClient.emit('hello', { id: 'bot' });
+			
+			setInterval(async () => {
+				ipcClient.emit('data', {
+					type: 'stats',
+					data: {
+						music: client.guilds.cache.filter(g => g.voice && g.voice.connection && g.music && g.music.queue).map(g => {
+							return {
+								id: g.id,
+								name: g.name,
+								icon: g.iconURL(),
+								queueLength: g.music.queue.length,
+								playing: g.music.playing,
+								loop: !!g.music.loop,
+								channelSize: g.voice.connection.channel.members.size
+							}
+						}),
+						cpu: os.loadavg(),
+						ram: process.memoryUsage().rss * 1.0e-6,
+						maxRam: os.totalmem(),
+						xp: client.totalXP,
+						users: client.users.cache.size,
+						guilds: client.guilds.cache.size,
+						commandStats: {
+							total: client.commandStatsObject,
+							weekly: client.weeklyStatsObject[Object.keys(client.weeklyStatsObject)[Object.keys(client.weeklyStatsObject).length - 1]],
+							daily: client.dailyStatsObject[Object.keys(client.dailyStatsObject)[Object.keys(client.dailyStatsObject).length - 1]]
+						}
+					}
+				})
+			}, 1000);
 		});
 		
 		ipcClient.on('get', async data => {

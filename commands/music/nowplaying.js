@@ -55,15 +55,14 @@ ${secString(secSpread(ellapsedTime), locale)} ${message.__('of')} ${secString(se
 			});
 		});
 	} else if (message.guild.music.queue[0].type === 5) { // soundcloud
-		let data = message.guild.voice.connection.player.streamingData;
-		let remainingTime = Math.round((Date.now() - (data.startTime - data.pausedTime)) / 1000);
+		let elapsedTime = Math.round(message.guild.voice.connection.dispatcher.totalStreamTime / 1000);
 
 		let embed = message.guild.music.queue[0].embed;
 		embed.author.name = i18n.getString('struct.music.now_playing', locale);
-		embed.description = embed.description.replace(i18n.getString('struct.music.length', locale) + ': ', `**${secString(secSpread(remainingTime), locale)}** ${message.__('of')} `);
+		embed.description = embed.description.replace(i18n.getString('struct.music.length', locale) + ': ', `**${secString(secSpread(elapsedTime), locale)}** ${message.__('of')} `);
 
 		message.channel.send({embed}).then(msg => {
-			Music.addReactionCollector(msg, client, remainingTime * 1000);
+			Music.addReactionCollector(msg, client, elapsedTime * 1000);
 		});
 	} else if (message.guild.music.queue[0].type >= 2) { // User-provided file
 		message.channel.send({
