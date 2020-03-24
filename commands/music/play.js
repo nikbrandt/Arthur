@@ -37,7 +37,7 @@ let add = async (message, id, type, client, first, loadMessage, ipc) => {
 	return 1; // for IPC
 };
 
-exports.run = async (message, args, suffix, client, perms, ipc) => {
+exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 	if (!message.member.voice.channel) return message.channel.send(message.__('not_in_channel'));
 	if (!args[0] && !message.attachments.size) {
 		if (message.guild.music && message.guild.music.playing === false) {

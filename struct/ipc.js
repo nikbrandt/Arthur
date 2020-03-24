@@ -351,7 +351,7 @@ let ipcObject = client => {
 							let out; // returns a 1 if successful, otherwise an error message
 							
 							try {
-								out = await client.commands.get('play').run(fakeMessage, args, params.song, client, client.permLevel(fakeMessage), true);
+								out = await client.commands.get('play').run(fakeMessage, args, params.song, client, client.permLevel(fakeMessage), 'asdf', true);
 							} catch (err) {
 								error = err;
 								break;
