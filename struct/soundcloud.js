@@ -77,7 +77,8 @@ function addToCache(song) {
 		title: song.title,
 		user: {
 			username: song.user.username,
-			avatar_url: song.user.avatar_url
+			avatar_url: song.user.avatar_url,
+			permalink_url: song.user.permalink_url
 		},
 		id: song.media.transcodings[1].url,
 		artwork_url: song.artwork_url

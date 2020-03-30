@@ -499,7 +499,7 @@ const Music = {
 								icon_url: meta.user.avatar_url
 							},
 							color: 0xff8800,
-							description: `[${meta.title}](${id})\n${i18n.get('commands.nowplaying.by', message)} ${meta.user.username}\n${message._('length')}: ${timeString}`,
+							description: `[${meta.title}](${id})\n${i18n.get('commands.nowplaying.by', message)} [${meta.user.username}](${meta.user.permalink_url})\n${message._('length')}: ${timeString}`,
 							thumbnail: {
 								url: meta.artwork_url
 							},
