@@ -194,7 +194,8 @@ const Music = {
 				}
 				case 5: { // soundcloud
 					let id = '' + Date.now() + guild.id;
-					let writeStream = soundcloud(music.queue[0].meta.id).pipe(fs.createWriteStream(`../media/temp/${id}.mp3`));
+					let url = await soundcloud(music.queue[0].meta.id);
+					let writeStream = request(url).pipe(fs.createWriteStream(`../media/temp/${id}.mp3`));
 	
 					writeStream.on('finish', () => {
 						setTimeout(() => {
@@ -206,7 +207,7 @@ const Music = {
 								fs.unlinkSync(`../media/temp/${id}.mp3`);
 								Music.next(guild);
 								setTimeout(() => {
-									if (guild.voice && !guild.voice.connection.dispatcher) Music.next(guild);
+									if (guild.voice && guild.voice.connection && !guild.voice.connection.dispatcher) Music.next(guild);
 								}, 10000);
 							});
 	
@@ -357,7 +358,7 @@ const Music = {
 					
 					if (!result) return reject(message._('no_results'));
 
-					resolve ( {
+					return resolve ( {
 						id: result.permalink_url,
 						type: 5
 					} );
@@ -474,7 +475,7 @@ const Music = {
 					break;
 				case 5: // soundcloud
 					let meta = await soundcloud.getInfo(id).catch(err => {
-						return reject (message._('could_not_get_info'));
+						return reject(message._('could_not_get_info'));
 					});
 					
 					if (!meta) return reject(message._('could_not_get_info'));

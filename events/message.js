@@ -136,6 +136,7 @@ module.exports = async (client, message) => {
 		let alexaStringLower = message.content.toLowerCase();
 		let alexaString = Array.from(alexaStringLower);
 		alexaString = alexaString.filter(character => character.toLowerCase() !== character.toUpperCase());
+		if (!message.guild.name) return;
 		if (!message.guild.name.toLowerCase().includes('bots') && !message.guild.name.toLowerCase().includes('listcord') && alexaString.join('').startsWith('thisissosadalexaplay')) alexaPlay = true;
 		else return;
 	}
