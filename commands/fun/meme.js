@@ -7,7 +7,6 @@ const subreddits = [ 'hmmm', 'dankmemes', 'memes', 'funny', 'deepfriedmemes', 'd
 //      lastUpdate: last time (from Date.now()) that subreddit was updated
 //      data: subreddit data from request, parsed
 let subredditCache = {};
-exports.cache = subredditCache;
 
 function updateSubreddit(subreddit) {
 	return new Promise((resolve, reject) => {
@@ -79,3 +78,6 @@ exports.config = {
 	perms: [ 'EMBED_LINKS' ],
 	category: 'fun'
 };
+
+exports.cache = subredditCache;
+exports.getSubredditMeme = getSubredditMeme;
