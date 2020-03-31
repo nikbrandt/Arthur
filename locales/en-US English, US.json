@@ -358,7 +358,7 @@
 			"meta": {
 				"dev": true,
 				"command": "reload",
-				"aliases": ["kys", "die"],
+				"aliases": [ "kys" ],
 				"name": "Restart",
 				"description": "Restart the bot",
 				"help": "How hard is to comprehend? Restart. The. Bot."
@@ -1023,7 +1023,8 @@
 			"meta": {
 				"command": "dice",
 				"aliases": [
-					"roll"
+					"roll",
+					"die"
 				],
 				"name": "Dice",
 				"description": "Rolls a dice",
