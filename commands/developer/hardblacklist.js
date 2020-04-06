@@ -1,17 +1,15 @@
-const sql = require('sqlite');
-
 exports.run = async (message, args, suffix, client) => {
 	if (!args[0]) return message.channel.send('I uh.. I need an ID');
 	if (args[0] === message.author.id) return message.channel.send('no, bad');
 	
 	let user;
 	try {
-		user = await client.users.fetch(args[0]);
+		user = await client.users.fetch(args[0]) || (await client.shard.broadcastEval(`this.users.fetch('${args[0]}')`)).filter(item => !!item)[0];
 	} catch (e) { 
 		user = undefined;
 	}
 	
-	let guild = client.guilds.cache.get(args[0]);
+	let guild = client.guilds.cache.get(args[0]) || (await client.shard.broadcastEval(`this.guilds.cache.get('${args[0]}')`)).filter(item => !!item)[0];
 	
 	if (!user && !guild) return message.channel.send('Could not find user or guild by that ID. rip');
 	

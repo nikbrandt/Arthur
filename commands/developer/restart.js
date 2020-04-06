@@ -1,17 +1,21 @@
 const fs = require('fs');
 
-exports.run = (message, args, suffix, client) => {
+exports.run = async (message, args, suffix, client) => {
 	let force = false;
-	let voice;
-	let processing;
 
 	if (args[0] === '-f') force = true;
 
-	if (client.voice.connections.size) voice = true;
-	if (client.processing.length) processing = true;
-
-	if ((voice || processing) && force === false) {
-		return message.channel.send(`I'm not gonna restart. ${voice ? `I've got ${client.voice.connections.size} guild${client.voice.connections.size !== 1 ? 's' : ''} listening to music through me..` : ''} ${processing ? `${voice ? '\n*and*' : ''} I've got the following things processing:\n${client.processing.map(p => `\`${p}\``).join('\n')}` : ''}\n*Bypass with -f*`);
+	let voice = (await client.shard.fetchClientValues('voice.connections.size')).reduce((prev, count) => prev + count, 0);
+	let processing = (await client.shard.fetchClientValues('processing')).reduce((prev, processing) => {
+		processing.forEach(item => {
+			prev.push(item);
+		});
+		
+		return prev;
+	}, []);
+	
+	if ((voice || processing.length) && !force) {
+		return message.channel.send(`I'm not gonna restart. ${voice ? `I've got ${voice} guild${voice !== 1 ? 's' : ''} listening to music through me..` : ''} ${processing.length ? `${voice ? '\n*and*' : ''} I've got the following things processing:\n${processing.map(p => `\`${p}\``).join('\n')}` : ''}\n*Bypass with -f*`);
 	}
 
 	const crashPath = require('path').join(__basedir, '..', 'media', 'temp', 'crash.txt');
@@ -19,7 +23,7 @@ exports.run = (message, args, suffix, client) => {
 		if (err) console.error('Could not delete previous crash.txt file:\n', err.stack);
 	});
 
-	message.channel.send('Restarting.').then(m => process.exit(0));
+	message.channel.send('Restarting all shards.').then(() => client.shard.respawnAll());
 };
 
 exports.config = {

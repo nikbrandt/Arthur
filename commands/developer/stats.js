@@ -32,7 +32,7 @@ function reverse (array) {
 	return reversed;
 }
 
-exports.run = (message, args, suffix, client) => {
+exports.run = async (message, args, suffix, client) => {
 	let object;
 
 	if (args[0] === 'weekly') {
@@ -96,17 +96,20 @@ exports.run = (message, args, suffix, client) => {
 
 		curWidth += barWidth + 4;
 	}
-
+	
+	let guilds = (await client.shard.fetchClientValues('guilds.cache.size')).reduce((prev, cur) => prev + cur, 0).toString();
+	let users = (await client.shard.fetchClientValues('users.cache.size')).reduce((prev, cur) => prev + cur, 0).toString();
+	
 	curWidth = 100; // show guild/user amounts
 	ctx.font = '50px RobotoMedium';
-	ctx.fillText(client.guilds.cache.size.toString(), curWidth, 70);
-	curWidth += ctx.measureText(client.guilds.cache.size.toString()).width;
+	ctx.fillText(guilds, curWidth, 70);
+	curWidth += ctx.measureText(guilds).width;
 	ctx.font = '50px RobotoLight';
-	ctx.fillText(' servers     ', curWidth, 70);
-	curWidth += ctx.measureText(' servers     ').width;
+	ctx.fillText(' guilds     ', curWidth, 70);
+	curWidth += ctx.measureText(' guilds     ').width;
 	ctx.font = '50px RobotoMedium';
-	ctx.fillText(client.users.cache.size.toString(), curWidth, 70);
-	curWidth += ctx.measureText(client.users.cache.size.toString()).width;
+	ctx.fillText(users, curWidth, 70);
+	curWidth += ctx.measureText(users).width;
 	ctx.font = '50px RobotoLight';
 	ctx.fillText(' users', curWidth, 70);
 
@@ -127,7 +130,7 @@ exports.run = (message, args, suffix, client) => {
 	ctx.fillText(text, curWidth, 150);
 
 	let lastEnd = -1.57; // RAM pie chart
-	let mem = process.memoryUsage().rss * 1.0e-6;
+	let mem = (await client.shard.broadcastEval('process.memoryUsage().rss * 1.0e-6')).reduce((prev, cur) => prev + cur, 0);
 	let total = 3000;
 	let data = [mem, total - mem];
 	let colors = ['#fff', accent];
@@ -143,7 +146,7 @@ exports.run = (message, args, suffix, client) => {
 	}
 
 	lastEnd = -1.57; // CPU pie chart
-	let cpu = os.loadavg()[1];
+	let cpu = os.loadavg()[1] || 0;
 	data = [cpu, 100 - cpu];
 	total = 100;
 

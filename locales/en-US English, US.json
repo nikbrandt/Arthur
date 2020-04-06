@@ -290,6 +290,16 @@
 				"help": "C'mon, you know how to use this."
 			}
 		},
+		"boradcasteval": {
+			"meta": {
+				"dev": true,
+				"command": "broadcasteval",
+				"name": "BroadcastEval",
+				"description": "Evaluate a thing on all shards. Confuse everyone.",
+				"usage": "<statement>",
+				"help": "ye."
+			}
+		},
 		"hardblacklist": {
 			"meta": {
 				"dev": true,
