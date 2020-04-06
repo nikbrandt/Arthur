@@ -12,6 +12,7 @@ const customCSS = `
 @font-face { font-family: 'Minecraftia'; src: url('../media/fonts/Minecraft-Bold.ttf') format('truetype'); font-weight: bold; font-style: normal; }
 @font-face { font-family: 'Minecraftia'; src: url('../media/fonts/Minecraft-BoldItalic.ttf') format('truetype'); font-weight: bold; font-style: italic; }
 * { font-size: 30px; font-family: Minecraftia, Minecraft, sans-serif }
+:not(span) { color: #AAAAAA }
 `;
 
 function failed (messageOptions, msg, client, index) {
