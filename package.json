@@ -2,7 +2,7 @@
 	"name": "arthur",
 	"version": "0.1.0",
 	"description": "A discord bot, probably a rewrite of Marvin",
-	"main": "bot.js",
+	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
