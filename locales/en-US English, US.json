@@ -1017,7 +1017,7 @@
 			"author": "Author",
 			"help": "Help",
 			"info": "Info",
-			"info_value": "Language - Javascript\nNode $nodeVersion\nDiscord.js v$discordVersion\nUptime of $uptime"
+			"info_value": "Language - Javascript\nNode $nodeVersion\nDiscord.js v$discordVersion\nShard uptime of $uptime (shard $shard)\nShard manager uptime of $managerUptime"
 		},
 		"invite": {
 			"meta": {

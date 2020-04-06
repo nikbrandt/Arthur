@@ -26,4 +26,11 @@ process.on('message', message => {
 		
 		return;
 	}
+	
+	if (message.uptime) {
+		client.shard.uptimeStart = message.uptime;
+		client.shard.id = message.id;
+		
+		return;
+	}
 });

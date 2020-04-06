@@ -59,48 +59,26 @@ module.exports = async (client, message) => {
 				client.recentMessages[message.author.id] = authorID.toString();
 				client.lastRecentMessageID += 1;
 			}
-
-			client.channels.cache.get(config.messageLogChannel).send(
-				{
-					embed: {
-						author: {
-							name: `Message from ${message.author.tag} | ID ${authorID}`,
-							icon_url: message.author.displayAvatarURL()
-						},
-						color: 0x418cf4,
-						description: message.content
+			
+			let messageObject = {
+				embed: {
+					author: {
+						name: `Message from ${message.author.tag} | ID ${authorID}`,
+						icon_url: message.author.displayAvatarURL()
 					},
-					files: message.attachments.array().map(a => a ? a.url : '')
-				}
-			);
+					color: 0x418cf4,
+					description: message.content
+				},
+				files: message.attachments.array().map(a => a ? a.url : '')
+			};
+			
+			client.shard.broadcastEval(`let channel = client.channels.cache.get('${config.messageLogChannel}');
+			if (channel) channel.send(${JSON.stringify(messageObject)}).then(() => {});`).catch(console.error);
 
 			client.lastMessage = message.author;
 		}
 
 		if (message.content.includes(`<@${client.user.id}>`) || message.content.includes(`<@!${client.user.id}>`)) {
-
-			let authorID;
-
-			if (client.recentMessages[message.author.id]) authorID = client.recentMessages[message.author.id];
-			else {
-				authorID = client.lastRecentMessageID + 1;
-				client.recentMessages[message.author.id] = authorID.toString();
-				client.lastRecentMessageID += 1;
-			}
-
-			client.channels.cache.get(config.messageLogChannel).send(
-				{
-					embed: {
-						author: {
-							name: `Mention from ${message.author.tag} | ID ${authorID}`,
-							icon_url: message.author.displayAvatarURL()
-						},
-						color: 0x418cf4,
-						description: message.content
-					},
-					files: message.attachments.array().map(a => a ? a.url : '')
-				}
-			);
 			if (message.content.toLowerCase().includes('ship')) message.channel.send('*shipped*', {
 				files: ['https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/HMS_BOUNTY_II_with_Full_Sails.jpg/1200px-HMS_BOUNTY_II_with_Full_Sails.jpg']
 			})

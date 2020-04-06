@@ -6,11 +6,11 @@ const { watch } = require('../commands/fun/poll');
 const dbots = require('../functions/dbots');
 const ipc = require('../struct/ipc');
 
-function game (client) {
+async function game (client) {
 	let games = [
 		[ 'Invite me to your server with the "invite" command.', 'PLAYING' ],
-		[ `${client.guilds.cache.size} servers do their things`, 'WATCHING' ],
-		[ `${client.users.cache.size} users very closely`, 'WATCHING' ],
+		[ `${(await client.shard.fetchClientValues('guilds.cache.size')).reduce((prev, cur) => prev + cur, 0)} servers do their things`, 'WATCHING' ],
+		[ `${(await client.shard.fetchClientValues('users.cache.size')).reduce((prev, cur) => prev + cur, 0)} users very closely`, 'WATCHING' ],
 		[ 'with the webshot command', 'PLAYING' ],
 		[ 'The lovely mp3 command', 'LISTENING' ],
 		[ 'what do i put here', 'PLAYING' ],
@@ -37,7 +37,7 @@ function game (client) {
 	client.user.setActivity(`${array[0]} | @Arthur help`, { type: array[1] }).catch(() => {});
 }
 
-function writeStats (client) {
+function writeStats (client) { // TODO: write stats in shard manager process to avoid corruption
 	fs.writeFileSync('../media/stats/commands.json', JSON.stringify(client.commandStatsObject));
 	fs.writeFileSync('../media/stats/daily.json', JSON.stringify(client.dailyStatsObject));
 	fs.writeFileSync('../media/stats/weekly.json', JSON.stringify(client.weeklyStatsObject));
@@ -127,7 +127,7 @@ module.exports = client => {
 
 		parsed.forEach(obj => {
 			let channel = client.channels.cache.get(obj.channelID);
-			if (!channel) return sql.run('DELETE FROM pollReactionCollectors WHERE messageID = ?', [obj.messageID]).catch(console.log);
+			if (!channel) return;
 			channel.messages.fetch(obj.messageID).then(msg => {
 				watch(msg, obj.options, obj.endDate, client, obj.embed);
 			}).catch(() => {

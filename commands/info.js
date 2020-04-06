@@ -26,8 +26,14 @@ exports.run = async (message, args, asdf, client) => {
 				inline: true
 			},
 			{
-				name: message.__('info'), // uptime to include manager uptime as well as shard uptime
-				value: message.__('info_value', { nodeVersion: process.version, discordVersion: Discord.version, uptime: moment.duration(process.uptime() * 1000).locale(locale).humanize() })
+				name: message.__('info'),
+				value: message.__('info_value', {
+					nodeVersion: process.version,
+					discordVersion: Discord.version,
+					uptime: moment.duration(process.uptime() * 1000).locale(locale).humanize(),
+					shard: client.shard.id,
+					managerUptime: moment.duration(Date.now() - client.shard.uptimeStart).locale(locale).humanize()
+				})
 			}
 		]
 	}});

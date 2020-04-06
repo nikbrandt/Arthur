@@ -15,6 +15,14 @@ let stopwatchUserObject = {};
 manager.on('shardCreate', shard => {
 	console.log(`Launched shard ${shard.id}`);
 	
+	shard.on('ready', () => {
+		shard.send({
+			uptime: Date.now() - Math.floor(process.uptime() * 1000),
+			id: shard.id
+		}).catch(console.error);
+	});
+	
+	
 	shard.on('message', message => {
 		if (message.stopwatch) {
 			let id = message.stopwatch;
