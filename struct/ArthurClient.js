@@ -23,6 +23,7 @@ class ArthurClient extends Client {
 		this.commands = new Collection();
 		this.aliases = new Collection();
 		this.reactionCollectors = new Collection();
+		this.stopwatchQueue = new Map();
 
 		loadCommands(this);
 

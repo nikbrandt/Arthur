@@ -19,3 +19,11 @@ sqlite.open({
 	
 	client.init().catch(console.error);
 }).catch(console.error);
+
+process.on('message', message => {
+	if (message.stopwatch) {
+		if (client.stopwatchQueue.has(message.stopwatch.id)) client.stopwatchQueue.get(message.stopwatch.id)(message.stopwatch);
+		
+		return;
+	}
+});

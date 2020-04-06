@@ -10,6 +10,24 @@ const manager = new ShardingManager('./bot.js', {
 
 manager.spawn().catch(console.error);
 
+let stopwatchUserObject = {};
+
 manager.on('shardCreate', shard => {
 	console.log(`Launched shard ${shard.id}`);
+	
+	shard.on('message', message => {
+		if (message.stopwatch) {
+			let id = message.stopwatch;
+			
+			if (stopwatchUserObject[id]) {
+				shard.send({ stopwatch: { id: id, start: stopwatchUserObject[id] }}).catch(() => {});
+				delete stopwatchUserObject[id];
+			} else {
+				stopwatchUserObject[id] = Date.now();
+				shard.send({ stopwatch: { id: id }}).catch(() => {});
+			}
+			
+			return;
+		}
+	});
 });
