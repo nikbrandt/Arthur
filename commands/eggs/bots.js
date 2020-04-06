@@ -13,6 +13,5 @@ exports.meta = {
 	command: 'bots',
 	name: 'bots',
 	description: 'An easter egg based off bots',
-	usage: 'bots',
 	help: 'An easter egg based off bots'
 };

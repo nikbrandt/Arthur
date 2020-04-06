@@ -33,6 +33,6 @@ exports.meta = {
 	command: 'isaac',
 	name: 'Isaac',
 	description: 'Yikes.',
-	usage: 'isaac',
+	usage: '[user]',
 	help: 'Yikes.'
 };

@@ -13,6 +13,5 @@ exports.meta = {
 	command: 'garfield',
 	name: 'garfield',
 	description: 'An easter egg based off garfield',
-	usage: 'garfield',
 	help: 'An easter egg based off garfield'
 };

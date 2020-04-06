@@ -21,6 +21,5 @@ exports.meta = {
 	command: 'nintenbot',
 	name: 'NintenBot',
 	description: 'An easter egg based off NintenBot',
-	usage: 'nintenbot',
 	help: 'An easter egg based off NintenBot'
 };

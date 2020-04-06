@@ -14,6 +14,5 @@ exports.meta = {
 	command: 'eli',
 	name: 'Eli',
 	description: 'Eli\'s lovely easter egg photo.',
-	usage: 'eli',
 	help: 'Eli\'s lovely easter egg photo.'
 };

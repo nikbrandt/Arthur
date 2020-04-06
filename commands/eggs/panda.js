@@ -13,6 +13,5 @@ exports.meta = {
 	command: 'panda',
 	name: 'panda',
 	description: 'An easter egg for Lumine',
-	usage: 'panda',
 	help: 'An easter egg for Lumine'
 };

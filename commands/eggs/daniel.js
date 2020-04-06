@@ -29,6 +29,5 @@ exports.meta = {
 	command: 'daniel',
 	name: 'Daniel',
 	description: 'Just for you, Daniel.',
-	usage: 'daniel',
 	help: 'Just for you, Daniel.'
 };

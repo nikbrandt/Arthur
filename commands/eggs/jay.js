@@ -10,6 +10,5 @@ exports.meta = {
 	command: 'jay',
 	name: 'Jay',
 	description: 'it\'s jay or something',
-	usage: 'jay',
 	help: 'just jay'
 };

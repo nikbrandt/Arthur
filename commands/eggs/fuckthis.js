@@ -14,6 +14,5 @@ exports.meta = {
 	command: 'fuckthis',
 	name: 'fuckthis',
 	description: 'An easter egg based off fuckthis',
-	usage: 'fuckthis',
 	help: 'An easter egg based off fuckthis'
 };

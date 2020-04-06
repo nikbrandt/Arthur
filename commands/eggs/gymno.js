@@ -14,6 +14,5 @@ exports.meta = {
 	command: 'gymno',
 	name: 'gymno',
 	description: 'An easter egg based off gymno',
-	usage: 'gymno',
 	help: 'An easter egg based off gymno'
 };

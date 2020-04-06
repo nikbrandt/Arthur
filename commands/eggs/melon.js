@@ -13,6 +13,5 @@ exports.meta = {
 	command: 'melon',
 	name: 'melon',
 	description: 'A special easter egg for melon.',
-	usage: 'melon',
 	help: 'Quite the different easter egg.'
 };

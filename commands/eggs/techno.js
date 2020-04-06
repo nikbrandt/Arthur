@@ -12,6 +12,5 @@ exports.meta = {
 	command: 'techno',
 	name: 'techno',
 	description: 'An easter egg based off techno',
-	usage: 'techno',
 	help: 'An easter egg based off techno'
 };

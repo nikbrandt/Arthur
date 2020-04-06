@@ -13,6 +13,5 @@ exports.meta = {
 	command: 'dude',
 	name: 'dude',
 	description: 'As per request of Tudor, dude.',
-	usage: 'dude',
 	help: 'As per request of Tudor, dude.'
 };
