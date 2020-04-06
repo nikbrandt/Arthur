@@ -1,9 +1,11 @@
-const sql = require('sqlite');
+
 const moment = require('moment');
 
-const VERSION = '0.1.1';
+const { getSubredditMeme } = require('../fun/meme');
+
+const VERSION = '0.1.2';
 const THEME_COLOR = 0xfcba03;
-const COIN_EMOJI = ':yellow_circle:';
+const COIN_EMOJI = '<:duckcoin:696521259256905779>';
 
 let init = false;
 let curDuck;
@@ -12,6 +14,7 @@ setTimeout(async () => {
 	let enUS = i18n._aliases.get('en-US');
 	enUS.set('duck', 'nik');
 	enUS.set('duk', 'nik');
+	enUS.set('leet', 'nik');
 	enUS.set('yikes', 'isaac'); // this is great code don't worry
 
 	let obj = await sql.get('SELECT MAX(duckID) FROM ducks');
@@ -33,6 +36,15 @@ let meta = {
 		run: daily,
 		help: 'Get daily DuckCoin.',
 		description: 'Get daily DuckCoin.\nRandom amount of coins given, increased if your duck is happy.'
+	},
+	image: {
+		run: image,
+		help: 'Get a duck image.',
+		description: 'Get a duck image. If you have ducks, they might even reward you for adoring them.'
+	},
+	changelog: {
+		run: changelogCommand,
+		help: 'View the update changelog.'
 	}
 };
 
@@ -84,7 +96,7 @@ async function balance(message) {
 	}});
 }
 
-async function daily (message) {
+async function daily(message) {
 	let user = await getUser(message.author.id);
 	let { coins } = user;
 	
@@ -116,6 +128,23 @@ async function daily (message) {
 	}});
 	
 	sql.run('UPDATE duckEconomy SET coins = ?, lastDaily = ? WHERE userID = ?', [ coins, today, message.author.id ]);
+}
+
+function image(message) {
+	getSubredditMeme('duck').then(meme => {
+		message.channel.send({embed: {
+			title: 'Quack!',
+			image: {
+				url: `https://i.imgur.com/${meme.hash}${meme.ext}`
+			},
+			color: THEME_COLOR // TODO: Add duck happiness/xp increase (rare-ish) and coin get (somewhat rare)
+		}})
+	}).catch(() => {
+		message.channel.send({ embed: {
+			color: THEME_COLOR,
+			description: 'Duck image retrieval failed. :('
+		}})
+	})
 }
 
 async function getUser(id) {
@@ -160,3 +189,26 @@ exports.meta = {
 	usage: '',
 	help: 'whoooo boy. use `duck help` to see how to use this wild command.'
 };
+
+let changelog = `**v0.1.2 - Changelogs!**
+ - 100x better coin emoji added
+ - \`image\` command added to view duck images
+ - \`changelog\` command added. you're using it. nice.
+ - "leet" alias added
+
+**v0.1.1**
+ - Framework for commands created
+ - Database for ducks and duck economy created
+ - Basic commands \`help\`, \`balance\`, and \`daily\` added
+ - "duck" and "duk" aliases added
+
+**v0.1 - The Beta Begins**
+Duck v0.1 is created. Only a base message is shown.
+ - Guidelines in [trello card](https://trello.com/c/wm6NbkBt/602-anik) for what is to come in the future created`;
+
+function changelogCommand(message) {
+	message.channel.send({ embed: {
+		description: changelog,
+		color: THEME_COLOR
+	}});
+}
