@@ -86,6 +86,8 @@ exports.run = async (message, args, s, client) => {
 
 			message.channel.send({embed}).then(() => {
 				msg.delete().catch(() => {});
+			}).then(() => {
+				client.processing.splice(index, 1);
 			});
 		})
 	});
