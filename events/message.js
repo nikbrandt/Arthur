@@ -1,8 +1,8 @@
-const config = require('../../media/config.json');
 const moment = require('moment');
-const XP = require('../struct/xp.js');
-const sql = require('sqlite');
 const https = require('https');
+
+const XP = require('../struct/xp.js');
+const config = require('../../media/config.json');
 
 const { errorLog } = require('../functions/eventLoader');
 let cooldownObj = {};

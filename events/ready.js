@@ -1,5 +1,4 @@
 const moment = require('moment');
-const sql = require('sqlite');
 const fs = require('fs');
 
 const { statusUpdate } = require('../functions/eventLoader');

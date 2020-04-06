@@ -1,5 +1,3 @@
-const sql = require('sqlite');
-
 exports.run = async (message, args) => {
 	let rows = await sql.all(`SELECT title, id FROM musicLikes WHERE userID = '${message.author.id}'`);
 	if (!rows || !rows.length) return message.channel.send(message.__('no_likes'));

@@ -1,4 +1,5 @@
-const sql = require('sqlite');
+const sqlite = require('sqlite');
+const sqlite3 = require('sqlite3');
 const ArthurClient = require('./struct/ArthurClient');
 
 global.__basedir = __dirname;
@@ -10,6 +11,11 @@ const client = new ArthurClient({
 	messageCacheMaxSize: 10
 });
 
-sql.open('../media/db.sqlite').then(() => {
+sqlite.open({
+	filename: '../media/db.sqlite',
+	driver: sqlite3.cached.Database
+}).then(db => {
+	global.sql = db;
+	
 	client.init().catch(console.error);
 }).catch(console.error);

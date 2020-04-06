@@ -5,7 +5,6 @@ const permLevel = require('../functions/permLevel.js');
 const findMember = require('../functions/findMember.js');
 const i18n = require('../struct/i18n');
 const fs = require('fs');
-const sql = require('sqlite');
 
 class ArthurClient extends Client {
 	constructor (options) {

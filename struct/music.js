@@ -1,7 +1,6 @@
 const fs = require('fs');
 const http = require('http');
 const https = require('https');
-const sql = require('sqlite');
 const ytdl = require('ytdl-core');
 const request = require('request');
 const fileType = require('file-type');

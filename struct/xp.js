@@ -1,4 +1,3 @@
-const sql = require('sqlite');
 const config = require('../../media/config.json');
 
 const emojiForNumber = num => {

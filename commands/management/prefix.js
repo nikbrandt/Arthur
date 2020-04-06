@@ -1,5 +1,3 @@
-const sql = require('sqlite');
-
 exports.run = async (message, args, s, c, permLevel) => {
 	let row = await sql.get(`SELECT prefix FROM guildOptions WHERE guildID = '${message.guild.id}'`);
 

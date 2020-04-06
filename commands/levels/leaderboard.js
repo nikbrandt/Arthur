@@ -1,4 +1,3 @@
-const sql = require('sqlite');
 const XP = require('../../struct/xp.js');
 
 exports.run = async (message, args, suffix, client) => {

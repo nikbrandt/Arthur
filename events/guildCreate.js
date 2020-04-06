@@ -1,6 +1,5 @@
 const defaultChannel = require('../functions/defaultChannel');
 const { post } = require('../functions/dbots');
-const sql = require('sqlite');
 
 module.exports = (client, guild) => {
 	// check for existence of guild settings in sql
