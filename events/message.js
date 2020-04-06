@@ -4,7 +4,7 @@ const XP = require('../struct/xp.js');
 const sql = require('sqlite');
 const https = require('https');
 
-const { errorLog } = require('../functions/eventLoader');
+const { errorLog, lastCommand } = require('../functions/eventLoader');
 let cooldownObj = {};
 
 const emojiRegex = /^\s*<?(a)?:?(\w{2,32}):(\d{17,19})>?\s*$/;
@@ -207,6 +207,7 @@ module.exports = async (client, message) => {
 	try {
 		console.log(`${moment().format('MM-DD H:mm:ss')} - Command ${command} being run, user id ${message.author.id}${message.guild ? `, guild id ${message.guild.id}` : ''}`);
 		let resp = cmdFile.run(message, args, suffix, client, perms, prefix);
+		errorLog.lastCommand = command;
 		if (resp && typeof resp.then === 'function' && typeof resp.catch === 'function') resp.catch(err => {
 			errorLog(`Error while running ${command} | ${err.message}`, err.stack, err.code);
 			console.error(`Command ${command} has failed to run!\n${err.stack}`)

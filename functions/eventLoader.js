@@ -25,7 +25,7 @@ const errorLog = (error, stack, code) => {
 		embeds: [ {
 			title: error,
 			description: '```js\n' + stack + '```',
-			footer: { text: code },
+			footer: { text: code + errorLog.lastCommand ? ` | last command: ${errorLog.lastCommand}` : '' },
 			timestamp: new Date().toISOString(),
 			color: 0xff0000
 		} ]

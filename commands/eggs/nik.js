@@ -1,4 +1,4 @@
-
+const sql = require('sqlite');
 const moment = require('moment');
 
 const { getSubredditMeme } = require('../fun/meme');
