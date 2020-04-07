@@ -22,7 +22,15 @@ sqlite.open({
 
 process.on('message', message => {
 	if (message.stopwatch) {
-		if (client.stopwatchQueue.has(message.stopwatch.id)) client.stopwatchQueue.get(message.stopwatch.id)(message.stopwatch);
+		if (client.shardQueue.has(message.stopwatch.id)) client.shardQueue.get(message.stopwatch.id)(message.stopwatch);
+		client.shardQueue.delete(message.stopwatch.id);
+		
+		return;
+	}
+
+	if (message.stats) {
+		if (client.shardQueue.has(message.id)) client.shardQueue.get(message.id)(message.value);
+		client.shardQueue.delete(message.id);
 		
 		return;
 	}

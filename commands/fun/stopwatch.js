@@ -7,7 +7,7 @@ function secSpread(sec, locale) {
 
 exports.run = (message, args, s, client) => {
 	client.shard.send({ stopwatch: message.author.id }).catch(console.error);
-	client.stopwatchQueue.set(message.author.id, object => {
+	client.shardQueue.set(message.author.id, object => {
 		if (!object.start) message.channel.send(message.__('stopwatch_started'));
 		else message.channel.send(message.__('stopwatch_stopped', { time: secSpread(Math.ceil( (Date.now() - object.start ) / 1000), i18n.getLocaleCode(message)) }));
 	});

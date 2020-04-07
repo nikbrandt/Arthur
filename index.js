@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const config = require('../media/config');
 
 const test = !!(process.argv[2] && process.argv[2] === 'test');
@@ -12,6 +14,10 @@ manager.spawn().catch(console.error);
 
 let stopwatchUserObject = {};
 
+let commandStatsObject = JSON.parse(fs.readFileSync('../media/stats/commands.json'));
+let dailyStatsObject = JSON.parse(fs.readFileSync('../media/stats/daily.json'));
+let weeklyStatsObject = JSON.parse(fs.readFileSync('../media/stats/weekly.json'));
+
 manager.on('shardCreate', shard => {
 	console.log(`Launched shard ${shard.id}`);
 	
@@ -21,7 +27,6 @@ manager.on('shardCreate', shard => {
 			id: shard.id
 		}).catch(console.error);
 	});
-	
 	
 	shard.on('message', message => {
 		if (message.stopwatch) {
@@ -37,5 +42,47 @@ manager.on('shardCreate', shard => {
 			
 			return;
 		}
+		
+		if (message.updateStats) {
+			let stats = message.updateStats;
+			
+			addValues(stats.commands, commandStatsObject);
+			addValues(stats.daily, dailyStatsObject);
+			addValues(stats.weekly, weeklyStatsObject);
+			
+			return;
+		}
+		
+		if (message.getStats) {
+			switch(message.getStats) {
+				case 'commands':
+					shard.send({ id: message.id, stats: true, value: commandStatsObject });
+					break;
+				case 'daily':
+					shard.send({ id: message.id, stats: true, value: dailyStatsObject[message.arg] });
+					break;
+				case 'weekly':
+					shard.send({ id: message.id, stats: true, value: weeklyStatsObject[message.arg] });
+					break;
+			}
+		}
 	});
 });
+
+function addValues(from, to) {
+	for (let key in from) {
+		if (typeof from[key] !== 'number') {
+			if (!to[key]) to[key] = {};
+			addValues(from[key], to[key]);
+		} else {
+			if (!to[key]) to[key] = from[key];
+			else to[key] += from[key];
+		}
+	}
+}
+
+setInterval(() => {
+	fs.writeFileSync('../media/stats/commands.json', JSON.stringify(commandStatsObject));
+	fs.writeFileSync('../media/stats/daily.json', JSON.stringify(dailyStatsObject));
+	fs.writeFileSync('../media/stats/weekly.json', JSON.stringify(weeklyStatsObject));
+}, 30000);

@@ -37,10 +37,18 @@ async function game (client) {
 	client.user.setActivity(`${array[0]} | @Arthur help`, { type: array[1] }).catch(() => {});
 }
 
-function writeStats (client) { // TODO: write stats in shard manager process to avoid corruption
-	fs.writeFileSync('../media/stats/commands.json', JSON.stringify(client.commandStatsObject));
-	fs.writeFileSync('../media/stats/daily.json', JSON.stringify(client.dailyStatsObject));
-	fs.writeFileSync('../media/stats/weekly.json', JSON.stringify(client.weeklyStatsObject));
+function sendStats(client) {
+	client.shard.send({
+		updateStats: {
+			commands: client.commandStatsObject,
+			daily: client.dailyStatsObject,
+			weekly: client.weeklyStatsObject
+		}
+	}).then(() => {
+		client.commandStatsObject = {};
+		client.dailyStatsObject = {};
+		client.weeklyStatsObject = {};
+	});
 }
 
 function cleanProcesses(client) {
@@ -95,7 +103,7 @@ module.exports = client => {
 
 	if (!client.test) {
 		client.setInterval(() => {
-			writeStats(client);
+			sendStats(client);
 		}, 30000);/*
 
 		dbots.getLikes(client);

@@ -32,18 +32,36 @@ function reverse (array) {
 	return reversed;
 }
 
+function requestStats(type, id, client, arg) {
+	return new Promise(resolve => {
+		let obj = {
+			getStats: type,
+			id: id
+		};
+		
+		if (arg) obj.arg = arg;
+		
+		client.shardQueue.set(id, resolve);
+		client.shard.send(obj).catch(() => {
+			resolve(null);
+		});
+	});
+}
+
 exports.run = async (message, args, suffix, client) => {
 	let object;
 
 	if (args[0] === 'weekly') {
-		if (!client.weeklyStatsObject[moment().format('W/YYYY')]) return message.channel.send('Not enough commands have been used, somehow');
-		object = client.weeklyStatsObject[moment().format('W/YYYY')];
+		object = await requestStats('weekly', message.id, client, moment().format('W/YYYY'));
+		if (!object) return message.channel.send('Not enough commands have been used, somehow');
 	} else if (args[0] === 'daily') {
-		if (!client.dailyStatsObject[moment().format('M/D/YYYY')]) return message.channel.send('Not enough commands have been used, apparently');
-		object = client.dailyStatsObject[moment().format('M/D/YYYY')];
+		object = await requestStats('daily', message.id, client, moment().format('M/D/YYYY'));
+		if (!object) return message.channel.send('Not enough commands have been used, apparently');
 	} else {
-		let keys = Object.keys(client.commandStatsObject);
-		let values = Object.values(client.commandStatsObject);
+		let stats = await requestStats('commands', message.id, client);
+		
+		let keys = Object.keys(stats);
+		let values = Object.values(stats);
 		let temp = {};
 
 		for (let i = 0; i < keys.length; i++) {
