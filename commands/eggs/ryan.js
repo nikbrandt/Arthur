@@ -1,5 +1,5 @@
 exports.run = message => {
-	if (message.author.id !== '304716594104369162') message.channel.send('no.');
+	if (message.author.id !== '304716594104369162') return message.channel.send('no.');
 	
 	message.client.daniel = !message.client.daniel;
 	if (message.client.daniel) message.channel.send('yep, ok.');
@@ -13,8 +13,8 @@ exports.config = {
 };
 
 exports.meta = {
-	command: 'jay',
-	name: 'Jay',
-	description: 'it\'s jay or something',
-	help: 'just jay'
+	command: 'ryan',
+	name: 'Ryan',
+	description: 'hehehehehehehe',
+	help: 'hehehehehehehehehehehehehehe'
 };

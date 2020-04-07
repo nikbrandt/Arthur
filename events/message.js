@@ -8,7 +8,7 @@ const { errorLog, lastCommand } = require('../functions/eventLoader');
 let cooldownObj = {};
 
 const emojiRegex = /^\s*<?(a)?:?(\w{2,32}):(\d{17,19})>?\s*$/;
-const CAT_EMOJIS = [ ':crying_cat_face:', ':heart_eyes_cat:', ':joy_cat:', ':kissing_cat:', ':pouting_cat:', ':scream_cat:', ':smile_cat:', ':smiley_cat:', ':smirk_cat:' ];
+const CAT_EMOJIS = [ '😿', '😻', '😹', '😽', '😾', '🙀', '😸', '😺', '😼' ];
 
 module.exports = async (client, message) => {
 	if (message.author.bot) return;
@@ -25,8 +25,11 @@ module.exports = async (client, message) => {
 
 	// easter egg bs
 	if (message.author.melon === true) message.react('🍉').catch(() => {});
-	if (client.daniel && message.guild && message.guild.id === '561659258622705705' && message.author.id === '346508486810796034')
-		for (let i = 0; i < 3; i++) message.react(CAT_EMOJIS[Math.floor(Math.random() * CAT_EMOJIS.length)]).catch(() => {});
+	if (client.daniel && message.guild && message.guild.id === '561659258622705705' && message.author.id === '346508486810796034') {
+		await message.react(CAT_EMOJIS[Math.floor(Math.random() * CAT_EMOJIS.length)]).catch(() => {});
+		await message.react(CAT_EMOJIS[Math.floor(Math.random() * CAT_EMOJIS.length)]).catch(() => {});
+		message.react(CAT_EMOJIS[Math.floor(Math.random() * CAT_EMOJIS.length)]).catch(() => {});
+	}
 	
 	// alright, resume normal code
 	let prefix;
