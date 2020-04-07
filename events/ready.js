@@ -3,7 +3,6 @@ const fs = require('fs');
 
 const { statusUpdate } = require('../functions/eventLoader');
 const { watch } = require('../commands/fun/poll');
-const dbots = require('../functions/dbots');
 const ipc = require('../struct/ipc');
 
 async function game (client) {
@@ -78,19 +77,11 @@ module.exports = client => {
 	if (Date.now() - client.loadStart > 300000) return;
 	console.log(`\n${client.test ? 'Testbot' : 'Arthur'} has started! Currently in ${client.guilds.cache.size} guilds, attempting to serve ${client.users.cache.size} users. (${Date.now() - client.loadStart} ms)\n`);
 
-	if (!client.test) dbots.post(client);
 	/*if (!client.test)*/ ipc(client);
 
 	client.owner = client.users.cache.get(client.config.owners[0]);
 	client.recentMessages = {};
 	client.lastRecentMessageID = 0;
-
-	if (!client.test) {
-		let tempItems = fs.readdirSync('../media/temp');
-		if (tempItems) tempItems.forEach(i => {
-			fs.unlinkSync(`../media/temp/${i}`);
-		});
-	}
 
 	game(client);
 	client.setInterval(() => {

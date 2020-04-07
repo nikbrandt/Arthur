@@ -1,8 +1,16 @@
 const fs = require('fs');
 
 const config = require('../media/config');
+const { post } = require('./functions/dbots');
 
 const test = !!(process.argv[2] && process.argv[2] === 'test');
+
+if (!test) {
+	let tempItems = fs.readdirSync('../media/temp');
+	if (tempItems) tempItems.forEach(i => {
+		fs.unlinkSync(`../media/temp/${i}`);
+	});
+}
 
 const { ShardingManager } = require('discord.js');
 const manager = new ShardingManager('./bot.js', {
@@ -86,3 +94,7 @@ setInterval(() => {
 	fs.writeFileSync('../media/stats/daily.json', JSON.stringify(dailyStatsObject));
 	fs.writeFileSync('../media/stats/weekly.json', JSON.stringify(weeklyStatsObject));
 }, 30000);
+
+setInterval(() => {
+	post(manager).catch(console.error);
+}, 1000 * 60 * 2);

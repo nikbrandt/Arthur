@@ -1,5 +1,4 @@
 const defaultChannel = require('../functions/defaultChannel');
-const { post } = require('../functions/dbots');
 
 module.exports = (client, guild) => {
 	// check for existence of guild settings in sql
@@ -21,8 +20,4 @@ module.exports = (client, guild) => {
 			).catch(() => {});
 		})
 	});
-
-	setTimeout(() => {
-		post(client);
-	}, 1000);
 };
