@@ -3,11 +3,12 @@ const https = require('https');
 
 const XP = require('../struct/xp.js');
 const config = require('../../media/config.json');
-
 const { errorLog } = require('../functions/eventLoader');
+
 let cooldownObj = {};
 
 const emojiRegex = /^\s*<?(a)?:?(\w{2,32}):(\d{17,19})>?\s*$/;
+const CAT_EMOJIS = [ '😿', '😻', '😹', '😽', '😾', '🙀', '😸', '😺', '😼' ];
 
 module.exports = async (client, message) => {
 	if (message.author.bot) return;
@@ -22,11 +23,18 @@ module.exports = async (client, message) => {
 		if (!!blacklisted['count(1)']) return;
 	}
 
+	// easter egg bs
 	if (message.author.melon === true) message.react('🍉').catch(() => {});
-
+	if (client.daniel && message.guild && message.guild.id === '561659258622705705' && message.author.id === '346508486810796034') {
+		await message.react(CAT_EMOJIS[Math.floor(Math.random() * CAT_EMOJIS.length)]).catch(() => {});
+		await message.react(CAT_EMOJIS[Math.floor(Math.random() * CAT_EMOJIS.length)]).catch(() => {});
+		message.react(CAT_EMOJIS[Math.floor(Math.random() * CAT_EMOJIS.length)]).catch(() => {});
+	}
+	
+	// alright, resume normal code
 	let prefix;
 	let humongoji = false;
-	let alexaPlay = false;
+	let alexaPlay = false; // except this lol
 
 	message.__ = (string, variables) => {
 		command = i18n.getCommandFileName(command, message) || command;
@@ -180,6 +188,7 @@ module.exports = async (client, message) => {
 	try {
 		console.log(`${moment().format('MM-DD H:mm:ss')} - Command ${command} being run, user id ${message.author.id}${message.guild ? `, guild id ${message.guild.id}` : ''}`);
 		let resp = cmdFile.run(message, args, suffix, client, perms, prefix);
+		errorLog.lastCommand = command;
 		if (resp && typeof resp.then === 'function' && typeof resp.catch === 'function') resp.catch(err => {
 			errorLog(`Error while running ${command} | ${err.message}`, err.stack, err.code);
 			console.error(`Command ${command} has failed to run!\n${err.stack}`)
