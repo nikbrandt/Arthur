@@ -115,7 +115,7 @@ const Music = {
 			
 			switch (music.queue[0].type) {
 				case 1: { // youtube
-					const stream = ytdl(music.queue[0].id, { quality: 'highestaudio' });
+					const stream = ytdl(music.queue[0].id, { quality: 'highestaudio', highWaterMark: 131072 });
 	
 					if (!guild.voice || !guild.voice.connection) {
 						guild.music = {};
