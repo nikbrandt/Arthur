@@ -3,6 +3,7 @@ const sqlite3 = require('sqlite3');
 
 const ArthurClient = require('./struct/ArthurClient');
 const { errorLog } = require('./functions/eventLoader');
+const { statusUpdate } = require('../functions/eventLoader');
 
 global.__basedir = __dirname;
 
@@ -49,6 +50,12 @@ process.on('message', message => {
 		client.shard.uptimeStart = message.uptime;
 		client.shard.id = message.id;
 		errorLog.shardID = message.id;
+
+		statusUpdate({
+			title: `Shard ${message.id} started`,
+			timestamp: new Date().toISOString(),
+			color: 0x00c140
+		});
 		
 		return;
 	}

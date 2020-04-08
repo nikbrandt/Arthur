@@ -30,7 +30,7 @@ exports.post = async shardManager => {
 	} catch (e) {}
 
 	shards.forEach((shard, i) => {
-		if (prevShards[i] === shard) return;
+		if (prevShards && prevShards[i] === shard) return;
 
 		let pwOpts = {
 			uri: `https://discord.bots.gg/api/v1/bots/${config.website.client_id}/stats`,

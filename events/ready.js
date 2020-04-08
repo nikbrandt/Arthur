@@ -1,7 +1,6 @@
 const moment = require('moment');
 const fs = require('fs');
 
-const { statusUpdate } = require('../functions/eventLoader');
 const { watch } = require('../commands/fun/poll');
 const ipc = require('../struct/ipc');
 
@@ -101,12 +100,6 @@ module.exports = client => {
 			dbots.getLikes(client);
 		}, 600000);*/
 	}
-
-	statusUpdate({
-		title: 'Bot started',
-		timestamp: new Date().toISOString(),
-		color: 0x00c140
-	});
 
 	sql.all('SELECT * FROM pollReactionCollectors').then(results => {
 		let parsed = [];
