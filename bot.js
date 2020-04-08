@@ -4,10 +4,18 @@ const ArthurClient = require('./struct/ArthurClient');
 global.__basedir = __dirname;
 
 const client = new ArthurClient({
-	fetchAllMembers: false,
-	disabledEvents: ['TYPING_START'],
-	disableEveryone: true,
-	messageCacheMaxSize: 10
+	disableMentions: 'everyone',
+	messageCacheMaxSize: 10,
+	ws: {
+		intents: [
+			'GUILDS',
+			'GUILD_MEMBERS',
+			'GUILD_VOICE_STATES',
+			'GUILD_MESSAGES',
+			'GUILD_MESSAGE_REACTIONS',
+			'DIRECT_MESSAGES'
+		]
+	}
 });
 
 sql.open('../media/db.sqlite').then(() => {
