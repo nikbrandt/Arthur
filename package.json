@@ -2,7 +2,7 @@
 	"name": "arthur",
 	"version": "0.1.0",
 	"description": "A discord bot, probably a rewrite of Marvin",
-	"main": "bot.js",
+	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
@@ -38,7 +38,7 @@
 		"node-ipc": "^9.1.1",
 		"request": "^2.88.2",
 		"request-promise": "^4.2.5",
-		"sqlite": "^3.0.3",
+		"sqlite": "^4.0.5",
 		"sqlite3": "^4.1.1",
 		"trello": "^0.9.1",
 		"utf-8-validate": "^5.0.2",

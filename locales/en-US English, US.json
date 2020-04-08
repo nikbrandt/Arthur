@@ -290,6 +290,16 @@
 				"help": "C'mon, you know how to use this."
 			}
 		},
+		"boradcasteval": {
+			"meta": {
+				"dev": true,
+				"command": "broadcasteval",
+				"name": "BroadcastEval",
+				"description": "Evaluate a thing on all shards. Confuse everyone.",
+				"usage": "<statement>",
+				"help": "ye."
+			}
+		},
 		"hardblacklist": {
 			"meta": {
 				"dev": true,
@@ -1007,7 +1017,7 @@
 			"author": "Author",
 			"help": "Help",
 			"info": "Info",
-			"info_value": "Language - Javascript\nNode $nodeVersion\nDiscord.js v$discordVersion\nUptime of $uptime"
+			"info_value": "Language - Javascript\nNode $nodeVersion\nDiscord.js v$discordVersion\nShard uptime of $uptime (shard $shard)\nShard manager uptime of $managerUptime"
 		},
 		"invite": {
 			"meta": {

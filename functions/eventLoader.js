@@ -6,17 +6,8 @@ const fs = require('fs');
 
 let lastHeartbeat = Date.now();
 
-function statusUpdate (embed, restart, client) {
-	if (!(process.argv[2] && process.argv[2] === 'test')) statusWebhookClient.send({ embeds: [ embed ] }).then(() => {
-		if (restart) setTimeout(() => {
-			if (Date.now() - lastHeartbeat > 45000 || (client && client.ws.lastHeartbeatAck === false)) process.exit(0);
-			else statusUpdate({
-				title: 'Reconnected',
-				timestamp: new Date().toISOString(),
-				color: 0xb25bff
-			});
-		}, 60000);
-	}).catch(() => {});
+function statusUpdate (embed) {
+	if (!(process.argv[2] && process.argv[2] === 'test')) statusWebhookClient.send({ embeds: [ embed ] }).catch(() => {});
 }
 
 const errorLog = (error, stack, code) => {
@@ -25,7 +16,9 @@ const errorLog = (error, stack, code) => {
 		embeds: [ {
 			title: error,
 			description: '```js\n' + stack + '```',
-			footer: { text: code + errorLog.lastCommand ? ` | last command: ${errorLog.lastCommand}` : '' },
+			footer: {
+				text: code + ` | Shard ${errorLog.shardID}` + errorLog.lastCommand ? ` | last command: ${errorLog.lastCommand}` : ''
+			},
 			timestamp: new Date().toISOString(),
 			color: 0xff0000
 		} ]
@@ -85,7 +78,7 @@ exports.load = client => {
 			title: 'Session Invalidated',
 			timestamp: new Date().toISOString(),
 			color: 0xf47742,
-		}, true);
+		});
 		
 		if (d.includes('eartbeat')) {
 			lastHeartbeat = Date.now();
@@ -111,7 +104,7 @@ exports.load = client => {
 		});
 	});
 
-	client.on('resume', (num, id) => {
+	client.on('shardResume', (id, num) => {
 		statusUpdate({
 			title: 'Resumed',
 			description: `${num} events replayed.`,

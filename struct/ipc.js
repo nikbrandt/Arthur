@@ -1,5 +1,4 @@
 const ipc = require('node-ipc');
-const sql = require('sqlite');
 const os = require("os");
 
 const { shuffle } = require('../commands/music/shuffle');

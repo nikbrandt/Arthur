@@ -1,5 +1,3 @@
-const sql = require('sqlite');
-
 exports.run = async (message, ar, sui, client) => {
 	let levels = await sql.get(`SELECT levels FROM guildOptions WHERE guildID = '${message.guild.id}'`);
 	levels = !(!levels || levels.levels === 'false');

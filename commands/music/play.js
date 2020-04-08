@@ -1,6 +1,5 @@
 const Music = require('../../struct/music.js');
 const config = require('../../../media/config.json');
-const sql = require('sqlite');
 
 let add = async (message, id, type, client, first, loadMessage, ipc) => {
 	let title = first

@@ -4,8 +4,7 @@ const eventLoader = require('../functions/eventLoader');
 const permLevel = require('../functions/permLevel.js');
 const findMember = require('../functions/findMember.js');
 const i18n = require('../struct/i18n');
-const fs = require('fs');
-const sql = require('sqlite');
+const config = require('../../media/config.json');
 
 class ArthurClient extends Client {
 	constructor (options) {
@@ -16,14 +15,16 @@ class ArthurClient extends Client {
 		this.test = !!(process.argv[2] && process.argv[2] === 'test');
 		this.processing = [];
 
-		this.commandStatsObject = JSON.parse(fs.readFileSync(`${__basedir}/../media/stats/commands.json`));
-		this.dailyStatsObject = JSON.parse(fs.readFileSync(`${__basedir}/../media/stats/daily.json`));
-		this.weeklyStatsObject = JSON.parse(fs.readFileSync(`${__basedir}/../media/stats/weekly.json`));
+		this.commandStatsObject = {};
+		this.dailyStatsObject = {};
+		this.weeklyStatsObject = {};
 
-		this.config = require(`${__basedir}/../media/config.json`);
+		this.config = config;
+		this.ownerID = config.owners[0];
 		this.commands = new Collection();
 		this.aliases = new Collection();
 		this.reactionCollectors = new Collection();
+		this.shardQueue = new Map();
 
 		loadCommands(this);
 

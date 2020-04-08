@@ -1,5 +1,4 @@
 const fs = require('fs');
-const sql = require('sqlite');
 const path = require('path');
 const { Collection, Message, Guild, User } = require('discord.js');
 

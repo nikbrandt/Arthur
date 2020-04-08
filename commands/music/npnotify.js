@@ -1,5 +1,3 @@
-const sql = require('sqlite');
-
 exports.run = async (message) => { // npNotify column
 	let row = await sql.get(`SELECT npNotify FROM guildOptions WHERE guildID = '${message.guild.id}'`);
 

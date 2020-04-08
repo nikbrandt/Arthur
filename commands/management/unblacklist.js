@@ -1,5 +1,3 @@
-const sql = require('sqlite');
-
 exports.run = async (message, args, suffix, client) => {
 	let users = await sql.all(`SELECT userID FROM guildUserBlacklist WHERE guildID = '${message.guild.id}'`);
 	users = users.map(u => u.userID);

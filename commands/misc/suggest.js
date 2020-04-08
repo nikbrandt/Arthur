@@ -4,7 +4,6 @@ const trello = new Trello(config.trello.key, config.trello.token);
 
 exports.run = (message, args, suffix, client) => {
 	if (!args[0]) return message.channel.send(message.__('no_args'));
-	let channel = client.channels.cache.get(config.trello.channel);
 
 	let splitified = suffix.split('\n');
 	if (splitified[0].length > 256) {
@@ -25,7 +24,7 @@ exports.run = (message, args, suffix, client) => {
 		: footer,
 		config.trello.board
 	).then(card => {
-		channel.send({
+		let messageOptions = {
 			embed: {
 				title: splitified[0],
 				url: card.url,
@@ -37,7 +36,10 @@ exports.run = (message, args, suffix, client) => {
 				color: 0x00c140
 			},
 			files: message.attachments.map(a => {return { attachment: a.url, name: a.name }})
-		});
+		};
+		
+		client.shard.broadcastEval(`let channel = this.channels.cache.get('${config.trello.channel}');
+		if (channel) channel.send(${JSON.stringify(messageOptions)}).then(() => true);`).catch(console.error);
 
 		message.channel.send(message.__('success', { extra: message.guild && message.guild.id === '304428345917964290' ? '' : '\n' + message.__('check_support_server', { link: client.config.info.guildLink }) }));
 	}).catch(err => {

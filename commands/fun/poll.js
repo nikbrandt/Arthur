@@ -1,6 +1,6 @@
 const ms = require('ms');
 const moment = require('moment');
-const sql = require('sqlite');
+
 const { askWithCondition } = require('../../functions/askQuestion');
 
 const emojis = [ '🇦', '🇧', '🇨', '🇩', '🇪', '🇫', '🇬', '🇭', '🇮', '🇯' ];

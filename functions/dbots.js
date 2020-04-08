@@ -1,34 +1,57 @@
 const request = require('request');
 
-exports.post = client => {
+const config = require('../../media/config.json');
+
+let guilds;
+let prevShards;
+
+exports.post = async shardManager => {
+	let shards = await shardManager.fetchClientValues('guilds.cache.size');
+	
+	let totalGuilds = shards.reduce((prev, cur) => prev + cur, 0);
+	if (guilds === totalGuilds) return;
+	guilds = totalGuilds;
+	
 	let orgOpts = {
-		url: `https://discordbots.org/api/bots/${client.user.id}/stats`,
+		url: `https://top.gg/api/bots/${config.website.client_id}/stats`,
 		method: 'POST',
 		json: true,
 		headers: {
-			"Authorization": client.config.dbotsAuth.org.bot
+			Authorization: config.dbotsAuth.org.bot
 		},
 		body: {
-			"server_count": client.guilds.cache.size
+			shards: shards,
+			shard_count: shards.length
 		}
 	};
-
-	let pwOpts = {
-		uri: `https://discord.bots.gg/api/v1/bots/${client.user.id}/stats`,
-		method: 'POST',
-		json: true,
-		headers: {
-			"Authorization": client.config.dbotsAuth.pw
-		},
-		body: {
-			"guildCount": client.guilds.cache.size
-		}
-	};
-
+	
 	try {
 		request(orgOpts);
-		request(pwOpts);
 	} catch (e) {}
+
+	shards.forEach((shard, i) => {
+		if (prevShards[i] === shard) return;
+
+		let pwOpts = {
+			uri: `https://discord.bots.gg/api/v1/bots/${config.website.client_id}/stats`,
+			method: 'POST',
+			json: true,
+			headers: {
+				Authorization: config.dbotsAuth.pw
+			},
+			body: {
+				guildCount: shard,
+				shardCount: shards.length,
+				shardId: i
+			}
+		};
+
+		try {
+			request(pwOpts);
+		} catch (e) {}
+	});
+
+	prevShards = shards;
 };
 
 exports.getLikes = client => {
@@ -37,7 +60,7 @@ exports.getLikes = client => {
 		method: 'GET',
 		json: true,
 		headers: {
-			"Authorization": client.config.dbotsAuth.org.bot
+			Authorization: config.dbotsAuth.org.bot
 		}
 	};
 

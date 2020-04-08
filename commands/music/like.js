@@ -1,4 +1,3 @@
-const sql = require('sqlite');
 const Music = require('../../struct/music');
 
 exports.run = async (message, args, suffix, client) => {

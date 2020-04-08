@@ -1,5 +1,3 @@
-const sql = require('sqlite');
-
 exports.run = async message => {
 	let row = await sql.get(`SELECT humongoji FROM guildOptions WHERE guildID = '${message.guild.id}'`);
 

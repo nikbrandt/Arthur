@@ -17,7 +17,7 @@ exports.run = async (message, args, asdf, client) => {
 		fields: [
 			{
 				name: message.__('author'),
-				value: client.owner.tag,
+				value: 'Gymnophoria#8146',
 				inline: true
 			},
 			{
@@ -27,7 +27,13 @@ exports.run = async (message, args, asdf, client) => {
 			},
 			{
 				name: message.__('info'),
-				value: message.__('info_value', { nodeVersion: process.version, discordVersion: Discord.version, uptime: moment.duration(process.uptime() * 1000).locale(locale).humanize() })
+				value: message.__('info_value', {
+					nodeVersion: process.version,
+					discordVersion: Discord.version,
+					uptime: moment.duration(process.uptime() * 1000).locale(locale).humanize(),
+					shard: client.shard.id,
+					managerUptime: moment.duration(Date.now() - client.shard.uptimeStart).locale(locale).humanize()
+				})
 			}
 		]
 	}});

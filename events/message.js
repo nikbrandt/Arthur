@@ -1,10 +1,10 @@
-const config = require('../../media/config.json');
 const moment = require('moment');
-const XP = require('../struct/xp.js');
-const sql = require('sqlite');
 const https = require('https');
 
-const { errorLog, lastCommand } = require('../functions/eventLoader');
+const XP = require('../struct/xp.js');
+const config = require('../../media/config.json');
+const { errorLog } = require('../functions/eventLoader');
+
 let cooldownObj = {};
 
 const emojiRegex = /^\s*<?(a)?:?(\w{2,32}):(\d{17,19})>?\s*$/;
@@ -67,48 +67,26 @@ module.exports = async (client, message) => {
 				client.recentMessages[message.author.id] = authorID.toString();
 				client.lastRecentMessageID += 1;
 			}
-
-			client.channels.cache.get(config.messageLogChannel).send(
-				{
-					embed: {
-						author: {
-							name: `Message from ${message.author.tag} | ID ${authorID}`,
-							icon_url: message.author.displayAvatarURL()
-						},
-						color: 0x418cf4,
-						description: message.content
+			
+			let messageObject = {
+				embed: {
+					author: {
+						name: `Message from ${message.author.tag} | ID ${authorID}`,
+						icon_url: message.author.displayAvatarURL()
 					},
-					files: message.attachments.array().map(a => a ? a.url : '')
-				}
-			);
+					color: 0x418cf4,
+					description: message.content
+				},
+				files: message.attachments.array().map(a => a ? a.url : '')
+			};
+			
+			client.shard.broadcastEval(`let channel = client.channels.cache.get('${config.messageLogChannel}');
+			if (channel) channel.send(${JSON.stringify(messageObject)}).then(() => {});`).catch(console.error);
 
 			client.lastMessage = message.author;
 		}
 
 		if (message.content.includes(`<@${client.user.id}>`) || message.content.includes(`<@!${client.user.id}>`)) {
-
-			let authorID;
-
-			if (client.recentMessages[message.author.id]) authorID = client.recentMessages[message.author.id];
-			else {
-				authorID = client.lastRecentMessageID + 1;
-				client.recentMessages[message.author.id] = authorID.toString();
-				client.lastRecentMessageID += 1;
-			}
-
-			client.channels.cache.get(config.messageLogChannel).send(
-				{
-					embed: {
-						author: {
-							name: `Mention from ${message.author.tag} | ID ${authorID}`,
-							icon_url: message.author.displayAvatarURL()
-						},
-						color: 0x418cf4,
-						description: message.content
-					},
-					files: message.attachments.array().map(a => a ? a.url : '')
-				}
-			);
 			if (message.content.toLowerCase().includes('ship')) message.channel.send('*shipped*', {
 				files: ['https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/HMS_BOUNTY_II_with_Full_Sails.jpg/1200px-HMS_BOUNTY_II_with_Full_Sails.jpg']
 			})
@@ -220,7 +198,7 @@ module.exports = async (client, message) => {
 		console.error(`Command ${command} has failed to run!\n${err.stack}`);
 	}
 
-	if (message.author.id !== client.owner.id) {
+	if (message.author.id !== client.ownerID) {
 		if (!client.commandStatsObject[command]) client.commandStatsObject[command] = { uses: 1 };
 		else client.commandStatsObject[command].uses++;
 
