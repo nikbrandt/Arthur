@@ -95,6 +95,6 @@ setInterval(() => {
 	fs.writeFileSync('../media/stats/weekly.json', JSON.stringify(weeklyStatsObject));
 }, 30000);
 
-setInterval(() => {
+if (!test) setInterval(() => {
 	post(manager).catch(console.error);
 }, 1000 * 60 * 2);

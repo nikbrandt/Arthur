@@ -79,14 +79,13 @@ module.exports = client => {
 
 	/*if (!client.test)*/ ipc(client);
 
-	client.owner = client.users.cache.get(client.config.owners[0]);
 	client.recentMessages = {};
 	client.lastRecentMessageID = 0;
 
 	game(client);
 	client.setInterval(() => {
 		game(client);
-	}, 120000);
+	}, 1000 * 60 * 5);
 
 	client.setInterval(() => {
 		cleanProcesses(client);

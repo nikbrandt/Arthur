@@ -198,7 +198,7 @@ module.exports = async (client, message) => {
 		console.error(`Command ${command} has failed to run!\n${err.stack}`);
 	}
 
-	if (message.author.id !== client.owner.id) {
+	if (message.author.id !== client.ownerID) {
 		if (!client.commandStatsObject[command]) client.commandStatsObject[command] = { uses: 1 };
 		else client.commandStatsObject[command].uses++;
 

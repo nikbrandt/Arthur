@@ -4,6 +4,7 @@ const eventLoader = require('../functions/eventLoader');
 const permLevel = require('../functions/permLevel.js');
 const findMember = require('../functions/findMember.js');
 const i18n = require('../struct/i18n');
+const config = require('../../media/config.json');
 
 class ArthurClient extends Client {
 	constructor (options) {
@@ -18,7 +19,8 @@ class ArthurClient extends Client {
 		this.dailyStatsObject = {};
 		this.weeklyStatsObject = {};
 
-		this.config = require(`${__basedir}/../media/config.json`);
+		this.config = config;
+		this.ownerID = config.owners[0];
 		this.commands = new Collection();
 		this.aliases = new Collection();
 		this.reactionCollectors = new Collection();

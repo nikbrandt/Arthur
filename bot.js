@@ -1,6 +1,8 @@
 const sqlite = require('sqlite');
 const sqlite3 = require('sqlite3');
+
 const ArthurClient = require('./struct/ArthurClient');
+const { errorLog } = require('./functions/eventLoader');
 
 global.__basedir = __dirname;
 
@@ -46,6 +48,7 @@ process.on('message', message => {
 	if (message.uptime) {
 		client.shard.uptimeStart = message.uptime;
 		client.shard.id = message.id;
+		errorLog.shardID = message.id;
 		
 		return;
 	}
