@@ -71,8 +71,8 @@ function failureMessage(client, name, text) {
 function finalMessage(client, messageOptions) {
 	if (client.channels.cache.has(MESSAGE_CHANNEL_ID)) return client.channels.cache.get(MESSAGE_CHANNEL_ID).send(messageOptions).catch(() => {});
 	
-	client.shard.broadcastEval(`if (!client.channels.cache.has('${MESSAGE_CHANNEL_ID}') return;
-	client.channels.cache.get('${MESSAGE_CHANNEL_ID}').send(${JSON.stringify(messageOptions)}).catch(() => {})`).catch(() => {});
+	client.shard.broadcastEval(`if (!this.channels.cache.has('${MESSAGE_CHANNEL_ID}') return;
+	this.channels.cache.get('${MESSAGE_CHANNEL_ID}').send(${JSON.stringify(messageOptions)}).catch(() => {})`).catch(() => {});
 }
 
 exports.config = {

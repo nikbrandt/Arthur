@@ -1,5 +1,9 @@
 const fs = require('fs');
 
+const sqlite = require('sqlite');
+const sqlite3 = require('sqlite3');
+let sql;
+
 const config = require('../media/config');
 const { post } = require('./functions/dbots');
 
@@ -18,7 +22,14 @@ const manager = new ShardingManager('./bot.js', {
 	shardArgs: test ? [ 'test' ] : []
 });
 
-manager.spawn().catch(console.error);
+sqlite.open({
+	filename: '../media/db.sqlite',
+	driver: sqlite3.cached.Database
+}).then(db => {
+	sql = db;
+
+	manager.spawn().catch(console.error);
+}).catch(console.error);
 
 let stopwatchUserObject = {};
 
@@ -37,6 +48,39 @@ manager.on('shardCreate', shard => {
 	});
 	
 	shard.on('message', message => {
+		if (message.sql) {
+			let { id, query, args } = message;
+			
+			switch(message.sql) {
+				case 'get':
+					sql.get(query, args).then(result => {
+						sqlThen(shard, id, result);
+					}).catch(error => {
+						sqlCatch(shard, id, error);
+					});
+					
+					break;
+				case 'run':
+					sql.run(query, args).then(result => {
+						sqlThen(shard, id, result);
+					}).catch(error => {
+						sqlCatch(shard, id, error);
+					});
+					
+					break;
+				case 'all':
+					sql.all(query, args).then(result => {
+						sqlThen(shard, id, result);
+					}).catch(error => {
+						sqlCatch(shard, id, error);
+					});
+					
+					break;
+			}
+			
+			return;
+		}
+		
 		if (message.stopwatch) {
 			let id = message.stopwatch;
 			
@@ -87,6 +131,27 @@ function addValues(from, to) {
 			else to[key] += from[key];
 		}
 	}
+}
+
+function sqlThen(shard, id, result) {
+	shard.send({
+		sql: {
+			id: id,
+			result: result
+		}
+	}).catch(console.error);
+}
+
+function sqlCatch(shard, id, error) {
+	console.error('SQL Error:');
+	console.error(error);
+
+	shard.send({
+		sql: {
+			id: id,
+			error: error
+		}
+	}).catch(console.error);
 }
 
 setInterval(() => {

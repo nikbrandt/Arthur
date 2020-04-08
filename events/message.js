@@ -80,7 +80,7 @@ module.exports = async (client, message) => {
 				files: message.attachments.array().map(a => a ? a.url : '')
 			};
 			
-			client.shard.broadcastEval(`let channel = client.channels.cache.get('${config.messageLogChannel}');
+			client.shard.broadcastEval(`let channel = this.channels.cache.get('${config.messageLogChannel}');
 			if (channel) channel.send(${JSON.stringify(messageObject)}).then(() => {});`).catch(console.error);
 
 			client.lastMessage = message.author;
