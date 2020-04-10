@@ -5,8 +5,8 @@ exports.run = async (message, args, suffix, client) => {
 
 	if (args[0] === '-f') force = true;
 
-	let voice = (await client.shard.fetchClientValues('voice.connections.size')).reduce((prev, count) => prev + count, 0);
-	let processing = (await client.shard.fetchClientValues('processing')).reduce((prev, processing) => {
+	let voice = (await client.shard.broadcastEval('this.voice.connections.size')).reduce((prev, count) => prev + count, 0);
+	let processing = (await client.shard.broadcastEval('this.processing')).reduce((prev, processing) => {
 		processing.forEach(item => {
 			prev.push(item);
 		});

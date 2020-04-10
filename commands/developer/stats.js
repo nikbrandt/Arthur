@@ -115,8 +115,8 @@ exports.run = async (message, args, suffix, client) => {
 		curWidth += barWidth + 4;
 	}
 	
-	let guilds = (await client.shard.fetchClientValues('guilds.cache.size')).reduce((prev, cur) => prev + cur, 0).toString();
-	let users = (await client.shard.fetchClientValues('users.cache.size')).reduce((prev, cur) => prev + cur, 0).toString();
+	let guilds = (await client.shard.broadcastEval('this.guilds.cache.size')).reduce((prev, cur) => prev + cur, 0).toString();
+	let users = (await client.shard.broadcastEval('this.users.cache.size')).reduce((prev, cur) => prev + cur, 0).toString();
 	
 	curWidth = 100; // show guild/user amounts
 	ctx.font = '50px RobotoMedium';

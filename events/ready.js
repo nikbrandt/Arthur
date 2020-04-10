@@ -7,8 +7,8 @@ const ipc = require('../struct/ipc');
 async function game (client) {
 	let games = [
 		[ 'Invite me to your server with the "invite" command.', 'PLAYING' ],
-		[ `${(await client.shard.fetchClientValues('guilds.cache.size')).reduce((prev, cur) => prev + cur, 0)} servers do their things`, 'WATCHING' ],
-		[ `${(await client.shard.fetchClientValues('users.cache.size')).reduce((prev, cur) => prev + cur, 0)} users very closely`, 'WATCHING' ],
+		[ `${(await client.shard.broadcastEval('this.guilds.cache.size')).reduce((prev, cur) => prev + cur, 0)} servers do their things`, 'WATCHING' ],
+		[ `${(await client.shard.broadcastEval('this.users.cache.size')).reduce((prev, cur) => prev + cur, 0)} users very closely`, 'WATCHING' ],
 		[ 'with the webshot command', 'PLAYING' ],
 		[ 'The lovely mp3 command', 'LISTENING' ],
 		[ 'what do i put here', 'PLAYING' ],
