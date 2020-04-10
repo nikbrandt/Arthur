@@ -17,7 +17,7 @@ const errorLog = (error, stack, code) => {
 			title: error,
 			description: '```js\n' + stack + '```',
 			footer: {
-				text: code + ` | Shard ${errorLog.shardID}` + errorLog.lastCommand ? ` | last command: ${errorLog.lastCommand}` : ''
+				text: code + ` | Shard ${errorLog.shardID}` + (errorLog.lastCommand ? ` | last command: ${errorLog.lastCommand}` : '')
 			},
 			timestamp: new Date().toISOString(),
 			color: 0xff0000
