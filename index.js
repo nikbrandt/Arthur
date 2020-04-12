@@ -37,6 +37,9 @@ let commandStatsObject = JSON.parse(fs.readFileSync('../media/stats/commands.jso
 let dailyStatsObject = JSON.parse(fs.readFileSync('../media/stats/daily.json'));
 let weeklyStatsObject = JSON.parse(fs.readFileSync('../media/stats/weekly.json'));
 
+let queue = new Map();
+let queueID = 0;
+
 manager.on('shardCreate', shard => {
 	console.log(`Launched shard ${shard.id}`);
 	
@@ -91,6 +94,67 @@ manager.on('shardCreate', shard => {
 				stopwatchUserObject[id] = Date.now();
 				shard.send({ stopwatch: { id: id }}).catch(() => {});
 			}
+			
+			return;
+		}
+		
+		if (message.broadcastEval) {
+			let { script, id } = message.broadcastEval;
+			let internalID = queueID++;
+			
+			queue.set(internalID, {
+				shards: 0,
+				returnShard: shard,
+				returnID: id,
+				results: {}
+			});
+			
+			manager.shards.forEach(shard => {
+				shard.send({
+					eval: {
+						script: script,
+						id: internalID
+					}
+				});
+			});
+			
+			return;
+		}
+		
+		if (message.eval) {
+			let { error, result, id } = message.eval;
+			
+			if (!queue.has(id)) return;
+			let queueObj = queue.get(id);
+			
+			if (error) {
+				queueObj.returnShard.send({
+					broadcastEval: {
+						error: error,
+						id: queueObj.returnID
+					}
+				}).catch(console.error);
+				return queue.delete(id);
+			}
+			
+			queueObj.shards++;
+			queueObj.results[shard.id] = result;
+			
+			if (queueObj.shards < manager.shards.size) return;
+			
+			let results = [];
+			for (let i = 0; i < queueObj.shards; i++) {
+				results.push(queueObj.results[i]);
+			}
+			
+			queueObj.returnShard.send({
+				broadcastEval: {
+					result: results,
+					id: queueObj.returnID
+				}
+			}).catch(console.error);
+			
+			queue.delete(id);
 			
 			return;
 		}

@@ -290,13 +290,14 @@
 				"help": "C'mon, you know how to use this."
 			}
 		},
-		"boradcasteval": {
+		"broadcasteval": {
 			"meta": {
 				"dev": true,
 				"command": "broadcasteval",
-				"name": "BroadcastEval",
+				"name": "Broadcast Eval",
 				"description": "Evaluate a thing on all shards. Confuse everyone.",
 				"usage": "<statement>",
+				"aliases": [ "beval" ],
 				"help": "ye."
 			}
 		},

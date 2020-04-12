@@ -38,7 +38,7 @@ exports.run = (message, args, suffix, client) => {
 			files: message.attachments.map(a => {return { attachment: a.url, name: a.name }})
 		};
 		
-		client.shard.broadcastEval(`let channel = this.channels.cache.get('${config.trello.channel}');
+		client.broadcastEval(`let channel = this.channels.cache.get('${config.trello.channel}');
 		if (channel) channel.send(${JSON.stringify(messageOptions)}).then(() => true);`).catch(console.error);
 
 		message.channel.send(message.__('success', { extra: message.guild && message.guild.id === '304428345917964290' ? '' : '\n' + message.__('check_support_server', { link: client.config.info.guildLink }) }));

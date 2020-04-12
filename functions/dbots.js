@@ -6,7 +6,7 @@ let guilds;
 let prevShards;
 
 exports.post = async shardManager => {
-	let shards = await shardManager.broadcastEval('this.guilds.cache.size');
+	let shards = await ArthurClient.broadcastEval('this.guilds.cache.size');
 	
 	let totalGuilds = shards.reduce((prev, cur) => prev + cur, 0);
 	if (guilds === totalGuilds) return;

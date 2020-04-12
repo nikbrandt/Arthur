@@ -46,7 +46,7 @@ exports.run = async (message, args, suffix, client) => {
 	}
 
 	try {
-		evaled = client.shard.broadcastEval(suffix.replace(/(\n)?```(js)?(\n)?/g, ''));
+		evaled = client.broadcastEval(suffix.replace(/(\n)?```(js)?(\n)?/g, ''));
 	} catch (err) {
 		return errorMessage(silent, message.channel, err.toString());
 	}

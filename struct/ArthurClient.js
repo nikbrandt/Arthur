@@ -11,6 +11,7 @@ class ArthurClient extends Client {
 		super(options);
 		
 		this.loadStart = Date.now();
+		this.queueCount = 0;
 		
 		this.test = !!(process.argv[2] && process.argv[2] === 'test');
 		this.processing = [];
@@ -25,6 +26,7 @@ class ArthurClient extends Client {
 		this.aliases = new Collection();
 		this.reactionCollectors = new Collection();
 		this.shardQueue = new Map();
+		this.shardErrorQueue = new Map();
 
 		loadCommands(this);
 
@@ -41,6 +43,24 @@ class ArthurClient extends Client {
 		this.totalXP = (await sql.get('SELECT SUM(global) FROM (SELECT DISTINCT userID, global FROM xp)'))['SUM(global)'];
 		
 		this.login(this.test ? this.config.testToken : this.config.token).catch(console.error);
+	}
+	
+	broadcastEval(script) {
+		return new Promise((resolve, reject) => {
+			if (!this.readyTimestamp) reject('Client not ready yet.');
+			
+			let id = this.queueCount++;
+			
+			this.shardQueue.set(id, resolve);
+			this.shardErrorQueue.set(id, reject);
+			
+			this.shard.send({
+				broadcastEval: {
+					script: script,
+					id: id
+				}
+			}).catch(reject);
+		});
 	}
 }
 

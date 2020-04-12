@@ -4,12 +4,12 @@ exports.run = async (message, args, suffix, client) => {
 	
 	let user;
 	try {
-		user = await client.users.fetch(args[0]) || (await client.shard.broadcastEval(`this.users.fetch('${args[0]}')`)).filter(item => !!item)[0];
+		user = await client.users.fetch(args[0]) || (await client.broadcastEval(`this.users.fetch('${args[0]}')`)).filter(item => !!item)[0];
 	} catch (e) { 
 		user = undefined;
 	}
 	
-	let guild = client.guilds.cache.get(args[0]) || (await client.shard.broadcastEval(`this.guilds.cache.get('${args[0]}')`)).filter(item => !!item)[0];
+	let guild = client.guilds.cache.get(args[0]) || (await client.broadcastEval(`this.guilds.cache.get('${args[0]}')`)).filter(item => !!item)[0];
 	
 	if (!user && !guild) return message.channel.send('Could not find user or guild by that ID. rip');
 	

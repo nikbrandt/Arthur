@@ -4,7 +4,7 @@ exports.run = async (message, args, suffix, client, permLevel) => {
 	let user;
 	if (permLevel === 10) user = client.users.cache.find(u => u.tag === suffix)
 		|| client.users.cache.find(u => u.tag.toLowerCase().includes(suffix.toLowerCase()))
-		|| (await client.shard.broadcastEval(`this.users.cache.find(u => u.tag.toLowerCase().includes("${suffix.toLowerCase().replace(/"/g, '')}"))`)).filter(item => !!item)[0];
+		|| (await client.broadcastEval(`this.users.cache.find(u => u.tag.toLowerCase().includes("${suffix.toLowerCase().replace(/"/g, '')}"))`)).filter(item => !!item)[0];
 	else user = message.guild.members.cache.find(m => m.user.tag.toLowerCase() === suffix.toLowerCase()) || message.guild.members.cache.find(m => m.user.tag.toLowerCase().includes(suffix.toLowerCase()));
 
 	if (!user) return message.channel.send(message.__('user_does_not_exist'));

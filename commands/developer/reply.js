@@ -1,7 +1,7 @@
 exports.run = async (message, args, suffix, client) => {
 	if (!args[0] && !message.attachments.size) return message.channel.send('yes, i\'ll send nothing. bravo.');
 
-	let user = client.shard.id === 0 ? client.lastMessage : (await client.shard.broadcastEval('this.lastMessage'))[0];
+	let user = client.shard.id === 0 ? client.lastMessage : (await client.broadcastEval('this.lastMessage'))[0];
 	if (!user) return message.channel.send('ive restarted since the last person sent a message, ffs');
 	message.delete().catch(() => {});
 	

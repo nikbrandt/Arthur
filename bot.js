@@ -52,6 +52,10 @@ const client = new ArthurClient({
 
 client.init().catch(console.error);
 
+const clientEval = (function(script) {
+	return eval(script);
+}).bind(client);
+
 process.on('message', message => {
 	if (message.sql) {
 		let { error, result, id } = message.sql;
@@ -66,6 +70,60 @@ process.on('message', message => {
 	if (message.stopwatch) {
 		if (client.shardQueue.has(message.stopwatch.id)) client.shardQueue.get(message.stopwatch.id)(message.stopwatch);
 		client.shardQueue.delete(message.stopwatch.id);
+		
+		return;
+	}
+	
+	if (message.eval) {
+		let { script, id } = message.eval;
+		
+		let result;
+		
+		try {
+			result = clientEval(script);
+		} catch (err) {
+			client.shard.send({
+				eval: {
+					error: err,
+					id: id
+				}
+			}).catch(console.error);
+		}
+		
+		if (!(result instanceof Promise)) return client.shard.send({
+			eval: {
+				result: result,
+				id: id
+			}
+		}).catch(console.error);
+		
+		result.then(result => {
+			client.shard.send({
+				eval: {
+					result: result,
+					id: id
+				}
+			}).catch(console.error);
+		}).catch(err => {
+			client.shard.send({
+				eval: {
+					error: err,
+					id: id
+				}
+			}).catch(console.error);
+		});
+		
+		return;
+	}
+	
+	if (message.broadcastEval) {
+		let { error, result, id } = message.broadcastEval;
+		
+		if (error) client.shardErrorQueue.get(id)(error);
+		else client.shardQueue.get(id)(result);
+		
+		client.shardQueue.delete(id);
+		client.shardErrorQueue.delete(id);
 		
 		return;
 	}

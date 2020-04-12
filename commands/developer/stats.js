@@ -115,8 +115,8 @@ exports.run = async (message, args, suffix, client) => {
 		curWidth += barWidth + 4;
 	}
 	
-	let guilds = (await client.shard.broadcastEval('this.guilds.cache.size')).reduce((prev, cur) => prev + cur, 0).toString();
-	let users = (await client.shard.broadcastEval('this.users.cache.size')).reduce((prev, cur) => prev + cur, 0).toString();
+	let guilds = (await client.broadcastEval('this.guilds.cache.size')).reduce((prev, cur) => prev + cur, 0).toString();
+	let users = (await client.broadcastEval('this.users.cache.size')).reduce((prev, cur) => prev + cur, 0).toString();
 	
 	curWidth = 100; // show guild/user amounts
 	ctx.font = '50px RobotoMedium';
@@ -148,7 +148,7 @@ exports.run = async (message, args, suffix, client) => {
 	ctx.fillText(text, curWidth, 150);
 
 	let lastEnd = -1.57; // RAM pie chart
-	let mem = (await client.shard.broadcastEval('process.memoryUsage().rss * 1.0e-6')).reduce((prev, cur) => prev + cur, 0);
+	let mem = (await client.broadcastEval('process.memoryUsage().rss * 1.0e-6')).reduce((prev, cur) => prev + cur, 0);
 	let total = 3000;
 	let data = [mem, total - mem];
 	let colors = ['#fff', accent];

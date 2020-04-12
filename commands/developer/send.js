@@ -8,14 +8,14 @@ exports.run = async (message, args, suffix, client) => {
 	let name;
 
 	let channel = client.users.cache.get(Object.keys(client.recentMessages)[Object.values(client.recentMessages).indexOf(args[0])])
-		||(await client.shard.broadcastEval(`this.users.cache.get(Object.keys(this.recentMessages)[Object.values(this.recentMessages).indexOf('${args[0]}')])`)).filter(item => !!item)[0];
+		||(await client.broadcastEval(`this.users.cache.get(Object.keys(this.recentMessages)[Object.values(this.recentMessages).indexOf('${args[0]}')])`)).filter(item => !!item)[0];
 	
 	if (!channel) channel = client.users.cache.get(args[0])
-		|| (await client.shard.broadcastEval(`this.users.cache.get('${args[0]}')`)).filter(item => !!item)[0];
+		|| (await client.broadcastEval(`this.users.cache.get('${args[0]}')`)).filter(item => !!item)[0];
 	
 	if (!channel) {
 		channel = client.channels.cache.get(args[0])
-			|| (await client.shard.broadcastEval(`this.channels.cache.get('${args[0]}')`)).filter(item => !!item)[0];
+			|| (await client.broadcastEval(`this.channels.cache.get('${args[0]}')`)).filter(item => !!item)[0];
 		
 		if (!channel) return message.channel.send('That\'s not a valid ID, sorry.');
 		name = `${channel.name} in ${channel.guild.name}`
@@ -30,7 +30,7 @@ exports.run = async (message, args, suffix, client) => {
 			if (message.channel.id === MESSAGE_CHANNEL_ID) failureMessage(client, name, text);
 		});
 	} else {
-		let success = (await client.shard.broadcastEval(`new Promise(resolve => {
+		let success = (await client.broadcastEval(`new Promise(resolve => {
 			let channel = this.${name.includes('#') ? 'users' : 'channels'}.cache.get('${channel.id}');
 			if (!channel) return resolve(null);
 			channel.send("${suffix.slice(args[0].length + 1).replace(/"/g, '').replace(/\\/g, '\\\\')}").then(() => {
@@ -71,7 +71,7 @@ function failureMessage(client, name, text) {
 function finalMessage(client, messageOptions) {
 	if (client.channels.cache.has(MESSAGE_CHANNEL_ID)) return client.channels.cache.get(MESSAGE_CHANNEL_ID).send(messageOptions).catch(() => {});
 	
-	client.shard.broadcastEval(`if (!this.channels.cache.has('${MESSAGE_CHANNEL_ID}') return;
+	client.broadcastEval(`if (!this.channels.cache.has('${MESSAGE_CHANNEL_ID}') return;
 	this.channels.cache.get('${MESSAGE_CHANNEL_ID}').send(${JSON.stringify(messageOptions)}).catch(() => {})`).catch(() => {});
 }
 
