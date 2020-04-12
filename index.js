@@ -128,13 +128,16 @@ manager.on('shardCreate', shard => {
 			let queueObj = queue.get(id);
 			
 			if (error) {
-				queueObj.returnShard.send({
+				queue.delete(id);
+				
+				if (queueObj.internal) return queueObj.internal.reject(error);
+				
+				return queueObj.returnShard.send({
 					broadcastEval: {
 						error: error,
 						id: queueObj.returnID
 					}
 				}).catch(console.error);
-				return queue.delete(id);
 			}
 			
 			queueObj.shards++;
@@ -147,7 +150,8 @@ manager.on('shardCreate', shard => {
 				results.push(queueObj.results[i]);
 			}
 			
-			queueObj.returnShard.send({
+			if (queueObj.internal) resolve(results);
+			else queueObj.returnShard.send({
 				broadcastEval: {
 					result: results,
 					id: queueObj.returnID
@@ -218,6 +222,25 @@ function sqlCatch(shard, id, error) {
 	}).catch(console.error);
 }
 
+
+function broadcastEval(script) {
+	return new Promise((resolve, reject) => {
+		let id = queueID++;
+		
+		queue.set(id, {
+			shards: 0,
+			results: {},
+			internal: { resolve, reject }
+		});
+		
+		manager.shards.forEach(shard => {
+			shard.send({
+				eval: { script, id}
+			}).catch(reject);
+		});
+	});
+}
+
 setInterval(() => {
 	fs.writeFileSync('../media/stats/commands.json', JSON.stringify(commandStatsObject));
 	fs.writeFileSync('../media/stats/daily.json', JSON.stringify(dailyStatsObject));
@@ -227,3 +250,5 @@ setInterval(() => {
 if (!test) setInterval(() => {
 	post(manager).catch(console.error);
 }, 1000 * 60 * 2);
+
+exports.broadcastEval = broadcastEval;
