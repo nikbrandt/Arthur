@@ -64,9 +64,11 @@ const Music = {
 	 * Play the next song in the queue
 	 * @param {Discord.Guild} guild The guild to play a song in
 	 * @param {boolean} [first] Whether or not this is the first song
+	 * @param {number} [retry] If song is being retried due to error, retry attempt number
 	 * @returns {Promise<void>}
 	 */
-	next: async (guild, first) => {
+	next: async (guild, first, retry) => {
+		if (retry) first = true;
 		let notify = await sql.get(`SELECT npNotify FROM guildOptions WHERE guildID = '${guild.id}'`);
 		if (!notify) notify = false;
 		else notify = notify.npNotify === 'true';
@@ -133,6 +135,12 @@ const Music = {
 					});
 	
 					dispatcher.on('error', err => {
+						if (err.toString().includes('input stream: Too many redirects')
+						|| err.toString().includes('input stream: Error parsing config: Unexpected token ; in JSON at position'))
+							return setTimeout(() => {
+								if (retry > 4) Music.next(guild);
+								else Music.next(guild, true, retry + 1);
+							}, 500);
 						console.warn(`error playing music: ${err}`);
 						guild.client.errorLog("Error playing music from YouTube", err.stack ? err.stack : err, `Video ID ${music.queue[0].id} after ${Math.round(dispatcher.totalStreamTime / 1000)} seconds`);
 						Music.next(guild);
@@ -163,6 +171,7 @@ const Music = {
 						});
 	
 						dispatcher.on('error', err => {
+							fs.unlinkSync(file);
 							console.warn(`error playing music: ${err}`);
 							guild.client.errorLog("Error playing music from URL", err.stack ? err.stack : err, `After ${Math.round(dispatcher.totalStreamTime / 1000)} seconds, URL:` + music.queue[0].id);
 							Music.next(guild);
@@ -400,7 +409,7 @@ const Music = {
 						return reject(message._('could_not_get_info'));
 					});
 					if (!info) return reject(message._('could_not_get_info'));
-					if (info.livestream === '1' || info.live_playback === '1' || info.length_seconds > 7200 ) return reject(info.length_seconds > 7200 ? message._('song_too_long') : message._('livestream'));
+					if (info.livestream === '1' || info.live_playback === '1') return reject(message._('livestream'));
 					if (info.length_seconds < 5) return reject(message._("song_too_short"));
 
 					let secObj = secSpread(info.length_seconds);
@@ -478,7 +487,6 @@ const Music = {
 					});
 					
 					if (!meta) return reject(message._('could_not_get_info'));
-					if (meta.duration > 7200000) return reject (message._('song_too_long'));
 
 					let timeObj = secSpread(Math.round(meta.duration / 1000));
 					let timeString = `${timeObj.h ? `${timeObj.h}${i18n.get('time.abbreviations.hours', message)} ` : ''}${timeObj.m ? `${timeObj.m}${i18n.get('time.abbreviations.minutes', message)} ` : ''}${timeObj.s}${i18n.get('time.abbreviations.seconds', message)}`;

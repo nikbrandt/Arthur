@@ -21,7 +21,6 @@
 	"license": "MIT",
 	"dependencies": {
 		"@discordjs/opus": "^0.1.0",
-		"@discordjs/uws": "^11.149.1",
 		"bufferutil": "^4.0.1",
 		"canvas": "^2.6.1",
 		"capture-website": "^0.8.1",

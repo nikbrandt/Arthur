@@ -15,6 +15,8 @@ let add = async (message, id, type, client, first, loadMessage, ipc) => {
 		return ipc ? message.__('error_getting_info', { err }) : loadMessage.edit(message.__('error_getting_info', { err }));
 	}
 
+	if (!first) obj.embed.footer.text += ' | ' + message.__('position_in_queue', { position: message.guild.music.queue.length + 1 });
+
 	let queueObj = { type: type, person: message.author, id: id, meta: obj.meta, embed: obj.embed };
 	if (obj.embed) {
 		if (ipc) {
@@ -23,7 +25,7 @@ let add = async (message, id, type, client, first, loadMessage, ipc) => {
 			else notify = notify.npNotify === 'true';
 			
 			if (notify) loadMessage = await message.channel.send({embed: obj.embed});
-		} else loadMessage.edit('', {embed: obj.embed});
+		} else loadMessage.edit('', { embed: obj.embed });
 	} else if (!ipc) loadMessage.delete();
 
 	message.guild.music.textChannel = message.channel;
