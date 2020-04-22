@@ -1,7 +1,7 @@
 const request = require('request');
 
 const config = require('../../media/config.json');
-const { broadcastEval } = require('../index');
+const { broadcastEval } = require.main.exports;
 
 let guilds;
 let prevShards;
