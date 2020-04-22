@@ -152,7 +152,7 @@ manager.on('shardCreate', shard => {
 				results.push(queueObj.results[i]);
 			}
 			
-			if (queueObj.internal) resolve(results);
+			if (queueObj.internal) queueObj.internal.resolve(results);
 			else queueObj.returnShard.send({
 				broadcastEval: {
 					result: results,
