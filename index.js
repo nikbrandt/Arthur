@@ -4,6 +4,8 @@ const sqlite = require('sqlite');
 const sqlite3 = require('sqlite3');
 let sql;
 
+exports.broadcastEval = broadcastEval; // such that the post() function below has it defined
+
 const config = require('../media/config');
 const { post } = require('./functions/dbots');
 
@@ -248,7 +250,5 @@ setInterval(() => {
 }, 30000);
 
 if (!test) setInterval(() => {
-	post(manager).catch(console.error);
+	post().catch(console.error);
 }, 1000 * 60 * 2);
-
-exports.broadcastEval = broadcastEval;
