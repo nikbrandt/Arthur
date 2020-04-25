@@ -29,6 +29,8 @@ function secSpread(sec) {
 	}
 }
 
+let searchToggle = 0;
+
 // returns Promise<boolean>, true if url links to valid file type, false otherwise
 function testIfValidFileType(url) {
 	return new Promise((resolve) => {
@@ -351,9 +353,12 @@ const Music = {
 					type: type
 				} );
 			} else { //  if (!YTRegex.test(args[0]))
+				searchToggle++;
+				if (searchToggle >= client.config.ytkeys.length) searchToggle = -1;
+
 				let youtubeSearch = {
 					maxResults: 1,
-					key: client.config.ytkey,
+					key: client.config.ytkeys[searchToggle],
 					type: 'video'
 				};
 
