@@ -57,6 +57,22 @@ const clientEval = (function(script) {
 }).bind(client);
 
 process.on('message', message => {
+	if (message.uptime) {
+		client.shard.uptimeStart = message.uptime;
+		client.shard.id = message.id;
+		errorLog.shardID = message.id;
+
+		statusUpdate({
+			title: `Shard ${message.id} started`,
+			timestamp: new Date().toISOString(),
+			color: 0x00c140
+		});
+
+		return;
+	}
+
+	if (!client.shardQueue || !client.shardErrorQueue) return; // return if client not instantiated yet
+
 	if (message.sql) {
 		let { error, result, id } = message.sql;
 
@@ -131,20 +147,6 @@ process.on('message', message => {
 	if (message.stats) {
 		if (client.shardQueue.has(message.id)) client.shardQueue.get(message.id)(message.value);
 		client.shardQueue.delete(message.id);
-		
-		return;
-	}
-	
-	if (message.uptime) {
-		client.shard.uptimeStart = message.uptime;
-		client.shard.id = message.id;
-		errorLog.shardID = message.id;
-
-		statusUpdate({
-			title: `Shard ${message.id} started`,
-			timestamp: new Date().toISOString(),
-			color: 0x00c140
-		});
 		
 		return;
 	}
