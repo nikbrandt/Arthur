@@ -4,7 +4,7 @@ const https = require('https');
 const ytdl = require('ytdl-core');
 const request = require('request');
 const fileType = require('file-type');
-const search = require('youtube-search');
+const ytSearch = require('yt-search');
 const Discord = require('discord.js');
 
 const soundcloud = require('./soundcloud');
@@ -13,6 +13,7 @@ const YTRegex = /^(https?:\/\/)?(www\.|m\.|music\.)?(youtube\.com\/watch\?v=|you
 const soundcloudRegex = /^(https:\/\/)?soundcloud.com\/.+\/[^/]+$/;
 const reactionFilter = reaction => ['👍', '⏩', '⏹', '🔁', '🎶'].includes(reaction.emoji.name);
 const streamOptions = { volume: false, passes: 2, bitrate: 'auto', highWaterMark: 50 };
+const ytdlOptions = { quality: 'highestaudio', highWaterMark: 1 << 23 };
 
 const supportedFileTypes = [ 'mp3', 'ogg', 'aac', 'm4a', 'mp4', 'mov', 'flac', 'ac3', 'wav' ];
 const songRegex = new RegExp(`^https?:\\/\\/.+\\/([^/]+)\\.(${supportedFileTypes.join('|')})$`);
@@ -28,8 +29,6 @@ function secSpread(sec) {
 		s: secs
 	}
 }
-
-let searchToggle = 0;
 
 // returns Promise<boolean>, true if url links to valid file type, false otherwise
 function testIfValidFileType(url) {
@@ -60,6 +59,8 @@ function testIfValidFileType(url) {
 		}
 	});
 }
+
+let youTubeInfoCache = {};
 
 const Music = {
 	/**
@@ -119,7 +120,9 @@ const Music = {
 			
 			switch (music.queue[0].type) {
 				case 1: { // youtube
-					const stream = ytdl(music.queue[0].id, { quality: 'highestaudio', highWaterMark: 1 << 23 }); // 8 MiB 
+					let stream;
+					if (youTubeInfoCache.hasOwnProperty(music.queue[0].id)) stream = ytdl.downloadFromInfo(youTubeInfoCache[music.queue[0].id], ytdlOptions);
+					else stream = ytdl(music.queue[0].id, ytdlOptions); // 8 MiB
 	
 					if (!guild.voice || !guild.voice.connection) {
 						guild.music = {};
@@ -353,15 +356,6 @@ const Music = {
 					type: type
 				} );
 			} else { //  if (!YTRegex.test(args[0]))
-				searchToggle++;
-				if (searchToggle >= client.config.ytkeys.length) searchToggle = -1;
-
-				let youtubeSearch = {
-					maxResults: 1,
-					key: client.config.ytkeys[searchToggle],
-					type: 'video'
-				};
-
 				if (suffix.includes('-s') || suffix.includes('-soundcloud')) {
 					let term = suffix.replace(/-s(oundcloud)?/g, '');
 
@@ -377,8 +371,8 @@ const Music = {
 					} );
 				}
 
-				search(suffix, youtubeSearch, (err, results) => {
-					if (err || !results || !results[0]) {
+				ytSearch(suffix, (err, results) => {
+					if (err || !results || !results.videos || !results.videos[0]) {
 						return soundcloud.search(suffix).then(result => {
 							if (!result) return reject(message._('no_results'));
 							
@@ -391,7 +385,7 @@ const Music = {
 						});
 					}
 
-					id = results[0].id;
+					id = results.videos[0].videoId;
 
 					resolve ( {
 						id: id,
@@ -410,10 +404,18 @@ const Music = {
 
 			switch (type) {
 				case 1: // youtube
-					let info = await ytdl.getInfo(id).catch(() => {
+					let info = youTubeInfoCache[id] || await ytdl.getInfo(id).catch(() => {
 						return reject(message._('could_not_get_info'));
 					});
 					if (!info) return reject(message._('could_not_get_info'));
+
+					if (!youTubeInfoCache.hasOwnProperty(id)) {
+						youTubeInfoCache[id] = info;
+						setTimeout(() => {
+							delete youTubeInfoCache[id];
+						}, 1000 * 60 * 15);
+					}
+
 					if (info.livestream === '1' || info.live_playback === '1') return reject(message._('livestream'));
 					if (info.length_seconds < 5) return reject(message._("song_too_short"));
 
