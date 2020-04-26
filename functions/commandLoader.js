@@ -61,7 +61,7 @@ module.exports = (client, reload) => {
 				let dFiles = fs.readdirSync(`${__dirname}/../commands/${f}`).filter(fi => fs.statSync(`${__dirname}/../commands/${f}/${fi}`).isFile());
 				dFiles.forEach(dF => {
 					try {
-						loadCmd(`${f}/${dF}`, dF, client, reload);
+						if (dF !== '.DS_Store') loadCmd(`${f}/${dF}`, dF, client, reload);
 					} catch (err) {
 						console.error(`Error loading ${f}/${dF}:\n${err.stack ? err.stack : err}`);
 					}

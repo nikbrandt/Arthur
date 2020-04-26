@@ -10,7 +10,7 @@ let cache = new Map();
 const soundcloud = module.exports = function soundcloud (id) {
 	return new Promise(async resolve => {
 		let res = await needle('get', id + `?client_id=${clientID}`, { json: true });
-		return resolve(res.url);
+		return resolve(res.body.url);
 	});
 };
 
@@ -25,7 +25,7 @@ function getInfo (url, localeResolvable) {
 		
 		if (cache.has(url)) return resolve(cache.get(url));
 		
-		let body = await needle('get', `https://api-v2.soundcloud.com/resolve?url=${encodeURIComponent(url)}&client_id=${clientID}`, { json: true }).catch(err => {
+		let { body } = await needle('get', `https://api-v2.soundcloud.com/resolve?url=${encodeURIComponent(url)}&client_id=${clientID}`, { json: true }).catch(err => {
 			reject(err);
 		});
 		
@@ -48,10 +48,10 @@ function getInfo (url, localeResolvable) {
  */
 function search (term, localeResolvable) {
 	return new Promise(async (resolve, reject) => {
-		let body = await needle('get', `https://api-v2.soundcloud.com/search/tracks?q=${encodeURIComponent(term)}&limit=1&client_id=${clientID}`, { json: true }).catch(err => {
+		let { body } = await needle('get', `https://api-v2.soundcloud.com/search/tracks?q=${encodeURIComponent(term)}&limit=1&client_id=${clientID}`, { json: true }).catch(err => {
 			reject(err);
 		});
-		
+
 		if (!body) return reject(i18n.get('struct.soundcloud.no_search_results', localeResolvable));
 			
 		if (!body.collection || body.collection.length === 0) return reject(i18n.get('struct.soundcloud.no_search_results', localeResolvable));
