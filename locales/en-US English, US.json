@@ -837,7 +837,8 @@
 			"cant_join_channel": "I can't join the channel you're in. Rude. I wanted to join you, and play you some tunes. The channel I wanted to join wasn't joinable. Do you see this conflict of interests?",
 			"could_not_connect": "Could not connect to voice channel - `$err`\nTry again, if you will. Or go complain in the support server.",
 			"unavailable_in_us": "The video you were trying to play is unavailable in the US - sorry, I'm based there, and can't really do much about that. ~~just reupload the video or gimme a soundcloud link~~",
-			"position_in_queue": "Position in queue: $position"
+			"position_in_queue": "Position in queue: $position",
+			"detected_playlist": "I detected a playlist in the link you sent. Would you like to queue all songs from the playlist?"
 		},
 		"queue": {
 			"meta": {
@@ -1194,6 +1195,12 @@
 				"Tell your fellow server people (or possibly yourself) to slow down, okay? Another $time second(s) before you can use this command, alright?",
 				"It'll be another $time second(s) before this server can use this command again, sorry.",
 				"Y'all are too fast. Try again in $time second(s), thanks."
+			],
+			"confirmation": [
+				"Aight.",
+				"Alright.",
+				"K.",
+				"Cool."
 			]
 		},
 		"askQuestion": {

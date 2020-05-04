@@ -341,11 +341,13 @@ const Music = {
 
 				if (query.startsWith('?') || query.startsWith('&')) query = query.slice(1);
 				query = querystring.parse(query);
-				if (query.hasOwnProperty('list')) null; // TODO: prompt whether to add playlist
+				let list;
+				if (query.list) list = query.list; // TODO: prompt whether to add playlist
 
 				resolve ( {
 					id: id,
-					type: type
+					type: type,
+					list: list
 				} );
 			} else if (playlistYTRegex.test(args[0])) {
 				let id = args[0].match(playlistYTRegex)[1];
@@ -476,6 +478,9 @@ const Music = {
 					if (!res || !res.data || !res.data.playlist) return reject(i18n.get('struct.music.invalid_playlist', message));
 
 					if (res.data.playlist.length > 200) return reject(i18n.get('struct.music.playlist_too_long', message));
+
+					if (message.guild.music && message.guild.music.queue && message.guild.music.queue.length)
+						res.data.playlist = res.data.playlist.filter(videoID => videoID !== message.guild.music.queue[message.guild.music.queue.length - 1].id);
 
 					let errors = 0;
 					let items = await Promise.all(res.data.playlist.map(videoID => Music.getInfo(1, videoID, message, message.client, i18n.get('struct.music.now_playing', message))
