@@ -1,23 +1,29 @@
 const fs = require('fs');
 const http = require('http');
 const https = require('https');
+const querystring = require('querystring');
+
 const ytdl = require('ytdl-core');
 const request = require('request');
 const fileType = require('file-type');
 const ytSearch = require('yt-search');
+const ytPlaylist = require('youtube-playlist');
 const Discord = require('discord.js');
 
 const soundcloud = require('./soundcloud');
 
-const YTRegex = /^(https?:\/\/)?(www\.|m\.|music\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/v\/|youtube\.com\/embed\/)([A-z0-9_-]{11})([&?].*)?$/;
-const soundcloudRegex = /^(https:\/\/)?soundcloud.com\/.+\/[^/]+$/;
-const reactionFilter = reaction => ['👍', '⏩', '⏹', '🔁', '🎶'].includes(reaction.emoji.name);
 const streamOptions = { volume: false, passes: 2, bitrate: 'auto', highWaterMark: 50 };
 const ytdlOptions = { quality: 'highestaudio', highWaterMark: 1 << 23 };
 
 const supportedFileTypes = [ 'mp3', 'ogg', 'aac', 'm4a', 'mp4', 'mov', 'flac', 'ac3', 'wav' ];
-const songRegex = new RegExp(`^https?:\\/\\/.+\\/([^/]+)\\.(${supportedFileTypes.join('|')})$`);
 const supportedFileTypesString = '`' + supportedFileTypes.join('`, `') + '`';
+
+const videoYTRegex = /^(?:https?:\/\/)?(?:www\.|m\.|music\.)?(?:youtube\.com\/watch\?.*?v=|youtu\.be\/|youtube\.com\/v\/|youtube\.com\/embed\/)([A-z0-9_-]{11})([?&].*?=.*)$/;
+const playlistYTRegex = /^(?:https?:\/\/)?(?:www\.|m\.|music\.)?(?:youtube\.com\/)(?:playlist|embed\/videoseries)(?:\?list=([A-z0-9_-]{34}))$/;
+const soundcloudRegex = /^(https:\/\/)?soundcloud.com\/.+\/[^/]+$/;
+const songRegex = new RegExp(`^https?:\\/\\/.+\\/([^/]+)\\.(${supportedFileTypes.join('|')})$`);
+
+const reactionFilter = reaction => [ '👍', '⏩', '⏹', '🔁', '🎶' ].includes(reaction.emoji.name);
 
 function secSpread(sec) {
 	let hours = Math.floor(sec / 3600);
@@ -65,7 +71,7 @@ let youTubeInfoCache = {};
 const Music = {
 	/**
 	 * Play the next song in the queue
-	 * @param {Discord.Guild} guild The guild to play a song in
+	 * @param {Guild} guild The guild to play a song in
 	 * @param {boolean} [first] Whether or not this is the first song
 	 * @param {number} [retry] If song is being retried due to error, retry attempt number
 	 * @returns {Promise<void>}
@@ -330,12 +336,23 @@ const Music = {
 					id: id,
 					type: type
 				} );
-			} else if (YTRegex.test(args[0])) {
-				id = args[0].match(YTRegex)[4];
+			} else if (videoYTRegex.test(args[0])) {
+				let [, id, query] = args[0].match(videoYTRegex);
+
+				if (query.startsWith('?') || query.startsWith('&')) query = query.slice(1);
+				query = querystring.parse(query);
+				if (query.hasOwnProperty('list')) null; // TODO: prompt whether to add playlist
 
 				resolve ( {
 					id: id,
 					type: type
+				} );
+			} else if (playlistYTRegex.test(args[0])) {
+				let id = args[0].match(playlistYTRegex)[1];
+
+				resolve ( {
+					id: id,
+					type: 1.1
 				} );
 			} else if (soundcloudRegex.test(args[0])) {
 				type = 5;
@@ -452,6 +469,28 @@ const Music = {
 						ms: info.length_seconds * 1000
 					});
 					break;
+				case 1.1: // youtube playlist
+					let out = {};
+					let res = await ytPlaylist('https://www.youtube.com/playlist?list=' + id, 'id').catch(() => {});
+
+					if (!res || !res.data || !res.data.playlist) return reject(i18n.get('struct.music.invalid_playlist', message));
+
+					if (res.data.playlist.length > 200) return reject(i18n.get('struct.music.playlist_too_long', message));
+
+					let errors = 0;
+					let items = await Promise.all(res.data.playlist.map(videoID => Music.getInfo(1, videoID, message, message.client, i18n.get('struct.music.now_playing', message))
+						.catch(() => { errors++; })));
+
+					if (errors >= res.data.playlist.length) return reject(i18n.get('struct.music.error_loading_playlist_songs'));
+
+					for (let i = 0; i < items.length; i++) {
+						if (!items[i]) continue;
+						out[res.data.playlist[i]] = items[i];
+					}
+
+					resolve(out);
+
+					break;
 				case 3: // sound effect
 					resolve({
 						meta: {
@@ -489,7 +528,7 @@ const Music = {
 
 					break;
 				case 5: // soundcloud
-					let meta = await soundcloud.getInfo(id).catch(err => {
+					let meta = await soundcloud.getInfo(id).catch(() => {
 						return reject(message._('could_not_get_info'));
 					});
 					

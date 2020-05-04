@@ -1,10 +1,14 @@
 const Music = require('../../struct/music.js');
 const config = require('../../../media/config.json');
+const { errorLog } = require('../../functions/eventLoader.js');
+const { objectMap } = require('../../struct/Util.js');
 
 let add = async (message, id, type, client, first, loadMessage, ipc) => {
 	let title = first
 		? i18n.get('struct.music.now_playing', message)
 		: i18n.get('struct.music.added_to_queue', message);
+
+	let playlist = type % 1 > 0; // playlists have a .1 added to the type; dividing by 1 will produce a nonzero remainder.
 
 	let obj;
 
@@ -15,32 +19,55 @@ let add = async (message, id, type, client, first, loadMessage, ipc) => {
 		return ipc ? message.__('error_getting_info', { err }) : loadMessage.edit(message.__('error_getting_info', { err }));
 	}
 
-	let footerStore = obj.embed.footer.text;
-	if (!first) obj.embed.footer.text += ' | ' + message.__('position_in_queue', { position: message.guild.music.queue.length + 1 });
+	let queueObj;
 
-	let queueObj = { type: type, person: message.author, id: id, meta: obj.meta, embed: obj.embed };
-	if (obj.embed) {
+	if (playlist) {
+		obj = objectMap(obj, (itemID, item) => {
+			return { type: type - (type * 10 % 10 / 10), person: message.author, id: itemID, meta: item.meta, embed: item.embed };
+		});
+
+		queueObj = obj[0];
+	} else queueObj = { type: type, person: message.author, id: id, meta: obj.meta, embed: obj.embed };
+
+	let footerStore = queueObj.embed.footer.text;
+	if (!first) queueObj.embed.footer.text += ' | ' + message.__('position_in_queue', {position: message.guild.music.queue.length + 1});
+
+	if (queueObj.embed) {
 		if (ipc) {
 			let notify = await sql.get(`SELECT npNotify FROM guildOptions WHERE guildID = '${guild.id}'`);
 			if (!notify) notify = false;
 			else notify = notify.npNotify === 'true';
 			
-			if (notify) loadMessage = await message.channel.send({embed: obj.embed}).then(() => {
-				obj.embed.footer.text = footerStore;
+			if (notify) {
+				if (first || !playlist) {
+					loadMessage = await message.channel.send({embed: queueObj.embed}).then(() => {
+						queueObj.embed.footer.text = footerStore;
+
+					});
+				}
+
+				queueObj.embed.footer.text = footerStore;
+				if (playlist) message.channel.send(i18n.get('struct.music.added_playlist', message, { num: obj.length }));
+			} else queueObj.embed.footer.text = footerStore;
+		} else if (first || !playlist) {
+			loadMessage.edit(playlist ? i18n.get('struct.music.added_playlist', message, { num: obj.length }) : '', { embed: queueObj.embed }).then(() => {
+				queueObj.embed.footer.text = footerStore;
 			});
-			else obj.embed.footer.text = footerStore;
-		} else loadMessage.edit('', { embed: obj.embed }).then(() => {
-			obj.embed.footer.text = footerStore;
-		});
+		} else {
+			queueObj.embed.footer.text = footerStore;
+			if (playlist) loadMessage.edit(i18n.get('struct.music.added_playlist', message, { num: obj.length }));
+		}
 	} else if (!ipc) loadMessage.delete();
 
 	message.guild.music.textChannel = message.channel;
 
 	if (first) {
-		if (obj.embed && loadMessage) Music.addReactionCollector(loadMessage, client, obj.ms);
-		message.guild.music.queue = [ queueObj ];
+		if (queueObj.embed && loadMessage) Music.addReactionCollector(loadMessage, client, queueObj.ms);
+		if (playlist) message.guild.music.queue = obj;
+		else message.guild.music.queue = [ queueObj ];
 		Music.next(message.guild, true);
-	} else message.guild.music.queue.push(queueObj);
+	} else if (playlist) message.guild.music.queue = message.guild.music.queue.concat(obj);
+	else message.guild.music.queue.push(queueObj);
 	
 	return 1; // for IPC
 };
@@ -61,6 +88,7 @@ exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 	/*
 			types
 		1 - YouTube
+		  1.1 - YouTube playlist (resolves to adding n of type 1 into queue)
 		2 - Uploaded File (deprecated to type 4)
 		3 - Local File (bot filesystem)
 		4 - File from URL
@@ -92,7 +120,7 @@ exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 		object = await Music.parseMessage(message, args, suffix, client);
 	} catch (err) {
 		if (message.guild.voice && message.guild.voice.connection && (!message.guild.music || !message.guild.music.queue[0])) message.guild.voice.connection.disconnect().catch(() => {});
-		return ipc ? err : loadMessage.edit(err);
+		return ipc ? err : loadMessage.edit(err.toString());
 	}
 
 	let { id, type } = object;
@@ -101,6 +129,7 @@ exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 		try {
 			return await add(message, id, type, client, false, loadMessage, ipc);
 		} catch (e) {
+			errorLog('Error during play command adding', e.stack, `ID ${id} | Type ${type}`);
 			return ipc ? message.__('unavailable_in_us') : loadMessage.edit(message.__('unavailable_in_us'));
 		}
 	}
@@ -141,7 +170,7 @@ exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 exports.config = {
 	enabled: 'true',
 	permLevel: 2,
-	perms: ['EMBED_LINKS', 'SPEAK', 'CONNECT'],
+	perms: [ 'EMBED_LINKS', 'SPEAK', 'CONNECT' ],
 	guildCooldown: 1000,
 	category: 'music'
 };

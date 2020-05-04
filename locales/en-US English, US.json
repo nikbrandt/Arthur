@@ -701,7 +701,8 @@
 				"You've already liked that song. Go away.",
 				"Must be a nifty song. Regardless of how nifty it is, you can't like it twice, sorry."
 			],
-			"song_liked": "Song Liked"
+			"song_liked": "Song Liked",
+			"song_is_playlist": "You can't like a whole playlist, sorry."
 		},
 		"liked": {
 			"meta": {
@@ -1155,6 +1156,10 @@
 			"separator": ",",
 			"invalid_file": "That file uh.. doesn't exist. Feel free to suggest to add it. What you *can* play are as follows: $files",
 			"invalid_url": "Please provide a valid URL (that links to a valid file type).",
+			"invalid_playlist": "The given playlist is invalid or inaccessible. Uh.. sorry.",
+			"error_loading_playlist_songs": "Could not load any songs from given playlist. Wack.",
+			"playlist_too_long": "Sorry, but over 200 songs is too many. Please use a shorter playlist.",
+			"added_playlist": "Successfully added $num songs from playlist.",
 			"no_results": [
 				"The song you searched for could not be found.. rip",
 				"No results found. Silly goose.",
