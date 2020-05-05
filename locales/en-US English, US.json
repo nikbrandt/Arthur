@@ -767,6 +767,24 @@
 			"off": "A'ight $name, loops off, as you wish.",
 			"on": "Loops on, $name, have fun listening to the same song(s) *forever*"
 		},
+		"move": {
+			"meta": {
+				"command": "move",
+				"name": "Move",
+				"description": "Moves a song at position *a* to position *b*.",
+				"help": "Moves a song from one position to another. The first position is the song to move, the second position is where to move it to (it will bump the song it replaces up a position).",
+				"usage": "<queue number of song to move> <position to move to>"
+			},
+			"no_music_playing": "There's no music playing right now, so I can't really move songs around.",
+			"no_permissions": "You need higher permissions or the `@@struct.music.dj` or `@@struct.music.music` role to do this.",
+			"missing_song": "Please provide a song queue number to move.",
+			"missing_position": "Please provide a position to move the song to.",
+			"invalid_song_or_position": "The song and/or position provided is invalid; please provide numbers.",
+			"song_or_position_too_low": "You can't move around songs that low in the queue. I won't let ya.",
+			"song_and_position_same": "Tada. Nothing changed.",
+			"song_or_position_too_high": "One or more of those queue number(s) is like, out of this world (too big).",
+			"success": "Moved song at position $song to position $pos. Nice."
+		},
 		"nowplaying": {
 			"meta": {
 				"command": "nowplaying",
