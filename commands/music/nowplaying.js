@@ -1,20 +1,7 @@
 const ytdl = require('ytdl-core');
-const Music = require('../../struct/music');
 
-function secSpread(sec) {
-	let hours = Math.floor(sec / 3600);
-	let mins = Math.floor((sec - hours * 3600) / 60);
-	let secs = sec - (hours * 3600 + mins * 60);
-	return {
-		h: hours,
-		m: mins,
-		s: secs
-	}
-}
-
-function secString(secObj, locale) {
-	return `${secObj.h ? `${secObj.h}${i18n.getString('time.abbreviations.hours', locale)} ` : ''}${secObj.m ? `${secObj.m}${i18n.getString('time.abbreviations.minutes', locale)} ` : ''}${secObj.s}${i18n.getString('time.abbreviations.seconds', locale)}`;
-}
+const Music = require('../../struct/Music');
+const { timeString } = require('../../struct/Util.js');
 
 exports.run = (message, args, s, client, permLevel) => {
 	if (args[0] && (args[0] === message.__('notify') || args[0] === message.__('notify_abbreviation'))) {
@@ -30,8 +17,9 @@ exports.run = (message, args, s, client, permLevel) => {
 	
 	if (message.guild.music.queue[0].type === 1) { // YouTube video
 		ytdl.getInfo(message.guild.music.queue[0].id).then(info => {
-			let secObj = secSpread(info.length_seconds);
-			let ellapsedTime = Math.round(message.guild.voice.connection.dispatcher.totalStreamTime / 1000);
+			let ellapsedTime = Date.now() - message.guild.music.startTime;
+			if (message.guild.music.pauseTime) ellapsedTime -= Date.now() - message.guild.music.pauseTime;
+			ellapsedTime = Math.floor(ellapsedTime / 1000);
 
 			message.channel.send({
 				embed: {
@@ -42,7 +30,7 @@ exports.run = (message, args, s, client, permLevel) => {
 					color: 0xff0000,
 					description: `[${info.title}](https://www.youtu.be/${message.guild.music.queue[0].id})
 ${message.__('by')} [${info.author.name}](${info.author.channel_url})
-${secString(secSpread(ellapsedTime), locale)} ${message.__('of')} ${secString(secObj, locale)}`,
+${timeString(ellapsedTime, locale)} ${message.__('of')} ${timeString(info.length_seconds, locale)}`,
 					thumbnail: {
 						url: info.iurlhq
 					},
@@ -59,7 +47,7 @@ ${secString(secSpread(ellapsedTime), locale)} ${message.__('of')} ${secString(se
 
 		let embed = message.guild.music.queue[0].embed;
 		embed.author.name = i18n.getString('struct.music.now_playing', locale);
-		embed.description = embed.description.replace(i18n.getString('struct.music.length', locale) + ': ', `**${secString(secSpread(elapsedTime), locale)}** ${message.__('of')} `);
+		embed.description = embed.description.replace(i18n.getString('struct.music.length', locale) + ': ', `**${timeString(elapsedTime, locale)}** ${message.__('of')} `);
 
 		message.channel.send({embed}).then(msg => {
 			Music.addReactionCollector(msg, client, elapsedTime * 1000);

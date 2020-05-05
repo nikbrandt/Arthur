@@ -4,20 +4,11 @@ const search = require('youtube-search');
 const moment = require('moment');
 const fs = require('fs');
 const request = require('request');
+
 const soundcloud = require('../../struct/soundcloud');
+const { timeString } = require('../../struct/Util.js');
 
 const YTRegex = /^(https?:\/\/)?(www\.|m\.|music\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/v\/|youtube\.com\/embed\/)([A-z0-9_-]{11})([&?].*)?$/;
-
-function secSpread(sec) {
-	let hours = Math.floor(sec / 3600);
-	let mins = Math.floor((sec - hours * 3600) / 60);
-	let secs = sec - (hours * 3600 + mins * 60);
-	return {
-		h: hours,
-		m: mins,
-		s: secs
-	}
-}
 
 async function youtube(id, message, client) {
 	let info;
@@ -59,8 +50,6 @@ async function finish(stream, title, length, message, client, thumbnail, url) {
 	client.processing.push(moment().format('h:mm:ss A') + ' - MP3');
 
 	let msg = await message.channel.send(message.__('downloading'));
-
-	let secObj = secSpread(length);
 
 	ffmpeg(stream, {priority: 20})
 		.duration(length + 1)
@@ -106,7 +95,7 @@ async function finish(stream, title, length, message, client, thumbnail, url) {
 				message.channel.send(message.__('song_converted', { user: message.author.toString() }), {
 					embed: {
 						title: title,
-						description: message.__('description', { url: body.link, songURL: url, length: `${secObj.h ? `${secObj.h}${i18n.get('time.abbreviations.hours', message)} ` : ''}${secObj.m ? `${secObj.m}${i18n.get('time.abbreviations.minutes', message)} ` : ''}${secObj.s}${i18n.get('time.abbreviations.seconds', message)}` }),
+						description: message.__('description', { url: body.link, songURL: url, length: timeString(length, message) }),
 						thumbnail: {
 							url: thumbnail
 						},

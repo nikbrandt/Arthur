@@ -6,6 +6,7 @@ exports.run = (message, a, s, d, permLevel) => {
 
 	message.guild.voice.connection.dispatcher.pause(true);
 	message.guild.music.playing = false;
+	message.guild.music.pauseTime = Date.now();
 	message.channel.send(message.__('paused'));
 };
 

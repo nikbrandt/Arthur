@@ -10,7 +10,8 @@ const ytSearch = require('yt-search');
 const ytPlaylist = require('youtube-playlist');
 const Discord = require('discord.js');
 
-const soundcloud = require('./soundcloud');
+const soundcloud = require('./soundcloud.js');
+const { timeString } = require('./Util.js');
 
 const streamOptions = { volume: false, passes: 2, bitrate: 'auto', highWaterMark: 50 };
 const ytdlOptions = { quality: 'highestaudio', highWaterMark: 1 << 23 };
@@ -25,16 +26,14 @@ const songRegex = new RegExp(`^https?:\\/\\/.+\\/([^/]+)\\.(${supportedFileTypes
 
 const reactionFilter = reaction => [ '👍', '⏩', '⏹', '🔁', '🎶' ].includes(reaction.emoji.name);
 
-function secSpread(sec) {
-	let hours = Math.floor(sec / 3600);
-	let mins = Math.floor((sec - hours * 3600) / 60);
-	let secs = sec - (hours * 3600 + mins * 60);
-	return {
-		h: hours,
-		m: mins,
-		s: secs
-	}
-}
+const soundEffectLengths = { // in seconds, for queue length calculation
+	airhorn: 2,
+	airhorns: 3,
+	oof: 1,
+	oofcat: 17,
+	rickroll: 17,
+	sadoof: 22
+};
 
 // returns Promise<boolean>, true if url links to valid file type, false otherwise
 function testIfValidFileType(url) {
@@ -143,6 +142,7 @@ const Music = {
 	
 					dispatcher.once('start', () => {
 						guild.voice.connection.player.streamingData.pausedTime = 0;
+						guild.music.startTime = Date.now();
 					});
 	
 					dispatcher.on('error', err => {
@@ -179,6 +179,7 @@ const Music = {
 	
 						dispatcher.once('start', () => {
 							guild.voice.connection.player.streamingData.pausedTime = 0;
+							guild.music.startTime = Date.now();
 						});
 	
 						dispatcher.on('error', err => {
@@ -201,6 +202,7 @@ const Music = {
 	
 					dispatcher.once('start', () => {
 						guild.voice.connection.player.streamingData.pausedTime = 0;
+						guild.music.startTime = Date.now();
 					});
 	
 					dispatcher.on('error', err => {
@@ -232,6 +234,7 @@ const Music = {
 	
 							dispatcher.once('start', () => {
 								guild.voice.connection.player.streamingData.pausedTime = 0;
+								guild.music.startTime = Date.now();
 							});
 	
 							dispatcher.on('error', err => {
@@ -256,7 +259,7 @@ const Music = {
 		return rows;
 	},
 
-	parseMessage: (message, args, suffix, client) => {
+	parseMessage: (message, args, suffix) => {
 		return new Promise(async (resolve, reject) => {
 			let type = 1;
 			let id;
@@ -422,7 +425,7 @@ const Music = {
 			};
 
 			switch (type) {
-				case 1: // youtube
+				case 1: {// youtube
 					let info = youTubeInfoCache[id] || await ytdl.getInfo(id).catch(() => {
 						return reject(message._('could_not_get_info'));
 					});
@@ -438,21 +441,22 @@ const Music = {
 					if (info.livestream === '1' || info.live_playback === '1') return reject(message._('livestream'));
 					if (info.length_seconds < 5) return reject(message._("song_too_short"));
 
-					let secObj = secSpread(info.length_seconds);
-					let secString = `${secObj.h ? `${secObj.h}${i18n.get('time.abbreviations.hours', message)} ` : ''}${secObj.m ? `${secObj.m}${i18n.get('time.abbreviations.minutes', message)} ` : ''}${secObj.s}${i18n.get('time.abbreviations.seconds', message)}`;
+					let time = timeString(info.length_seconds, message);
 					let thumbnail;
-					
+
 					try {
 						thumbnail = info.thumbnail_url || info.player_response.videoDetails.thumbnail.thumbnails[0].url
-					} catch (e) { }
+					} catch (e) {
+					}
 
 					info.title = Discord.Util.escapeMarkdown(info.title);
 					info.author.name = info.author.name ? Discord.Util.escapeMarkdown(info.author.name) : undefined;
 					resolve({
 						meta: {
 							url: `https://youtu.be/${id}`,
-							title: `${info.title} (${secString})`,
-							queueName: `[${info.title}](https://youtu.be/${id}) - ${secString}`
+							title: `${info.title} (${time})`,
+							queueName: `[${info.title}](https://youtu.be/${id}) - ${time}`,
+							length: info.length_seconds
 						},
 						embed: {
 							author: {
@@ -460,18 +464,18 @@ const Music = {
 								icon_url: info.author.avatar
 							},
 							color: 0xff0000,
-							description: `[${info.title}](https://youtu.be/${id})\n${i18n.get('commands.nowplaying.by', message)} [${info.author.name}](${info.author.channel_url})\n${message._('length')}: ${secString}`,
+							description: `[${info.title}](https://youtu.be/${id})\n${i18n.get('commands.nowplaying.by', message)} [${info.author.name}](${info.author.channel_url})\n${message._('length')}: ${time}`,
 							thumbnail: {
 								url: thumbnail
 							},
 							footer: {
-								text: i18n.get('commands.nowplaying.footer', message, { tag: message.author.tag })
+								text: i18n.get('commands.nowplaying.footer', message, {tag: message.author.tag})
 							}
 						},
 						ms: info.length_seconds * 1000
 					});
 					break;
-				case 1.1: // youtube playlist
+				} case 1.1: // youtube playlist
 					let out = {};
 					let res = await ytPlaylist('https://www.youtube.com/playlist?list=' + id, 'id').catch(() => {});
 
@@ -501,7 +505,8 @@ const Music = {
 						meta: {
 							title: `${message._('sound_effect')} - ${id}`,
 							queueName: `${message._('sound_effect')} - ${id}`,
-							url: 'https://github.com/Gymnophoria/Arthur'
+							url: 'https://github.com/Gymnophoria/Arthur',
+							length: soundEffectLengths[id.toLowerCase()]
 						},
 						ms: 30000
 					});
@@ -516,7 +521,8 @@ const Music = {
 						meta: {
 							title: filename,
 							queueName: `[${filename}](${id})`,
-							url: id
+							url: id,
+							length: 1000 * 60 * 3 // can't accurately estimate music file length without complicated calculation
 						},
 						embed: {
 							author: {
@@ -532,24 +538,24 @@ const Music = {
 					});
 
 					break;
-				case 5: // soundcloud
+				case 5: {// soundcloud
 					let meta = await soundcloud.getInfo(id).catch(() => {
 						return reject(message._('could_not_get_info'));
 					});
-					
+
 					if (!meta) return reject(message._('could_not_get_info'));
 
-					let timeObj = secSpread(Math.round(meta.duration / 1000));
-					let timeString = `${timeObj.h ? `${timeObj.h}${i18n.get('time.abbreviations.hours', message)} ` : ''}${timeObj.m ? `${timeObj.m}${i18n.get('time.abbreviations.minutes', message)} ` : ''}${timeObj.s}${i18n.get('time.abbreviations.seconds', message)}`;
+					let time = timeString(Math.round(meta.duration / 1000), message);
 
 					meta.title = Discord.Util.escapeMarkdown(meta.title);
 					meta.user.username = Discord.Util.escapeMarkdown(meta.user.username);
-					resolve ({
+					resolve({
 						meta: {
 							url: id,
-							title: `${meta.title} (${timeString})`,
-							queueName: `[${meta.title}](${id}) - ${timeString}`,
-							id: meta.id
+							title: `${meta.title} (${time})`,
+							queueName: `[${meta.title}](${id}) - ${time}`,
+							id: meta.id,
+							length: Math.round(meta.duration / 1000)
 						},
 						embed: {
 							author: {
@@ -557,17 +563,18 @@ const Music = {
 								icon_url: meta.user.avatar_url
 							},
 							color: 0xff8800,
-							description: `[${meta.title}](${id})\n${i18n.get('commands.nowplaying.by', message)} [${meta.user.username}](${meta.user.permalink_url})\n${message._('length')}: ${timeString}`,
+							description: `[${meta.title}](${id})\n${i18n.get('commands.nowplaying.by', message)} [${meta.user.username}](${meta.user.permalink_url})\n${message._('length')}: ${time}`,
 							thumbnail: {
 								url: meta.artwork_url
 							},
 							footer: {
-								text: i18n.get('commands.nowplaying.footer', message, { tag: message.author.tag })
+								text: i18n.get('commands.nowplaying.footer', message, {tag: message.author.tag})
 							}
 						},
 						ms: meta.duration
 					});
 					break;
+				}
 			}
 		});
 	},
@@ -637,6 +644,13 @@ const Music = {
 			await message.react('🔁');
 			await message.react('🎶');
 		} catch (e) {}
+	},
+
+	calculateQueueLength: (guild) => {
+		let ellapsedTime = Math.round((Date.now() - guild.music.startTime) / 1000);
+		let queueLength = guild.music.queue.reduce((accum, current) => accum + parseInt(current.meta.length), 0);
+
+		return queueLength - ellapsedTime;
 	}
 };
 

@@ -1,4 +1,4 @@
-const Music = require('../../struct/music');
+const Music = require('../../struct/Music');
 
 exports.run = async (message, args, suffix, client) => {
 	if ((!message.guild.music || !message.guild.music.queue) && !args[0] && !message.attachments.size) return message.channel.send(message.__('no_song_specified'));

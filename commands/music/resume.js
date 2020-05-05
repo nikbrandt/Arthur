@@ -6,6 +6,9 @@ exports.run = (message, a, s, d, permLevel) => {
 
 	message.guild.voice.connection.dispatcher.resume();
 	message.guild.music.playing = true;
+	message.guild.music.startTime += Date.now() - message.guild.music.pauseTime;
+	message.guild.music.pauseTime = null;
+
 	message.channel.send(message.__('resumed'));
 };
 

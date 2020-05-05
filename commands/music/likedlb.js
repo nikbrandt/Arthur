@@ -1,4 +1,4 @@
-const Music = require('../../struct/music');
+const Music = require('../../struct/Music');
 
 exports.run = async (message, args) => {
 	let array = await Music.likedArray();

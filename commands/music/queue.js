@@ -1,3 +1,6 @@
+const { calculateQueueLength } = require('../../struct/Music.js');
+const { timeString } = require('../../struct/Util.js');
+
 exports.run = async (message, args) => {
 	if (!message.guild.music || !message.guild.music.queue) return message.channel.send(message.__('no_music_queued'));
 
@@ -31,8 +34,15 @@ exports.run = async (message, args) => {
 			color: 0x427df4,
 			footer: {
 				text: message.guild.music.queue.length === 1 
-					? message.__('footer', { page: Math.ceil(pars / 10), maxPage: Math.ceil(message.guild.music.queue.length / 10), name: message.member.displayName }) 
-					: message.__('footer_plural', { page: Math.ceil(pars / 10), maxPage: Math.ceil(message.guild.music.queue.length / 10), songs: message.guild.music.queue.length, name: message.member.displayName })
+					? message.__('footer', { page: Math.ceil(pars / 10),
+						maxPage: Math.ceil(message.guild.music.queue.length / 10),
+						length: timeString(calculateQueueLength(message.guild), message),
+						name: message.member.displayName })
+					: message.__('footer_plural', { page: Math.ceil(pars / 10),
+						maxPage: Math.ceil(message.guild.music.queue.length / 10),
+						songs: message.guild.music.queue.length,
+						length: timeString(calculateQueueLength(message.guild), message),
+						name: message.member.displayName })
 			}
 		}});
 	}

@@ -855,7 +855,7 @@
 			"cant_join_channel": "I can't join the channel you're in. Rude. I wanted to join you, and play you some tunes. The channel I wanted to join wasn't joinable. Do you see this conflict of interests?",
 			"could_not_connect": "Could not connect to voice channel - `$err`\nTry again, if you will. Or go complain in the support server.",
 			"unavailable_in_us": "The video you were trying to play is unavailable in the US - sorry, I'm based there, and can't really do much about that. ~~just reupload the video or gimme a soundcloud link~~",
-			"position_in_queue": "Position in queue: $position",
+			"footer_extra": "Position in queue: $position | Song will play in about $time",
 			"detected_playlist": "I detected a playlist in the link you sent. Would you like to queue all songs from the playlist?"
 		},
 		"queue": {
@@ -872,8 +872,8 @@
 			"no_music_queued": "There is no music queued. Add some with the `@@play` command.",
 			"only_multiple_pages": "There are only $pages pages in the queue.",
 			"only_one_page": "There is only one page in the queue.",
-			"footer": "Page $page of $maxPage | 1 Song Total | Requested by $name",
-			"footer_plural": "Page $page of $maxPage | $songs Songs Total | Requested by $name"
+			"footer": "Page $page of $maxPage | 1 Song Total | Estimated Queue Length: $length | Requested by $name",
+			"footer_plural": "Page $page of $maxPage | $songs songs total | Estimated queue length: $length | Requested by $name"
 		},
 		"remove": {
 			"meta": {

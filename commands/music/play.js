@@ -1,7 +1,8 @@
-const Music = require('../../struct/music.js');
+const Music = require('../../struct/Music.js');
 const config = require('../../../media/config.json');
 const { errorLog } = require('../../functions/eventLoader.js');
-const { objectMap } = require('../../struct/Util.js');
+const { objectMap, timeString } = require('../../struct/Util.js');
+const { calculateQueueLength } = require('../../struct/Music.js');
 
 let add = async (message, id, type, client, first, loadMessage, ipc, playlistQuery) => {
 	let title = first
@@ -30,7 +31,7 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 	} else queueObj = { type: type, person: message.author, id: id, meta: obj.meta, embed: obj.embed };
 
 	let footerStore = queueObj.embed.footer.text;
-	if (!first) queueObj.embed.footer.text += ' | ' + message.__('position_in_queue', {position: message.guild.music.queue.length + 1});
+	if (!first) queueObj.embed.footer.text += ' | ' + message.__('footer_extra', { position: message.guild.music.queue.length + 1, time: timeString(calculateQueueLength(message.guild), message) });
 
 	if (queueObj.embed) {
 		if (ipc) {
@@ -111,6 +112,7 @@ exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 		1 - YouTube
 		  1.1 - YouTube playlist (resolves to adding n of type 1 into queue)
 		  1.2 - YouTube playlist from video (e.g. youtube.com/watch?v=asdf1234567&list=big_ole_playlist_id_here)
+		            (resolves to type 1, possibly adding a type 1.1 as well)
 		2 - Uploaded File (deprecated to type 4)
 		3 - Local File (bot filesystem)
 		4 - File from URL
@@ -130,9 +132,12 @@ exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 				title: title to display as queue title
 				queueName: title to display in queue when not title
 				url: url to display w/ title
+				length: song length, in seconds
 			embed: embed message if applicable
 			voteSkips: array (all people who have voted to skip)
 		textChannel: channel in which last play message was
+		startTime: time current song started (may be fudged from reality due to below)
+		pauseTime: time current song paused, if paused (offsets startTime on resume to get accurate playing time)
 	 */
 
 	let object;
