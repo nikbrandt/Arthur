@@ -14,7 +14,7 @@ exports.run = async (message, args, suffix, client) => {
 		try {
 			object = await Music.parseMessage(message, args, suffix, client);
 
-			if (object.type === 1.1 || object.type === 5.1) return message.channel.send(message.__('song_is_playlist'));
+			if (object.type === 1.5 || object.type === 5.5) return message.channel.send(message.__('song_is_playlist'));
 
 			info = await Music.getInfo(object.type, object.id, message, client, 'asdf');
 		} catch (err) {

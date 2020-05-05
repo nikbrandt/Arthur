@@ -345,7 +345,7 @@ const Music = {
 				if (query.startsWith('?') || query.startsWith('&')) query = query.slice(1);
 				query = querystring.parse(query);
 				let list;
-				if (query.list) list = query.list; // TODO: prompt whether to add playlist
+				if (query.list) list = query.list;
 
 				resolve ( {
 					id: id,
@@ -357,7 +357,7 @@ const Music = {
 
 				resolve ( {
 					id: id,
-					type: 1.1
+					type: 1.5
 				} );
 			} else if (soundcloudRegex.test(args[0])) {
 				type = 5;
@@ -475,7 +475,7 @@ const Music = {
 						ms: info.length_seconds * 1000
 					});
 					break;
-				} case 1.1: // youtube playlist
+				} case 1.5: // youtube playlist
 					let out = {};
 					let res = await ytPlaylist('https://www.youtube.com/playlist?list=' + id, 'id').catch(() => {});
 
@@ -647,10 +647,16 @@ const Music = {
 	},
 
 	calculateQueueLength: (guild) => {
-		let ellapsedTime = Math.round((Date.now() - guild.music.startTime) / 1000);
+		let ellapsedTime = Music.calculateEllapsedTime(guild);
 		let queueLength = guild.music.queue.reduce((accum, current) => accum + parseInt(current.meta.length), 0);
 
 		return queueLength - ellapsedTime;
+	},
+
+	calculateEllapsedTime: (guild) => {
+		let time = Date.now() - guild.music.startTime;
+		if (guild.music.pauseTime) time -= Date.now() - guild.music.pauseTime;
+		return Math.floor(time / 1000);
 	}
 };
 

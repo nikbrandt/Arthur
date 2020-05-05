@@ -2,14 +2,14 @@ const Music = require('../../struct/Music.js');
 const config = require('../../../media/config.json');
 const { errorLog } = require('../../functions/eventLoader.js');
 const { objectMap, timeString } = require('../../struct/Util.js');
-const { calculateQueueLength } = require('../../struct/Music.js');
+const { calculateQueueLength, calculateEllapsedTime } = require('../../struct/Music.js');
 
 let add = async (message, id, type, client, first, loadMessage, ipc, playlistQuery) => {
 	let title = first
 		? i18n.get('struct.music.now_playing', message)
 		: i18n.get('struct.music.added_to_queue', message);
 
-	let playlist = type % 1 > 0; // playlists have a .1 added to the type; dividing by 1 will produce a nonzero remainder.
+	let playlist = type % 1 > .3; // playlists have a .5 added to the type; dividing by 1 will produce a remainder > .3 (not === .5 because binary math).
 
 	let obj;
 
@@ -31,7 +31,10 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 	} else queueObj = { type: type, person: message.author, id: id, meta: obj.meta, embed: obj.embed };
 
 	let footerStore = queueObj.embed.footer.text;
-	if (!first) queueObj.embed.footer.text += ' | ' + message.__('footer_extra', { position: message.guild.music.queue.length + 1, time: timeString(calculateQueueLength(message.guild), message) });
+	if (!first) queueObj.embed.footer.text += ' | ' + message.__('footer_extra', {
+		position: message.playnext ? 2 : message.guild.music.queue.length + 1,
+		time: message.playnext ? timeString(message.guild.music.queue[0].meta.length - calculateEllapsedTime(message.guild), message) : timeString(calculateQueueLength(message.guild), message)
+	});
 
 	if (queueObj.embed) {
 		if (ipc) {
@@ -68,6 +71,7 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 		else message.guild.music.queue = [ queueObj ];
 		Music.next(message.guild, true);
 	} else if (playlist) message.guild.music.queue = message.guild.music.queue.concat(obj);
+	else if (message.playnext) message.guild.music.queue.splice(1, 0, queueObj);
 	else message.guild.music.queue.push(queueObj);
 
 	if (playlistQuery) {
@@ -110,9 +114,9 @@ exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 	/*
 			types
 		1 - YouTube
-		  1.1 - YouTube playlist (resolves to adding n of type 1 into queue)
-		  1.2 - YouTube playlist from video (e.g. youtube.com/watch?v=asdf1234567&list=big_ole_playlist_id_here)
-		            (resolves to type 1, possibly adding a type 1.1 as well)
+		  1.1 - YouTube playlist from video (e.g. youtube.com/watch?v=asdf1234567&list=big_ole_playlist_id_here)
+		            (resolves to type 1, adding a type 1.1 as well if user wants to add playlist)
+		  1.5 - YouTube playlist (resolves to adding n of type 1 into queue)
 		2 - Uploaded File (deprecated to type 4)
 		3 - Local File (bot filesystem)
 		4 - File from URL
@@ -151,6 +155,8 @@ exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 	}
 
 	let { id, type, list } = object;
+
+	if (message.playnext && (type === 1.5 || type === 5.5)) return message.channel.send(message.__('playnext_playlist'));
 
 	if (message.guild.music && message.guild.music.queue) {
 		try {

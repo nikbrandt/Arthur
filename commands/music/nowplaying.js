@@ -17,9 +17,7 @@ exports.run = (message, args, s, client, permLevel) => {
 	
 	if (message.guild.music.queue[0].type === 1) { // YouTube video
 		ytdl.getInfo(message.guild.music.queue[0].id).then(info => {
-			let ellapsedTime = Date.now() - message.guild.music.startTime;
-			if (message.guild.music.pauseTime) ellapsedTime -= Date.now() - message.guild.music.pauseTime;
-			ellapsedTime = Math.floor(ellapsedTime / 1000);
+			let ellapsedTime = Music.calculateEllapsedTime(message.guild);
 
 			message.channel.send({
 				embed: {
