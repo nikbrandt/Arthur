@@ -390,7 +390,7 @@ const Music = {
 					} );
 				}
 
-				ytSearch(suffix, (err, results) => {
+				ytSearch({ query: suffix, YT_SEARCH_QUERY_URI: 'https://www.youtube.com/results?sp=EgIQAQ%253D%253D&' }, (err, results) => {
 					if (err || !results || !results.videos || !results.videos[0]) {
 						return soundcloud.search(suffix).then(result => {
 							if (!result) return reject(message._('no_results'));

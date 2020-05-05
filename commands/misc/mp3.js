@@ -158,7 +158,7 @@ exports.run = async (message, args, suffix, client) => {
 			type: 'video'
 		};
 
-		search(suffix, sOpts, (err, results) => {
+		search({ query: suffix, YT_SEARCH_QUERY_URI: 'https://www.youtube.com/results?sp=EgIQAQ%253D%253D&' }, sOpts, (err, results) => {
 			if (err) return message.channel.send(message.__('no_results'));
 
 			id = results[0].id;

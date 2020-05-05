@@ -72,7 +72,7 @@ const morseDecode = reverse(morseEncode);
 const waluigiDecode = reverse(waluigiEncode);
 
 exports.run = (message, args) => {
-	if (!args[0] || !args[1]) return message.channel.send('waaa wa woo waaa waaa waaa wa waaa wa waaa wa waaa');
+	if (!args[0] || !args[1]) return message.channel.send('waaa wa woo waaa waaa waaa woo wa waaa wa waaa wa waaa');
 
 	let suffix = args.slice(1).join(' ').toLowerCase();
 
@@ -117,7 +117,7 @@ exports.run = (message, args) => {
 		});
 
 		message.channel.send(out);
-	} else message.channel.send('waaa wa woo waaa waaa waaa wa waaa wa waaa wa waaa');
+	} else message.channel.send('waaa wa woo waaa waaa waaa woo wa waaa wa waaa wa waaa');
 };
 
 exports.config = {
