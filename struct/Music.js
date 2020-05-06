@@ -66,8 +66,6 @@ function testIfValidFileType(url) {
 	});
 }
 
-let youTubeInfoCache = {};
-
 const Music = {
 	/**
 	 * Play the next song in the queue
@@ -126,9 +124,7 @@ const Music = {
 			
 			switch (music.queue[0].type) {
 				case 1: { // youtube
-					let stream;
-					if (youTubeInfoCache.hasOwnProperty(music.queue[0].id)) stream = ytdl.downloadFromInfo(youTubeInfoCache[music.queue[0].id], ytdlOptions);
-					else stream = ytdl(music.queue[0].id, ytdlOptions); // 8 MiB
+					let stream = ytdl(music.queue[0].id, ytdlOptions);
 	
 					if (!guild.voice || !guild.voice.connection) {
 						guild.music = {};
@@ -441,17 +437,11 @@ const Music = {
 
 			switch (type) {
 				case 1: {// youtube
-					let info = youTubeInfoCache[id] || await ytdl.getInfo(id).catch(() => {
+					let info = await ytdl.getBasicInfo(id).catch(() => {
 						return reject(message._('could_not_get_info'));
 					});
-					if (!info) return reject(message._('could_not_get_info'));
 
-					if (!youTubeInfoCache.hasOwnProperty(id)) {
-						youTubeInfoCache[id] = info;
-						setTimeout(() => {
-							delete youTubeInfoCache[id];
-						}, 1000 * 60 * 15);
-					}
+					if (!info) return reject(message._('could_not_get_info'));
 
 					if (info.livestream === '1' || info.live_playback === '1') return reject(message._('livestream'));
 					if (info.length_seconds < 5) return reject(message._("song_too_short"));
