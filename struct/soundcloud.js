@@ -73,8 +73,6 @@ function search (term, localeResolvable) {
  * @returns {object} Object with in getInfo format
  */
 function constructInfoFromMeta(meta, message, title) {
-	if (meta._arthur) return meta;
-
 	if (!meta.user || !meta.title || !meta.duration) return null;
 
 	let time = timeString(Math.round(meta.duration / 1000), message);
@@ -83,12 +81,11 @@ function constructInfoFromMeta(meta, message, title) {
 	meta.user.username = Discord.Util.escapeMarkdown(meta.user.username);
 
 	return {
-		_arthur: true,
 		meta: {
 			url: meta.permalink_url,
 			title: `${meta.title} (${time})`,
 			queueName: `[${meta.title}](${meta.permalink_url}) - ${time}`,
-			id: meta.media.transcodings[1].url,
+			id: meta.media ? meta.media.transcodings[1].url : meta.id,
 			length: Math.round(meta.duration / 1000)
 		},
 		embed: {
@@ -112,12 +109,12 @@ function constructInfoFromMeta(meta, message, title) {
 function addToCache(item) {
 	let id = item.permalink_url;
 
-	if (item.kind === 'track') cache.set(id, getNecessarySongInfo(item));
+	if (item.kind === 'track') cache.set(id, getNecessarySongMeta(item));
 	else if (item.kind === 'playlist') {
 		let tracks = [];
 		item.tracks.forEach(track => {
 			let id = track.permalink_url;
-			let info = getNecessarySongInfo(track);
+			let info = getNecessarySongMeta(track);
 
 			if (!info) return;
 
@@ -136,18 +133,19 @@ function addToCache(item) {
 	setCacheTimeout(id);
 }
 
-function getNecessarySongInfo(song) {
+function getNecessarySongMeta(song) {
 	if (!song.user || !song.title || !song.duration) return null;
 
 	return {
 		duration: song.duration,
 		title: song.title,
+		permalink_url: song.permalink_url,
 		user: {
 			username: song.user.username,
 			avatar_url: song.user.avatar_url,
 			permalink_url: song.user.permalink_url
 		},
-		id: song.media.transcodings[1].url,
+		id: song.media ? song.media.transcodings[1].url : song.id,
 		artwork_url: song.artwork_url,
 		kind: 'track'
 	}
