@@ -20,7 +20,34 @@ const grainyRice = [
 	'https://image.shutterstock.com/image-photo/vietnam-farmer-bearing-seedlings-rice-600w-1127931986.jpg',
 	'https://image.shutterstock.com/image-photo/appetizing-healthy-rice-vegetables-white-600w-279069605.jpg',
 	'https://image.shutterstock.com/image-photo/bowl-rice-vegetables-isolated-on-600w-751234129.jpg',
-	'https://image.shutterstock.com/image-photo/raw-red-rice-wooden-bowl-600w-1470669227.jpg'
+	'https://image.shutterstock.com/image-photo/raw-red-rice-wooden-bowl-600w-1470669227.jpg',
+	'https://media.istockphoto.com/photos/cooked-rice-picture-id491090528',
+	'https://media.istockphoto.com/photos/rice-picture-id916000818',
+	'https://media.istockphoto.com/photos/raw-white-rice-in-brown-bowl-and-and-ear-of-rice-or-unmilled-rice-on-picture-id974779604',
+	'https://media.istockphoto.com/photos/rice-picture-id916000818',
+	'https://media.istockphoto.com/photos/rice-picture-id671580286',
+	'https://media.istockphoto.com/photos/cauliflower-rice-with-basil-in-bowl-closeup-horizontal-top-view-picture-id622914636',
+	'https://media.istockphoto.com/photos/woman-cooking-rice-in-saucepan-on-stove-picture-id1147294766',
+	'https://media.istockphoto.com/photos/closeup-of-a-spatula-over-a-pan-of-rice-picture-id494494922',
+	'https://media.istockphoto.com/photos/uncooked-white-longgrain-rice-background-picture-id1069180776',
+	'https://media.istockphoto.com/photos/white-rice-in-burlap-sack-bag-isolated-on-white-background-picture-id827465154',
+	'https://media.istockphoto.com/photos/top-view-of-raw-jasmine-rice-in-a-bowl-and-wooden-spoon-on-dark-picture-id1076982398',
+	'https://media.istockphoto.com/photos/rice-in-transparent-plastic-bag-isolated-on-white-background-picture-id1011356342',
+	'https://media.istockphoto.com/photos/hyderabadi-chicken-biryani-with-cucumber-raita-on-rustic-table-picture-id923387432',
+	'https://media.istockphoto.com/photos/rice-fields-on-terraced-of-mu-cang-chai-yenbai-rice-fields-prepare-picture-id694050758',
+	'https://media.istockphoto.com/photos/indian-food-madras-beef-with-basmati-rice-horizontal-top-view-picture-id623426322',
+	'https://media.istockphoto.com/photos/cauliflower-rice-in-a-bowl-top-view-overhead-copy-space-picture-id827951624',
+	'https://media.istockphoto.com/photos/woman-cooking-rice-in-saucepan-on-stove-picture-id843260772',
+	'https://media.istockphoto.com/photos/cauliflower-rice-picture-id623175642',
+	'https://media.istockphoto.com/photos/lentils-and-rice-with-crispy-onions-and-parsley-picture-id529139494',
+	'https://media.istockphoto.com/photos/rice-cooked-with-vegetables-and-olive-oil-in-a-frying-pan-picture-id868047170',
+	'https://media.istockphoto.com/photos/arroz-de-carreteiro-picture-id962396116',
+	'https://media.istockphoto.com/photos/rinse-the-rice-picture-id468861012',
+	'https://media.istockphoto.com/photos/red-yeast-rice-picture-id698793546',
+	'https://media.istockphoto.com/photos/varieties-of-grains-seeds-and-beans-picture-id458218433',
+	'https://media.istockphoto.com/photos/mixed-boiled-rice-with-chilli-and-basil-dietary-menu-picture-id622192690',
+	'https://media.istockphoto.com/photos/rows-of-rice-picture-id172794933',
+	'https://media.istockphoto.com/photos/white-basmati-rice-scattered-picture-id174749280'
 ];
 
 const humanyRice = [
@@ -52,7 +79,12 @@ exports.run = (message) => {
 		? humanyRice[Math.floor(Math.random() * humanyRice.length)]
 		: grainyRice[Math.floor(Math.random() * grainyRice.length)];
 
-	message.channel.send({ files: [ file ] });
+	message.channel.send({ embed: {
+		color: 0x00c140,
+		image: {
+			url: file
+		}
+	} });
 };
 
 exports.config = {
