@@ -30,8 +30,8 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 		queueObj = obj[0];
 	} else queueObj = { type: type, person: message.author, id: id, meta: obj.meta, embed: obj.embed };
 
-	let footerStore = queueObj.embed.footer.text;
-	if (!first) queueObj.embed.footer.text += ' | ' + message.__('footer_extra', {
+	let footerStore = queueObj.embed ? queueObj.embed.footer.text : null;
+	if (!first && footerStore) queueObj.embed.footer.text += ' | ' + message.__('footer_extra', {
 		position: message.playnext ? 2 : message.guild.music.queue.length + 1,
 		time: message.playnext ? timeString(message.guild.music.queue[0].meta.length - calculateEllapsedTime(message.guild), message) : timeString(calculateQueueLength(message.guild), message)
 	});
@@ -46,7 +46,6 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 				if (first || !playlist) {
 					loadMessage = await message.channel.send({embed: queueObj.embed}).then(() => {
 						queueObj.embed.footer.text = footerStore;
-
 					});
 				}
 
