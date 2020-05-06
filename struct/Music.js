@@ -575,7 +575,9 @@ const Music = {
 
 					let out = {};
 					meta.tracks.forEach(track => {
-						out[track.permalink_url] = soundcloud.constructInfoFromMeta(track, message, title);
+						let info = soundcloud.constructInfoFromMeta(track, message, title);
+						if (!info) return;
+						out[track.permalink_url] = info;
 					});
 
 					resolve(out);

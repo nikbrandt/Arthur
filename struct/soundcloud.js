@@ -75,6 +75,8 @@ function search (term, localeResolvable) {
 function constructInfoFromMeta(meta, message, title) {
 	if (meta._arthur) return meta;
 
+	if (!meta.user || !meta.title || !meta.duration) return null;
+
 	let time = timeString(Math.round(meta.duration / 1000), message);
 
 	meta.title = Discord.Util.escapeMarkdown(meta.title);
@@ -117,6 +119,8 @@ function addToCache(item) {
 			let id = track.permalink_url;
 			let info = getNecessarySongInfo(track);
 
+			if (!info) return;
+
 			cache.set(id, info);
 			setCacheTimeout(id);
 			tracks.push(info);
@@ -133,6 +137,8 @@ function addToCache(item) {
 }
 
 function getNecessarySongInfo(song) {
+	if (!song.user || !song.title || !song.duration) return null;
+
 	return {
 		duration: song.duration,
 		title: song.title,
