@@ -21,7 +21,8 @@ const supportedFileTypesString = '`' + supportedFileTypes.join('`, `') + '`';
 
 const videoYTRegex = /^(?:https?:\/\/)?(?:www\.|m\.|music\.)?(?:youtube\.com\/watch\?.*?v=|youtu\.be\/|youtube\.com\/v\/|youtube\.com\/embed\/)([A-z0-9_-]{11})([?&].*?=.*)$/;
 const playlistYTRegex = /^(?:https?:\/\/)?(?:www\.|m\.|music\.)?(?:youtube\.com\/)(?:playlist|embed\/videoseries)(?:\?list=([A-z0-9_-]{34}))$/;
-const soundcloudRegex = /^(https:\/\/)?soundcloud.com\/.+\/[^/]+$/;
+const generalSCRegex = /^(?:https?:\/\/)?(?:www\.)?(?:m\.)?soundcloud.com\/[A-Za-z-_]{3,25}\/[^/\n\s]+?(?:\?(.+))?$/;
+const playlistSCRegex = /^(?:https?:\/\/)?(?:www\.)?(?:m\.)?soundcloud.com\/[A-Za-z-_]{3,25}\/sets\/[^/\n\s]{1,100}$/;
 const songRegex = new RegExp(`^https?:\\/\\/.+\\/([^/]+)\\.(${supportedFileTypes.join('|')})$`);
 
 const reactionFilter = reaction => [ '👍', '⏩', '⏹', '🔁', '🎶' ].includes(reaction.emoji.name);
@@ -353,18 +354,32 @@ const Music = {
 					list: list
 				} );
 			} else if (playlistYTRegex.test(args[0])) {
-				let id = args[0].match(playlistYTRegex)[1];
+				id = args[0].match(playlistYTRegex)[1];
 
 				resolve ( {
 					id: id,
 					type: 1.5
 				} );
-			} else if (soundcloudRegex.test(args[0])) {
-				type = 5;
+			} else if (playlistSCRegex.test(args[0])) {
 				id = args[0];
 
+				resolve( {
+					id: id,
+					type: 5.5
+				} )
+			} else if (generalSCRegex.test(args[0])) {
+				type = 5;
+				id = args[0];
+				let list;
+
+				let matched = args[0].match(generalSCRegex);
+				if (matched[1]) {
+					let query = querystring.parse(matched[1]);
+					if (query.in) list = query.in;
+				}
+
 				resolve ( {
-					id, type
+					id, type, list
 				} );
 			} else if (supportedFileTypes.some(fileType => args[0].toLowerCase().endsWith('.' + fileType))) {
 				if (!songRegex.test(args[0])) return reject(message._('invalid_url'));
@@ -479,9 +494,9 @@ const Music = {
 					let out = {};
 					let res = await ytPlaylist('https://www.youtube.com/playlist?list=' + id, 'id').catch(() => {});
 
-					if (!res || !res.data || !res.data.playlist) return reject(i18n.get('struct.music.invalid_playlist', message));
+					if (!res || !res.data || !res.data.playlist) return reject(message._('invalid_playlist'));
 
-					if (res.data.playlist.length > 200) return reject(i18n.get('struct.music.playlist_too_long', message));
+					if (res.data.playlist.length > 200) return reject(message._('playlist_too_long'));
 
 					if (message.guild.music && message.guild.music.queue && message.guild.music.queue.length)
 						res.data.playlist = res.data.playlist.filter(videoID => videoID !== message.guild.music.queue[message.guild.music.queue.length - 1].id);
@@ -490,7 +505,7 @@ const Music = {
 					let items = await Promise.all(res.data.playlist.map(videoID => Music.getInfo(1, videoID, message, message.client, i18n.get('struct.music.now_playing', message))
 						.catch(() => { errors++; })));
 
-					if (errors >= res.data.playlist.length) return reject(i18n.get('struct.music.error_loading_playlist_songs'));
+					if (errors >= res.data.playlist.length) return reject(message._('error_loading_playlist_songs'));
 
 					for (let i = 0; i < items.length; i++) {
 						if (!items[i]) continue;
@@ -545,34 +560,26 @@ const Music = {
 
 					if (!meta) return reject(message._('could_not_get_info'));
 
-					let time = timeString(Math.round(meta.duration / 1000), message);
+					resolve(soundcloud.constructInfoFromMeta(meta, message, title));
 
-					meta.title = Discord.Util.escapeMarkdown(meta.title);
-					meta.user.username = Discord.Util.escapeMarkdown(meta.user.username);
-					resolve({
-						meta: {
-							url: id,
-							title: `${meta.title} (${time})`,
-							queueName: `[${meta.title}](${id}) - ${time}`,
-							id: meta.id,
-							length: Math.round(meta.duration / 1000)
-						},
-						embed: {
-							author: {
-								name: title,
-								icon_url: meta.user.avatar_url
-							},
-							color: 0xff8800,
-							description: `[${meta.title}](${id})\n${i18n.get('commands.nowplaying.by', message)} [${meta.user.username}](${meta.user.permalink_url})\n${message._('length')}: ${time}`,
-							thumbnail: {
-								url: meta.artwork_url
-							},
-							footer: {
-								text: i18n.get('commands.nowplaying.footer', message, {tag: message.author.tag})
-							}
-						},
-						ms: meta.duration
+					break;
+				} case 5.5: {
+					let meta = await soundcloud.getInfo(id).catch(() => {
+						return reject(message._('could_not_get_info'));
 					});
+
+					if (!meta || !meta.tracks || !meta.tracks[0]) return reject(message._('invalid_playlist'));
+
+					if (message.guild.music && message.guild.music.queue && message.guild.music.queue.length)
+						meta.tracks = meta.tracks.filter(track => track.permalink_url !== message.guild.music.queue[message.guild.music.queue.length - 1].meta.url);
+
+					let out = {};
+					meta.tracks.forEach(track => {
+						out[track.permalink_url] = soundcloud.constructInfoFromMeta(track, message, title);
+					});
+
+					resolve(out);
+
 					break;
 				}
 			}

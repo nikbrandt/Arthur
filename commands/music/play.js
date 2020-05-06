@@ -81,7 +81,9 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 				if (!reactions || !reactions.size) return;
 				if (reactions.first().emoji.id === '706749501947510805') return msg.edit(i18n.get('struct.message.confirmation', message));
 
-				let playlistLink = 'https://youtube.com/playlist?list=' + playlistQuery;
+				let playlistLink = type === 1
+					? 'https://youtube.com/playlist?list=' + playlistQuery
+					: 'https://soundcloud.com/' + playlistQuery;
 
 				client.commands.get('play').run(message, [ playlistLink ], playlistLink, client, message.perms, message.prefix, ipc).catch(() => {});
 			});
@@ -113,13 +115,12 @@ exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 	/*
 			types
 		1 - YouTube
-		  1.1 - YouTube playlist from video (e.g. youtube.com/watch?v=asdf1234567&list=big_ole_playlist_id_here)
-		            (resolves to type 1, adding a type 1.1 as well if user wants to add playlist)
 		  1.5 - YouTube playlist (resolves to adding n of type 1 into queue)
 		2 - Uploaded File (deprecated to type 4)
 		3 - Local File (bot filesystem)
 		4 - File from URL
 		5 - SoundCloud
+		  5.5 - SoundCloud playlist (resolves to adding n of type 5 into queue)
 
 			discordfm in the future
 
