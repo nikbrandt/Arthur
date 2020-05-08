@@ -15,6 +15,12 @@ module.exports = async (client, message) => {
 	const botPerms = message.guild ? message.channel.permissionsFor(message.guild.me) : null;
 	if (message.guild && botPerms && !botPerms.has('SEND_MESSAGES')) return;
 	
+	if (client.daniel && message.guild && message.guild.id === '561659258622705705' && message.author.id === '346508486810796034') {
+		await message.react(CAT_EMOJIS[Math.floor(Math.random() * CAT_EMOJIS.length)]).catch(() => {});
+		await message.react(CAT_EMOJIS[Math.floor(Math.random() * CAT_EMOJIS.length)]).catch(() => {});
+		message.react(CAT_EMOJIS[Math.floor(Math.random() * CAT_EMOJIS.length)]).catch(() => {});
+	}
+	
 	let shouldIStayOrShouldIGo = await sql.get('SELECT * FROM hardBlacklist WHERE id = ? OR id = ?', [ message.author.id, message.guild ? message.guild.id : 'xd' ]);
 	if (shouldIStayOrShouldIGo && !config.owners.includes(message.author.id)) return;
 
@@ -22,14 +28,9 @@ module.exports = async (client, message) => {
 		let blacklisted = await sql.get(`SELECT count(1) FROM guildUserBlacklist WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`);
 		if (!!blacklisted['count(1)']) return;
 	}
-
+	
 	// easter egg bs
 	if (message.author.melon === true) message.react('🍉').catch(() => {});
-	if (client.daniel && message.guild && message.guild.id === '561659258622705705' && message.author.id === '346508486810796034') {
-		await message.react(CAT_EMOJIS[Math.floor(Math.random() * CAT_EMOJIS.length)]).catch(() => {});
-		await message.react(CAT_EMOJIS[Math.floor(Math.random() * CAT_EMOJIS.length)]).catch(() => {});
-		message.react(CAT_EMOJIS[Math.floor(Math.random() * CAT_EMOJIS.length)]).catch(() => {});
-	}
 	
 	// alright, resume normal code
 	let prefix;
