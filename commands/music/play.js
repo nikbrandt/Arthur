@@ -75,11 +75,11 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 
 	if (playlistQuery) {
 		message.channel.send(message.__('detected_playlist')).then(async msg => {
-			const filter = (reaction, user) => [ '706749501842522112', '706749501947510805' ].includes(reaction.emoji.id) && user.id === message.author.id;
+			const filter = (reaction, user) => ([ '706749501842522112', '706749501947510805' ].includes(reaction.emoji.id) || [ '️️️️✔️', '✖️' ].includes(reaction.emoji.name)) && user.id === message.author.id;
 
 			msg.awaitReactions(filter, { time: 1000 * 60, max: 1}).then(reactions => {
 				if (!reactions || !reactions.size) return;
-				if (reactions.first().emoji.id === '706749501947510805') return msg.edit(i18n.get('struct.message.confirmation', message));
+				if (reactions.first().emoji.id === '706749501947510805' || reactions.first().emoji.name === '✖️') return msg.edit(i18n.get('struct.message.confirmation', message));
 
 				let playlistLink = type === 1
 					? 'https://youtube.com/playlist?list=' + playlistQuery
@@ -88,8 +88,14 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 				client.commands.get('play').run(message, [ playlistLink ], playlistLink, client, message.perms, message.prefix, ipc).catch(() => {});
 			});
 
-			await msg.react('706749501842522112'); // yes (check)
-			msg.react('706749501947510805'); // no (x)
+			msg.react('706749501842522112').catch(() => { // yes (check)
+				msg.react('️️️️✔️').catch(() => {});
+			}).then(() => {
+				msg.react('706749501947510805').catch(() => { // no (x)
+					msg.react('✖️').catch(() => {});
+				});
+			}); 
+			
 		});
 	}
 	
