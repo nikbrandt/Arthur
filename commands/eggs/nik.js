@@ -187,7 +187,7 @@ async function daily(message) {
 }
 
 const ENTRIES_PER_PAGE = 10;
-const emojiArray = [ '👑', ':two:', ':three:', ':four:', ':five:', ':six:', ':seven:', ':eight', ':nine:', ':keycap_ten:' ];
+const emojiArray = [ '👑', ':two:', ':three:', ':four:', ':five:', ':six:', ':seven:', ':eight:', ':nine:', ':keycap_ten:' ];
 const numberToEmoji = num => {
 	if (num <= 9) return emojiArray[num - 1];
 	else return num + '.';

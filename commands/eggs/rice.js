@@ -71,7 +71,8 @@ const humanyRice = [
 	'https://i.imgur.com/jzjgwF8.jpg',
 	'https://i.imgur.com/715qewy.jpg',
 	'https://i.imgur.com/rwsb6je.jpg',
-	'https://i.imgur.com/oMxOnrT.png'
+	'https://i.imgur.com/oMxOnrT.png',
+	'https://i.imgur.com/FW4bIwr.png'
 ];
 
 exports.run = (message) => {
