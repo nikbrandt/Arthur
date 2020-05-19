@@ -835,6 +835,9 @@
 		"play": {
 			"meta": {
 				"command": "play",
+				"aliases": [
+					"p"
+				],
 				"name": "Play",
 				"description": "Play a song or add it to the queue",
 				"usage": "<song name/youtube or soundcloud url/file url/file/top/liked> [extra params]",
@@ -928,7 +931,7 @@
 			"meta": {
 				"command": "skip",
 				"aliases": [
-					"next"
+					"next", "s"
 				],
 				"name": "Skip",
 				"description": "Skip the current song.",
