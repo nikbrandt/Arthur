@@ -16,7 +16,7 @@ const { timeString } = require('./Util.js');
 const streamOptions = { volume: false, passes: 2, bitrate: 'auto', highWaterMark: 50 };
 const ytdlOptions = { quality: 'highestaudio', highWaterMark: 1 << 23 };
 
-const supportedFileTypes = [ 'mp3', 'ogg', 'aac', 'm4a', 'mp4', 'mov', 'flac', 'ac3', 'wav' ];
+const supportedFileTypes = [ 'mp3', 'ogg', 'aac', 'm4a', 'mp4', 'mov', 'flac', 'ac3', 'wav', 'bcstm' ];
 const supportedFileTypesString = '`' + supportedFileTypes.join('`, `') + '`';
 
 const videoYTRegex = /^(?:https?:\/\/)?(?:www\.|m\.|music\.)?(?:youtube\.com\/watch\?.*?v=|youtu\.be\/|youtube\.com\/v\/|youtube\.com\/embed\/)([A-z0-9_-]{11})([?&].*?=.*)$/;
@@ -59,6 +59,7 @@ function testIfValidFileType(url) {
 					response.destroy();
 
 					const type = fileType(section);
+					if (!type && url.endsWith('bcstm')) return resolve(true);
 					return resolve(supportedFileTypes.includes(type.ext));
 				}
 			});
