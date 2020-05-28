@@ -18,7 +18,7 @@ exports.run = async (message, args, s, client) => {
 		height: 1080,
 		fullPage: true,
 		cookies: [],
-		timeout: 30 // add beforeScreenshot to filter out IP or something
+		timeout: 30 // TODO: add beforeScreenshot to filter out IP or something
 	};
 
 	let msg;
@@ -50,7 +50,13 @@ exports.run = async (message, args, s, client) => {
 		if (err) {
 			if (err.toString().includes('value 1')) message.channel.send(message.__('invalid_url'));
 			else if (err.toString().includes('timeout setting')) message.channel.send(message.__('timed_out'));
-			else message.channel.send(message.__('unknown_error', { err: err.toString() }));
+			else {
+				console.error('Unknown webshot error:');
+				console.error(err);
+				message.channel.send(message.__('unknown_error', { err: err.toString() })).catch(() => {
+					message.channel.send(message.__('unknown_error', { err: 'Please join Arthur\'s support server for further help.' })).catch(() => {});
+				});
+			}
 			client.processing.splice(index, 1);
 			sent = true;
 			return;
