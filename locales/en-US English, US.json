@@ -290,6 +290,16 @@
 				"help": "C'mon, you know how to use this."
 			}
 		},
+		"exec": {
+			"meta": {
+				"dev": true,
+				"command": "exec",
+				"name": "Exec",
+				"description": "Execute a command on the command line.",
+				"usage": "<statement>",
+				"help": "Working directory is ~/arthur/bot"
+			}
+		},
 		"broadcasteval": {
 			"meta": {
 				"dev": true,

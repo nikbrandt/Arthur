@@ -72,7 +72,8 @@ const humanyRice = [
 	'https://i.imgur.com/715qewy.jpg',
 	'https://i.imgur.com/rwsb6je.jpg',
 	'https://i.imgur.com/oMxOnrT.png',
-	'https://i.imgur.com/FW4bIwr.png'
+	'https://i.imgur.com/FW4bIwr.png',
+	'https://cdn.discordapp.com/attachments/692901031863910493/715026013431791726/unknown.png'
 ];
 
 exports.run = (message) => {

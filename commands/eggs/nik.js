@@ -1,4 +1,6 @@
 const moment = require('moment');
+const needle = require('needle');
+const Canvas = require('canvas');
 
 const { getSubredditMeme } = require('../fun/meme');
 const findMember = require('../../functions/findMember.js');
@@ -19,6 +21,8 @@ setTimeout(async () => {
 
 	let obj = await sql.get('SELECT MAX(duckID) FROM ducks');
 	curDuck = obj['MAX(duckID'];
+
+	Canvas.registerFont('../media/fonts/Impact.ttf', { family: 'Impact' });
 
 	init = true;
 }, 2000);
@@ -57,6 +61,11 @@ let meta = {
 		help: 'Get a duck image.',
 		description: 'If you have ducks, they might even reward you for adoring them.'
 	},
+	quote: {
+		run: quote,
+		help: `Get an inspirational quote for 10 ${COIN_EMOJI}.`,
+		aliases: [ 'inspiration' ]
+	},
 	changelog: {
 		run: changelog,
 		help: 'View the update changelog.'
@@ -72,6 +81,38 @@ Object.keys(meta).forEach(key => {
 	else for (const alias of keyAliases)
 		aliases[alias] = meta[key];
 });
+
+async function getUser(id) {
+	let obj = await sql.get('SELECT * FROM duckEconomy WHERE userID = ?', [ id ]);
+
+	if (!obj) {
+		obj = { coins: 0 };
+		sql.run('INSERT INTO duckEconomy (userID) VALUES (?)', [ id ]);
+	}
+
+	return obj;
+}
+
+/**
+ * Evaluates whether or not rebel duck will appear
+ * @param {number} [probability] The probability to base the rebel's appearance off of. Defaults to 0.05.
+ * @returns {boolean|string} Either a boolean denoting whether the rebel should appear, or his reasoning for appearing.
+ */
+function rebelDuck(probability = 0.05) {
+	const date = moment().format('M-D');
+	const time = moment().format('HH:mm');
+
+	if (date === '4-20') return 'It\'s a fine day to smoke weed';
+	if (date === '6-9') return '69 heheehehehe';
+	if (time === '4:20') return 'My joint told me to visit';
+	if (time === '11:11') return 'It\'s a lucky time';
+
+	return Math.random() < probability;
+}
+
+// --------------------------------------
+//    Arguments (commands) begin here.
+// --------------------------------------
 
 function help(message) {
 	if (message.args[0] && (meta[message.args[0].toLowerCase()] || aliases[message.args[0].toLowerCase()])) {
@@ -133,7 +174,7 @@ async function transfer(message) {
 		sql.get('SELECT coins FROM duckEconomy WHERE userID = ?', [ message.author.id ]),
 		sql.run('INSERT OR IGNORE INTO duckEconomy (userID) VALUES (?)', [ message.author.id ])
 	]);
-	if (!user) await sql.run('INSERT INTO duckEconomy (userID) VALUES (?)', [ message.author.id ]);
+	if (!user) user = { coins: 0 };
 	
 	let num = parseInt(message.args[0]);
 	if (!num) return message.channel.send('Invalid transfer amount provided (see `help transfer`).');
@@ -189,7 +230,7 @@ async function daily(message) {
 const ENTRIES_PER_PAGE = 10;
 const emojiArray = [ '👑', ':two:', ':three:', ':four:', ':five:', ':six:', ':seven:', ':eight:', ':nine:', ':keycap_ten:' ];
 const numberToEmoji = num => {
-	if (num <= 9) return emojiArray[num - 1];
+	if (num <= 10) return emojiArray[num - 1];
 	else return num + '.';
 };
 async function leaderboard(message) {
@@ -249,19 +290,106 @@ function image(message) {
 	})
 }
 
-async function getUser(id) {
-	let obj = await sql.get('SELECT * FROM duckEconomy WHERE userID = ?', [ id ]);
+function splitInHalf(text) {
+	let split = [ '', '' ];
+	let spacedOut = text.split(' ');
 
-	if (!obj) {
-		obj = { coins: 0 };
-		sql.run('INSERT INTO duckEconomy (userID) VALUES (?)', [ id ]);
+	for (let i = 0; i < Math.floor(spacedOut.length / 2); i++) {
+		split[0] += spacedOut[i] + ' ';
+		split[1] += spacedOut[Math.floor(spacedOut.length / 2) + i] + ' ';
 	}
-	
-	return obj;
+
+	split[0] = split[0].slice(0, -1);
+	split[1] = split[1].slice(0, -1);
+
+	if (spacedOut.length % 2 === 1) split[1] += spacedOut[spacedOut.length - 1];
+	return split;
+}
+let quotes;
+let quoteReset;
+async function quote(message) {
+	if (!quotes || moment().format('D') !== quoteReset) {
+		quotes = JSON.parse((await needle('get', 'https://type.fit/api/quotes', { json: true })).body);
+		quoteReset = moment().format('D');
+	}
+
+	let [ user ] = await Promise.all([
+		sql.get('SELECT coins FROM duckEconomy WHERE userID = ?', [ message.author.id ]),
+		sql.run('INSERT OR IGNORE INTO duckEconomy (userID) VALUES (?)', [ message.author.id ])
+	]);
+	if (!user) user = { coins: 0 };
+
+	if (user.coins < 10) return message.channel.send(`You can't afford the holy word of the ducks right now. Come back when you have at least 10 ${COIN_EMOJI}.`);
+
+	getSubredditMeme('duck').then(async meme => {
+		const quote = quotes[Math.floor(Math.random() * quotes.length)].text;
+
+		let split = quote.replace(/(\.\.\.|\.\.|[.!?,;:])/g, '$1\n').split('\n').filter(item => !!item);
+		if (split.length === 1) split = splitInHalf(quote);
+		let tooLong = true;
+
+		while (tooLong) {
+			tooLong = false;
+			for (let i = 0; i < split.length; i++) {
+				if (split[i].length > 35) {
+					let [ firstHalf, secondHalf ] = splitInHalf(split[i]);
+					split.splice(i, 1, firstHalf);
+					split.splice(++i, 0, secondHalf);
+					tooLong = true;
+				}
+			}
+		}
+
+		const canvas = Canvas.createCanvas(meme.width, meme.height);
+		const ctx = canvas.getContext('2d');
+
+		const middle = Math.floor(meme.width / 2);
+		let duckImage = await Canvas.loadImage(`https://i.imgur.com/${meme.hash}${meme.ext}`);
+
+		ctx.drawImage(duckImage, 0, 0);
+
+		ctx.strokeStyle = 'black';
+		ctx.fillStyle = 'white';
+		ctx.textAlign = 'center';
+
+		function fillText(text, height, backwards) {
+			ctx.font = '10px Impact';
+			let textWidth = ctx.measureText(text).width;
+			let fontSize = Math.round(0.9 * meme.width * 10 / textWidth);
+			if (fontSize > (meme.height * 0.2)) fontSize = Math.floor(meme.height * 0.2);
+
+			ctx.font = `${fontSize}px Impact`;
+			ctx.lineWidth = Math.floor(fontSize * .07);
+
+			if (backwards) height += fontSize;
+			ctx.strokeText(text, middle, height);
+			ctx.fillText(text, middle, height);
+
+			return fontSize;
+		}
+
+		let curHeight = 10;
+		for (let i = 0; i < Math.floor(split.length / 2); i++) {
+			let fontSize = fillText(split[i], curHeight, true);
+			curHeight += fontSize + 10;
+		}
+
+		curHeight = meme.height - 20;
+		for (let i = split.length - 1; i >= Math.floor(split.length / 2); i--) {
+			let fontSize = fillText(split[i], curHeight);
+			curHeight -= fontSize + 10;
+		}
+
+		sql.run('UPDATE duckEconomy SET coins = coins - 10 WHERE userID = ?', [ message.author.id ]);
+		message.channel.send(`You have been charged 10 ${COIN_EMOJI}. Enjoy.`, { files: [{ attachment: canvas.toBuffer(), name: 'inspiration.png' }] });
+	}).catch(err => {
+		console.error(err);
+		message.channel.send(`The ducks are not with us today, because I cannot get a duck image. At least the 10 ${COIN_EMOJI} transfer from your account worked.`);
+	})
 }
 
 exports.run = (message, args, suffix, client, perms, prefix) => {
-	if (!init) return message.channel.send(':duck: Duck still initializing. Please come back later.');
+	if (!init) return message.channel.send(':duck: Duck still initializing. Please try again.');
 	if (!args[0]) return message.channel.send(`:duck: Duck v${VERSION} operational.\nUse the \`help\` argument to get started.`);
 	
 	let func = meta[args[0].toLowerCase()] || aliases[args[0].toLowerCase()];
@@ -292,7 +420,13 @@ exports.meta = {
 	help: 'whoooo boy. use `duck help` to see how to use this wild command.'
 };
 
-let changelogText = `**v0.4**
+let changelogText = `**v0.5**
+Been a hot sec, but I didn't *entirely* forget, I promise.
+ - \`quote\` command so you can spend your daily BTC on something
+ - Implemented some rebel duck code, you'll see him in a future update
+ - Fixed leaderboard bugs pertaining to number 8 and number 10
+
+**v0.4**
  - \`leaderboard\` command added so you can say you're cooler than your friends
  - \`transfer\` command added so you can make your friends cooler than you
  - Command aliases added (e.g. \`lb\` for leaderboard) Use the help command with another command to view its aliases.
