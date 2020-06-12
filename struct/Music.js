@@ -19,7 +19,7 @@ const ytdlOptions = { quality: 'highestaudio', highWaterMark: 1 << 23 };
 const supportedFileTypes = [ 'mp3', 'ogg', 'aac', 'm4a', 'mp4', 'mov', 'flac', 'ac3', 'wav', 'bcstm' ];
 const supportedFileTypesString = '`' + supportedFileTypes.join('`, `') + '`';
 
-const videoYTRegex = /^(?:https?:\/\/)?(?:www\.|m\.|music\.)?(?:youtube\.com\/watch\?.*?v=|youtu\.be\/|youtube\.com\/v\/|youtube\.com\/embed\/)([A-z0-9_-]{11})([?&].*?=.*)$/;
+const videoYTRegex = /^(?:https?:\/\/)?(?:www\.|m\.|music\.)?(?:youtube\.com\/watch\?.*?v=|youtu\.be\/|youtube\.com\/v\/|youtube\.com\/embed\/)([A-z0-9_-]{11})([?&].*?=.*)?$/;
 const playlistYTRegex = /^(?:https?:\/\/)?(?:www\.|m\.|music\.)?(?:youtube\.com\/)(?:playlist|embed\/videoseries)(?:\?list=([A-z0-9_-]{34}))$/;
 const generalSCRegex = /^(?:https?:\/\/)?(?:www\.)?(?:m\.)?soundcloud.com\/[A-Za-z-_]{3,25}\/[^/\n\s]+?(?:\?(.+))?$/;
 const playlistSCRegex = /^(?:https?:\/\/)?(?:www\.)?(?:m\.)?soundcloud.com\/[A-Za-z-_]{3,25}\/sets\/[^/\n\s]{1,100}$/;
@@ -60,6 +60,7 @@ function testIfValidFileType(url) {
 
 					const type = fileType(section);
 					if (!type && url.endsWith('bcstm')) return resolve(true);
+					if (!type) return resolve(false);
 					return resolve(supportedFileTypes.includes(type.ext));
 				}
 			});
@@ -340,10 +341,12 @@ const Music = {
 			} else if (videoYTRegex.test(args[0])) {
 				let [, id, query] = args[0].match(videoYTRegex);
 
-				if (query.startsWith('?') || query.startsWith('&')) query = query.slice(1);
-				query = querystring.parse(query);
 				let list;
-				if (query.list) list = query.list;
+				if (query) {
+					if (query.startsWith('?') || query.startsWith('&')) query = query.slice(1);
+					query = querystring.parse(query);
+					if (query.list) list = query.list;
+				}
 
 				resolve ( {
 					id: id,
@@ -407,6 +410,13 @@ const Music = {
 
 				ytSearch({ query: suffix, YT_SEARCH_QUERY_URI: 'https://www.youtube.com/results?sp=EgIQAQ%253D%253D&' }, (err, results) => {
 					if (err || !results || !results.videos || !results.videos[0]) {
+						let error;
+						if (err) error = err;
+						else if (!results) error = 'No results.';
+						else if (!results.videos) error = 'No videos array.';
+						else error = 'No elements in the videos array.';
+						message.client.errorLog('No YouTube results found.', `Query: ${suffix}\n${error}`);
+
 						return soundcloud.search(suffix).then(result => {
 							if (!result) return reject(message._('no_results'));
 							
@@ -455,8 +465,16 @@ const Music = {
 					} catch (e) {
 					}
 
+					let author;
+
+					try {
+						author = info.author.name;
+						if (!author) author = info.player_response.videoDetails.author;
+					} catch (e) {}
+
+					if (author) author = Discord.Util.escapeMarkdown(author);
+
 					info.title = Discord.Util.escapeMarkdown(info.title);
-					info.author.name = info.author.name ? Discord.Util.escapeMarkdown(info.author.name) : undefined;
 					resolve({
 						meta: {
 							url: `https://youtu.be/${id}`,

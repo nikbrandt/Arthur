@@ -45,7 +45,7 @@
 		"youtube-playlist": "^1.0.2",
 		"youtube-search": "^1.1.4",
 		"yt-search": "^1.1.2",
-		"ytdl-core": "github:rezemble/node-ytdl-core",
+		"ytdl-core": "^2.1.7",
 		"zlib-sync": "^0.1.6"
 	}
 }

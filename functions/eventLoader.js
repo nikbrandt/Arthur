@@ -11,7 +11,11 @@ function statusUpdate (embed) {
 }
 
 const errorLog = (error, stack, code) => {
-	if (process.argv[2] && process.argv[2] === 'test') return; //code += ' | Testbot error';
+	if (process.argv[2] && process.argv[2] === 'test') {
+		if (process.env['ARTHUR_ERRORLOG'] !== 'true') return;
+		code += ' | Testbot error';
+	}
+
 	errorWebhookClient.send({
 		embeds: [ {
 			title: error,

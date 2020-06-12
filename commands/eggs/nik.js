@@ -320,6 +320,7 @@ async function quote(message) {
 	if (!user) user = { coins: 0 };
 
 	if (user.coins < 10) return message.channel.send(`You can't afford the holy word of the ducks right now. Come back when you have at least 10 ${COIN_EMOJI}.`);
+	sql.run('UPDATE duckEconomy SET coins = coins - 10 WHERE userID = ?', [ message.author.id ]);
 
 	getSubredditMeme('duck').then(async meme => {
 		const quote = quotes[Math.floor(Math.random() * quotes.length)].text;
@@ -380,7 +381,6 @@ async function quote(message) {
 			curHeight -= fontSize + 10;
 		}
 
-		sql.run('UPDATE duckEconomy SET coins = coins - 10 WHERE userID = ?', [ message.author.id ]);
 		message.channel.send(`You have been charged 10 ${COIN_EMOJI}. Enjoy.`, { files: [{ attachment: canvas.toBuffer(), name: 'inspiration.png' }] });
 	}).catch(err => {
 		console.error(err);

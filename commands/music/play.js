@@ -17,7 +17,8 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 		obj = await Music.getInfo(type, id, message, client, title);
 	} catch (err) {
 		if (!message.guild.music.queue && message.guild.voice) message.guild.voice.connection.disconnect();
-		return ipc ? message.__('error_getting_info', { err }) : loadMessage.edit(message.__('error_getting_info', { err }));
+		if (err instanceof Error) err = message.__('error_getting_info', { err });
+		return ipc ? err : loadMessage.edit(err);
 	}
 
 	let queueObj;
