@@ -460,49 +460,37 @@ const Music = {
 
 					if (!info) return reject(message._('could_not_get_info'));
 
-					if (info.livestream === '1' || info.live_playback === '1') return reject(message._('livestream'));
-					if (info.length_seconds < 5) return reject(message._("song_too_short"));
+					if (info.videoDetails.isLiveContent) return reject(message._('livestream'));
+					if (info.videoDetails.lengthSeconds < 5) return reject(message._("song_too_short"));
 
-					let time = timeString(info.length_seconds, message);
-					let thumbnail;
+					let time = timeString(parseInt(info.videoDetails.lengthSeconds), message);
 
-					try {
-						thumbnail = info.thumbnail_url || info.player_response.videoDetails.thumbnail.thumbnails[0].url
-					} catch (e) {
-					}
-
-					let author;
-
-					try {
-						author = info.author.name;
-						if (!author) author = info.player_response.videoDetails.author;
-					} catch (e) {}
-
+					let author = info.videoDetails.author.name;
 					if (author) author = Discord.Util.escapeMarkdown(author);
 
-					info.title = Discord.Util.escapeMarkdown(info.title);
+					info.videoDetails.title = Discord.Util.escapeMarkdown(info.videoDetails.title);
 					resolve({
 						meta: {
 							url: `https://youtu.be/${id}`,
-							title: `${info.title} (${time})`,
-							queueName: `[${info.title}](https://youtu.be/${id}) - ${time}`,
-							length: info.length_seconds
+							title: `${info.videoDetails.title} (${time})`,
+							queueName: `[${info.videoDetails.title}](https://youtu.be/${id}) - ${time}`,
+							length: parseInt(info.videoDetails.lengthSeconds)
 						},
 						embed: {
 							author: {
 								name: title,
-								icon_url: info.author.avatar
+								icon_url: info.videoDetails.author.avatar
 							},
 							color: 0xff0000,
-							description: `[${info.title}](https://youtu.be/${id})\n${i18n.get('commands.nowplaying.by', message)} [${info.author.name}](${info.author.channel_url})\n${message._('length')}: ${time}`,
+							description: `[${info.videoDetails.title}](https://youtu.be/${id})\n${i18n.get('commands.nowplaying.by', message)} [${author}](${info.videoDetails.author.channel_url})\n${message._('length')}: ${time}`,
 							thumbnail: {
-								url: thumbnail
+								url: info.videoDetails.thumbnail.thumbnails.find(thumb => thumb.width > 300) ? info.videoDetails.thumbnail.thumbnails.find(thumb => thumb.width > 300).url : info.videoDetails.thumbnail.thumbnails[0].url
 							},
 							footer: {
 								text: i18n.get('commands.nowplaying.footer', message, {tag: message.author.tag})
 							}
 						},
-						ms: info.length_seconds * 1000
+						ms: info.videoDetails.lengthSeconds * 1000
 					});
 					break;
 				} case 1.5: // youtube playlist

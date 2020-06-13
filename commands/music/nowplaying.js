@@ -14,51 +14,37 @@ exports.run = (message, args, s, client, permLevel) => {
 	if (!message.guild.music || !message.guild.music.queue) return message.channel.send(message.__('nothing_playing'));
 
 	const locale = i18n.getLocaleCode(message);
+	const queueItem = message.guild.music.queue[0];
 	
-	if (message.guild.music.queue[0].type === 1) { // YouTube video
-		ytdl.getInfo(message.guild.music.queue[0].id).then(info => {
-			let ellapsedTime = Music.calculateEllapsedTime(message.guild);
+	if (queueItem.type === 1) { // YouTube video
+		const ellapsedTime = Music.calculateEllapsedTime(message.guild);
+		const embed = queueItem.embed;
 
-			message.channel.send({
-				embed: {
-					author: {
-						name: i18n.getString('struct.music.now_playing', locale),
-						icon_url: info.author.avatar
-					},
-					color: 0xff0000,
-					description: `[${info.title}](https://www.youtu.be/${message.guild.music.queue[0].id})
-${message.__('by')} [${info.author.name}](${info.author.channel_url})
-${timeString(ellapsedTime, locale)} ${message.__('of')} ${timeString(info.length_seconds, locale)}`,
-					thumbnail: {
-						url: info.iurlhq
-					},
-					footer: {
-						text: message.__('footer', { tag: message.guild.music.queue[0].person.tag })
-					}
-				}
-			}).then(msg => {
-				Music.addReactionCollector(msg, client, ellapsedTime * 1000);
-			});
+		embed.author.name = i18n.getString('struct.music.now_playing', locale);
+		embed.description = embed.description.split('\n').slice(0, -1).join('\n') + `\n${timeString(ellapsedTime, locale)} ${message.__('of')} ${timeString(queueItem.meta.length, locale)}`;
+
+		message.channel.send({ embed }).then(msg => {
+			Music.addReactionCollector(msg, client, ellapsedTime * 1000);
 		});
-	} else if (message.guild.music.queue[0].type === 5) { // soundcloud
+	} else if (queueItem.type === 5) { // soundcloud
 		let elapsedTime = Math.round(message.guild.voice.connection.dispatcher.totalStreamTime / 1000);
 
-		let embed = message.guild.music.queue[0].embed;
+		let embed = queueItem.embed;
 		embed.author.name = i18n.getString('struct.music.now_playing', locale);
 		embed.description = embed.description.replace(i18n.getString('struct.music.length', locale) + ': ', `**${timeString(elapsedTime, locale)}** ${message.__('of')} `);
 
 		message.channel.send({embed}).then(msg => {
 			Music.addReactionCollector(msg, client, elapsedTime * 1000);
 		});
-	} else if (message.guild.music.queue[0].type >= 2) { // User-provided file
+	} else if (queueItem.type >= 2) { // User-provided file
 		message.channel.send({
 			embed: {
 				author: {
 					name: i18n.getString('struct.music.now_playing', locale)
 				},
-				url: message.guild.music.queue[0].meta.url,
+				url: queueItem.meta.url,
 				color: 0x7289DA,
-				description: message.guild.music.queue[0].meta.title
+				description: queueItem.meta.title
 			}
 		}).then(msg => {
 			Music.addReactionCollector(msg, client);

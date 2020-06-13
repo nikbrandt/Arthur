@@ -21,11 +21,11 @@ async function youtube(id, message, client) {
 	
 	if (!info) return message.edit(message.__('song_not_found')).catch(() => {});
 
-	if (info.livestream) return message.edit(message.__('livestream')).catch(() => {});
-	if (info.length_seconds > 1200) return message.edit(message.__('too_long', { minutes: 20 })).catch(() => {});
+	if (info.videoDetails.isLiveContent) return message.edit(message.__('livestream')).catch(() => {});
+	if (info.videoDetails.lengthSeconds > 1200) return message.edit(message.__('too_long', { minutes: 20 })).catch(() => {});
 
-	message.edit(message.__('downloading_with_time', { seconds: Math.round((info.length_seconds / 24).toFixed(1)) * 10 })).catch(() => {});
-	let title = info.title;
+	message.edit(message.__('downloading_with_time', { seconds: Math.round((parseInt(info.videoDetails.lengthSeconds) / 24).toFixed(1)) * 10 })).catch(() => {});
+	let title = info.videoDetails.title;
 
 	let ytdlStream;
 
@@ -36,7 +36,7 @@ async function youtube(id, message, client) {
 		return message.edit(message.__('song_not_found')).catch(() => {});
 	}
 
-	finish(ytdlStream, title, info.length_seconds, message, client, info.thumbnail_url, `https://youtu.be/${id}`).catch((e) => {
+	finish(ytdlStream, title, parseInt(info.videoDetails.lengthSeconds), message, client, info.videoDetails.thumbnail.thumbnails[0], `https://youtu.be/${id}`).catch((e) => {
 		client.errorLog('Error finishing mp3 from YT source', e.stack, e.code);
 		return message.edit(message.__('song_not_found')).catch(() => {});
 	});
