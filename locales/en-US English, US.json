@@ -1217,6 +1217,7 @@
 				"That video is, hear me out, too short. Really. I'll need one longer than 5 seconds. Thanks."
 			],
 			"livestream": "Trying to play a livestream, eh? Well, no, sorry.",
+			"video_requires_payment": "The video `$video` requires payment to watch. I ain't buyin' that for ya. Skipping.",
 			"file_footer": "Added by $tag. | Invalid URLs will be skipped."
 		},
 		"message": {

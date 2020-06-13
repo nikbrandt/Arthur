@@ -151,6 +151,13 @@ const Music = {
 								if (retry > 4) Music.next(guild);
 								else Music.next(guild, true, retry + 1);
 							}, 500);
+
+						if (err.toString().includes('This video requires payment')) {
+							console.log(music.queue[0].meta.title.split(' (').slice(0, -1).join(' ('));
+							music.textChannel.send(i18n.get('struct.music.video_requires_payment', guild, { video: music.queue[0].meta.title.split(' (').slice(0, -1).join(' (') }));
+							return Music.next(guild);
+						}
+
 						console.warn(`error playing music: ${err}`);
 						guild.client.errorLog("Error playing music from YouTube", err.stack ? err.stack : err, `Video ID ${music.queue[0].id} after ${Math.round(dispatcher.totalStreamTime / 1000)} seconds`);
 						Music.next(guild);
