@@ -32,7 +32,7 @@ exports.run = async (message, args, suffix, client, perms, prefix) => {
 			else if (com.config.category === 'developer' || com.config.category === 'eggs') return;
 
 			if (!categories.hasOwnProperty(com.config.category)) categories[com.config.category] = [];
-			categories[com.config.category].push(`\u200b	${prefix}${meta.command} - ${meta.description}`);
+			categories[com.config.category].push(`**${prefix}${meta.command}** \u203a ${meta.description}`);
 		});
 
 		forEach(categories, (coms, cat) => {

@@ -497,7 +497,8 @@ const Music = {
 								text: i18n.get('commands.nowplaying.footer', message, {tag: message.author.tag})
 							}
 						},
-						ms: info.videoDetails.lengthSeconds * 1000
+						ms: info.videoDetails.lengthSeconds * 1000,
+						requester: message.author.id
 					});
 					break;
 				} case 1.5: // youtube playlist
