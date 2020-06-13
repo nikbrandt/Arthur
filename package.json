@@ -44,8 +44,8 @@
 		"xml2json": "^0.11.2",
 		"youtube-playlist": "^1.0.2",
 		"youtube-search": "^1.1.4",
-		"yt-search": "^1.1.2",
 		"ytdl-core": "^2.1.7",
+		"ytsr": "^0.1.15",
 		"zlib-sync": "^0.1.6"
 	}
 }

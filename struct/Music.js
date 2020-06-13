@@ -6,7 +6,7 @@ const querystring = require('querystring');
 const ytdl = require('ytdl-core');
 const request = require('request');
 const fileType = require('file-type');
-const ytSearch = require('yt-search');
+const ytSearch = require('ytsr');
 const ytPlaylist = require('youtube-playlist');
 const Discord = require('discord.js');
 
@@ -408,13 +408,19 @@ const Music = {
 					} );
 				}
 
-				ytSearch({ query: suffix, YT_SEARCH_QUERY_URI: 'https://www.youtube.com/results?sp=EgIQAQ%253D%253D&' }, (err, results) => {
-					if (err || !results || !results.videos || !results.videos[0]) {
+				const options = {
+					limit: 1,
+					nextpageRef: `https://www.youtube.com/results?search_query=${encodeURIComponent(suffix)}&sp=EgIQAQ%253D%253D`
+				};
+
+				ytSearch(null, options, (err, results) => {
+					if (err || !results || !results.items || !results.items[0] || !results.items[0].link) {
 						let error;
 						if (err) error = err;
 						else if (!results) error = 'No results.';
-						else if (!results.videos) error = 'No videos array.';
-						else error = 'No elements in the videos array.';
+						else if (!results.items) error = 'No items array.';
+						else if (!results.items[0]) error = 'No elements in the items array.';
+						else error = 'No link in first element of array.';
 						message.client.errorLog('No YouTube results found.', `Query: ${suffix}\n${error}`);
 
 						return soundcloud.search(suffix).then(result => {
@@ -429,7 +435,7 @@ const Music = {
 						});
 					}
 
-					id = results.videos[0].videoId;
+					id = results.items[0].link.slice(-11);
 
 					resolve ( {
 						id: id,
