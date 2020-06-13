@@ -119,9 +119,18 @@ const Music = {
 				let embed = music.queue[0].embed;
 				if (!embed.author) embed.author = {};
 				embed.author.name = i18n.get('struct.music.now_playing', guild);
-				music.textChannel.send({ embed }).then(msg => {
+
+				let messageCallback = msg => {
 					Music.addReactionCollector(msg, msg.client, music.queue[0].ms);
-				});
+				};
+
+				if (music.textChannel // check if last message was a "Added to queue" message; if so, edit that one instead of sending a new one to notify
+					&& music.textChannel.lastMessage
+					&& music.textChannel.lastMessage.author.id === guild.client.user.id
+					&& music.textChannel.lastMessage.embeds.length
+					&& music.textChannel.lastMessage.embeds[0].description
+					&& music.textChannel.lastMessage.embeds[0].description === music.queue[0].embed.description) music.textChannel.lastMessage.edit({ embed }).then(messageCallback);
+				else music.textChannel.send({ embed }).then(messageCallback);
 			}
 			
 			switch (music.queue[0].type) {
