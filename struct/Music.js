@@ -162,8 +162,12 @@ const Music = {
 							}, 500);
 
 						if (err.toString().includes('This video requires payment')) {
-							console.log(music.queue[0].meta.title.split(' (').slice(0, -1).join(' ('));
 							music.textChannel.send(i18n.get('struct.music.video_requires_payment', guild, { video: music.queue[0].meta.title.split(' (').slice(0, -1).join(' (') }));
+							return Music.next(guild);
+						}
+
+						if (err.toString().includes('No such format found: highestaudio')) {
+							music.textChannel.send(i18n.get('struct.music.no_audio_track', guild, { video: music.queue[0].meta.title.split(' (').slice(0, -1).join(' (') }));
 							return Music.next(guild);
 						}
 
@@ -175,34 +179,21 @@ const Music = {
 					break;
 				}
 				case 4: { // from URL
-					let date = Date.now();
-					let rng = Math.floor(Math.random() * 10000);
-					let file = `../media/temp/${rng}-${date}.${music.queue[0].id.match(/\.([^.]+)$/)[1]}`;
-	
-					const r = request(music.queue[0].id, (err) => {
-						if (err) return Music.next(guild);
-					}).pipe(fs.createWriteStream(file));
-	
-					r.on('finish', () => {
-						const stream = fs.createReadStream(file);
-						let dispatcher = guild.voice.connection.play(stream, streamOptions);
-	
-						dispatcher.once('finish', () => {
-							fs.unlinkSync(file);
-							Music.next(guild);
-						});
-	
-						dispatcher.once('start', () => {
-							guild.voice.connection.player.streamingData.pausedTime = 0;
-							guild.music.startTime = Date.now();
-						});
-	
-						dispatcher.on('error', err => {
-							fs.unlinkSync(file);
-							console.warn(`error playing music: ${err}`);
-							guild.client.errorLog("Error playing music from URL", err.stack ? err.stack : err, `After ${Math.round(dispatcher.totalStreamTime / 1000)} seconds, URL:` + music.queue[0].id);
-							Music.next(guild);
-						});
+					let dispatcher = guild.voice.connection.play(music.queue[0].id, streamOptions);
+
+					dispatcher.once('finish', () => {
+						Music.next(guild);
+					});
+
+					dispatcher.once('start', () => {
+						guild.voice.connection.player.streamingData.pausedTime = 0;
+						guild.music.startTime = Date.now();
+					});
+
+					dispatcher.on('error', err => {
+						console.warn(`error playing music: ${err}`);
+						guild.client.errorLog("Error playing music from URL", err.stack ? err.stack : err, `After ${Math.round(dispatcher.totalStreamTime / 1000)} seconds, URL:` + music.queue[0].id);
+						Music.next(guild);
 					});
 					
 					break;
@@ -229,35 +220,27 @@ const Music = {
 					break;
 				}
 				case 5: { // soundcloud
-					let id = '' + Date.now() + guild.id;
 					let url = await soundcloud(music.queue[0].meta.id);
-					let writeStream = request(url).pipe(fs.createWriteStream(`../media/temp/${id}.mp3`));
-	
-					writeStream.on('finish', () => {
+
+					if (!guild.voice) return;
+					let dispatcher = guild.voice.connection.play(url, streamOptions);
+
+					dispatcher.once('finish', () => {
+						Music.next(guild);
 						setTimeout(() => {
-							let scStream = fs.createReadStream(`../media/temp/${id}.mp3`);
-							if (!guild.voice) return;
-							let dispatcher = guild.voice.connection.play(scStream, streamOptions);
-	
-							dispatcher.once('finish', () => {
-								fs.unlinkSync(`../media/temp/${id}.mp3`);
-								Music.next(guild);
-								setTimeout(() => {
-									if (guild.voice && guild.voice.connection && !guild.voice.connection.dispatcher) Music.next(guild);
-								}, 10000);
-							});
-	
-							dispatcher.once('start', () => {
-								guild.voice.connection.player.streamingData.pausedTime = 0;
-								guild.music.startTime = Date.now();
-							});
-	
-							dispatcher.on('error', err => {
-								console.warn(`error playing music: ${err}`);
-								guild.client.errorLog("Error playing music from Soundcloud", err.stack ? err.stack : err, `Soundcloud ID ${music.queue[0].id} after ${Math.round(dispatcher.totalStreamTime / 1000)} seconds`);
-								Music.next(guild);
-							});
-						}, 100);
+							if (guild.voice && guild.voice.connection && !guild.voice.connection.dispatcher) Music.next(guild);
+						}, 10000);
+					});
+
+					dispatcher.once('start', () => {
+						guild.voice.connection.player.streamingData.pausedTime = 0;
+						guild.music.startTime = Date.now();
+					});
+
+					dispatcher.on('error', err => {
+						console.warn(`error playing music: ${err}`);
+						guild.client.errorLog("Error playing music from Soundcloud", err.stack ? err.stack : err, `Soundcloud ID ${music.queue[0].id} after ${Math.round(dispatcher.totalStreamTime / 1000)} seconds`);
+						Music.next(guild);
 					});
 				}
 			}
