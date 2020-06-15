@@ -1,9 +1,13 @@
+const LINKS = [ 'https://youtu.be/p5rQHoaQpTw', 'https://youtu.be/w9uWPBDHEKE' ];
+
 exports.run = (message, args, suffix, client, permLevel, prefix, ipc) => {
 	message.__ = (string, variables) => {
 		return i18n.get('commands.play.' + string, message, variables);
 	};
 
-	client.commands.get('play').run(message, [ 'https://youtu.be/w9uWPBDHEKE' ], 'https://youtu.be/w9uWPBDHEKE', client, permLevel, prefix, ipc).catch(console.error);
+	const song = LINKS[Math.floor(Math.random() * LINKS.length)];
+
+	client.commands.get('play').run(message, [ song ], song, client, permLevel, prefix, ipc).catch(console.error);
 };
 
 exports.config = {

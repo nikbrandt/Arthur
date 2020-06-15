@@ -36,7 +36,7 @@ async function youtube(id, message, client) {
 		return message.edit(message.__('song_not_found')).catch(() => {});
 	}
 
-	finish(ytdlStream, title, parseInt(info.videoDetails.lengthSeconds), message, client, info.videoDetails.thumbnail.thumbnails[0], `https://youtu.be/${id}`).catch((e) => {
+	finish(ytdlStream, title, parseInt(info.videoDetails.lengthSeconds), message, client, info.videoDetails.thumbnail.thumbnails[0].url, `https://youtu.be/${id}`).catch((e) => {
 		client.errorLog('Error finishing mp3 from YT source', e.stack, e.code);
 		return message.edit(message.__('song_not_found')).catch(() => {});
 	});
