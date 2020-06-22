@@ -1,11 +1,14 @@
-const moment = require('moment');
+const fs = require('fs');
 const https = require('https');
+
+const moment = require('moment');
 
 const XP = require('../struct/xp.js');
 const config = require('../../media/config.json');
 const { errorLog } = require('../functions/eventLoader');
 
-let cooldownObj = {};
+const cooldownObj = {};
+const messageLog = fs.createWriteStream('../media/messsages.log');
 
 const emojiRegex = /^\s*<?(a)?:?(\w{2,32}):(\d{17,19})>?\s*$/;
 const CAT_EMOJIS = [ '😿', '😻', '😹', '😽', '😾', '🙀', '😸', '😺', '😼' ];
@@ -14,7 +17,9 @@ module.exports = async (client, message) => {
 	if (message.author.bot) return;
 	const botPerms = message.guild ? message.channel.permissionsFor(message.guild.me) : null;
 	if (message.guild && botPerms && !botPerms.has('SEND_MESSAGES')) return;
-	
+
+	message.timeline = { received: Date.now() };
+
 	if (client.daniel && message.guild && message.guild.id === '561659258622705705' && message.author.id === '346508486810796034') {
 		await message.react(CAT_EMOJIS[Math.floor(Math.random() * CAT_EMOJIS.length)]).catch(() => {});
 		await message.react(CAT_EMOJIS[Math.floor(Math.random() * CAT_EMOJIS.length)]).catch(() => {});
@@ -56,9 +61,12 @@ module.exports = async (client, message) => {
 
 	prefix = prefix.toLowerCase();
 
+	message.timeline.sqlComplete = Date.now() - message.timeline.received;
+
 	if (!message.content.toLowerCase().startsWith(prefix) && !message.content.startsWith(`<@${client.user.id}>`) && !message.content.startsWith(`<@!${client.user.id}>`)) {
 		if (message.channel.type !== 'text') {
 			if (/^[^ ]*help$/i.test(message.content)) return message.channel.send(i18n.get('struct.message.dm_help', message));
+			if (/^idol\s|\sidol\s|\sidol$|idol/g.test(message.content)) return message.channel.send('Arthur is not a Survivor ORG bot. You won\'t find whatever an "idol" is here. Thanks.');
 
 			let authorID;
 
@@ -185,19 +193,19 @@ module.exports = async (client, message) => {
 	if (cmdFile.config.permLevel > perms) return message.react(i18n.get('struct.message.user_missing_perms_emoji', message)).catch(() => {});
 
 	command = i18n.getCommandFileName(command, message) || command;
+
+	message.timeline.ready = Date.now() - message.timeline.received;
 	
 	try {
 		console.log(`${moment().format('MM-DD H:mm:ss')} - Command ${command} being run, user id ${message.author.id}${message.guild ? `, guild id ${message.guild.id}` : ''}`);
-		let resp = cmdFile.run(message, args, suffix, client, perms, prefix);
 		errorLog.lastCommand = command;
-		if (resp && typeof resp.then === 'function' && typeof resp.catch === 'function') resp.catch(err => {
-			errorLog(`Error while running ${command} | ${err.message}`, err.stack, err.code);
-			console.error(`Command ${command} has failed to run!\n${err.stack}`)
-		});
+		await cmdFile.run(message, args, suffix, client, perms, prefix);
 	} catch (err) {
 		errorLog(`Error while running ${command} | ${err.message}`, err.stack, err.code);
 		console.error(`Command ${command} has failed to run!\n${err.stack}`);
 	}
+
+	message.timeline.complete = Date.now() - message.timeline.received;
 
 	if (message.author.id !== client.ownerID) {
 		if (!client.commandStatsObject[command]) client.commandStatsObject[command] = { uses: 1 };
@@ -214,4 +222,11 @@ module.exports = async (client, message) => {
 		if (!client.weeklyStatsObject[weekAndYear][command]) client.weeklyStatsObject[weekAndYear][command] = 1;
 		else client.weeklyStatsObject[weekAndYear][command]++;
 	}
+
+	if (message.timeline.complete < 1000) return;
+
+	let timelineMessage = `${command} command received at ${message.timeline.received}, sql complete after ${message.timeline.sqlComplete} ms, ready after ${message.timeline.ready - message.timeline.sqlComplete} ms more, finished ${message.timeline.complete - message.timeline.ready} ms later, total ${message.timeline.complete} ms.`;
+
+	messageLog.write(timelineMessage + '\n');
+	console.log(timelineMessage);
 };
