@@ -4,7 +4,6 @@ const https = require('https');
 const querystring = require('querystring');
 
 const ytdl = require('ytdl-core');
-const request = require('request');
 const fileType = require('file-type');
 const ytSearch = require('ytsr');
 const ytPlaylist = require('youtube-playlist');
@@ -20,9 +19,9 @@ const supportedFileTypes = [ 'mp3', 'ogg', 'aac', 'm4a', 'mp4', 'mov', 'flac', '
 const supportedFileTypesString = '`' + supportedFileTypes.join('`, `') + '`';
 
 const videoYTRegex = /^(?:https?:\/\/)?(?:www\.|m\.|music\.)?(?:youtube\.com\/watch\?.*?v=|youtu\.be\/|youtube\.com\/v\/|youtube\.com\/embed\/)([A-z0-9_-]{11})([?&].*?=.*)?$/;
-const playlistYTRegex = /^(?:https?:\/\/)?(?:www\.|m\.|music\.)?(?:youtube\.com\/)(?:playlist|embed\/videoseries)(?:\?list=([A-z0-9_-]{34}))$/;
-const generalSCRegex = /^(?:https?:\/\/)?(?:www\.)?(?:m\.)?soundcloud.com\/[A-Za-z-_]{3,25}\/[^/\n\s]+?(?:\?(.+))?$/;
-const playlistSCRegex = /^(?:https?:\/\/)?(?:www\.)?(?:m\.)?soundcloud.com\/[A-Za-z-_]{3,25}\/sets\/[^/\n\s]{1,100}$/;
+const playlistYTRegex = /^(?:https?:\/\/)?(?:www\.|m\.|music\.)?(?:youtube\.com\/)(?:playlist|embed\/videoseries)(?:\?list=([A-z0-9_-]{10,}))$/;
+const generalSCRegex = /^(?:https?:\/\/)?(?:www\.)?(?:m\.)?soundcloud.com\/[A-Za-z-_0-9]{3,25}\/[^/\n\s]+?(?:\?(.+))?$/;
+const playlistSCRegex = /^(?:https?:\/\/)?(?:www\.)?(?:m\.)?soundcloud.com\/[A-Za-z-_0-9]{3,25}\/sets\/[^/\n\s]{1,100}$/;
 const songRegex = new RegExp(`^https?:\\/\\/.+\\/([^/]+)\\.(${supportedFileTypes.join('|')})$`);
 
 const reactionFilter = reaction => [ '👍', '⏩', '⏹', '🔁', '🎶' ].includes(reaction.emoji.name);

@@ -1,5 +1,7 @@
 const fs = require('fs');
 
+const sqlog = fs.createWriteStream('../media/sql.log');
+
 const sqlite = require('sqlite');
 const sqlite3 = require('sqlite3');
 let sql;
@@ -54,34 +56,17 @@ manager.on('shardCreate', shard => {
 	
 	shard.on('message', message => {
 		if (message.sql) {
+			let timeline = { start: Date.now() };
 			let { id, query, args } = message;
-			
-			switch(message.sql) {
-				case 'get':
-					sql.get(query, args).then(result => {
-						sqlThen(shard, id, result);
-					}).catch(error => {
-						sqlCatch(shard, id, error);
-					});
-					
-					break;
-				case 'run':
-					sql.run(query, args).then(result => {
-						sqlThen(shard, id, result);
-					}).catch(error => {
-						sqlCatch(shard, id, error);
-					});
-					
-					break;
-				case 'all':
-					sql.all(query, args).then(result => {
-						sqlThen(shard, id, result);
-					}).catch(error => {
-						sqlCatch(shard, id, error);
-					});
-					
-					break;
-			}
+
+			sql[message.sql](query, args).then(result => {
+				timeline.sqlFinished = Date.now() - timeline.start;
+				sqlThen(shard, id, result, timeline);
+			}).catch(error => {
+				timeline.sqlFinished = Date.now() - timeline.start;
+				timeline.error = true;
+				sqlCatch(shard, id, error, timeline);
+			});
 			
 			return;
 		}
@@ -203,16 +188,18 @@ function addValues(from, to) {
 	}
 }
 
-function sqlThen(shard, id, result) {
+function sqlThen(shard, id, result, timeline) {
 	shard.send({
 		sql: {
 			id: id,
 			result: result
 		}
-	}).catch(console.error);
+	}).catch(console.error).then(() => {
+		handleSQLTimeline(timeline);
+	});
 }
 
-function sqlCatch(shard, id, error) {
+function sqlCatch(shard, id, error, timeline) {
 	console.error('SQL Error:');
 	console.error(error);
 
@@ -221,7 +208,15 @@ function sqlCatch(shard, id, error) {
 			id: id,
 			error: error
 		}
-	}).catch(console.error);
+	}).catch(console.error).then(() => {
+		handleSQLTimeline(timeline);
+	});
+}
+
+function handleSQLTimeline(timeline) {
+	timeline.finished = Date.now() - timeline.start;
+	
+	sqlog.write(`SQL rec at ${timeline.start}, finished ${timeline.sqlFinished} ms later, sent off ${timeline.finished - timeline.sqlFinished} ms later, total ${timeline.finished} ms.\n`);
 }
 
 
