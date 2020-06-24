@@ -182,10 +182,10 @@
 			},
 			"default_footer": "Command will be canceled in 15 seconds. Type \"cancel\" to cancel now. Attempt 1 of 5.",
 			"multiple_votes": "Multiple votes",
-			"multiple_votes_description": "Should users be able to submit multiple votes? <__Y__es/__N__o>",
+			"multiple_votes_description": "Should users be able to submit multiple votes? @@booleans.yesno.prompt",
 			"duplication_checking": "Duplication checking",
 			"duplication_checking_description": "How should duplication checking be handled?\n`normal` for IP checking, `permissive` for browser cookie checking, `disabled` for no checking.",
-			"captcha_description": "Should the poll include a captcha? <__Y__es/__N__o>",
+			"captcha_description": "Should the poll include a captcha? @@booleans.yesno.prompt",
 			"no_title": [
 				"You'll uh.. you'll need a title for that poll there.",
 				"It's pretty hard to make a poll without a title.",
@@ -1276,6 +1276,7 @@
 	},
 	"booleans": {
 		"yesno": {
+			"prompt": "<__Y__es/__N__o>",
 			"abbreviations": {
 				"yes": "y",
 				"no": "n",

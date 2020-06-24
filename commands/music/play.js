@@ -75,18 +75,14 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 	else message.guild.music.queue.push(queueObj);
 
 	if (playlistQuery) {
-		message.channel.send(message.__('detected_playlist')).then(async msg => {
+		if (message.channel.permissionsFor(message.guild.me).has('ADD_REACTIONS')) message.channel.send(message.__('detected_playlist')).then(async msg => {
 			const filter = (reaction, user) => ([ '706749501842522112', '706749501947510805' ].includes(reaction.emoji.id) || [ '️️️️✔️', '✖️' ].includes(reaction.emoji.name)) && user.id === message.author.id;
 
 			msg.awaitReactions(filter, { time: 1000 * 60, max: 1}).then(reactions => {
 				if (!reactions || !reactions.size) return;
 				if (reactions.first().emoji.id === '706749501947510805' || reactions.first().emoji.name === '✖️') return msg.edit(i18n.get('struct.message.confirmation', message));
 
-				let playlistLink = type === 1
-					? 'https://youtube.com/playlist?list=' + playlistQuery
-					: 'https://soundcloud.com/' + playlistQuery;
-
-				client.commands.get('play').run(message, [ playlistLink ], playlistLink, client, message.perms, message.prefix, ipc).catch(() => {});
+				finishPlaylistQuery(client, message, ipc, type, playlistQuery);
 			});
 
 			msg.react('706749501842522112').catch(() => { // yes (check)
@@ -95,13 +91,41 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 				msg.react('706749501947510805').catch(() => { // no (x)
 					msg.react('✖️').catch(() => {});
 				});
-			}); 
-			
+			});
 		});
+		else {
+			const playlistMessage = await message.channel.send(message.__('detected_playlist') + ' ' + i18n.get('booleans.yesno.prompt', message));
+			
+			let starts = [
+				i18n.get('booleans.yesno.abbreviations.yes', message),
+				i18n.get('booleans.yesno.abbreviations.no', message)
+			];
+			
+			starts.push(starts[0] + i18n.get('booleans.yesno.abbreviations.yes_end', message));
+			starts.push(starts[1] + i18n.get('booleans.yesno.abbreviations.no_end', message));
+			
+			const filter = msg => message.author.id === msg.author.id && starts.some(start => msg.content.toLowerCase().startsWith(start));
+			
+			message.channel.awaitMessages(filter, { max: 1, time: 1000 * 60, errors: [ 'time' ]}).then(collected => {
+				if (!collected.first().content.toLowerCase().startsWith(starts[0])) return playlistMessage.edit(i18n.get('struct.message.confirmation', message));
+
+				finishPlaylistQuery(client, message, ipc, type, playlistQuery);
+			}).catch(() => {
+				playlistMessage.delete().catch(() => {});
+			});
+		}
 	}
 	
 	return 1; // for IPC
 };
+
+function finishPlaylistQuery(client, message, ipc, type, playlistQuery) {
+	let playlistLink = type === 1
+		? 'https://youtube.com/playlist?list=' + playlistQuery
+		: 'https://soundcloud.com/' + playlistQuery;
+
+	client.commands.get('play').run(message, [ playlistLink ], playlistLink, client, message.perms, message.prefix, ipc).catch(() => {});
+}
 
 exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 	if (!message.member.voice.channel) return message.channel.send(message.__('not_in_channel'));
