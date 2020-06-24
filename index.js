@@ -173,6 +173,8 @@ manager.on('shardCreate', shard => {
 					break;
 			}
 		}
+		
+		if (message.restart) process.exit();
 	});
 });
 

@@ -382,7 +382,7 @@
 				"aliases": [ "kys" ],
 				"name": "Restart",
 				"description": "Restart the bot",
-				"help": "How hard is to comprehend? Restart. The. Bot."
+				"help": "Restarts the bot.\n-f forces restart.\n-m restarts the manager, not just the shards.\n-c checks whether restart is possible, but does not actually do it.\n-s restarts the bot as soon as possible."
 			}
 		},
 		"send": {
