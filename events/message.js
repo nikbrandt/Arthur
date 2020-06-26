@@ -8,7 +8,7 @@ const config = require('../../media/config.json');
 const { errorLog } = require('../functions/eventLoader');
 
 const cooldownObj = {};
-const messageLog = fs.createWriteStream('../media/messsages.log');
+const messageLog = fs.createWriteStream('../media/messages.log');
 
 const emojiRegex = /^\s*<?(a)?:?(\w{2,32}):(\d{17,19})>?\s*$/;
 const CAT_EMOJIS = [ '😿', '😻', '😹', '😽', '😾', '🙀', '😸', '😺', '😼' ];

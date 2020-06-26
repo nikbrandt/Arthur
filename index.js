@@ -217,6 +217,7 @@ function sqlCatch(shard, id, error, timeline) {
 
 function handleSQLTimeline(timeline) {
 	timeline.finished = Date.now() - timeline.start;
+	if (timeline.finished < 1000) return;
 	
 	sqlog.write(`SQL rec at ${timeline.start}, finished ${timeline.sqlFinished} ms later, sent off ${timeline.finished - timeline.sqlFinished} ms later, total ${timeline.finished} ms.\n`);
 }

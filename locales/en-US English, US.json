@@ -437,7 +437,7 @@
 				"command": "leaderboard",
 				"aliases": ["lb", "lead", "top"],
 				"name": "Leaderboard",
-				"description": "Show the leaderboard for the current guild or global.",
+				"description": "Show the leaderboard for the current server or global.",
 				"usage": "[__g__lobal/server] [page]",
 				"help": "Show either server or global leaderboard for XP. Select a page, if necessary."
 			},
@@ -460,8 +460,8 @@
 					"leveling"
 				],
 				"name": "Leveling Toggle",
-				"description": "Enable or disable leveling for a guild.",
-				"help": "Simply a toggle for leveling on a guild, including all leveling commands. Leveling is disabled by default."
+				"description": "Enable or disable leveling for a server.",
+				"help": "Simply a toggle for leveling on a server, including all leveling commands. Leveling is disabled by default."
 			},
 			"leveling_enabled": "Leveling has been enabled.",
 			"leveling_disabled": "Leveling has been disabled."
@@ -478,7 +478,7 @@
 			},
 			"description": "**$xp** global XP$end",
 			"rank_on_page": "Rank **$rank**, on page **$page**.",
-			"guild_xp": "Guild XP",
+			"guild_xp": "Server XP",
 			"current_xp": "Current: **$current**$total\nLevel **$level**$rank",
 			"total": "Total",
 			"rank": "Rank",
@@ -493,7 +493,7 @@
 				],
 				"name": "XP Info",
 				"description": "Gives information about Arthur's leveling system.",
-				"help": "Receive information on Arthur's leveling system, including whether or not it is disabled in the current guild and its current settings."
+				"help": "Receive information on Arthur's leveling system, including whether or not it is disabled in the current server and its current settings."
 			},
 			"leveling_system": "Leveling System",
 			"description": "Arthur has a leveling system that will give you XP and eventually level you up while you type messages. This is $levels for this server and can be toggled by a server manager with `$prefix@@levels`.",
@@ -1124,7 +1124,7 @@
 					"hugemoji"
 				],
 				"name": "Toggle Humongoji",
-				"description": "Enable or disable humongojis in a guild. They're wumbojis, but better.",
+				"description": "Enable or disable humongojis in a server. They're wumbojis, but better.",
 				"help": "Wumbojis are bigger emojis that appear when an emoji is in a message by itself. See the [changelog](https://blog.discordapp.com/2016-4-29-change-log-a6451dfbaac8) for when they were added. Humongojis (this feature) are even *bigger* emojis that will appear in the same scenario, where Arthur will show the emoji image in full glorious HD.\nIf Arthur has the MANAGE_MESSAGES permission, the original message will also be deleted. Humongojis are disabled by default."
 			},
 			"enabled": "Humongojis have been enabled for this server. Enjoy.",

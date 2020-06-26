@@ -7,6 +7,23 @@ global.__basedir = __dirname;
 let sqlQueue = new Map();
 let sqlErrorQueue = new Map();
 let sqlCount = 0;
+
+const client = new ArthurClient({
+	disableMentions: 'everyone',
+	messageCacheMaxSize: 10,
+	ws: {
+		intents: [
+			'GUILDS',
+			'GUILD_MEMBERS',
+			'GUILD_VOICE_STATES',
+			'GUILD_MESSAGES',
+			'GUILD_MESSAGE_REACTIONS',
+			'DIRECT_MESSAGES'
+		]
+	}
+});
+
+
 global.sql = {
 	get: (query, args) => {
 		return sqlPromise('get', query, args);
@@ -26,29 +43,18 @@ function sqlPromise(type, query, args) {
 		sqlQueue.set(id, resolve);
 		sqlErrorQueue.set(id, reject);
 
-		process.send({
+		client.shard.send({
 			sql: type,
 			query: query,
 			args: args,
 			id: id
+		}).catch(err => {
+			sqlQueue.delete(id);
+			sqlErrorQueue.delete(id);
+			reject(err);
 		});
 	});
 }
-
-const client = new ArthurClient({
-	disableMentions: 'everyone',
-	messageCacheMaxSize: 10,
-	ws: {
-		intents: [
-			'GUILDS',
-			'GUILD_MEMBERS',
-			'GUILD_VOICE_STATES',
-			'GUILD_MESSAGES',
-			'GUILD_MESSAGE_REACTIONS',
-			'DIRECT_MESSAGES'
-		]
-	}
-});
 
 client.init().catch(console.error);
 
