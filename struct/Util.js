@@ -35,7 +35,7 @@ class Util {
 		let mins = Math.floor(seconds / 60);
 		seconds -= mins * 60;
 
-		return (hours ? hours + h + ' ' : '') + (mins ? mins + m + ' ' : '') + seconds + s;
+		return ((hours ? hours + h + ' ' : '') + (mins ? mins + m + ' ' : '') + (seconds || (!hours && !mins) ? seconds + s: '')).trim();
 	}
 }
 
