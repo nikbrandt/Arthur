@@ -1135,7 +1135,8 @@
 				"command": "l",
 				"name": "L",
 				"description": "L",
-				"help": "Post an L of Ls"
+				"usage": "[emoji]",
+				"help": "Post an L of Ls, or any other emoji"
 			}
 		},
 		"lenny": {
