@@ -600,7 +600,7 @@ const Music = {
 			let user = reaction.users.cache.filter(user => user.id !== client.user.id).first();
 			if (!user) return;
 
-			let fakeMessage = message;
+			let fakeMessage = Object.assign(Object.create(Object.getPrototypeOf(message)), message); // copy of `message`
 			fakeMessage.author = user;
 			fakeMessage.member = message.guild.members.cache.get(user.id) || await message.guild.members.fetch(user);
 			let permLevel = client.permLevel(fakeMessage);
