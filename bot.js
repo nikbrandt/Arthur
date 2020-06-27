@@ -77,7 +77,11 @@ process.on('message', message => {
 		return;
 	}
 
-	if (!client.shardQueue || !client.shardErrorQueue) return; // return if client not instantiated yet
+	if (!client.shardQueue || !client.shardErrorQueue) return setTimeout(() => {
+		message.retries = message.retries ? ++message.retries : 1;
+		if (message.retries > 60) return;
+		process.emit('message', message);
+	}, 250); // retry later if client not instantiated yet
 
 	if (message.sql) {
 		let { error, result, id } = message.sql;
