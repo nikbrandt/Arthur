@@ -126,6 +126,7 @@ exports.load = client => {
 	});
 
 	process.on('unhandledRejection', (err, promise) => {
+		if (err.code === 'ERR_IPC_CHANNEL_CLOSED') process.exit();
 		errorLog('Unhandled Rejection Error', err.stack, err.code);
 		console.error('Unhandled Promise Rejection at ', promise, ':\n', err);
 	});
