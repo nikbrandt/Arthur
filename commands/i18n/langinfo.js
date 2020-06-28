@@ -12,11 +12,10 @@ exports.run = (message, args) => {
 	if (!locale) return message.channel.send(message.__('locale_not_found'));
 	
 	let { meta } = locale;
-	let localeCode = i18n.getLocaleCode(message);
 	
 	message.channel.send({ embed: {
 		title: meta.lang,
-		description: `:flag_${meta.flag}: *${meta.translations[localeCode]}*\n\n` + message.__('description', { authors: meta.authors.join(', '), percent: meta.percentComplete, code: args[0] }),
+		description: `:flag_${meta.flag}: *${i18n.get(`meta.translations.${args[0]}`, message)}*\n\n` + message.__('description', { authors: meta.authors.join(', '), percent: meta.percentComplete, code: args[0] }),
 		color: 0x00c140
 	}});
 };

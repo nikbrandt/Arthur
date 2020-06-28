@@ -5,8 +5,8 @@
 		],
 		"flag": "ro",
 		"translations": {
-			"en-US": "Romanian, Romania",
-			"nl": "Roemeens, Roemenië",
+			"en-US": "Engleză, Statele Unite",
+			"nl": "Olandeză",
 			"ro": "Română"
 		}
 	},

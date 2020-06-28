@@ -2,11 +2,12 @@ exports.run = (message) => {
 	const locales = i18n.getAllLocaleMeta();
 	
 	let descriptionArray = [];
-	let localeCode = i18n.getLocaleCode(message);
+	let localLocaleCode = i18n.getLocaleCode(message);
+	let localLocale = locales.get(localLocaleCode);
 	
 	locales.keyArray().forEach(locale => {
 		let meta = locales.get(locale);
-		descriptionArray.push(`:flag_${meta.flag}: \`${locale}\` **${meta.lang}** (${meta.translations[localeCode]}) | ${message.__('percent_complete', { percent: meta.percentComplete } )}`);
+		descriptionArray.push(`:flag_${meta.flag}: \`${locale}\` **${meta.lang}** (${localLocale.translations[locale]}) | ${message.__('percent_complete', { percent: meta.percentComplete } )}`);
 	});
 	
 	message.channel.send({ embed: {

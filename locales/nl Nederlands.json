@@ -5,9 +5,9 @@
 		],
 		"flag": "nl",
 		"translations": {
-			"en-US": "Dutch",
+			"en-US": "Engels, VS",
 			"nl": "Nederlands",
-			"ro": "Olandeză"
+			"ro": "Roemeens"
 		}
 	},
 	"commands": {

@@ -8,9 +8,14 @@
 		],
 		"flag": "us",
 		"translations": {
+			"cs": "Czech",
 			"en-US": "English, US",
-			"nl": "Engels, VS",
-			"ro": "Engleză, Statele Unite"
+			"es-ES": "Spanish, Spain",
+			"nl": "Dutch",
+			"pl": "Polish",
+			"pt": "Portuguese",
+			"pt-BR": "Portuguese, Brazil",
+			"ro": "Romanian"
 		}
 	},
 	"commands": {
