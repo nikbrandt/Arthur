@@ -45,7 +45,7 @@ Please follow steps 1 and 2. I'll happily setup a file for you, though (meaning 
 - Every value string should be translated. If you don't want to translate parts of the file, that's fine, but please don't leave the English translation in it.
 
 - When filling out the `"meta"` section, keep the following in mind:
-   - Don't worry about overriding the English versions of commands. Arthur will try to find the command in your language, but will fall back to the English version if it can't. (Meaning, for example, users can type `a.8ball` even when their language is set to Dutch and still run the command)
+   - Please do override the English versions of commands. Arthur will try to find the command in your language, but will fall back to the English version if it can't.
    - Not all aliases need to be translated if they don't all make sense. You can also add more if it is logical, necessary, or a good play on words/joke (that still makes sense to be an alias). 
    - Please keep the square brackets (`[]`) and angle brackets (`<>`) in the `usage` section (but translate the text inside of them).
 

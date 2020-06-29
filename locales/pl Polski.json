@@ -1,0 +1,198 @@
+{
+	"meta": {
+		"authors": [
+		  "indepth6#4065"
+		],
+		"flag": "pl",
+		"translations": {
+			"cs": "Czeski",
+			"en-US": "Angielski, USA",
+			"es-ES": "Hiszpański, Hiszpania",
+			"nl": "Holenderski",
+			"pl": "Polski",
+			"pt": "Portugalski",
+			"pt-BR": "Portugalski, Brazylia",
+			"ro": "Rumuński"
+		}
+	},
+	"commands": {
+		"8ball": {
+			"meta": {
+				"command": "8ball",
+				"aliases": [ "9ball", "7ball", "ball", "eightball" ],
+				"name": "Ósemka",
+				"description": "Zadaj *magicznej ósemce* pytanie.",
+				"usage": "[question]",
+				"help": "Zadaj *magicznej ósemce* pytanie. Niewiele wątpliwości."
+			},
+			"answer": [
+				"Jest to pewne.",
+				"Zdecydowanie.",
+				"Bez wątpienia.",
+				"Tak - definitywnie.",
+				"Możesz na tym polegać.",
+				"Z tego co widzę, tak.",
+				"Prawdopodobnie.",
+				"Dobra perspektywa.",
+				"Tak.",
+				"Wskazuje na to, że tak.",
+				"Mgliste myśli, spróbuj ponownie.",
+				"Zapytaj ponownie następnym razem.",
+				"Lepiej na razie nie mówić.",
+				"Nie można określić.",
+				"Skoncentruj się i zapytaj ponownie.",
+				"Nie licz na to.",
+				"Moja odpowiedź to nie.",
+				"Moje źródła mówią, że nie.",
+				"Niezbyt dobra perspektywa.",
+				"Mocno wątpię."
+			]
+		},
+		"cat": {
+			"meta": {
+				"command": "cat",
+				"aliases": [ "kitty", "kat", "kitten" ],
+				"name": "Kot",
+				"description": "Otrzymaj obraz kota.",
+				"help": "Otrzymaj obraz kota z [Kociego API (The Cat API)](http://thecatapi.com/)."
+			},
+			"error": "Nastąpił błąd podczas łączenia z Kocim API (The Cat API). Dołącz do serwera ze wsparciem, jeśli naprawdę potrzebujesz swych kotów.",
+			"embed_description": "[Tutaj]($url) jest originalny obraz."
+		},
+		"dog": {
+			"meta": {
+				"command": "dog",
+				"aliases": [ "doggo", "pupper", "puppy", "pup", "woof", "bark", "doge" ],
+				"name": "Pies",
+				"description": "Otrzymaj darmowe zdjęcie psa.",
+				"help": "Otrzymaj zdjęcie psa."
+			},
+			"error": "Nastąpił błąd.. ;-;. Dołącz do serwera ze wsparciem, jeśli jesteś w pilnej potrzebie piesełów.",
+			"embed_description": "[Tutaj]($url) jest originalny obraz."
+		},
+		"math": {
+			"meta": {
+				"command": "math",
+				"aliases": [ "calc" ],
+				"name": "Matematyka",
+				"description": "Oblicz wyrażenia i konwersje matematyczne.",
+				"usage": "<wyrażenie>",
+				"help": "Oblicz wyrażenia i konwersje matematyczne."
+			},
+			"no_args": [
+				"Serio? Oczekujesz, żebym obliczył nic? :clap:",
+				"Nic? W ogóle nic? Czuję, że nie mogę tego obliczyć, wybacz."
+			],
+			"long_equation": "twoje równanie jest zbyt długie; odpocznij, pomyśl i zrób twoje równanie krótsze niż 256 znaki.",
+			"error": "Twoje równianie jest nieprawidłowe. Prymityw."
+		},
+		"mchistory": {
+			"meta": {
+				"command": "mchistory",
+				"name": "Historia nazw Minecraft",
+				"description": "Zobacz wszystkie poprzednie nazwy użytkownika Minecraft.",
+				"usage": "<nazwa/UUID> [strona]",
+				"help": "Zobacz poprzednie nazwy użytkownika Minecraft używając nazwy lub UUID."
+			},
+			"no_args": [
+				"Dobrze, tutaj jest twoja historia nazw:\n3. Potrzebujesz\n2. Podac_mi\n1. Nazwe",
+				"Podaj mi nazwę. Proszę.",
+				"Ja eeee.. Potrzebuję nazwy, by otrzymać historię tego użytkownika."
+			],
+			"long_name": [
+				"Gdyby tylko nazwy użytkownika mogły być takie długie..",
+				"Tak długie nazwy nie istnieją. Wybacz."
+			],
+			"invalid_name": [
+				"Tja, to nie nazwa.",
+				"Nie jestem pewny czy go znam...",
+				"A kto to?"
+			],
+			"invalid_page": "To nie jest prawidłowy numer strony, wybacz.",
+			"negative_page": "Ujemne strony? Serio?",
+			"no_body": "Coś się popsuło. Jesteś pewny, że wpisałeś to poprawnie?",
+			"page_too_high": "Ta osoba nie zmieniła swojej nazwy wystarczająco, by wygenerować stronę $page. rip.",
+			"no_name_changes": "Nic tu ni ma, kontynuuj.",
+			"embed_title": "Historia nazw użytkownika $name",
+			"name": "Nazwa",
+			"date_changed": "Zmieniono dnia",
+			"embed_footer": "Strona $page z $maxPage | Oryginalna nazwa użytkownika była $name"
+		},
+		"mcserver": {
+			"meta": {
+				"command": "mcserver",
+				"aliases": [ "mcs", "server", "minecraftserver" ],
+				"name": "Serwer Minecraft",
+				"description": "Otrzymaj informacje o serwerze Minecraft",
+				"usage": "<IP serwera>[:port serwera]",
+				"help": "Otrzymaj informacje typu gracze i wiadomość dnia z serwera Minecraft."
+			},
+			"failed": {
+				"title": "Serwer jest nieprawidłowy lub jest offine",
+				"description": "Wybacz ¯\\_(ツ)_/¯",
+				"footer": "Jeśli serwer jest online, spróbuj ustawić `enable-query` na `true` w `server.properties`."
+			},
+			"no_args": [
+				"Proszę podaj, jaki serwer mam sprawdzić.",
+				"Będzie musiał podać, jaki serwer mam sprawdzić.",
+				"Serio, jest to niemożliwe, żeby otrzymać status serwera, jeśli nie podasz serwera."
+			],
+			"processing": "Przetwarzanie..",
+			"embed": {
+				"title": "$hostname jest online.",
+				"footer": "Port $port | Protokół $protocol",
+				"players": "Gracze",
+				"version": "Wersja"
+			}
+		},
+		"mcskin": {
+			"meta": {
+				"command": "mcskin",
+				"aliases": ["minecraftskin", "skin", "mskin"],
+				"name": "Skin Minecraft",
+				"description": "Otrzymaj skina gracza Minecraft",
+				"usage": "<nazwa użytkownika/UUID>",
+				"help": "Otrzymaj skina gracza Minecraft."
+			},
+			"some_rando": [
+				"jakiś typ",
+				"koleś którego znalazłem na jezdni"
+			],
+			"embed": {
+				"title": "Skin $user (klik po link namemc)",
+				"footer": "Render jest tutaj dzięki uprzejmości Visage."
+			}
+		},
+		"meme": {
+			"meta": {
+				"command": "meme",
+				"aliases": [ "meemee", "maymay", "meem" ],
+				"name": "Mem",
+				"description": "Otrzymaj jakiegoś mema.",
+				"help": "Otrzymaj jakiś obraz z jakiś subredditów z memami."
+			},
+			"error": "Nastąpił błąd podczas łączenie do Reddita. Dołącz do serwera ze wsparciem, jeśli potrzebujesz swoich memów."
+		},
+		"strawpoll": {
+			"meta": {
+				"command": "strawpoll",
+				"aliases": [ "sp", "straw" ],
+				"name": "Strawpoll",
+				"description": "Stwórz głosowanie.",
+				"usage": "<\"tytuł\"> <opcja jeden|opcja dwa|itd..> [--@@commands.strawpoll.advanced_abbreviation lub --@@commands.strawpoll.advanced]",
+				"help": "Stwórz głosowanie na strawpoll.me.\nUżycie flagi --@@commands.strawpoll.advanced_abbreviation pozwala na konfigurację zaawansowanych opcji:\nwiele odpowiedzi (domyślnie false)\nsprawdzanie duplikatów (domyślnie sprawdzanie IP)\ncaptcha (domyślnie false)"
+			},
+			"default_footer": "Komenda będzie anulowana za 15 sekund. Wpisz \"cancel\" by anulować teraz. Próba 1 z 5.",
+			"multiple_votes": "Wiele odpowiedzi",
+			"multiple_votes_description": "Czy użytkownicy mogą wysyłać wiele głosów? @@booleans.yesno.prompt",
+			"duplication_checking": "Sprawdzanie duplikatów",
+			"duplication_checking_description": "Jak sprawdzanie duplikatów powinno być obsługiwane?\n`normal` dla sprawdzania IP, `permissive` dla sprawdziania ciasteczek w przeglądarce, `disabled` dla żadnego sprawdzania.",
+			"captcha_description": "Czy głosowanie powinno zawierać captcha? @@booleans.yesno.prompt",
+			"no_title": [
+				"Ty eeee.. ty potrzebujesz tytułu dla tego głosowania.",
+				"Jest trudno robić głosowania bez tytułu.",
+				"Zadasz pytanie czy co? Głosowania nie są użyteczne bez pytań."
+			]
+		}
+	}
+}
