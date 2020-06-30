@@ -97,11 +97,18 @@ manager.on('shardCreate', shard => {
 			});
 			
 			manager.shards.forEach(shard => {
-				shard.send({
+				sendWhenReady(shard, {
 					eval: {
 						script: script,
 						id: internalID
 					}
+				}, () => {
+					shard.emit({
+						eval: {
+							error: 'Shard took too long to become ready.',
+							id: internalID
+						}
+					})
 				});
 			});
 			
@@ -177,6 +184,15 @@ manager.on('shardCreate', shard => {
 		if (message.restart) process.exit();
 	});
 });
+
+function sendWhenReady(shard, message, error, retry = 0) {
+	if (retry > 20) return error();
+	
+	if (shard.ready) shard.send(message);
+	else setTimeout(() => {
+		sendWhenReady(shard, message, error, ++retry);
+	}, 1000);
+}
 
 function addValues(from, to) {
 	for (let key in from) {
