@@ -27,7 +27,7 @@ const manager = new ShardingManager('./bot.js', {
 });
 
 sqlite.open({
-	filename: '../media/db.sqlite',
+	filename: test ? '../media/database/db.sqlite' : '/mnt/ramdisk/database/db.sqlite',
 	driver: sqlite3.cached.Database
 }).then(db => {
 	sql = db;

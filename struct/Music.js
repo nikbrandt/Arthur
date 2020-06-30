@@ -13,7 +13,6 @@ const soundcloud = require('./soundcloud.js');
 const { timeString } = require('./Util.js');
 
 const streamOptions = { volume: false, passes: 2, bitrate: 'auto', highWaterMark: 50 };
-const ytdlOptions = { quality: 'highestaudio', highWaterMark: 1 << 23 };
 
 const supportedFileTypes = [ 'mp3', 'ogg', 'aac', 'm4a', 'mp4', 'mov', 'flac', 'ac3', 'wav', 'bcstm' ];
 const supportedFileTypesString = '`' + supportedFileTypes.join('`, `') + '`';
@@ -134,7 +133,7 @@ const Music = {
 			
 			switch (music.queue[0].type) {
 				case 1: { // youtube
-					let stream = ytdl(music.queue[0].id, ytdlOptions);
+					let stream = ytdl(music.queue[0].id, { quality: 'highestaudio', highWaterMark: 1 << 23, requestOptions: { maxRedirects: 10 } });
 	
 					if (!guild.voice || !guild.voice.connection) {
 						guild.music = {};
