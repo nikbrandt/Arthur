@@ -5,8 +5,13 @@
 		],
 		"flag": "nl",
 		"translations": {
+			"cs": "Tsjechisch",
 			"en-US": "Engels, VS",
+			"es-ES": "Spaans, Spanje",
 			"nl": "Nederlands",
+			"pl": "Pools",
+			"pt": "Portugees",
+			"pt-BR": "Portugees, Brazilië",
 			"ro": "Roemeens"
 		}
 	},

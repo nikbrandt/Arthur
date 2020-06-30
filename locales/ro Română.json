@@ -5,8 +5,13 @@
 		],
 		"flag": "ro",
 		"translations": {
+			"cs": "Cehă",
 			"en-US": "Engleză, Statele Unite",
+			"es-ES": "Spaniolă",
 			"nl": "Olandeză",
+			"pl": "Polonă",
+			"pt": "Portugheză",
+			"pt-BR": "Portugheză, Brazilia",
 			"ro": "Română"
 		}
 	},

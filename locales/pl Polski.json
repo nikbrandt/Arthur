@@ -18,11 +18,11 @@
 	"commands": {
 		"8ball": {
 			"meta": {
-				"command": "8ball",
-				"aliases": [ "9ball", "7ball", "ball", "eightball" ],
+				"command": "ósemka",
+				"aliases": [ "dziewiątka", "siódemka", "bila", "osemka", "dziewiatka", "siodemka" ],
 				"name": "Ósemka",
 				"description": "Zadaj *magicznej ósemce* pytanie.",
-				"usage": "[question]",
+				"usage": "[pytanie]",
 				"help": "Zadaj *magicznej ósemce* pytanie. Niewiele wątpliwości."
 			},
 			"answer": [
@@ -50,8 +50,8 @@
 		},
 		"cat": {
 			"meta": {
-				"command": "cat",
-				"aliases": [ "kitty", "kat", "kitten" ],
+				"command": "kot",
+				"aliases": [ "kociak", "kat", "kociątko", "kociatko" ],
 				"name": "Kot",
 				"description": "Otrzymaj obraz kota.",
 				"help": "Otrzymaj obraz kota z [Kociego API (The Cat API)](http://thecatapi.com/)."
@@ -61,8 +61,8 @@
 		},
 		"dog": {
 			"meta": {
-				"command": "dog",
-				"aliases": [ "doggo", "pupper", "puppy", "pup", "woof", "bark", "doge" ],
+				"command": "pies",
+				"aliases": [ "pieseł", "szczeniak", "kundel", "szczenię", "hau", "piesel", "szczenie" ],
 				"name": "Pies",
 				"description": "Otrzymaj darmowe zdjęcie psa.",
 				"help": "Otrzymaj zdjęcie psa."
@@ -72,8 +72,8 @@
 		},
 		"math": {
 			"meta": {
-				"command": "math",
-				"aliases": [ "calc" ],
+				"command": "matma",
+				"aliases": [ "kalk", "kalkulator", "matematyka" ],
 				"name": "Matematyka",
 				"description": "Oblicz wyrażenia i konwersje matematyczne.",
 				"usage": "<wyrażenie>",
@@ -88,7 +88,7 @@
 		},
 		"mchistory": {
 			"meta": {
-				"command": "mchistory",
+				"command": "historiamc",
 				"name": "Historia nazw Minecraft",
 				"description": "Zobacz wszystkie poprzednie nazwy użytkownika Minecraft.",
 				"usage": "<nazwa/UUID> [strona]",
@@ -120,8 +120,8 @@
 		},
 		"mcserver": {
 			"meta": {
-				"command": "mcserver",
-				"aliases": [ "mcs", "server", "minecraftserver" ],
+				"command": "serwermc",
+				"aliases": [ "smc", "serwer", "serwerminecraft" ],
 				"name": "Serwer Minecraft",
 				"description": "Otrzymaj informacje o serwerze Minecraft",
 				"usage": "<IP serwera>[:port serwera]",
@@ -147,8 +147,8 @@
 		},
 		"mcskin": {
 			"meta": {
-				"command": "mcskin",
-				"aliases": ["minecraftskin", "skin", "mskin"],
+				"command": "skinmc",
+				"aliases": ["skinminecraft", "skin", "skinm"],
 				"name": "Skin Minecraft",
 				"description": "Otrzymaj skina gracza Minecraft",
 				"usage": "<nazwa użytkownika/UUID>",
@@ -165,8 +165,8 @@
 		},
 		"meme": {
 			"meta": {
-				"command": "meme",
-				"aliases": [ "meemee", "maymay", "meem" ],
+				"command": "mem",
+				"aliases": [ "meme", "memy", "meem" ],
 				"name": "Mem",
 				"description": "Otrzymaj jakiegoś mema.",
 				"help": "Otrzymaj jakiś obraz z jakiś subredditów z memami."
@@ -192,7 +192,12 @@
 				"Ty eeee.. ty potrzebujesz tytułu dla tego głosowania.",
 				"Jest trudno robić głosowania bez tytułu.",
 				"Zadasz pytanie czy co? Głosowania nie są użyteczne bez pytań."
-			]
+			],
+			"no_options": [
+				"Chyba chcesz odpowiedzi do tego głosowania, racja?",
+				"Głosowania są *ekstremalnie* trunde do przeprowadzenia, jeśli ludzi nie mogą na nie odpowiedzieć. Po prostu nie otrzymujesz danych. Jesteś smutny. Ludzie są smutni. Wszyscy jesteśmy smutni."
+			],
+			"too_many_polls": "Stworzyłem za dużo głosowań podczas tej godzinu. Spróbuj później. Wybacz za to."
 		}
 	}
 }
