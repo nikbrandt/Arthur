@@ -3,7 +3,7 @@ const MESSAGE_CHANNEL_ID = '304441662724243457';
 exports.run = async (message, args, suffix, client) => {
 	if (!args[0]) return message.channel.send('Mhm. I\'ll send it to no one.');
 	if (!args[1] && !message.attachments.size) return message.channel.send('Right. And what, exactly, are you sending?');
-	message.delete().catch(() => {});
+	if (!message.noDelete) message.delete().catch(() => {});
 
 	let name;
 

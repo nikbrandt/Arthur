@@ -27,10 +27,10 @@ exports.run = (message, args, suffix, client) => {
 		let messageOptions = {
 			embed: {
 				title: splitified[0],
-				url: card.url,
+				url: card.shortUrl,
 				description: splitified[1] ? splitified.slice(1).join('\n') : undefined,
 				footer: {
-					text: `Suggested by ${message.author.tag}`,
+					text: `Suggested by ${message.author.tag} | ${message.author.id}`,
 					icon_url: message.author.displayAvatarURL()
 				},
 				color: 0x00c140
@@ -52,3 +52,5 @@ exports.config = {
 	permLevel: 1,
 	category: 'other'
 };
+
+exports.trello = trello;

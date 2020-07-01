@@ -356,8 +356,18 @@
 				"aliases": [ "gitpull" ],
 				"name": "Git Pull",
 				"description": "Pull from GitHub and, optionally, reload commands.",
-				"usage": "[-r]",
+				"usage": "[-k] [-m] [-c]",
 				"help": "Pull from GitHub and, if `-r` is specified, reload commands."
+			}
+		},
+		"reject": {
+			"meta": {
+				"dev": true,
+				"command": "reject",
+				"name": "Reject Suggestion",
+				"description": "Reject a suggestion by message ID",
+				"usage": "<message ID> [message]",
+				"help": "Reject a suggestion by message ID, and add a message if wanted."
 			}
 		},
 		"reload": {
