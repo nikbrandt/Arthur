@@ -8,6 +8,7 @@ const config = require('../../media/config.json');
 const { errorLog } = require('../functions/eventLoader');
 
 const cooldownObj = {};
+const queueObj = {};
 const messageLog = fs.createWriteStream('../media/messages.log');
 
 const emojiRegex = /^\s*<?(a)?:?(\w{2,32}):(\d{17,19})>?\s*$/;
@@ -196,6 +197,15 @@ module.exports = async (client, message) => {
 
 	message.timeline.ready = Date.now() - message.timeline.received;
 	
+	if (cmdFile.config.queued) {
+		if (queueObj[command] && queueObj[command].length) await Promise.all(queueObj[command]);
+		if (!queueObj[command]) queueObj[command] = [];
+		message.timeline.index = queueObj[command].length;
+		queueObj[command].push(new Promise(resolve => {
+			message.timeline.resolve = resolve;
+		}));
+	}
+	
 	try {
 		console.log(`${moment().format('MM-DD H:mm:ss')} - Command ${command} being run, user id ${message.author.id}${message.guild ? `, guild id ${message.guild.id}` : ''}`);
 		errorLog.lastCommand = command;
@@ -204,7 +214,12 @@ module.exports = async (client, message) => {
 		errorLog(`Error while running ${command} | ${err.message}`, err.stack, err.code);
 		console.error(`Command ${command} has failed to run!\n${err.stack}`);
 	}
-
+	
+	if (cmdFile.config.queued) {
+		message.timeline.resolve();
+		queueObj[command].splice(message.timeline.index, 1);
+	}
+	
 	message.timeline.complete = Date.now() - message.timeline.received;
 
 	if (message.author.id !== client.ownerID) {
@@ -223,10 +238,12 @@ module.exports = async (client, message) => {
 		else client.weeklyStatsObject[weekAndYear][command]++;
 	}
 
-	if (message.timeline.complete < 1000) return;
+	if (message.timeline.complete < 1000 || (message.timeline.complete < 5000 && command === 'play')) return;
 
 	let timelineMessage = `${command} command received at ${message.timeline.received}, sql complete after ${message.timeline.sqlComplete} ms, ready after ${message.timeline.ready - message.timeline.sqlComplete} ms more, finished ${message.timeline.complete - message.timeline.ready} ms later, total ${message.timeline.complete} ms.`;
 
 	messageLog.write(timelineMessage + '\n');
 	console.log(timelineMessage);
 };
+
+exports.queueObj = queueObj;

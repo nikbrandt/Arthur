@@ -235,5 +235,6 @@ exports.config = {
 	enabled: 'true',
 	permLevel: 2,
 	perms: [ 'EMBED_LINKS', 'SPEAK', 'CONNECT' ],
+	queued: true,
 	category: 'music'
 };
