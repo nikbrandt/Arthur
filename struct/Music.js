@@ -6,7 +6,7 @@ const querystring = require('querystring');
 const ytdl = require('ytdl-core');
 const fileType = require('file-type');
 const ytSearch = require('ytsr');
-const ytPlaylist = require('youtube-playlist');
+const ytPlaylist = require('ytpl');
 const Discord = require('discord.js');
 
 const soundcloud = require('./soundcloud.js');
@@ -344,6 +344,8 @@ const Music = {
 					query = querystring.parse(query);
 					if (query.list) list = query.list;
 				}
+				
+				console.log('List: ' + list);
 
 				resolve ( {
 					id: id,
@@ -493,24 +495,25 @@ const Music = {
 					break;
 				} case 1.5: // youtube playlist
 					let out = {};
-					let res = await ytPlaylist('https://www.youtube.com/playlist?list=' + id, 'id').catch(() => {});
+					let res = await ytPlaylist(id).catch(() => {});
 
-					if (!res || !res.data || !res.data.playlist) return reject(message._('invalid_playlist'));
+					if (!res || !res.items) return reject(message._('invalid_playlist'));
 
-					if (res.data.playlist.length > 200) return reject(message._('playlist_too_long'));
+					if (res.items.length > 200) return reject(message._('playlist_too_long'));
 
 					if (message.guild.music && message.guild.music.queue && message.guild.music.queue.length)
-						res.data.playlist = res.data.playlist.filter(videoID => videoID !== message.guild.music.queue[message.guild.music.queue.length - 1].id);
+						res.items = res.items.filter(video => video.id !== message.guild.music.queue[message.guild.music.queue.length - 1].id);
 
 					let errors = 0;
-					let items = await Promise.all(res.data.playlist.map(videoID => Music.getInfo(1, videoID, message, message.client, i18n.get('struct.music.now_playing', message))
-						.catch(() => { errors++; })));
+					let nowPlaying = i18n.get('struct.music.now_playing', message);
+					let items = await Promise.all(res.items.map(video => Music.getInfo(1, video.id, message, message.client, nowPlaying)
+						.catch((e) => { console.error(e); errors++; })));
 
-					if (errors >= res.data.playlist.length) return reject(message._('error_loading_playlist_songs'));
+					if (errors >= res.items.length) return reject(message._('error_loading_playlist_songs'));
 
 					for (let i = 0; i < items.length; i++) {
 						if (!items[i]) continue;
-						out[res.data.playlist[i]] = items[i];
+						out[res.items[i].id] = items[i];
 					}
 
 					resolve(out);

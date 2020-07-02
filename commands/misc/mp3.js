@@ -30,7 +30,7 @@ async function youtube(id, message, client) {
 	let ytdlStream;
 
 	try {
-		ytdlStream = ytdl.downloadFromInfo(info, { quality: 'highestaudio' });
+		ytdlStream = ytdl.downloadFromInfo(info, { quality: 'highestaudio', requestOptions: { maxRedirects: 10 } });
 	} catch (e) {
 		client.errorLog('Error retrieving ytdl stream in mp3', e.stack, e.code);
 		return message.edit(message.__('song_not_found')).catch(() => {});
