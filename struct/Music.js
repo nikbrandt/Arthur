@@ -168,6 +168,11 @@ const Music = {
 							music.textChannel.send(i18n.get('struct.music.no_audio_track', guild, { video: music.queue[0].meta.title.split(' (').slice(0, -1).join(' (') }));
 							return Music.next(guild);
 						}
+						
+						if (err.toString().includes('This video is unavailable')) {
+							music.textChannel.send(i18n.get('struct.music.video_unavailable', guild, { video: music.queue[0].meta.title.split(' (').slice(0, -1).join(' (') }));
+							return Music.next(guild);
+						}
 
 						console.warn(`error playing music: ${err}`);
 						guild.client.errorLog("Error playing music from YouTube", err.stack ? err.stack : err, `Video ID ${music.queue[0].id} after ${Math.round(dispatcher.totalStreamTime / 1000)} seconds`);
@@ -344,8 +349,6 @@ const Music = {
 					query = querystring.parse(query);
 					if (query.list) list = query.list;
 				}
-				
-				console.log('List: ' + list);
 
 				resolve ( {
 					id: id,

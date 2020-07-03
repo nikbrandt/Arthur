@@ -194,7 +194,7 @@ exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 			return await add(message, id, type, client, false, loadMessage, ipc, list);
 		} catch (e) {
 			errorLog('Error during play command adding', e.stack, `ID ${id} | Type ${type}`);
-			return ipc ? message.__('unavailable_in_us') : loadMessage.edit(message.__('unavailable_in_us'));
+			return ipc ? message.__('adding_song_error') : loadMessage.edit(message.__('adding_song_error'));
 		}
 	}
 
@@ -227,7 +227,7 @@ exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 		return await add(message, id, type, client, true, loadMessage, ipc, list);
 	} catch(e) {
 		message.guild.music = {};
-		return ipc ? e : loadMessage.edit(message.__('unavailable_in_us'));
+		return ipc ? e : loadMessage.edit(message.__('adding_song_error'));
 	}
 };
 

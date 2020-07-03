@@ -882,7 +882,7 @@
 			],
 			"cant_join_channel": "I can't join the channel you're in. Rude. I wanted to join you, and play you some tunes. The channel I wanted to join wasn't joinable. Do you see this conflict of interests?",
 			"could_not_connect": "Could not connect to voice channel - `$err`\nTry again, if you will. Or go complain in the support server.",
-			"unavailable_in_us": "The video you were trying to play is unavailable in the US - sorry, I'm based there, and can't really do much about that. ~~just reupload the video or gimme a soundcloud link~~",
+			"adding_song_error": "An unknown error has occured while adding that song (or songs). The error has been logged and should be resolved soon. Join the support server for more information.",
 			"footer_extra": "Position in queue: $position | Song will play in about $time",
 			"detected_playlist": "I detected a playlist in the link you sent. Would you like to queue all songs from the playlist?",
 			"playnext_playlist": "You cannot use the @@playnext command with a playlist, sorry."
@@ -1235,6 +1235,7 @@
 			"livestream": "Trying to play a livestream, eh? Well, no, sorry.",
 			"video_requires_payment": "The video `$video` requires payment to watch. I ain't buyin' that for ya. Skipping.",
 			"no_audio_track": "The video `$video` has no public audio track on YouTube; it's either a paid video or supremely broken. Can't play it for ya.",
+			"video_unavailable": "The video `$video` is unavailable. Could be copyright blocked, age restricted, country blocked, or just YouTube being mean. Sorry.",
 			"file_footer": "Added by $tag. | Invalid URLs will be skipped."
 		},
 		"message": {
