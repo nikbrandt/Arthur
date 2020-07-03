@@ -115,7 +115,7 @@
 			"no_name_changes": "Nic tu ni ma, kontynuuj.",
 			"embed_title": "Historia nazw użytkownika $name",
 			"name": "Nazwa",
-			"date_changed": "Zmieniono dnia",
+			"date_changed": "Zmieniono dnia (GMT)",
 			"embed_footer": "Strona $page z $maxPage | Oryginalna nazwa użytkownika była $name"
 		},
 		"mcserver": {

@@ -91,7 +91,7 @@
 			],
 			"embed_title": "Gebruikersnaam geschiedenis van $name",
 			"name": "Gebruikersnaam",
-			"date_changed": "Veranderd op",
+			"date_changed": "Veranderd op (GMT)",
 			"embed_footer": "Pagina $page van $maxPage | Eerste gebruikersnaam was $name"
 		},
 		"mcserver": {

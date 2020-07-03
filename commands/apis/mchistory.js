@@ -56,7 +56,8 @@ exports.run = async (message, args) => {
 	for (let object of reversed) {
 		if (index !== json.length && index >= 1) {
 			nameArray.push(`${index}. ${object.name}  \u200b`);
-			dateArray.push(moment(object.changedToAt).locale(locale).utc().format(i18n.get('time.moment.precise', message)));
+			if (object.changedToAt) dateArray.push(moment(object.changedToAt).locale(locale).utc().format(i18n.get('time.moment.precise', message)));
+			else dateArray.push('');
 		}
 		index--;
 	}

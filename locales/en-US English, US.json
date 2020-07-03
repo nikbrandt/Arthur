@@ -118,7 +118,7 @@
 			"no_name_changes": "Nothin' to see here, carry on.",
 			"embed_title": "Name history of $name",
 			"name": "Name",
-			"date_changed": "Date Changed",
+			"date_changed": "Date Changed (GMT)",
 			"embed_footer": "Page $page of $maxPage | Original username was $name"
 		},
 		"mcserver": {
