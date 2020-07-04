@@ -189,44 +189,43 @@ exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 
 	if (message.playnext && (type === 1.5 || type === 5.5)) return message.channel.send(message.__('playnext_playlist'));
 
-	if (message.guild.music && message.guild.music.queue) {
-		try {
-			return await add(message, id, type, client, false, loadMessage, ipc, list);
-		} catch (e) {
-			errorLog('Error during play command adding', { stack: e.stack, code: `ID ${id} | Type ${type}` });
-			return ipc ? message.__('adding_song_error') : loadMessage.edit(message.__('adding_song_error'));
-		}
-	}
-
-	if (!message.member.voice.channel.joinable) return ipc ? message.__('cant_join_channel') : loadMessage.edit(message.__('cant_join_channel'));
-
-	message.guild.music = {};
-	let stop = false;
-
-	try {
-		let errorInterval = setInterval(() => {
-			if (message.guild.voice && message.guild.voice.connection) {
-				clearInterval(errorInterval);
-				message.guild.voice.connection.on('error', err => {
-					if (!ipc) loadMessage.edit(message.__('could_not_connect', { err }));
-					stop = true;
-				});
-			}
-		}, 500);
-		
-		await message.member.voice.channel.join();
-	} catch (e) {
-		return loadMessage.edit(message.__('could_not_connect', { err: e.stack ? e.stack.split('\n')[0] : e }));
-	}
+	let first = !message.guild.music || !message.guild.music.queue;
+	let resumePlayback = !first && (!message.guild.voice || !message.guild.voice.connection);
 	
-	if (stop) return message.__('could_not_connect');
+	if (first || resumePlayback) {
+		if (!message.member.voice.channel.joinable) return ipc ? message.__('cant_join_channel') : loadMessage.edit(message.__('cant_join_channel'));
 
-	message.guild.music.playing = true;
+		if (first) message.guild.music = {};
+		let stop = false;
+
+		try {
+			let errorInterval = setInterval(() => {
+				if (message.guild.voice && message.guild.voice.connection) {
+					clearInterval(errorInterval);
+					message.guild.voice.connection.on('error', err => {
+						if (!ipc) loadMessage.edit(message.__('could_not_connect', { err }));
+						stop = err;
+					});
+				}
+			}, 500);
+
+			await message.member.voice.channel.join();
+		} catch (e) {
+			return loadMessage.edit(message.__('could_not_connect', { err: e.toString() }));
+		}
+
+		if (stop) return message.__('could_not_connect', { err: stop.toString() });
+
+		message.guild.music.playing = true;
+	}
 
 	try {
-		return await add(message, id, type, client, true, loadMessage, ipc, list);
+		let res = await add(message, id, type, client, first, loadMessage, ipc, list);
+		if (resumePlayback) Music.next(message.guild, true);
+		return res;
 	} catch(e) {
-		message.guild.music = {};
+		errorLog('Error during play command adding', { stack: e.stack, code: `ID ${id} | Type ${type}` });
+		if (first) message.guild.music = {};
 		return ipc ? e : loadMessage.edit(message.__('adding_song_error'));
 	}
 };
