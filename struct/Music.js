@@ -13,6 +13,7 @@ const soundcloud = require('./soundcloud.js');
 const { timeString } = require('./Util.js');
 
 const streamOptions = { volume: false, passes: 2, bitrate: 'auto', highWaterMark: 50 };
+const fileStreamOptions = { volume: false, passes: 2, bitrate: 'auto', highWaterMark: 1 << 27 };
 
 const supportedFileTypes = [ 'mp3', 'ogg', 'aac', 'm4a', 'mp4', 'mov', 'flac', 'ac3', 'wav', 'bcstm' ];
 const supportedFileTypesString = '`' + supportedFileTypes.join('`, `') + '`';
@@ -181,7 +182,7 @@ const Music = {
 					break;
 				}
 				case 4: { // from URL
-					let dispatcher = guild.voice.connection.play(music.queue[0].id, streamOptions);
+					let dispatcher = guild.voice.connection.play(music.queue[0].id, fileStreamOptions);
 
 					dispatcher.once('finish', () => {
 						Music.next(guild);
@@ -540,7 +541,7 @@ const Music = {
 							title: filename,
 							queueName: `[${filename}](${id})`,
 							url: id,
-							length: 1000 * 60 * 3 // can't accurately estimate music file length without complicated calculation
+							length: 60 * 3 // can't accurately estimate music file length without complicated calculation
 						},
 						embed: {
 							author: {
