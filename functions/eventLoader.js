@@ -108,29 +108,6 @@ exports.load = client => {
 		errorLog('Discord.JS Client Error', err);
 	});
 
-	client.on('shardReconnecting', id => {
-		statusUpdate({
-			title: 'Reconnecting',
-			footer: {
-				text: `Shard ${id}`
-			},
-			timestamp: new Date().toISOString(),
-			color: 0xfff53a
-		});
-	});
-
-	client.on('shardResume', (id, num) => {
-		statusUpdate({
-			title: 'Resumed',
-			description: `${num} events replayed.`,
-			footer: {
-				text: `Shard ${id}`
-			},
-			timestamp: new Date().toISOString(),
-			color: 0x39ffb0
-		});
-	});
-
 	process.on('unhandledPromiseRejection', (err, promise) => {
 		errorLog(`Unhandled Promise Rejection at ${promise}`, err);
 	});
