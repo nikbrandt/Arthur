@@ -25,7 +25,7 @@
 		"canvas": "^2.6.1",
 		"capture-website": "^0.8.1",
 		"discord.js": "^12.1.1",
-		"erlpack": "github:discordapp/erlpack",
+		"erlpack": "github:discordapp/erlpack#master",
 		"file-type": "^12.4.2",
 		"fluent-ffmpeg": "^2.1.2",
 		"hoek": "^5.0.4",
