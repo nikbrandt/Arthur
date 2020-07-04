@@ -32,12 +32,12 @@ async function youtube(id, message, client) {
 	try {
 		ytdlStream = ytdl.downloadFromInfo(info, { quality: 'highestaudio', requestOptions: { maxRedirects: 10 } });
 	} catch (e) {
-		client.errorLog('Error retrieving ytdl stream in mp3', e.stack, e.code);
+		client.errorLog('Error retrieving ytdl stream in mp3', e);
 		return message.edit(message.__('song_not_found')).catch(() => {});
 	}
 
 	finish(ytdlStream, title, parseInt(info.videoDetails.lengthSeconds), message, client, info.videoDetails.thumbnail.thumbnails[0].url, `https://youtu.be/${id}`).catch((e) => {
-		client.errorLog('Error finishing mp3 from YT source', e.stack, e.code);
+		client.errorLog('Error finishing mp3 from YT source', e);
 		return message.edit(message.__('song_not_found')).catch(() => {});
 	});
 }
@@ -86,7 +86,7 @@ async function finish(stream, title, length, message, client, thumbnail, url) {
 				try {
 					body = JSON.parse(body);
 				} catch (e) {
-					client.errorLog('Error parsing upload API body in mp3', e.stack, e.code);
+					client.errorLog('Error parsing upload API body in mp3', e);
 					return message.channel.send(message.__('error', { err: e }));
 				}
 
@@ -115,7 +115,7 @@ async function finish(stream, title, length, message, client, thumbnail, url) {
 
 			msg.delete().catch(() => {});
 
-			client.errorLog('Error converting to mp3', err.stack, err.code);
+			client.errorLog('Error converting to mp3', err);
 			message.channel.send(message.__('error', { err }));
 		});
 }
@@ -139,7 +139,7 @@ exports.run = async (message, args, suffix, client) => {
 		let length = Math.round(info.duration / 1000);
 		let thumbnail = info.artwork_url;
 
-		finish(stream, title, length, message, client, thumbnail, args[0]).catch(console.error);
+		finish(stream, title, length, message, client, thumbnail, args[0]).catch(client.errorLog.simple);
 	} else if (!YTRegex.test(args[0])) {
 		let sOpts = {
 			maxResults: 1,
@@ -151,11 +151,11 @@ exports.run = async (message, args, suffix, client) => {
 			if (err) return message.channel.send(message.__('no_results'));
 
 			id = results[0].id;
-			youtube(id, message, client).catch(console.error);
+			youtube(id, message, client).catch(client.errorLog.simple);
 		});
 	} else {
 		id = args[0].match(YTRegex)[4];
-		youtube(id, message, client).catch(console.error);
+		youtube(id, message, client).catch(client.errorLog.simple);
 	}
 };
 

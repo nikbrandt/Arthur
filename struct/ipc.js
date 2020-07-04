@@ -466,7 +466,7 @@ let ipcObject = client => {
 							try {
 								await sql.run(`UPDATE userOptions SET ${questionArray.join(', ')} WHERE guildID = ${id}`, inputArray);
 							} catch (e) {
-								console.error('Sqlite error while updating guildOptions in IPC module:\n', e);
+								client.errorLog('Sqlite error while updating guildOptions in IPC module', e);
 								error = 'Sqlite error'
 							}
 

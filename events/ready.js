@@ -125,23 +125,20 @@ module.exports = client => {
 				sql.run('DELETE FROM pollReactionCollectors WHERE messageID = ?', [obj.messageID]).catch(console.log);
 			})
 		});
-	}).catch(console.error);
+	}).catch(client.errorLog.simple);
 
 	const crashPath = require('path').join(__basedir, '..', 'media', 'temp', 'crash.txt');
 	if (fs.existsSync(crashPath)) fs.readFile(crashPath, 'utf8', (err, data) => {
-		if (err) {
-			console.error('Error loading previous error:\n', err);
-			return client.errorLog('Error loading previous error', err.stack, err.code);
-		}
+		if (err) return client.errorLog('Error loading previous error', err);
 
 		let datarray = data.split('\n');
 		const code = datarray.shift();
 		const stack = datarray.join('\n');
 
-		client.errorLog('Previous crash error', stack, code);
+		client.errorLog('Previous crash error', { stack, code }, true);
 
 		fs.unlink(crashPath, err => {
-			if (err) console.error('Could not delete previous crash.txt file:\n', err.stack);
+			if (err) client.errorLog('Could not delete previous crash.txt file', err);
 		});
 	});
 };

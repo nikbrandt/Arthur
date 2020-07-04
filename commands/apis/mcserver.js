@@ -73,8 +73,7 @@ exports.run = async (message, args, s, client) => {
 				.setColor(0x00c140);
 			
 			if (captureError) {
-				console.log('mcserver command error while rendering webshot - rip\n', captureError);
-				errorLog('mcserver command failed while getting webshot', captureError.stack, captureError.code);
+				errorLog('mcserver command failed while getting webshot', captureError);
 				embed.setDescription('```\n' + body.motd.clean.join('\n') + '```');
 			} else {
 				files.push({ attachment: fileLocation, name: 'motd.png' });

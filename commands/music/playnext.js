@@ -5,7 +5,7 @@ exports.run = (message, args, suffix, client, permLevel, prefix, ipc) => {
 
 	message.playnext = true;
 
-	client.commands.get('play').run(message, args, suffix, client, permLevel, prefix, ipc).catch(console.error);
+	client.commands.get('play').run(message, args, suffix, client, permLevel, prefix, ipc).catch(client.errorLog.simple);
 };
 
 exports.config = {

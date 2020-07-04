@@ -30,7 +30,7 @@ exports.run = async (message, args, suffix, client) => {
 
 	const crashPath = require('path').join(__basedir, '..', 'media', 'temp', 'crash.txt');
 	if (fs.existsSync(crashPath)) fs.unlink(crashPath, err => {
-		if (err) console.error('Could not delete previous crash.txt file:\n', err.stack);
+		if (err) client.errorLog('Could not delete previous crash.txt file', err);
 	});
 
 	if (manager) message.channel.send('Restarting shard manager/bot.').then(() => client.shard.send({restart: true}));

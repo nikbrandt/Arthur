@@ -1,5 +1,7 @@
 const fs = require('fs');
 
+const { errorLog } = require('./eventLoader');
+
 let count = 0;
 let i = -1;
 
@@ -63,7 +65,7 @@ module.exports = (client, reload) => {
 					try {
 						if (dF !== '.DS_Store') loadCmd(`${f}/${dF}`, dF, client, reload);
 					} catch (err) {
-						console.error(`Error loading ${f}/${dF}:\n${err.stack ? err.stack : err}`);
+						errorLog(`Error loading ${f}/${dF}`, err);
 					}
 					
 				});
@@ -71,7 +73,7 @@ module.exports = (client, reload) => {
 				if (f !== '.DS_Store') loadCmd(f, f, client);
 			}
 		} catch (err) {
-			console.error(`Error loading ${f}:\n${err.stack ? err.stack : err}`);
+			errorLog(`Error loading ${f}`, err);
 		}
 	});
 

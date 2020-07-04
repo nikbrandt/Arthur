@@ -42,7 +42,7 @@ class ArthurClient extends Client {
 		await this.i18n.init();
 		this.totalXP = (await sql.get('SELECT SUM(global) FROM (SELECT DISTINCT userID, global FROM xp)'))['SUM(global)'];
 		
-		this.login(this.test ? this.config.testToken : this.config.token).catch(console.error);
+		this.login(this.test ? this.config.testToken : this.config.token).catch(this.errorLog.simple);
 	}
 	
 	broadcastEval(script) {

@@ -10,7 +10,15 @@ function statusUpdate (embed) {
 	if (!(process.argv[2] && process.argv[2] === 'test')) statusWebhookClient.send({ embeds: [ embed ] }).catch(() => {});
 }
 
-const errorLog = (error, stack, code) => {
+const errorLog = (shortError, error, noConsole) => {
+	if (!noConsole) {
+		console.error(shortError);
+		console.error(error);
+	}
+	
+	let { stack, code} = error;
+	if (!stack) stack = error;
+	
 	if (process.argv[2] && process.argv[2] === 'test') {
 		if (process.env['ARTHUR_ERRORLOG'] !== 'true') return;
 		code += ' | Testbot error';
@@ -18,7 +26,7 @@ const errorLog = (error, stack, code) => {
 
 	errorWebhookClient.send({
 		embeds: [ {
-			title: error,
+			title: shortError,
 			description: '```js\n' + stack + '```',
 			footer: {
 				text: code + ` | Shard ${errorLog.shardID}` + (errorLog.lastCommand ? ` | last command: ${errorLog.lastCommand}` : '')
@@ -29,6 +37,10 @@ const errorLog = (error, stack, code) => {
 	}).catch((e) => {
 		console.error('Error sending error webhook:\n', e.stack);
 	});
+};
+
+errorLog.simple = error => {
+	errorLog(`Error from ${errorLog.simple.caller}`, error);
 };
 
 const rawEvents = {
@@ -93,8 +105,7 @@ exports.load = client => {
 	});
 
 	client.on('error', err => {
-		console.error('Client error\n', err);
-		errorLog('Discord.JS Client Error', err, err.code);
+		errorLog('Discord.JS Client Error', err);
 	});
 
 	client.on('shardReconnecting', id => {
@@ -121,14 +132,12 @@ exports.load = client => {
 	});
 
 	process.on('unhandledPromiseRejection', (err, promise) => {
-		errorLog('Unhandled Promise Rejection', err.stack, err.code);
-		console.error('Unhandled Promise Rejection at ', promise, ':\n', err);
+		errorLog(`Unhandled Promise Rejection at ${promise}`, err);
 	});
 
 	process.on('unhandledRejection', (err, promise) => {
 		if (err.code === 'ERR_IPC_CHANNEL_CLOSED') process.exit();
-		errorLog('Unhandled Rejection Error', err.stack, err.code);
-		console.error('Unhandled Promise Rejection at ', promise, ':\n', err);
+		errorLog(`Unhandled Rejection Error at ${promise}`, err);
 	});
 
 	process.on('uncaughtException', err => {

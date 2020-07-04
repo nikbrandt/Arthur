@@ -39,7 +39,7 @@ exports.run = (message, args, suffix, client) => {
 		};
 		
 		client.broadcastEval(`let channel = this.channels.cache.get('${config.trello.channel}');
-		if (channel) channel.send(${JSON.stringify(messageOptions)}).then(() => true);`).catch(console.error);
+		if (channel) channel.send(${JSON.stringify(messageOptions)}).then(() => true);`).catch(client.errorLog.simple);
 
 		message.channel.send(message.__('success', { extra: message.guild && message.guild.id === '304428345917964290' ? '' : '\n' + message.__('check_support_server', { link: client.config.info.guildLink }) }));
 	}).catch(err => {

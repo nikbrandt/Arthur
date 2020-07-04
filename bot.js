@@ -56,7 +56,7 @@ function sqlPromise(type, query, args) {
 	});
 }
 
-client.init().catch(console.error);
+client.init().catch(errorLog.simple);
 
 const clientEval = (function(script) {
 	return eval(script);
@@ -113,7 +113,7 @@ process.on('message', message => {
 					error: err,
 					id: id
 				}
-			}).catch(console.error);
+			}).catch(errorLog.simple);
 		}
 		
 		if (!(result instanceof Promise)) return client.shard.send({
@@ -121,7 +121,7 @@ process.on('message', message => {
 				result: result,
 				id: id
 			}
-		}).catch(console.error);
+		}).catch(errorLog.simple);
 		
 		result.then(result => {
 			client.shard.send({
@@ -129,14 +129,14 @@ process.on('message', message => {
 					result: result,
 					id: id
 				}
-			}).catch(console.error);
+			}).catch(errorLog.simple);
 		}).catch(err => {
 			client.shard.send({
 				eval: {
 					error: err,
 					id: id
 				}
-			}).catch(console.error);
+			}).catch(errorLog.simple);
 		});
 		
 		return;

@@ -15,8 +15,8 @@ exports.run = async (message, args, suffix) => {
 	let suggesterID = splitText[splitText.length - 1];
 	
 	trello.updateCard(cardID, 'closed', true).catch(err => {
-		message.channel.send('Card update failed, error logged to console.');
-		console.error(err);
+		message.channel.send('Card update failed, error logged');
+		message.client.errorLog('Error updating trello card for reject command', err);
 	}).then(() => {
 		message.noDelete = true;
 		

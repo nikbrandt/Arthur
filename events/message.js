@@ -53,7 +53,7 @@ module.exports = async (client, message) => {
 		humongoji = false;
 	} else if (message.guild) {
 		let row = await sql.get(`SELECT prefix, levels, levelMessage, humongoji FROM guildOptions WHERE guildID = '${message.guild.id}'`);
-		XP.addXP(message, row).catch(console.error);
+		XP.addXP(message, row).catch(errorLog.simple);
 		if (row) {
 			prefix = row.prefix;
 			humongoji = row.humongoji === 'true';
@@ -91,7 +91,7 @@ module.exports = async (client, message) => {
 			};
 			
 			client.broadcastEval(`let channel = this.channels.cache.get('${config.messageLogChannel}');
-			if (channel) channel.send(${JSON.stringify(messageObject)}).then(() => {});`).catch(console.error);
+			if (channel) channel.send(${JSON.stringify(messageObject)}).then(() => {});`).catch(errorLog.simple);
 
 			client.lastMessage = message.author;
 		}
@@ -211,8 +211,7 @@ module.exports = async (client, message) => {
 		errorLog.lastCommand = command;
 		await cmdFile.run(message, args, suffix, client, perms, prefix);
 	} catch (err) {
-		errorLog(`Error while running ${command} | ${err.message}`, err.stack, err.code);
-		console.error(`Command ${command} has failed to run!\n${err.stack}`);
+		errorLog(`Error while running ${command} | ${err.message}`, err);
 	}
 	
 	if (cmdFile.config.queued) {

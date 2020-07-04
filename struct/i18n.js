@@ -213,8 +213,7 @@ class i18n {
 		let file = this._locales.get(locale);
 		if (!file) {
 			let error = new Error('Invalid locale: ' + locale);
-			errorLog('i18n error', error.stack, 42069);
-			console.error(error);
+			errorLog('i18n error', error);
 			locale = 'en-US';
 			file = this._locales.get(locale);
 		}
@@ -237,16 +236,14 @@ class i18n {
 			if (locale === 'en-US') {
 				selection = this.getString('struct.i18n.response_not_found', _originalLocale, { string });
 				let error = new Error('en-US locale missing string `' + string + '`');
-				errorLog('i18n error', error.stack, 420);
-				console.error('en-US locale missing string ' + string);
+				errorLog('i18n error', error);
 			} else return this.getString(string, 'en-US', variables, locale);
 		}
 		
 		if (typeof selection !== 'string' && !selection instanceof Array) {
 			selection = this.getString('struct.i18n.response_not_found', locale, { string });
 			let error = new Error(`Locale string ${string} returning ${selection}`);
-			errorLog('i18n error', error.stack, 69);
-			console.error(`Locale string ${string} returning ${selection}`);
+			errorLog('i18n error', error);
 		}
 		
 		if (selection instanceof Array) selection = selection[Math.floor(Math.random() * selection.length)];

@@ -174,8 +174,7 @@ const Music = {
 							return Music.next(guild);
 						}
 
-						console.warn(`error playing music: ${err}`);
-						guild.client.errorLog("Error playing music from YouTube", err.stack ? err.stack : err, `Video ID ${music.queue[0].id} after ${Math.round(dispatcher.totalStreamTime / 1000)} seconds`);
+						guild.client.errorLog("Error playing music from YouTube", { stack: err.stack ? err.stack : err, code: `Video ID ${music.queue[0].id} after ${Math.round(dispatcher.totalStreamTime / 1000)} seconds` });
 						Music.next(guild);
 					});
 					
@@ -194,8 +193,7 @@ const Music = {
 					});
 
 					dispatcher.on('error', err => {
-						console.warn(`error playing music: ${err}`);
-						guild.client.errorLog("Error playing music from URL", err.stack ? err.stack : err, `After ${Math.round(dispatcher.totalStreamTime / 1000)} seconds, URL:` + music.queue[0].id);
+						guild.client.errorLog("Error playing music from URL", { stack: err.stack ? err.stack : err, code: `After ${Math.round(dispatcher.totalStreamTime / 1000)} seconds, URL:` + music.queue[0].id });
 						Music.next(guild);
 					});
 					
@@ -215,8 +213,7 @@ const Music = {
 					});
 	
 					dispatcher.on('error', err => {
-						console.warn(`error playing music: ${err}`);
-						guild.client.errorLog("Error playing music from local file", err.stack ? err.stack : err, `File ${music.queue[0].id} after ${Math.round(dispatcher.totalStreamTime / 1000)} seconds`);
+						guild.client.errorLog("Error playing music from local file", { stack: err.stack ? err.stack : err, code: `File ${music.queue[0].id} after ${Math.round(dispatcher.totalStreamTime / 1000)} seconds` });
 						Music.next(guild);
 					});
 					
@@ -241,8 +238,7 @@ const Music = {
 					});
 
 					dispatcher.on('error', err => {
-						console.warn(`error playing music: ${err}`);
-						guild.client.errorLog("Error playing music from Soundcloud", err.stack ? err.stack : err, `Soundcloud ID ${music.queue[0].id} after ${Math.round(dispatcher.totalStreamTime / 1000)} seconds`);
+						guild.client.errorLog("Error playing music from Soundcloud", { stack: err.stack ? err.stack : err, code: `Soundcloud ID ${music.queue[0].id} after ${Math.round(dispatcher.totalStreamTime / 1000)} seconds` });
 						Music.next(guild);
 					});
 				}
@@ -423,7 +419,7 @@ const Music = {
 						else if (!results.items) error = 'No items array.';
 						else if (!results.items[0]) error = 'No elements in the items array.';
 						else error = 'No link in first element of array.';
-						message.client.errorLog('No YouTube results found.', `Query: ${suffix}\n${error}`);
+						message.client.errorLog('No YouTube results found.', `Query: ${suffix}\n${error}`, true);
 
 						return soundcloud.search(suffix).then(result => {
 							if (!result) return reject(message._('no_results'));
@@ -649,7 +645,7 @@ const Music = {
 			}
 
 			reaction.users.remove(user).catch(err => {
-				console.error('failed to remove reaction; \n' + err.stack);
+				client.errorLog('Failed to remove reaction from music collector', err);
 			})
 		});
 

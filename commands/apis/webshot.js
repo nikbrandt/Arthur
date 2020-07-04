@@ -55,8 +55,7 @@ exports.run = async (message, args, s, client) => {
 			if (err.toString().includes('value 1')) message.channel.send(message.__('invalid_url'));
 			else if (err.toString().includes('timeout setting')) message.channel.send(message.__('timed_out'));
 			else {
-				console.error('Unknown webshot error:');
-				console.error(err);
+				client.errorLog('Unknown webshot error', err);
 				message.channel.send(message.__('unknown_error', { err: err.toString() })).catch(() => {
 					message.channel.send(message.__('unknown_error', { err: 'Please join Arthur\'s support server for further help.' })).catch(() => {});
 				});

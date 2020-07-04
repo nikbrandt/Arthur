@@ -193,7 +193,7 @@ exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 		try {
 			return await add(message, id, type, client, false, loadMessage, ipc, list);
 		} catch (e) {
-			errorLog('Error during play command adding', e.stack, `ID ${id} | Type ${type}`);
+			errorLog('Error during play command adding', { stack: e.stack, code: `ID ${id} | Type ${type}` });
 			return ipc ? message.__('adding_song_error') : loadMessage.edit(message.__('adding_song_error'));
 		}
 	}

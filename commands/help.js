@@ -23,7 +23,7 @@ exports.run = async (message, args, suffix, client, perms, prefix) => {
 			} else try {
 				meta = i18n.getMeta(name, message) || com.meta;
 			} catch (e) {
-				if (e !== `en-US locale missing string commands.${name}.meta`) console.error(e);
+				if (e.toString() !== `en-US locale missing string commands.${name}.meta`) client.errorLog('Error getting meta for command while generating help'. e);
 			}
 			if (!meta) return;
 
@@ -81,7 +81,7 @@ exports.run = async (message, args, suffix, client, perms, prefix) => {
 		} else try {
 			meta = i18n.getMeta(name, message) || command.meta;
 		} catch (e) {
-			if (e !== `en-US locale missing string commands.${name}.meta`) console.error(e);
+			if (e !== `en-US locale missing string commands.${name}.meta`) client.errorLog('Error getting individual command meta for help command display', e);
 		}
 
 		if (!meta) return message.channel.send(message.__('invalid_command', { command: args[0] }));

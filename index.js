@@ -10,6 +10,8 @@ exports.broadcastEval = broadcastEval; // such that the post() function below ha
 
 const config = require('../media/config');
 const { post } = require('./functions/dbots');
+const { errorLog } = require('./functions/eventLoader');
+errorLog.shardID = 'Manager';
 
 const test = !!(process.argv[2] && process.argv[2] === 'test');
 
@@ -32,8 +34,8 @@ sqlite.open({
 }).then(db => {
 	sql = db;
 
-	manager.spawn().catch(console.error);
-}).catch(console.error);
+	manager.spawn().catch(errorLog.simple);
+}).catch(errorLog.simple);
 
 let stopwatchUserObject = {};
 
@@ -51,7 +53,7 @@ manager.on('shardCreate', shard => {
 		shard.send({
 			uptime: Date.now() - Math.floor(process.uptime() * 1000),
 			id: shard.id
-		}).catch(console.error);
+		}).catch(errorLog.simple);
 	});
 	
 	shard.on('message', message => {
@@ -131,7 +133,7 @@ manager.on('shardCreate', shard => {
 						error: error,
 						id: queueObj.returnID
 					}
-				}).catch(console.error);
+				}).catch(errorLog.simple);
 			}
 			
 			queueObj.shards++;
@@ -150,7 +152,7 @@ manager.on('shardCreate', shard => {
 					result: results,
 					id: queueObj.returnID
 				}
-			}).catch(console.error);
+			}).catch(errorLog.simple);
 			
 			queue.delete(id);
 			
@@ -212,21 +214,20 @@ function sqlThen(shard, id, result, timeline) {
 			id: id,
 			result: result
 		}
-	}).catch(console.error).then(() => {
+	}).catch(errorLog.simple).then(() => {
 		handleSQLTimeline(timeline);
 	});
 }
 
 function sqlCatch(shard, id, error, timeline) {
-	console.error('SQL Error:');
-	console.error(error);
+	errorLog('SQL error', error);
 
 	shard.send({
 		sql: {
 			id: id,
 			error: error
 		}
-	}).catch(console.error).then(() => {
+	}).catch(errorLog.simple).then(() => {
 		handleSQLTimeline(timeline);
 	});
 }
@@ -264,5 +265,5 @@ setInterval(() => {
 }, 30000);
 
 if (!test) setInterval(() => {
-	post().catch(console.error);
+	post().catch(errorLog.simple);
 }, 1000 * 60 * 2);

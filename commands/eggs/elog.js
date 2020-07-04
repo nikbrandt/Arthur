@@ -7,7 +7,7 @@ exports.run = (message, args, suffix, client, permLevel, prefix, ipc) => {
 
 	const song = LINKS[Math.floor(Math.random() * LINKS.length)];
 
-	client.commands.get('play').run(message, [ song ], song, client, permLevel, prefix, ipc).catch(console.error);
+	client.commands.get('play').run(message, [ song ], song, client, permLevel, prefix, ipc).catch(client.errorLog.simple);
 };
 
 exports.config = {

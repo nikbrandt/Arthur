@@ -142,7 +142,7 @@ class XP {
 		let entries = await sql.all(`SELECT DISTINCT userID, global FROM xp`);
 
 		if (!entries) {
-			console.error('No sqlite entries, xp.js#144');
+			client.errorLog('No sqlite entries', new Error('No SQL entries in global leaderboard func'));
 			return {
 				max: 1,
 				array: ['no entries found - you shouldn\'t ever see this - please report it']

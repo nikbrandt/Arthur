@@ -383,7 +383,7 @@ async function quote(message) {
 
 		message.channel.send(`You have been charged 10 ${COIN_EMOJI}. Enjoy.`, { files: [{ attachment: canvas.toBuffer(), name: 'inspiration.png' }] });
 	}).catch(err => {
-		console.error(err);
+		message.client.errorLog('Error getting subreddit meme in duck command', err);
 		message.channel.send(`The ducks are not with us today, because I cannot get a duck image. At least the 10 ${COIN_EMOJI} transfer from your account worked.`);
 	})
 }
