@@ -663,7 +663,9 @@ const Music = {
 		let ellapsedTime = Music.calculateEllapsedTime(guild);
 		let queueLength = guild.music.queue.reduce((accum, current) => accum + parseInt(current.meta.length), 0);
 
-		return queueLength - ellapsedTime;
+		let length = queueLength - ellapsedTime;
+		if (length < 0) return 0;
+		return length;
 	},
 
 	calculateEllapsedTime: (guild) => {
