@@ -5,8 +5,10 @@ const { objectMap, timeString } = require('../../struct/Util.js');
 const { calculateQueueLength, calculateEllapsedTime } = require('../../struct/Music.js');
 
 let add = async (message, id, type, client, first, loadMessage, ipc, playlistQuery) => {
+	const nowPlayingMessage= i18n.get('struct.music.now_playing', message);
+	
 	let title = first
-		? i18n.get('struct.music.now_playing', message)
+		? nowPlayingMessage
 		: i18n.get('struct.music.added_to_queue', message);
 
 	let playlist = type % 1 > .3; // playlists have a .5 added to the type; dividing by 1 will produce a remainder > .3 (not === .5 because binary math).
@@ -31,6 +33,11 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 		queueObj = obj[0];
 	} else queueObj = { type: type, person: message.author, id: id, meta: obj.meta, embed: obj.embed };
 
+	if (!message.guild.music || !message.guild.music.queue) { // Recheck first after having to await the info 
+		first = true;
+		if (queueObj.embed) queueObj.embed.author.name = nowPlayingMessage;
+	}
+	
 	let footerStore = queueObj.embed ? queueObj.embed.footer.text : null;
 	if (!first && footerStore) queueObj.embed.footer.text += ' | ' + message.__('footer_extra', {
 		position: message.playnext ? 2 : message.guild.music.queue.length + 1,
