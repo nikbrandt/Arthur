@@ -67,6 +67,7 @@ module.exports = async (client, message) => {
 	if (!message.content.toLowerCase().startsWith(prefix) && !message.content.startsWith(`<@${client.user.id}>`) && !message.content.startsWith(`<@!${client.user.id}>`)) {
 		if (message.channel.type !== 'text') {
 			if (/^[^ ]*help$/i.test(message.content)) return message.channel.send(i18n.get('struct.message.dm_help', message));
+			if (/^(?:https:\/\/)?discord.gg\/[A-Za-z0-9]+$/.test(message.content)) return message.channel.send(i18n.get('struct.message.invite_help', message));
 			if (/^idol\s|\sidol\s|\sidol$|idol/g.test(message.content)) return message.channel.send('Arthur is not a Survivor ORG bot. You won\'t find whatever an "idol" is here. Thanks.');
 
 			let authorID;

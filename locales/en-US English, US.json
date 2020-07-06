@@ -1240,6 +1240,7 @@
 		},
 		"message": {
 			"dm_help": "My prefix is `a.`; do `a.help` for help.",
+			"invite_help": "To invite Arthur to your server, use the `a.invite` command. Bots unfortunately cannot use invite links.",
 			"command_disabled": "This command is currently disabled. Join the support server for more information.",
 			"bot_missing_perms": "I lack the permissions(s) needed to run this command: $perms",
 			"user_missing_perms_emoji": ":missingpermissions:407054344874229760",
