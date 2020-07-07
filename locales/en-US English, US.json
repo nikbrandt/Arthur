@@ -437,6 +437,30 @@
 				"What do you think I'm supposed to esrever?"
 			]
 		},
+		"spacify": {
+			"meta": {
+				"command": "spacify",
+				"name": "Spacify",
+				"description": "A d d   s o m e   s p a c e",
+				"usage": "<text>",
+				"help": "Add some space to text. Y o u   k n o w."
+			},
+			"no_args": "Y o u   t h i n k   I   c a n   s p a c i f y   n o t h i n g ?",
+			"too_big": "Unfortunately, the implication of the colossal text you've provided with me is that... I can't send a message with your text spaced out. Try a little smaller of a text, perhaps?"
+		},
+		"spongebob": {
+			"meta": {
+				"command": "spongebob",
+				"aliases": [
+					"spongebobify", "alternatecaps"
+				],
+				"name": "Spongebob-ify",
+				"description": "It'S tImE tO sPoNgEbOb SoMe TeXt",
+				"usage": "<text>",
+				"help": "Spongebob-ify some text. yOu KnOw."
+			},
+			"no_args": "I need something to spongebob-ify :("
+		},
 		"stopwatch": {
 			"meta": {
 				"command": "stopwatch",
