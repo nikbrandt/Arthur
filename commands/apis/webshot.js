@@ -54,6 +54,8 @@ exports.run = async (message, args, s, client) => {
 		if (err) {
 			if (err.toString().includes('value 1')) message.channel.send(message.__('invalid_url'));
 			else if (err.toString().includes('timeout setting')) message.channel.send(message.__('timed_out'));
+			else if ([ 'ERR_NAME_NOT_RESOLVED', 'ERR_NAME_RESOLUTION_FAILED' ].some(e => err.toString().includes(e))) message.channel.send(message.__('dns_failed'));
+			else if (err.toString().includes('ERR_CERT_COMMON_NAME_INVALID')) message.channel.send(message.__('invalid_certificate'));
 			else {
 				client.errorLog('Unknown webshot error', err);
 				message.channel.send(message.__('unknown_error', { err: err.toString() })).catch(() => {

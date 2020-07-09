@@ -270,7 +270,9 @@
 				"title": "Render of $url",
 				"description": "Website can be found [here]($url)\nI am not responsible for the content of this website.",
 				"footer": "Requested by $name"
-			}
+			},
+			"invalid_certificate": "This website's certificate is invalid; essentially, it's too insecure to connect to.",
+			"dns_failed": "The DNS query for this website failed. Try again later if you know this site works."
 		},
 		"xkcd": {
 			"meta": {
