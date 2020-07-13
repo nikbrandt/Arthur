@@ -121,9 +121,11 @@ function help(message) {
 		message.channel.send({ embed: {
 			color: THEME_COLOR,
 			author: {
-				name: message.args[0].charAt(0).toUpperCase() + message.args[0].substring(1).toLowerCase()
+				name: arg.run.name.charAt(0).toUpperCase() + arg.run.name.substring(1)
 			},
-			description: arg.description ? arg.help + '\n' + arg.description : arg.help + (arg.aliases ? '\nAliases: `' + arg.aliases.join('`, `') + '`' : ''),
+			description: arg.help + (arg.description ? '\n' + arg.description : '')
+				+ (arg.aliases ? '\nAliases: `' + arg.aliases.join('`, `') + '`' : '')
+				+ '\nUsage: `' + arg.run.name + (arg.usage ? ' ' + arg.usage + '`' : '`'),
 			footer: {
 				text: '<> denotes a required argument and [] denotes an optional argument. Please don\'t type them.'
 			}
@@ -268,7 +270,7 @@ async function leaderboard(message) {
 		description: formattedEntries.join('\n'),
 		color: THEME_COLOR,
 		footer: {
-			text: `Page ${page} of ${maxPage} | You are rank ${userLocation} on page ${userPage}.`
+			text: `Page ${page} of ${maxPage} | You are rank ${userLocation + 1} on page ${userPage + 1}.`
 		}
 	}})
 }
@@ -420,7 +422,11 @@ exports.meta = {
 	help: 'whoooo boy. use `duck help` to see how to use this wild command.'
 };
 
-let changelogText = `**v0.5**
+let changelogText = `**v0.5.1**
+ - Show \`usage\` field in help for individual arguments, as was intended
+ - Fix leaderboard page/rank display in footer
+
+**v0.5**
 Been a hot sec, but I didn't *entirely* forget, I promise.
  - \`quote\` command so you can spend your daily BTC on something
  - Implemented some rebel duck code, you'll see him in a future update
