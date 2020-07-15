@@ -1,9 +1,13 @@
 const moment = require('moment');
 const needle = require('needle');
 const Canvas = require('canvas');
+const { WebhookClient } = require('discord.js');
 
+const { errorLog } = require('../../functions/eventLoader');
 const { getSubredditMeme } = require('../fun/meme');
-const findMember = require('../../functions/findMember.js');
+const findMember = require('../../functions/findMember');
+
+const config = require('../../../media/config.json');
 
 const VERSION = '0.1.3';
 const THEME_COLOR = 0xfcba03;
@@ -11,8 +15,16 @@ const COIN_EMOJI = '<:duckcoin:696521259256905779>';
 
 let init = false;
 let curDuck;
+let pastLeaderboard;
 
-setTimeout(async () => {
+let interval = setInterval(() => {
+	if (i18n && sql && sql.get) {
+		clearInterval(interval);
+		start().catch(errorLog.simple);
+	}
+}, 1000);
+
+async function start() {
 	let enUS = i18n._aliases.get('en-US');
 	enUS.set('duck', 'nik');
 	enUS.set('duk', 'nik');
@@ -23,9 +35,13 @@ setTimeout(async () => {
 	curDuck = obj['MAX(duckID'];
 
 	Canvas.registerFont('../media/fonts/Impact.ttf', { family: 'Impact' });
+	
+	pastLeaderboard = await sql.all(`SELECT userID, coins FROM duckEconomy ORDER BY coins DESC LIMIT 11`);
+	
+	setInterval(sendLedger, 1000 * 5);
 
 	init = true;
-}, 2000);
+}
 
 let meta = {
 	help: {
@@ -110,6 +126,53 @@ function rebelDuck(probability = 0.05) {
 	return Math.random() < probability;
 }
 
+// -------------------------------------
+//    Webhook (Ledger) Implementation
+// -------------------------------------
+
+const ledgerWebhook = new WebhookClient(config.duckLog.id, config.duckLog.token);
+let ledger = [];
+
+async function sendLedger() {
+	if (ledger.length === 0) return;
+	
+	await ledgerWebhook.send({
+		embeds: [ {
+			color: THEME_COLOR,
+			description: ledger.map(cur => {
+				switch (cur.type) {
+					case 'transfer':
+						return `**${cur.amount}** ${COIN_EMOJI} transferred from **${cur.from}** (${cur.senderBal}) to **${cur.to}** (${cur.receiverBal})`;
+					case 'leaderboard':
+						return `**${cur.user}** moved from leaderboard position **${cur.from}** to **${cur.to}**`;
+				}
+			}).join('\n')
+		} ]
+	});
+	
+	ledger = [];
+}
+
+async function checkLeaderboardChange(client) {
+	let curLeaderboard = await sql.all(`SELECT userID, coins FROM duckEconomy ORDER BY coins DESC LIMIT 11`);
+	
+	for (let i = 0; i < 10; i++) {
+		if (!pastLeaderboard[i]) break;
+		if (pastLeaderboard[i].userID === curLeaderboard[i].userID) continue;
+		
+		let newPos = curLeaderboard.findIndex(obj => obj.userID === pastLeaderboard[i].userID);
+		
+		ledger.push({
+			type: 'leaderboard',
+			user: (await client.users.fetch(pastLeaderboard[i].userID)).username,
+			from: i + 1,
+			to: newPos + 1
+		})
+	}
+	
+	pastLeaderboard = curLeaderboard;
+}
+
 // --------------------------------------
 //    Arguments (commands) begin here.
 // --------------------------------------
@@ -172,7 +235,8 @@ async function transfer(message) {
 	
 	let [ user ] = await Promise.all([
 		sql.get('SELECT coins FROM duckEconomy WHERE userID = ?', [ message.author.id ]),
-		sql.run('INSERT OR IGNORE INTO duckEconomy (userID) VALUES (?)', [ message.author.id ])
+		sql.run('INSERT OR IGNORE INTO duckEconomy (userID) VALUES (?)', [ message.author.id ]),
+		sql.run('INSERT OR IGNORE INTO duckEconomy (userID) VALUES (?)', [ obj.user.id ])
 	]);
 	if (!user) user = { coins: 0 };
 	
@@ -190,7 +254,18 @@ async function transfer(message) {
 	message.channel.send({embed: {
 		description: `${message.member.displayName}, you've transfered ${COIN_EMOJI}${num} to ${obj.member.displayName}.`,
 		color: THEME_COLOR
-	}})
+	}});
+	
+	ledger.push({
+		type: 'transfer',
+		from: message.author.username,
+		to: obj.user.username,
+		amount: num,
+		senderBal: user.coins - num,
+		receiverBal: (await sql.get('SELECT coins FROM duckEconomy WHERE userID = ?', [ obj.user.id ])).coins
+	});
+	
+	checkLeaderboardChange(message.client).catch(errorLog.simple);
 }
 
 async function daily(message) {
@@ -224,7 +299,9 @@ async function daily(message) {
 		description: `${add} DuckCoins added for a total of ${COIN_EMOJI} ${coins}${out}`
 	}});
 	
-	sql.run('UPDATE duckEconomy SET coins = ?, lastDaily = ? WHERE userID = ?', [ coins, today, message.author.id ]);
+	await sql.run('UPDATE duckEconomy SET coins = ?, lastDaily = ? WHERE userID = ?', [ coins, today, message.author.id ]);
+	
+	checkLeaderboardChange(message.client).catch(errorLog.simple);
 }
 
 const ENTRIES_PER_PAGE = 10;

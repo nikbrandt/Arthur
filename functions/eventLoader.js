@@ -40,7 +40,7 @@ const errorLog = (shortError, error, noConsole) => {
 };
 
 errorLog.simple = error => {
-	errorLog(`Error from ${errorLog.simple.caller}`, error);
+	errorLog(`Simple error log error`, error);
 };
 
 const rawEvents = {
