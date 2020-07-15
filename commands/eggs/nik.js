@@ -38,7 +38,7 @@ async function start() {
 	
 	pastLeaderboard = await sql.all(`SELECT userID, coins FROM duckEconomy ORDER BY coins DESC LIMIT 11`);
 	
-	setInterval(sendLedger, 1000 * 5);
+	setInterval(sendLedger, 1000 * 60 * 10);
 
 	init = true;
 }
