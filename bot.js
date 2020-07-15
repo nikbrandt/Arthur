@@ -110,7 +110,7 @@ process.on('message', message => {
 		} catch (err) {
 			client.shard.send({
 				eval: {
-					error: err,
+					error: err.toString(),
 					id: id
 				}
 			}).catch(errorLog.simple);
@@ -133,7 +133,7 @@ process.on('message', message => {
 		}).catch(err => {
 			client.shard.send({
 				eval: {
-					error: err,
+					error: err.toString(),
 					id: id
 				}
 			}).catch(errorLog.simple);
