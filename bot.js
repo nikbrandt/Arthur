@@ -44,7 +44,8 @@ function sqlPromise(type, query, args) {
 		sqlErrorQueue.set(id, reject);
 
 		client.shard.send({
-			sql: type,
+			action: 'sql',
+			type: type,
 			query: query,
 			args: args,
 			id: id
@@ -59,105 +60,97 @@ function sqlPromise(type, query, args) {
 client.init().catch(errorLog.simple);
 
 const clientEval = (function(script) {
-	return eval(script);
+	return new Promise(async (resolve, reject) => {
+		let res;
+		
+		try {
+			res = await eval(script);
+		} catch (e) {
+			return reject(e);
+		}
+		
+		resolve(res);
+	})
 }).bind(client);
 
 process.on('message', message => {
-	if (message.uptime) {
-		client.shard.uptimeStart = message.uptime;
-		client.shard.id = message.id;
-		errorLog.shardID = message.id;
-
-		statusUpdate({
-			title: `Shard ${message.id} started`,
-			timestamp: new Date().toISOString(),
-			color: 0x00c140
-		});
-
-		return;
-	}
-
 	if (!client.shardQueue || !client.shardErrorQueue) return setTimeout(() => {
 		message.retries = message.retries ? ++message.retries : 1;
 		if (message.retries > 60) return;
 		process.emit('message', message);
 	}, 250); // retry later if client not instantiated yet
-
-	if (message.sql) {
-		let { error, result, id } = message.sql;
-
-		if (!error) {
-			if (sqlQueue.has(id)) sqlQueue.get(id)(result);
-		} else {
-			if (sqlErrorQueue.has(id)) sqlErrorQueue.get(id)(error);
-		}
-	}
 	
-	if (message.stopwatch) {
-		if (client.shardQueue.has(message.stopwatch.id)) client.shardQueue.get(message.stopwatch.id)(message.stopwatch);
-		client.shardQueue.delete(message.stopwatch.id);
-		
-		return;
-	}
-	
-	if (message.eval) {
-		let { script, id } = message.eval;
-		
-		let result;
-		
-		try {
-			result = clientEval(script);
-		} catch (err) {
-			client.shard.send({
-				eval: {
-					error: err.toString(),
-					id: id
-				}
-			}).catch(errorLog.simple);
+	switch (message.action) {
+		case 'uptime': {
+			client.shard.uptimeStart = message.uptime;
+			client.shard.id = message.id;
+			errorLog.shardID = message.id;
+
+			statusUpdate({
+				title: `Shard ${message.id} started`,
+				timestamp: new Date().toISOString(),
+				color: 0x00c140
+			});
+
+			break;
 		}
-		
-		if (!(result instanceof Promise)) return client.shard.send({
-			eval: {
-				result: result,
-				id: id
+
+		case 'sql': {
+			let { error, result, id } = message;
+
+			if (!error) {
+				if (sqlQueue.has(id)) sqlQueue.get(id)(result);
+			} else {
+				if (sqlErrorQueue.has(id)) sqlErrorQueue.get(id)(error);
 			}
-		}).catch(errorLog.simple);
-		
-		result.then(result => {
-			client.shard.send({
-				eval: {
+
+			break;
+		}
+
+		case 'stopwatch': {
+			if (client.shardQueue.has(message.id)) client.shardQueue.get(message.id)(message);
+			client.shardQueue.delete(message.id);
+
+			break;
+		}
+
+		case 'eval': {
+			let { script, id } = message;
+
+			clientEval(script).then(result => {
+				client.shard.send({
+					action: 'eval',
 					result: result,
 					id: id
-				}
-			}).catch(errorLog.simple);
-		}).catch(err => {
-			client.shard.send({
-				eval: {
+				}).catch(errorLog.simple);
+			}).catch(err => {
+				client.shard.send({
+					action: 'eval',
 					error: err.toString(),
 					id: id
-				}
-			}).catch(errorLog.simple);
-		});
-		
-		return;
-	}
-	
-	if (message.broadcastEval) {
-		let { error, result, id } = message.broadcastEval;
-		
-		if (error) client.shardErrorQueue.get(id)(error);
-		else client.shardQueue.get(id)(result);
-		
-		client.shardQueue.delete(id);
-		client.shardErrorQueue.delete(id);
-		
-		return;
-	}
+				}).catch(errorLog.simple);
+			});
 
-	if (message.stats) {
-		if (client.shardQueue.has(message.id)) client.shardQueue.get(message.id)(message.value);
-		client.shardQueue.delete(message.id);
-		
-		return;
+			break;
+		}
+
+		case 'broadcastEval': {
+			let { error, result, id } = message;
+
+			if (error) client.shardErrorQueue.get(id)(error);
+			else client.shardQueue.get(id)(result);
+
+			client.shardQueue.delete(id);
+			client.shardErrorQueue.delete(id);
+
+			break;
+		}
+
+		case 'stats': {
+			if (client.shardQueue.has(message.id)) client.shardQueue.get(message.id)(message.value);
+			client.shardQueue.delete(message.id);
+
+			break;
+		}
 	}
 });

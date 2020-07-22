@@ -13,7 +13,7 @@ function statusUpdate (embed) {
 const errorLog = (shortError, error, noConsole) => {
 	if (!noConsole) {
 		console.error(shortError);
-		console.error(error);
+		console.error(error.stack ? error.stack : error);
 	}
 	
 	let { stack, code} = error;

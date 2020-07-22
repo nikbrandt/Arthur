@@ -33,7 +33,7 @@ exports.run = async (message, args, suffix, client) => {
 		if (err) client.errorLog('Could not delete previous crash.txt file', err);
 	});
 
-	if (manager) message.channel.send('Restarting shard manager/bot.').then(() => client.shard.send({restart: true}));
+	if (manager) message.channel.send('Restarting shard manager/bot.').then(() => client.shard.send({ action: 'restart' }));
 	else message.channel.send('Restarting all shards.').then(() => client.shard.respawnAll());
 };
 

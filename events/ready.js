@@ -37,11 +37,10 @@ async function game (client) {
 
 function sendStats(client) {
 	client.shard.send({
-		updateStats: {
-			commands: client.commandStatsObject,
-			daily: client.dailyStatsObject,
-			weekly: client.weeklyStatsObject
-		}
+		action: 'updateStats',
+		commands: client.commandStatsObject,
+		daily: client.dailyStatsObject,
+		weekly: client.weeklyStatsObject
 	}).then(() => {
 		client.commandStatsObject = {};
 		client.dailyStatsObject = {};
