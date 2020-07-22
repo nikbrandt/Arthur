@@ -55,10 +55,9 @@ class ArthurClient extends Client {
 			this.shardErrorQueue.set(id, reject);
 			
 			this.shard.send({
-				broadcastEval: {
-					script: script,
-					id: id
-				}
+				action: 'broadcastEval',
+				script: script,
+				id: id
 			}).catch(reject);
 		});
 	}

@@ -45,25 +45,13 @@ exports.run = async (message, args, suffix, client) => {
 		}, 1000);
 	}
 
-	try {
-		evaled = client.broadcastEval(suffix.replace(/(\n)?```(js)?(\n)?/g, ''));
-	} catch (err) {
-		return errorMessage(silent, message.channel, err.toString());
-	}
+	client.broadcastEval(suffix.replace(/(\n)?```(js)?(\n)?/g, '')).then(res => {
+		awaitMsg(() => { successMessage(silent, null, 'Promise <Resolved>\n' + util.inspect(res), msg).catch(() => {}) });
+	}).catch(err => {
+		awaitMsg(() => { errorMessage(silent, null, err.toString(), msg) });
+	});
 
-	if (evaled && typeof evaled.then === 'function' && typeof evaled.catch === 'function') {
-		response = 'Promise <Pending>';
-
-		evaled.then(res => {
-			awaitMsg(() => { successMessage(silent, null, 'Promise <Resolved>\n' + util.inspect(res), msg).catch(() => {}) });
-		});
-
-		evaled.catch(err => {
-			awaitMsg(() => { errorMessage(silent, null, err.toString(), msg) });
-		});
-	} else response = util.inspect(evaled);
-
-	msg = await successMessage(silent, message.channel, response);
+	msg = await successMessage(silent, message.channel, 'Promise <Pending>');
 };
 
 exports.config = {

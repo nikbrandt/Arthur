@@ -51,139 +51,141 @@ manager.on('shardCreate', shard => {
 	
 	shard.on('ready', () => {
 		shard.send({
+			action: 'uptime',
 			uptime: Date.now() - Math.floor(process.uptime() * 1000),
 			id: shard.id
 		}).catch(errorLog.simple);
 	});
 	
 	shard.on('message', message => {
-		if (message.sql) {
-			let timeline = { start: Date.now() };
-			let { id, query, args } = message;
+		switch (message.action) {
+			case 'sql': {
+				let timeline = {start: Date.now()};
+				let { id, query, args, type } = message;
 
-			sql[message.sql](query, args).then(result => {
-				timeline.sqlFinished = Date.now() - timeline.start;
-				sqlThen(shard, id, result, timeline);
-			}).catch(error => {
-				timeline.sqlFinished = Date.now() - timeline.start;
-				timeline.error = true;
-				sqlCatch(shard, id, error, timeline);
-			});
-			
-			return;
-		}
-		
-		if (message.stopwatch) {
-			let id = message.stopwatch;
-			
-			if (stopwatchUserObject[id]) {
-				shard.send({ stopwatch: { id: id, start: stopwatchUserObject[id] }}).catch(() => {});
-				delete stopwatchUserObject[id];
-			} else {
-				stopwatchUserObject[id] = Date.now();
-				shard.send({ stopwatch: { id: id }}).catch(() => {});
+				sql[type](query, args).then(result => {
+					timeline.sqlFinished = Date.now() - timeline.start;
+					sqlThen(shard, id, result, timeline);
+				}).catch(error => {
+					timeline.sqlFinished = Date.now() - timeline.start;
+					timeline.error = true;
+					sqlCatch(shard, id, error, timeline);
+				});
+
+				break;
 			}
-			
-			return;
-		}
-		
-		if (message.broadcastEval) {
-			let { script, id } = message.broadcastEval;
-			let internalID = queueID++;
-			
-			queue.set(internalID, {
-				shards: 0,
-				returnShard: shard,
-				returnID: id,
-				results: {}
-			});
-			
-			manager.shards.forEach(shard => {
-				sendWhenReady(shard, {
-					eval: {
+
+			case 'stopwatch': {
+				let { id } = message;
+
+				if (stopwatchUserObject[id]) {
+					shard.send({ action: 'stopwatch', id: id, start: stopwatchUserObject[id] }).catch(() => {});
+					delete stopwatchUserObject[id];
+				} else {
+					stopwatchUserObject[id] = Date.now();
+					shard.send({ action: 'stopwatch', id: id }).catch(() => {});
+				}
+
+				break;
+			}
+
+			case 'broadcastEval': {
+				let { script, id } = message;
+				let internalID = queueID++;
+
+				queue.set(internalID, {
+					shards: 0,
+					returnShard: shard,
+					returnID: id,
+					results: {}
+				});
+
+				manager.shards.forEach(shard => {
+					sendWhenReady(shard, {
+						action: 'eval',
 						script: script,
 						id: internalID
-					}
-				}, () => {
-					shard.emit({
-						eval: {
+					}, () => {
+						shard.emit({
+							action: 'eval',
 							error: 'Shard took too long to become ready.',
 							id: internalID
-						}
-					})
+						})
+					});
 				});
-			});
-			
-			return;
-		}
-		
-		if (message.eval) {
-			let { error, result, id } = message.eval;
-			
-			if (!queue.has(id)) return;
-			let queueObj = queue.get(id);
-			
-			if (error) {
-				queue.delete(id);
-				
-				if (queueObj.internal) return queueObj.internal.reject(error);
-				
-				return queueObj.returnShard.send({
-					broadcastEval: {
+
+				break;
+			}
+
+			case 'eval': {
+				let { error, result, id } = message;
+
+				if (!queue.has(id)) return;
+				let queueObj = queue.get(id);
+
+				if (error) {
+					queue.delete(id);
+
+					if (queueObj.internal) return queueObj.internal.reject(error);
+
+					return queueObj.returnShard.send({
+						action: 'broadcastEval',
 						error: error,
 						id: queueObj.returnID
-					}
-				}).catch(errorLog.simple);
-			}
-			
-			queueObj.shards++;
-			queueObj.results[shard.id] = result;
-			
-			if (queueObj.shards < manager.shards.size) return;
-			
-			let results = [];
-			for (let i = 0; i < queueObj.shards; i++) {
-				results.push(queueObj.results[i]);
-			}
-			
-			if (queueObj.internal) queueObj.internal.resolve(results);
-			else queueObj.returnShard.send({
-				broadcastEval: {
+					}).catch(errorLog.simple);
+				}
+
+				queueObj.shards++;
+				queueObj.results[shard.id] = result;
+
+				if (queueObj.shards < manager.shards.size) return;
+
+				let results = [];
+				for (let i = 0; i < queueObj.shards; i++) {
+					results.push(queueObj.results[i]);
+				}
+
+				if (queueObj.internal) queueObj.internal.resolve(results);
+				else queueObj.returnShard.send({
+					action: 'broadcastEval',
 					result: results,
 					id: queueObj.returnID
+				}).catch(errorLog.simple);
+
+				queue.delete(id);
+
+				break;
+			}
+
+			case 'updateStats': {
+				addValues(message.commands, commandStatsObject);
+				addValues(message.daily, dailyStatsObject);
+				addValues(message.weekly, weeklyStatsObject);
+
+				break;
+			}
+
+			case 'getStats': {
+				switch (message.type) {
+					case 'commands':
+						shard.send({ action: 'stats', id: message.id, value: commandStatsObject }).catch(errorLog.simple);
+						break;
+					case 'daily':
+						shard.send({ action: 'stats', id: message.id, value: dailyStatsObject[message.arg] }).catch(errorLog.simple);
+						break;
+					case 'weekly':
+						shard.send({ action: 'stats', id: message.id, value: weeklyStatsObject[message.arg] }).catch(errorLog.simple);
+						break;
 				}
-			}).catch(errorLog.simple);
-			
-			queue.delete(id);
-			
-			return;
-		}
-		
-		if (message.updateStats) {
-			let stats = message.updateStats;
-			
-			addValues(stats.commands, commandStatsObject);
-			addValues(stats.daily, dailyStatsObject);
-			addValues(stats.weekly, weeklyStatsObject);
-			
-			return;
-		}
-		
-		if (message.getStats) {
-			switch(message.getStats) {
-				case 'commands':
-					shard.send({ id: message.id, stats: true, value: commandStatsObject });
-					break;
-				case 'daily':
-					shard.send({ id: message.id, stats: true, value: dailyStatsObject[message.arg] });
-					break;
-				case 'weekly':
-					shard.send({ id: message.id, stats: true, value: weeklyStatsObject[message.arg] });
-					break;
+				
+				break;
+			}
+
+			case 'restart': {
+				process.exit();
+				break;
 			}
 		}
-		
-		if (message.restart) process.exit();
 	});
 });
 
@@ -210,10 +212,9 @@ function addValues(from, to) {
 
 function sqlThen(shard, id, result, timeline) {
 	shard.send({
-		sql: {
-			id: id,
-			result: result
-		}
+		action: 'sql',
+		id: id,
+		result: result
 	}).catch(errorLog.simple).then(() => {
 		handleSQLTimeline(timeline);
 	});
@@ -223,10 +224,9 @@ function sqlCatch(shard, id, error, timeline) {
 	errorLog('SQL error', error);
 
 	shard.send({
-		sql: {
-			id: id,
-			error: error
-		}
+		action: 'sql',
+		id: id,
+		error: error
 	}).catch(errorLog.simple).then(() => {
 		handleSQLTimeline(timeline);
 	});
@@ -252,7 +252,9 @@ function broadcastEval(script) {
 		
 		manager.shards.forEach(shard => {
 			shard.send({
-				eval: { script, id}
+				action: 'eval',
+				script: script,
+				id: id
 			}).catch(reject);
 		});
 	});

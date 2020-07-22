@@ -35,7 +35,8 @@ function reverse (array) {
 function requestStats(type, id, client, arg) {
 	return new Promise(resolve => {
 		let obj = {
-			getStats: type,
+			action: 'getStats',
+			type: type,
 			id: id
 		};
 		
