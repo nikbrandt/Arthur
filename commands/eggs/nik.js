@@ -190,7 +190,7 @@ function help(message) {
 				+ (arg.aliases ? '\nAliases: `' + arg.aliases.join('`, `') + '`' : '')
 				+ '\nUsage: `' + arg.run.name + (arg.usage ? ' ' + arg.usage + '`' : '`'),
 			footer: {
-				text: '<> denotes a required argument and [] denotes an optional argument. Please don\'t type them.'
+				text: '<> denotes a required argument and [] denotes an optional argument. Don\'t type the brackets.'
 			}
 		}});
 	} else {

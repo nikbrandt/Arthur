@@ -153,24 +153,27 @@ const Music = {
 					});
 	
 					dispatcher.on('error', err => {
-						if (err.toString().includes('input stream: Too many redirects')
-						|| err.toString().includes('input stream: Error parsing config: Unexpected token ; in JSON at position'))
+						let toString = toString;
+						
+						if (toString.includes('input stream: Too many redirects')
+						|| toString.includes('input stream: Error parsing config: Unexpected token ; in JSON at position'))
 							return setTimeout(() => {
 								if (retry > 4) Music.next(guild);
 								else Music.next(guild, true, retry + 1);
 							}, 500);
 
-						if (err.toString().includes('This video requires payment')) {
+						if (toString.includes('This video requires payment')) {
 							music.textChannel.send(i18n.get('struct.music.video_requires_payment', guild, { video: music.queue[0].meta.title.split(' (').slice(0, -1).join(' (') }));
 							return Music.next(guild);
 						}
 
-						if (err.toString().includes('No such format found: highestaudio')) {
+						if (toString.includes('No such format found: highestaudio')) {
 							music.textChannel.send(i18n.get('struct.music.no_audio_track', guild, { video: music.queue[0].meta.title.split(' (').slice(0, -1).join(' (') }));
 							return Music.next(guild);
 						}
 						
-						if (err.toString().includes('This video is unavailable')) {
+						if (toString.includes('This video is unavailable')
+						|| toString.includes('Video unavailable')) {
 							music.textChannel.send(i18n.get('struct.music.video_unavailable', guild, { video: music.queue[0].meta.title.split(' (').slice(0, -1).join(' (') }));
 							return Music.next(guild);
 						}
