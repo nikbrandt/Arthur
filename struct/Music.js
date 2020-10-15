@@ -415,35 +415,42 @@ const Music = {
 					nextpageRef: `https://www.youtube.com/results?search_query=${encodeURIComponent(suffix)}&sp=EgIQAQ%253D%253D`
 				};
 
-				ytSearch(null, options, (err, results) => {
-					if (err || !results || !results.items || !results.items[0] || !results.items[0].link) {
-						let error;
-						if (err) error = err;
-						else if (!results) error = 'No results.';
-						else if (!results.items) error = 'No items array.';
-						else if (!results.items[0]) error = 'No elements in the items array.';
-						else error = 'No link in first element of array.';
-						message.client.errorLog('No YouTube results found.', `Query: ${suffix}\n${error}`, true);
+				let results;
+				let err;
 
-						return soundcloud.search(suffix).then(result => {
-							if (!result) return reject(message._('no_results'));
-							
-							resolve ( {
-								id: result.permalink_url,
-								type: 5
-							});
-						}).catch(() => {
-							reject(message._('no_results'));
+				try {
+					results = await ytSearch(null, options);
+				} catch (error) {
+					err = error;
+				}
+
+				if (err || !results || !results.items || !results.items[0] || !results.items[0].link) {
+					let error;
+					if (err) error = err;
+					else if (!results) error = 'No results.';
+					else if (!results.items) error = 'No items array.';
+					else if (!results.items[0]) error = 'No elements in the items array.';
+					else error = 'No link in first element of array.';
+					message.client.errorLog('No YouTube results found.', `Query: ${suffix}\n${error}`);
+
+					return soundcloud.search(suffix).then(result => {
+						if (!result) return reject(message._('no_results'));
+
+						resolve ( {
+							id: result.permalink_url,
+							type: 5
 						});
-					}
+					}).catch(() => {
+						reject(message._('no_results'));
+					});
+				}
 
-					id = results.items[0].link.slice(-11);
+				id = results.items[0].link.slice(-11);
 
-					resolve ( {
-						id: id,
-						type: type
-					} );
-				});
+				resolve ( {
+					id: id,
+					type: type
+				} );
 			}
 		})
 	},

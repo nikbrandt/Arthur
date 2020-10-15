@@ -45,7 +45,7 @@
 		"youtube-search": "^1.1.4",
 		"ytdl-core": "^3.2.2",
 		"ytpl": "^0.3.0",
-		"ytsr": "^0.1.21",
+		"ytsr": "^1.0.4",
 		"zlib-sync": "^0.1.7"
 	}
 }
