@@ -1,11 +1,9 @@
-const LINKS = [ 'https://youtu.be/p5rQHoaQpTw', 'https://youtu.be/w9uWPBDHEKE', 'https://youtu.be/Fl-rYuI1-0w', 'https://youtu.be/qgDrpWWxuto' ];
-
 exports.run = (message, args, suffix, client, permLevel, prefix, ipc) => {
 	message.__ = (string, variables) => {
 		return i18n.get('commands.play.' + string, message, variables);
 	};
 
-	const song = LINKS[Math.floor(Math.random() * LINKS.length)];
+	const song = 'https://youtu.be/7tBi4Z7yexY';
 
 	client.commands.get('play').run(message, [ song ], song, client, permLevel, prefix, ipc).catch(client.errorLog.simple);
 };
@@ -18,8 +16,8 @@ exports.config = {
 };
 
 exports.meta = {
-	command: 'elog',
-	name: 'E Log',
-	description: '"What\'s another way to say hello?"',
-	help: '"What\'s another way to say hello?"'
+	command: 'wap',
+	name: 'wap, but gilbert gottfried',
+	description: 'wap, babey',
+	help: 'YEAH, YEAH, YEAH'
 };

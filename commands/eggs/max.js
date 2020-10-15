@@ -1,4 +1,4 @@
-const LINKS = [ 'https://youtu.be/p5rQHoaQpTw', 'https://youtu.be/w9uWPBDHEKE', 'https://youtu.be/Fl-rYuI1-0w', 'https://youtu.be/qgDrpWWxuto' ];
+const LINKS = [ 'https://youtu.be/O5zuXg4NyEU' ];
 
 exports.run = (message, args, suffix, client, permLevel, prefix, ipc) => {
 	message.__ = (string, variables) => {
@@ -18,8 +18,8 @@ exports.config = {
 };
 
 exports.meta = {
-	command: 'elog',
-	name: 'E Log',
-	description: '"What\'s another way to say hello?"',
-	help: '"What\'s another way to say hello?"'
+	command: 'max',
+	name: 'mr. pinecone',
+	description: 'just ease off you\'re killin\' me',
+	help: 'ease off, baby, just ease off you\'re killin\' me'
 };
