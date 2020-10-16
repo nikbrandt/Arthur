@@ -410,45 +410,21 @@ const Music = {
 					} );
 				}
 
-				const options = {
-					limit: 1,
-					nextpageRef: `https://www.youtube.com/results?search_query=${encodeURIComponent(suffix)}&sp=EgIQAQ%253D%253D`
-				};
+				let results = await Music.attemptYTSearch(suffix, message.client.errorLog);
 
-				let results;
-				let err;
+				if (!results) return soundcloud.search(suffix).then(result => {
+					if (!result) return reject(message._('no_results'));
 
-				try {
-					results = await ytSearch(null, options);
-				} catch (error) {
-					err = error;
-				}
-
-				if (err || !results || !results.items || !results.items[0] || !results.items[0].link) {
-					let error;
-					if (err) error = err;
-					else if (!results) error = 'No results.';
-					else if (!results.items) error = 'No items array.';
-					else if (!results.items[0]) error = 'No elements in the items array.';
-					else error = 'No link in first element of array.';
-					message.client.errorLog('No YouTube results found.', `Query: ${suffix}\n${error}`);
-
-					return soundcloud.search(suffix).then(result => {
-						if (!result) return reject(message._('no_results'));
-
-						resolve ( {
-							id: result.permalink_url,
-							type: 5
-						});
-					}).catch(() => {
-						reject(message._('no_results'));
+					resolve ( {
+						id: result.permalink_url,
+						type: 5
 					});
-				}
-
-				id = results.items[0].link.slice(-11);
+				}).catch(() => {
+					reject(message._('no_results'));
+				});
 
 				resolve ( {
-					id: id,
+					id: results,
 					type: type
 				} );
 			}
@@ -682,6 +658,47 @@ const Music = {
 		let time = Date.now() - guild.music.startTime;
 		if (guild.music.pauseTime) time -= Date.now() - guild.music.pauseTime;
 		return Math.floor(time / 1000);
+	},
+
+	attemptYTSearch: (term, errorLog, retry = 0) => {
+		return new Promise(async resolve => {
+			if (retry > 4) return resolve(false);
+
+			await new Promise(res => {
+				setTimeout(res, 250);
+			});
+
+			const options = {
+				limit: 1,
+				nextpageRef: `https://www.youtube.com/results?search_query=${encodeURIComponent(term)}&sp=EgIQAQ%253D%253D`
+			};
+
+			let results;
+			let err;
+
+			try {
+				results = await ytSearch(null, options);
+			} catch (error) {
+				err = error;
+			}
+
+			if (err && err.toString().startsWith('SyntaxError')) return resolve(await Music.attemptYTSearch(term, errorLog, retry + 1));
+
+			if (err || !results || !results.items || !results.items[0] || !results.items[0].link) {
+				let error;
+				if (err) error = err;
+				else if (!results) error = 'No results.';
+				else if (!results.items) error = 'No items array.';
+				else if (!results.items[0]) error = 'No elements in the items array.';
+				else error = 'No link in first element of array.';
+				errorLog('No YouTube results found.', `Query: ${term}\n${error}`);
+
+				resolve(false);
+			}
+
+			let id = results.items[0].link.slice(-11);
+			resolve(id);
+		});
 	}
 };
 
