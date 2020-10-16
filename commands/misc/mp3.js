@@ -1,30 +1,30 @@
 const ffmpeg = require('fluent-ffmpeg');
 const ytdl = require('ytdl-core');
-const search = require('youtube-search');
 const moment = require('moment');
 const fs = require('fs');
 const request = require('request');
 
 const soundcloud = require('../../struct/soundcloud');
-const { timeString } = require('../../struct/Util.js');
+const Music = require('../../struct/Music');
+const { timeString } = require('../../struct/Util');
 
 const YTRegex = /^(https?:\/\/)?(www\.|m\.|music\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/v\/|youtube\.com\/embed\/)([A-z0-9_-]{11})([&?].*)?$/;
 
-async function youtube(id, message, client) {
+async function youtube(id, message, msg, client) {
 	let info;
 	
 	try {
 		info = await ytdl.getInfo(id);
 	} catch (e) {
-		return message.edit(message.__('song_not_found')).catch(() => {});
+		return msg.edit(message.__('song_not_found')).catch(() => {});
 	}
 	
-	if (!info) return message.edit(message.__('song_not_found')).catch(() => {});
+	if (!info) return msg.edit(message.__('song_not_found')).catch(() => {});
 
-	if (info.videoDetails.isLiveContent) return message.edit(message.__('livestream')).catch(() => {});
-	if (info.videoDetails.lengthSeconds > 1200) return message.edit(message.__('too_long', { minutes: 20 })).catch(() => {});
+	if (info.videoDetails.isLiveContent) return msg.edit(message.__('livestream')).catch(() => {});
+	if (info.videoDetails.lengthSeconds > 1200) return msg.edit(message.__('too_long', { minutes: 20 })).catch(() => {});
 
-	message.edit(message.__('downloading_with_time', { seconds: Math.round((parseInt(info.videoDetails.lengthSeconds) / 24).toFixed(1)) * 10 })).catch(() => {});
+	msg.edit(message.__('downloading_with_time', { seconds: Math.round(parseInt(info.videoDetails.lengthSeconds) / 24).toFixed(1) })).catch(() => {});
 	let title = info.videoDetails.title;
 
 	let ytdlStream;
@@ -33,23 +33,21 @@ async function youtube(id, message, client) {
 		ytdlStream = ytdl.downloadFromInfo(info, { quality: 'highestaudio', requestOptions: { maxRedirects: 10 } });
 	} catch (e) {
 		client.errorLog('Error retrieving ytdl stream in mp3', e);
-		return message.edit(message.__('song_not_found')).catch(() => {});
+		return msg.edit(message.__('song_not_found')).catch(() => {});
 	}
 
-	finish(ytdlStream, title, parseInt(info.videoDetails.lengthSeconds), message, client, info.videoDetails.thumbnail.thumbnails[0].url, `https://youtu.be/${id}`).catch((e) => {
+	finish(ytdlStream, title, parseInt(info.videoDetails.lengthSeconds), message, msg, client, info.videoDetails.thumbnail.thumbnails[0].url, `https://youtu.be/${id}`).catch((e) => {
 		client.errorLog('Error finishing mp3 from YT source', e);
-		return message.edit(message.__('song_not_found')).catch(() => {});
+		return msg.edit(message.__('song_not_found')).catch(() => {});
 	});
 }
 
-async function finish(stream, title, length, message, client, thumbnail, url) {
+async function finish(stream, title, length, message, msg, client, thumbnail, url) {
 	title = title.replace(/[^A-z0-9]/g, '_');
 
 	let index = client.processing.length;
 	let filePath = `${__dirname}/../../../media/temp/${message.id}.mp3`;
 	client.processing.push(moment().format('h:mm:ss A') + ' - MP3');
-
-	let msg = await message.channel.send(message.__('downloading'));
 
 	ffmpeg(stream, {priority: 20})
 		.duration(length + 1)
@@ -122,6 +120,7 @@ async function finish(stream, title, length, message, client, thumbnail, url) {
 
 exports.run = async (message, args, suffix, client) => {
 	if (!args[0]) return message.channel.send(message.__('no_args'));
+	let msg = await message.channel.send(message.__('downloading'));
 
 	let id;
 
@@ -131,7 +130,7 @@ exports.run = async (message, args, suffix, client) => {
 		try {
 			info = await soundcloud.getInfo(args[0]);
 		} catch (e) {
-			return message.edit(message.__('song_not_found')).catch(() => {});
+			return msg.edit(message.__('song_not_found')).catch(() => {});
 		}
 
 		let stream = soundcloud(info.id);
@@ -139,23 +138,15 @@ exports.run = async (message, args, suffix, client) => {
 		let length = Math.round(info.duration / 1000);
 		let thumbnail = info.artwork_url;
 
-		finish(stream, title, length, message, client, thumbnail, args[0]).catch(client.errorLog.simple);
+		finish(stream, title, length, message, msg, client, thumbnail, args[0]).catch(client.errorLog.simple);
 	} else if (!YTRegex.test(args[0])) {
-		let sOpts = {
-			maxResults: 1,
-			key: client.config.ytkey,
-			type: 'video'
-		};
+		id = await Music.attemptYTSearch(suffix, message.client.errorLog);
+		if (!id) return message.channel.send(message.__('no_results'));
 
-		search({ query: suffix, YT_SEARCH_QUERY_URI: 'https://www.youtube.com/results?sp=EgIQAQ%253D%253D&' }, sOpts, (err, results) => {
-			if (err) return message.channel.send(message.__('no_results'));
-
-			id = results[0].id;
-			youtube(id, message, client).catch(client.errorLog.simple);
-		});
+		youtube(id, message, msg, client).catch(client.errorLog.simple);
 	} else {
 		id = args[0].match(YTRegex)[4];
-		youtube(id, message, client).catch(client.errorLog.simple);
+		youtube(id, message, msg, client).catch(client.errorLog.simple);
 	}
 };
 
