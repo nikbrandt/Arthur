@@ -547,28 +547,22 @@
 			"meta": {
 				"command": "blacklist",
 				"aliases": [ "bl" ],
-				"name": "Blacklist User",
-				"description": "Blacklist a user from using Arthur in your server.",
-				"usage": "<user resolvable>",
-				"help": "Blacklist a user from using Arthur on your server. Give me a user ID, mention, or tag (username#0000).\nArthur will not interact with this user in any way, other than like.. notice that they're in a voice channel"
+				"name": "Blacklist User or Role",
+				"description": "Blacklist a user or role from using Arthur in your server.",
+				"usage": "<user or role resolvable>",
+				"help": "Blacklist a user or role from using Arthur on your server. Give me a user/role ID, mention, tag (username#0000), or role name.\nArthur will not interact with this user in any way, other than like.. notice that they're in a voice channel"
 			},
-			"blacklisted_users": "Blacklisted Users",
-			"nothing_to_display": "Nothin' to display here, carry on.",
-			"invalid_user": [
-				"Did you make that person up in your imagination? They don't exist. You can't blacklist people that aren't here. It just doesn't work.",
-				"Who? I.. can't find whoever it is you're trying to find.",
-				"That person just.. doesn't exist. rip.",
-				"A real person would be nice.",
-				"I could not find the member whom you have tried to find. Could you try again with someone who *exists*?"
-			],
+			"no_args": "Please tell me which user or role to blacklist.",
+			"invalid": "That user or role doesn't, uh, exist. Sorry.",
 			"self_blacklist": [
 				"Hey. I'm not blacklisting you from me. Thanks, but no thanks.",
 				"You can't.. you can't do that. At least, I won't let you do that.",
 				"Seriously, you don't like me that much? Wow. Alright. I see how it is. Why don't you just kick me then, if that's how it's going to be?",
 				"lol. no."
 			],
-			"already_blacklisted": "This person is already blacklisted.\nGo ahead and run `@@unblacklist $id` if you don't want them blacklisted anymore. Thanks.",
-			"blacklisted": "**$tag** has been blacklisted from usage of Arthur in this server. Riperoni in pepperoni.\nShould you want to unblacklist them, run `@@unblacklist $id`.\nHave a good day. :thumbsup:"
+			"self_role_blacklist": "You can't blacklist a role you have. I hope you know why.",
+			"already_blacklisted": "This person or role is already blacklisted.\nGo ahead and run `@@unblacklist $id` if you don't want them/it blacklisted anymore. Thanks.",
+			"blacklisted": "**$tag** has been blacklisted from usage of Arthur in this server. Riperoni in pepperoni.\nShould you want to unblacklist, run `@@unblacklist $id`."
 		},
 		"levelmessages": {
 			"meta": {
@@ -627,8 +621,7 @@
 				"Well? You gonna choose who you want to unblacklist? Or just ~~stand~~ sit there?",
 				"I'm on it. I'll unblacklist ` ` right away."
 			],
-			"self_blacklist": "You're clearly not blacklisted if I'm talking to you. You alright there, bud?",
-			"not_blacklisted": "That person isn't blacklisted. How nice of you, looking out for those who are doing just fine.",
+			"not_blacklisted": "That person or role isn't blacklisted. How nice of you, looking out for those who are doing just fine.",
 			"unblacklisted": "Like magic, **$tag** can interact with me again. :tada:"
 		},
 		"language": {

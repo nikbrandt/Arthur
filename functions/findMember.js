@@ -1,7 +1,7 @@
 module.exports = (message, string) => {
 	let member;
 	
-	if (message.mentions.members) member = message.mentions.members.find(mem => mem.id !== message.client.user.id);
+	if (message.mentions.members.size) member = message.mentions.members.find(mem => mem.id !== message.client.user.id);
 	
 	if (!member && !!string) {
 		let find = message.guild.members.cache.find(mem => mem.user.tag.toUpperCase() === string.toUpperCase());
