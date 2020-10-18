@@ -73,11 +73,11 @@ const clientEval = (function(script) {
 }).bind(client);
 
 process.on('message', message => {
-	if (!client.shardQueue || !client.shardErrorQueue) return setTimeout(() => {
+	if (!client.shardQueue || !client.shardErrorQueue || !client.shardQueue.get) return setTimeout(() => {
 		message.retries = message.retries ? ++message.retries : 1;
-		if (message.retries > 60) return;
+		if (message.retries > 200) return;
 		process.emit('message', message);
-	}, 250); // retry later if client not instantiated yet
+	}, 100); // retry later if client not instantiated yet
 	
 	switch (message.action) {
 		case 'uptime': {

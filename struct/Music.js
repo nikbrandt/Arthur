@@ -153,7 +153,7 @@ const Music = {
 					});
 	
 					dispatcher.on('error', err => {
-						let toString = toString;
+						let toString = err.toString();
 						
 						if (toString.includes('input stream: Too many redirects')
 						|| toString.includes('input stream: Error parsing config: Unexpected token ; in JSON at position'))
@@ -591,6 +591,7 @@ const Music = {
 			let fakeMessage = Object.assign(Object.create(Object.getPrototypeOf(message)), message); // copy of `message`
 			fakeMessage.author = user;
 			fakeMessage.member = message.guild.members.cache.get(user.id) || await message.guild.members.fetch(user);
+			fakeMessage.client = client;
 			let permLevel = client.permLevel(fakeMessage);
 
 			switch (reaction.emoji.name) {
@@ -632,7 +633,7 @@ const Music = {
 			}
 
 			reaction.users.remove(user).catch(err => {
-				client.errorLog('Failed to remove reaction from music collector', err);
+				if (!err.includes('Missing Access')) client.errorLog('Failed to remove reaction from music collector', err);
 			})
 		});
 
@@ -693,7 +694,7 @@ const Music = {
 				else error = 'No link in first element of array.';
 				errorLog('No YouTube results found.', `Query: ${term}\n${error}`);
 
-				resolve(false);
+				return resolve(false);
 			}
 
 			let id = results.items[0].link.slice(-11);
