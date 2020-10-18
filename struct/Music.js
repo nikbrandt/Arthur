@@ -483,6 +483,9 @@ const Music = {
 					let out = {};
 					let res = await ytPlaylist(id).catch(() => {});
 
+					console.log(`id: ${id}, res:`);
+					console.log(res);
+
 					if (!res || !res.items) return reject(message._('invalid_playlist'));
 
 					if (res.items.length > 200) return reject(message._('playlist_too_long'));
