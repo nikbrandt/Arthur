@@ -27,6 +27,8 @@ class ArthurClient extends Client {
 		this.reactionCollectors = new Collection();
 		this.shardQueue = new Map();
 		this.shardErrorQueue = new Map();
+		this.guildBlacklists = new Map();
+		this.hardBlacklist;
 
 		loadCommands(this);
 
@@ -60,6 +62,27 @@ class ArthurClient extends Client {
 				id: id
 			}).catch(reject);
 		});
+	}
+
+	async getGuildBlacklist(guildID) {
+		if (this.guildBlacklists.has(guildID)) return this.guildBlacklists.get(guildID);
+		else {
+			let blacklist = await sql.all('SELECT ID FROM guildBlacklist WHERE guildID = ?', guildID);
+			this.guildBlacklists.set(guildID, blacklist.map(o => o.ID));
+
+			return blacklist;
+		}
+	}
+
+	async checkHardBlacklist(id) {
+		if (this.hardBlacklist) return this.hardBlacklist.includes(id);
+		else {
+			let blacklist = await sql.all('SELECT id FROM hardBlacklist');
+			blacklist = blacklist.map(o => o.id);
+			this.hardBlacklist = blacklist;
+
+			return blacklist.includes(id);
+		}
 	}
 }
 

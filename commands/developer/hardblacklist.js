@@ -26,6 +26,8 @@ exports.run = async (message, args, suffix, client) => {
 		deleteEntry ? await sql.run('DELETE FROM hardBlacklist WHERE id = ?', [ args[0] ]) : await sql.run('INSERT INTO hardBlacklist (id, type) VALUES (?, ?)', [ args[0], 'guild' ]);
 		message.channel.send(deleteEntry ? `Guild \`${guild.name}\` removed from blacklist. Anti-uf.` : `Guild \`${guild.name}\` added to blacklist. ***Uf***.`);
 	}
+
+	client.hardBlacklist = undefined;
 };
 
 exports.config = {

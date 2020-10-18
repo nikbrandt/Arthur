@@ -27,12 +27,14 @@ module.exports = async (client, message) => {
 		message.react(CAT_EMOJIS[Math.floor(Math.random() * CAT_EMOJIS.length)]).catch(() => {});
 	}
 	
-	let shouldIStayOrShouldIGo = await sql.get('SELECT * FROM hardBlacklist WHERE id = ? OR id = ?', [ message.author.id, message.guild ? message.guild.id : 'xd' ]);
+	let shouldIStayOrShouldIGo = await client.checkHardBlacklist(message.author.id) || await client.checkHardBlacklist(message.guild ? message.guild.id : 'x');
 	if (shouldIStayOrShouldIGo && !config.owners.includes(message.author.id)) return;
 
 	if (message.guild) {
-		let blacklisted = await sql.get(`SELECT count(1) FROM guildUserBlacklist WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`);
-		if (!!blacklisted['count(1)']) return;
+		let blacklist = await message.client.getGuildBlacklist(message.guild.id);
+
+		if (blacklist.includes(message.author.id)) return;
+		if (message.member.roles.cache.some(role => blacklist.includes(role.id))) return;
 	}
 	
 	// easter egg bs

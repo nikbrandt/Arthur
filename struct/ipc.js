@@ -77,9 +77,9 @@ let ipcObject = client => {
 					}
 					
 					await sql.run('INSERT OR IGNORE INTO guildOptions (guildID) VALUES (?)', [id]);
-					let [options, userBlacklist] = await Promise.all([
+					let [options, blacklist] = await Promise.all([
 						sql.get(`SELECT * FROM guildOptions WHERE guildID = '${id}'`),
-						sql.all(`SELECT userBlacklist FROM guildUserBlacklist WHERE guildID = '${id}'`)
+						sql.all(`SELECT ID FROM guildBlacklist WHERE guildID = '${id}'`)
 					]);
 
 					time = 60 * 10;
@@ -89,7 +89,7 @@ let ipcObject = client => {
 						name: guild.name,
 						id: id,
 						options: options,
-						userBlacklist: userBlacklist
+						blacklist: blacklist
 					};
 
 					break;
@@ -259,26 +259,27 @@ let ipcObject = client => {
 							
 							break;
 						}
-						case 'blacklistUser': {
+						case 'blacklistUser': { // TODO: Add (un)blacklistRole functions
 							let user = await client.users.fetch(params.userID);
 							if (!user) {
 								error = 'Invalid user ID';
 								break;
 							}
-							
-							let users = await sql.all(`SELECT userID FROM guildUserBlacklist WHERE guildID = '${id}'`);
-							if (!users.some(obj => obj.userID === params.userID)) await sql.run(`INSERT INTO guildUserBlacklist (guildID, userID) VALUES (?, ?)`, [ id, userID ]);
+
+							// TODO: make this more efficient (using sql.all and then users.some??)
+							let users = await sql.all(`SELECT ID FROM guildBlacklist WHERE guildID = '${id}'`);
+							if (!users.some(obj => obj.userID === params.userID)) await sql.run(`INSERT INTO guildBlacklist (guildID, ID) VALUES (?, ?)`, [ id, params.userID ]);
 							
 							break;
 						}
 						case 'unblacklistUser': {
-							let users = await sql.all(`SELECT userID FROM guildUserBlacklist WHERE guildID = '${id}'`);
+							let users = await sql.all(`SELECT ID FROM guildBlacklist WHERE guildID = '${id}'`);
 							if (!users.some(obj => obj.userID === params.userID)) {
 								error = 'User is not blacklsited';
 								break;
 							}
 							
-							await sql.run(`DELETE FROM guildUserBlacklist WHERE userID = ? AND guildID = ?`, [ params.userID, id ]);
+							await sql.run(`DELETE FROM guildBlacklist WHERE ID = ? AND guildID = ?`, [ params.userID, id ]);
 							
 							break;
 						}
