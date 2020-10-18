@@ -24,7 +24,7 @@ async function youtube(id, message, msg, client) {
 	if (info.videoDetails.isLiveContent) return msg.edit(message.__('livestream')).catch(() => {});
 	if (info.videoDetails.lengthSeconds > 1200) return msg.edit(message.__('too_long', { minutes: 20 })).catch(() => {});
 
-	msg.edit(message.__('downloading_with_time', { seconds: Math.round(parseInt(info.videoDetails.lengthSeconds) / 24).toFixed(1) })).catch(() => {});
+	msg.edit(message.__('downloading_with_time', { seconds: (parseInt(info.videoDetails.lengthSeconds) / 13).toFixed(1) })).catch(() => {});
 	let title = info.videoDetails.title;
 
 	let ytdlStream;
