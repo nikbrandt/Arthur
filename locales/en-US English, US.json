@@ -1255,6 +1255,7 @@
 			"video_requires_payment": "The video `$video` requires payment to watch. I ain't buyin' that for ya. Skipping.",
 			"no_audio_track": "The video `$video` has no public audio track on YouTube; it's either a paid video or supremely broken. Can't play it for ya.",
 			"video_unavailable": "The video `$video` is unavailable. Could be copyright blocked, age restricted, country blocked, or just YouTube being mean. Sorry.",
+			"music_premium": "The video `$video` is only available to YouTube Music Premium members. That ain't me. Skipping.",
 			"file_footer": "Added by $tag. | Invalid URLs will be skipped."
 		},
 		"message": {

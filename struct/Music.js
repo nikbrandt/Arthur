@@ -155,15 +155,21 @@ const Music = {
 					dispatcher.on('error', err => {
 						let toString = err.toString();
 						
-						if (toString.includes('input stream: Too many redirects')
-						|| toString.includes('input stream: Error parsing config: Unexpected token ; in JSON at position'))
+						if ((toString.includes('input stream: Too many redirects')
+						|| toString.includes('input stream: Error parsing config: Unexpected token')
+						|| toString.includes('input stream: Error parsing info: Unexpected token')
+						|| toString.includes('input stream: Could not find player config')) && retry <= 4)
 							return setTimeout(() => {
-								if (retry > 4) Music.next(guild);
-								else Music.next(guild, true, retry + 1);
+								Music.next(guild, true, retry + 1);
 							}, 500);
 
 						if (toString.includes('This video requires payment')) {
 							music.textChannel.send(i18n.get('struct.music.video_requires_payment', guild, { video: music.queue[0].meta.title.split(' (').slice(0, -1).join(' (') }));
+							return Music.next(guild);
+						}
+
+						if (toString.includes('This video is only available to Music Premium members')) {
+							music.textChannel.send(i18n.get('struct.music.music_premium', guild, { video: music.queue[0].meta.title.split(' (').slice(0, -1).join(' (') }));
 							return Music.next(guild);
 						}
 
@@ -439,7 +445,8 @@ const Music = {
 
 			switch (type) {
 				case 1: {// youtube
-					let info = await ytdl.getBasicInfo(id).catch(() => {
+					let info = await ytdl.getBasicInfo(id).catch(err => {
+						client.errorLog('Error getting ytdl info', err);
 						return reject(message._('could_not_get_info'));
 					});
 
