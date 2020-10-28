@@ -159,7 +159,8 @@ const Music = {
 						if ((toString.includes('input stream: Too many redirects')
 						|| toString.includes('input stream: Error parsing config: Unexpected token')
 						|| toString.includes('input stream: Error parsing info: Unexpected token')
-						|| toString.includes('input stream: Could not find player config')) && retry <= 4)
+						|| toString.includes('input stream: Could not find player config')
+						|| toString.includes('The "url" argument must be of type string. Received undefined')) && retry <= 4)
 							return setTimeout(() => {
 								Music.next(guild, true, retry + 1);
 							}, 500);
