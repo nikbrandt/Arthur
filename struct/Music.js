@@ -186,7 +186,11 @@ const Music = {
 							return Music.next(guild);
 						}
 
-						guild.client.errorLog("Error playing music from YouTube", { stack: err.stack ? err.stack : err, code: `Video ID ${music.queue[0].id} after ${Math.round(dispatcher.totalStreamTime / 1000)} seconds` });
+						guild.client.errorLog("Error playing music from YouTube", {
+							stack: err.stack ? err.stack : err,
+							code: `Video ID ${music.queue[0].id} after ${Math.round(dispatcher.totalStreamTime / 1000)} seconds` + (retry ? `, retry ${5}` : '')
+						});
+
 						Music.next(guild);
 					});
 					
