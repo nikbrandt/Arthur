@@ -76,7 +76,7 @@ const Music = {
 	 * @param {number} [retry] If song is being retried due to error, retry attempt number
 	 * @returns {Promise<void>}
 	 */
-	next: async (guild, first, retry) => {
+	next: async (guild, first, retry = 0) => {
 		if (retry) first = true;
 		let notify = await sql.get(`SELECT npNotify FROM guildOptions WHERE guildID = '${guild.id}'`);
 		if (!notify) notify = false;
@@ -155,12 +155,12 @@ const Music = {
 	
 					dispatcher.on('error', err => {
 						let toString = err.toString();
+						console.log('music log error toString: ' + toString);
 						
 						if ((toString.includes('input stream: Too many redirects')
 						|| toString.includes('input stream: Error parsing config: Unexpected token')
 						|| toString.includes('input stream: Error parsing info: Unexpected token')
-						|| toString.includes('input stream: Could not find player config')
-						|| toString.includes('The "url" argument must be of type string. Received undefined')) && retry <= 4)
+						|| toString.includes('input stream: Could not find player config')) && retry <= 4)
 							return setTimeout(() => {
 								Music.next(guild, true, retry + 1);
 							}, 500);
@@ -188,7 +188,7 @@ const Music = {
 
 						guild.client.errorLog("Error playing music from YouTube", {
 							stack: err.stack ? err.stack : err,
-							code: `Video ID ${music.queue[0].id} after ${Math.round(dispatcher.totalStreamTime / 1000)} seconds` + (retry ? `, retry ${5}` : '')
+							code: `Video ID ${music.queue[0].id} after ${Math.round(dispatcher.totalStreamTime / 1000)} seconds, retry ` + (retry ? retry : 0)
 						});
 
 						Music.next(guild);
