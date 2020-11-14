@@ -736,7 +736,7 @@
 				],
 				"name": "Fore skip",
 				"description": "Force skip the current song",
-				"help": "Force skip the current song. (Same as `@@prefixskip -f`) Requires \"@@struct.music.dj\" or \"@@struct.music.music\" role (or the below permisssions) or that you are the person who queued the song"
+				"help": "Force skip the current song. (Same as `skip -f`) Requires \"@@struct.music.dj\" or \"@@struct.music.music\" role (or the below permisssions) or that you are the person who queued the song"
 			}
 		},
 		"like": {
