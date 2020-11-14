@@ -728,6 +728,17 @@
 			"check_support_server": "Check the support server - $link - to see if your suggestion gets accepted.",
 			"error": "I couldn't add the card to trello for some reason.. Heck man, that's weird, could your report this on my support server? - $link\n```\n$err\n```"
 		},
+		"forceskip": {
+			"meta": {
+				"command": "forceskip",
+				"aliases": [
+					"fs"
+				],
+				"name": "Fore skip",
+				"description": "Force skip the current song",
+				"help": "Force skip the current song. (Same as `@@prefixskip -f`) Requires \"@@struct.music.dj\" or \"@@struct.music.music\" role (or the below permisssions) or that you are the person who queued the song"
+			}
+		},
 		"like": {
 			"meta": {
 				"command": "like",
