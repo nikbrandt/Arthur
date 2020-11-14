@@ -1,4 +1,4 @@
-const LINKS = [ 'https://youtu.be/p5rQHoaQpTw', 'https://youtu.be/w9uWPBDHEKE', 'https://youtu.be/Fl-rYuI1-0w', 'https://youtu.be/qgDrpWWxuto' ];
+const LINKS = [ 'https://youtu.be/p5rQHoaQpTw', 'https://youtu.be/w9uWPBDHEKE', 'https://youtu.be/Fl-rYuI1-0w', 'https://youtu.be/qgDrpWWxuto', 'https://youtu.be/9vMLTcftlyI', 'https://youtu.be/zYh-nANS444' ];
 
 exports.run = (message, args, suffix, client, permLevel, prefix, ipc) => {
 	message.__ = (string, variables) => {
