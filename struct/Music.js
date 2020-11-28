@@ -9,7 +9,6 @@ const ytSearch = require('ytsr');
 const ytPlaylist = require('ytpl');
 const Discord = require('discord.js');
 
-const tempYTSearch = require('../functions/youtubeSearchTemp');
 const soundcloud = require('./soundcloud.js');
 const { timeString } = require('./Util.js');
 
@@ -407,7 +406,7 @@ const Music = {
 					id: id,
 					type: type
 				} );
-			} else { //  if (!YTRegex.test(args[0]))
+			} else {
 				if (suffix.includes('-s') || suffix.includes('-soundcloud')) {
 					let term = suffix.replace(/-s(oundcloud)?/g, '');
 
@@ -423,14 +422,8 @@ const Music = {
 					} );
 				}
 
-				// let results = await Music.attemptYTSearch(suffix, message.client.errorLog);
+				let results = await Music.attemptYTSearch(suffix, message.client.errorLog);
 
-				let results;
-				try {
-					results = await tempYTSearch(suffix);
-				} catch (e) {}
-
-				// only need to check !results when moving back to ytsr
 				if (!results || !results[0]) return soundcloud.search(suffix).then(result => {
 					if (!result) return reject(message._('no_results'));
 
@@ -441,9 +434,6 @@ const Music = {
 				}).catch(() => {
 					reject(message._('no_results'));
 				});
-
-				// remove this when moving back to ytsr
-				results = results[0].id;
 
 				resolve ( {
 					id: results,
@@ -695,16 +685,13 @@ const Music = {
 				setTimeout(res, 250);
 			});
 
-			const options = {
-				limit: 1,
-				nextpageRef: `https://www.youtube.com/results?search_query=${encodeURIComponent(term)}&sp=EgIQAQ%253D%253D`
-			};
+			const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(term)}&sp=EgIQAQ%253D%253D`;
 
 			let results;
 			let err;
 
 			try {
-				results = await ytSearch(null, options);
+				results = await ytSearch(url);
 			} catch (error) {
 				err = error;
 			}
