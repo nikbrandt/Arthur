@@ -43,7 +43,7 @@
 		"trello": "^0.10.0",
 		"utf-8-validate": "^5.0.2",
 		"xml2json": "^0.11.2",
-		"ytdl-core": "^4.1.0",
+		"ytdl-core": "^4.1.1",
 		"ytpl": "^1.0.1",
 		"ytsr": "^2.0.0-alpha.3",
 		"zlib-sync": "^0.1.7"
