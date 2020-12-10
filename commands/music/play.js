@@ -81,7 +81,7 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 	else if (message.playnext) message.guild.music.queue.splice(1, 0, queueObj);
 	else message.guild.music.queue.push(queueObj);
 
-	if (playlistQuery) {
+	/*if (playlistQuery) {
 		if (message.channel.permissionsFor(message.guild.me).has('ADD_REACTIONS')) message.channel.send(message.__('detected_playlist')).then(async msg => {
 			const filter = (reaction, user) => ([ '706749501842522112', '706749501947510805' ].includes(reaction.emoji.id) || [ '️️️️✔️', '✖️' ].includes(reaction.emoji.name)) && user.id === message.author.id;
 
@@ -121,7 +121,7 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 				playlistMessage.delete().catch(() => {});
 			});
 		}
-	}
+	} */
 	
 	return 1; // for IPC
 };
@@ -193,6 +193,9 @@ exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 	}
 
 	let { id, type, list } = object;
+
+	// TODO: Re-implement playlists with a delay between info (better yet, rewrite music so getInfo isn't needed until video plays)
+	if (type % 1 > .3) return message.channel.send('Playlists are currently disabled until I can implement a better system for them when I have more time. Sorry \'bout that.');
 
 	if (message.playnext && (type === 1.5 || type === 5.5)) return message.channel.send(message.__('playnext_playlist'));
 
