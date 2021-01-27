@@ -353,6 +353,8 @@ const Music = {
 					type: type
 				} );
 			} else if (videoYTRegex.test(args[0])) {
+				// return reject('YouTube videos are temporarily not supported, sorry :(');
+
 				let [, id, query] = args[0].match(videoYTRegex);
 
 				let list;
@@ -368,6 +370,8 @@ const Music = {
 					list: list
 				} );
 			} else if (playlistYTRegex.test(args[0])) {
+				return reject('YouTube playlists are currently not supported, sorry :(');
+
 				id = args[0].match(playlistYTRegex)[1];
 
 				resolve ( {
@@ -421,6 +425,8 @@ const Music = {
 						type: 5
 					} );
 				}
+
+				// return reject('YouTube videos are currently not supported, sorry - to search soundcloud, add `-s` to your search term.');
 
 				let results = await Music.attemptYTSearch(suffix, message.client.errorLog);
 
@@ -691,26 +697,28 @@ const Music = {
 			let err;
 
 			try {
-				results = await ytSearch(url);
+				results = await ytSearch(url, { limit: 1 });
 			} catch (error) {
 				err = error;
 			}
 
 			if (err && err.toString().startsWith('SyntaxError')) return resolve(await Music.attemptYTSearch(term, errorLog, retry + 1));
 
-			if (err || !results || !results.items || !results.items[0] || !results.items[0].link) {
+			console.log(results);
+
+			if (err || !results || !results.items || !results.items[0] || !results.items[0].id) {
 				let error;
 				if (err) error = err;
 				else if (!results) error = 'No results.';
 				else if (!results.items) error = 'No items array.';
 				else if (!results.items[0]) error = 'No elements in the items array.';
-				else error = 'No link in first element of array.';
+				else error = 'No ID in first element of array.';
 				errorLog('No YouTube results found.', `Query: ${term}\n${error}`);
 
 				return resolve(false);
 			}
 
-			let id = results.items[0].link.slice(-11);
+			let id = results.items[0].id;
 			resolve(id);
 		});
 	}
