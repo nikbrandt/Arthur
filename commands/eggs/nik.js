@@ -135,22 +135,40 @@ let ledger = [];
 
 async function sendLedger() {
 	if (ledger.length === 0) return;
+
+	let chars = 2500;
+	let embed = -1;
+	let embeds = [];
+
+	while (ledger.length > 0) {
+		let string = getLedgerString(ledger.shift());
+		chars += string.length + 1;
+
+		if (chars > 2048) {
+			embed++;
+			chars = string.length;
+
+			embeds.push({
+				color: THEME_COLOR,
+				description: string
+			});
+		} else {
+			embeds[embed].description += '\n' + string;
+		}
+	}
 	
-	await ledgerWebhook.send({
-		embeds: [ {
-			color: THEME_COLOR,
-			description: ledger.map(cur => {
-				switch (cur.type) {
-					case 'transfer':
-						return `**${cur.amount}** ${COIN_EMOJI} transferred from **${cur.from}** (${cur.senderBal}) to **${cur.to}** (${cur.receiverBal})`;
-					case 'leaderboard':
-						return `**${cur.user}** moved from leaderboard position **${cur.from}** to **${cur.to}**`;
-				}
-			}).join('\n')
-		} ]
-	});
+	await ledgerWebhook.send({ embeds });
 	
 	ledger = [];
+}
+
+function getLedgerString(ledgerObject) {
+	switch (ledgerObject.type) {
+		case 'transfer':
+			return `**${ledgerObject.amount}** ${COIN_EMOJI} transferred from **${ledgerObject.from}** (${ledgerObject.senderBal}) to **${ledgerObject.to}** (${ledgerObject.receiverBal})`;
+		case 'leaderboard':
+			return `**${ledgerObject.user}** moved from leaderboard position **${ledgerObject.from}** to **${ledgerObject.to}**`;
+	}
 }
 
 async function checkLeaderboardChange(client) {
