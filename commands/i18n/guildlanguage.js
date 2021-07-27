@@ -10,11 +10,11 @@ exports.run = async (message, args, suffix, client, permLevel) => {
 	else args[0] = args[0].toLowerCase();
 
 	args[0] = args[0].trim();
-	
+
 	let locales = i18n.getLocales();
-	
+
 	if (!locales.includes(args[0])) return message.channel.send(message.__('invalid_locale', { locales: locales.map(locale => '`' + locale + '`').join(', ') }));
-	
+
 	await i18n.setGuildLocale(message.guild.id, args[0]);
 	message.channel.send(message.__('locale_set'));
 };

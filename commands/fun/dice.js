@@ -42,14 +42,14 @@ exports.run = (message, args) => {
 		summationArray.push(num);
 		summation += num;
 	}
-	
+
 	if (additive > 0) summation += additive;
-	
+
 	let successMessage;
 	if (additive === 0 && rollCount === 1) successMessage = message.__('success_roll', { result: summation });
 	else if (additive === 0) successMessage = message.__('success_roll_multiple', { roll: '**' + summationArray.join('** + **') + '**', result: summation });
 	else successMessage = message.__('success_roll_multiple', { roll: '(**' + summationArray.join('** + **') + '**) + **' + additive + '**', result: summation });
-	
+
 	if (successMessage.length > 2000) message.channel.send(message.__('success_roll', { result: summation }));
 	else message.channel.send(successMessage);
 };

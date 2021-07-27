@@ -6,7 +6,7 @@ exports.run = async (message, args, suffix, client) => {
 
 	if (args[0] === message.__('server') || args[0] === message.__('guild') || args[0] === message.__('server_abbreviation') || !args[0] || (args[0].length > 0 && args[0].length < 4 && args[0] !== message.__('global_abbreviation')) || args[0].length === 19) {
 		let guildID = message.guild.id;
-		
+
 		let page = 1;
 		if (args[1] || args[0]) {
 			if ((args[0] === message.__('server') || args[0] === message.__('guild') || args[0] === message.__('server_abbreviation')) && !args[1]) args[1] = '1';
@@ -15,12 +15,12 @@ exports.run = async (message, args, suffix, client) => {
 			if (tempPage < 1) return message.channel.send(message.__('negative_or_zero_page'));
 			page = Math.floor(tempPage);
 		}
-		
+
 		let rank = await XP.guildRank(message.member);
 		let list = await XP.guildLeaderboard(guildID, page, client, i18n.getLocaleCode(message));
 		if (!list) return message.channel.send(message.__('not_enough_people', { page }));
 		let guild = client.guilds.cache.get(guildID);
-		
+
 		message.channel.send({embed: {
 			color: 0x8356ff,
 			author: {
@@ -31,7 +31,7 @@ exports.run = async (message, args, suffix, client) => {
 			description: list.array.join('\n')
 		}});
 	}
-	
+
 	if (args[0] === message.__('global') || args[0] === message.__('global_abbreviation')) {
 		let pg = 1;
 		if (args[1]) {
@@ -40,11 +40,11 @@ exports.run = async (message, args, suffix, client) => {
 			if (tempPage < 1) return message.channel.send(message.__('negative_or_zero_page'));
 			pg = Math.floor(tempPage);
 		}
-		
+
 		let gRank = await XP.globalRank(message.author);
 		let gList = await XP.globalLeaderboard(pg, client);
 		if (!gList) return message.channel.send(message.__('not_enough_people', { page: pg }));
-		
+
 		message.channel.send({embed: {
 			author: {
 				name: message.__('global_leaderboard'),

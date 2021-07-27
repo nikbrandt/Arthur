@@ -9,10 +9,10 @@ const config = require('../../media/config.json');
 class ArthurClient extends Client {
 	constructor (options) {
 		super(options);
-		
+
 		this.loadStart = Date.now();
 		this.queueCount = 0;
-		
+
 		this.test = !!(process.argv[2] && process.argv[2] === 'test');
 		this.processing = [];
 
@@ -34,28 +34,28 @@ class ArthurClient extends Client {
 
 		this.i18n = new i18n(this);
 		global.i18n = this.i18n;
-		
+
 		permLevel.pl(this);
 		this.findMember = findMember;
 	}
-	
+
 	async init () {
 		eventLoader.load(this);
 		await this.i18n.init();
 		this.totalXP = (await sql.get('SELECT SUM(global) FROM (SELECT DISTINCT userID, global FROM xp)'))['SUM(global)'];
-		
+
 		this.login(this.test ? this.config.testToken : this.config.token).catch(this.errorLog.simple);
 	}
-	
+
 	broadcastEval(script) {
 		return new Promise((resolve, reject) => {
 			if (!this.readyTimestamp) reject('Client not ready yet.');
-			
+
 			let id = this.queueCount++;
-			
+
 			this.shardQueue.set(id, resolve);
 			this.shardErrorQueue.set(id, reject);
-			
+
 			this.shard.send({
 				action: 'broadcastEval',
 				script: script,

@@ -4,7 +4,7 @@ exports.run = async (message, args, suffix, client) => {
 	let user = client.shard.id === 0 ? client.lastMessage : (await client.broadcastEval('this.lastMessage'))[0];
 	if (!user) return message.channel.send('ive restarted since the last person sent a message, ffs');
 	message.delete().catch(() => {});
-	
+
 	client.commands.get('send').run(message, [ user.id, suffix ], '.'.repeat(user.id.toString().length + 1) + suffix, client);
 };
 

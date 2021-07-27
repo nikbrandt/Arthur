@@ -26,12 +26,12 @@ exports.run = (message, args, s, d, permLevel) => {
 	let skipNum = Math.round((message.guild.voice.connection.channel.members.size - 1) / 2);
 	if (message.guild.music.queue[0].voteSkips.length >= skipNum) return skip(message);
 
-	message.channel.send(message.__('vote_skip_registered', { 
+	message.channel.send(message.__('vote_skip_registered', {
 		user: message.member.displayName.replace(/@/g, '@\u200b'),
 		votes: skipNum - message.guild.music.queue[0].voteSkips.length,
 		part: message.guild.music.queue[0].voteSkips.length,
 		whole: skipNum,
-		forceMessage: canForceSkip ? '\n' + message.__('force_message') : '' 
+		forceMessage: canForceSkip ? '\n' + message.__('force_message') : ''
 	}));
 };
 

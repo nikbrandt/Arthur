@@ -9,9 +9,9 @@ exports.run = message => {
 		} catch (e) {
 			return message.channel.send(message.__('error'));
 		}
-		
+
 		if (!json) return message.channel.send(message.__('error'));
-		
+
 		message.channel.send({embed: {
 			description: message.__('embed_description', { url: json.message }),
 			image: {

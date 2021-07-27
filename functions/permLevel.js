@@ -1,12 +1,12 @@
 exports.pl = client => {
 	client.permLevel = message => {
 		let permLevel = 2;
-		
+
 		if (client.ownerID === message.author.id) return 10;
 		if (client.config.owners.includes(message.author.id)) return 9;
 		if (!message.author) return 0;
 		if (!message.guild) return 1;
-		
+
 		try {
 			let mod = message.guild.roles.cache.find(r => /mod$|moderator.*/.test(r.name.toLowerCase()));
 			let admin = message.guild.roles.cache.find(r => r.name.toLowerCase().includes('admin'));
@@ -14,9 +14,9 @@ exports.pl = client => {
 			if (message.member.permissions.has('MANAGE_GUILD')) permLevel = 4;
 			if ((admin && message.member.roles.cache.has(admin.id)) || message.member.permissions.has('ADMINISTRATOR')) permLevel = 5;
 		} catch (e) {}
-		
+
 		if (message.author.id === message.guild.ownerID) permLevel = 6;
-		
+
 		return permLevel;
 
 		/*

@@ -44,7 +44,7 @@ function getSubredditMeme(subreddit) {
 	return new Promise((resolve, reject) => {
 		updateSubreddit(subreddit).then(() => {
 			let { data } = subredditCache[subreddit];
-			
+
 			resolve(data[Math.floor(Math.random() * data.length)]);
 		}).catch(reject);
 	});
@@ -54,7 +54,7 @@ exports.run = (message, args) => {
 	let subreddit = args[0] && subreddits.includes(args[0].toLowerCase())
 		? args[0].toLowerCase()
 		: subreddits[Math.floor(Math.random() * subreddits.length)];
-	
+
 	getSubredditMeme(subreddit).then(meme => {
 		message.channel.send({embed: {
 				title: meme.title,

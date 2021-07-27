@@ -1,6 +1,6 @@
 ## Arthur
 
-[Support Server](https://discord.gg/HW7KYG9) . [TOS](http://bit.ly/ArthurTOS) . [Invite](https://discordapp.com/oauth2/authorize?client_id=329085343800229889&permissions=34683526&scope=bot) . [Trello](https://trello.com/b/wt7ptHpC/arthur)  
+[Support Server](https://discord.gg/HW7KYG9) . [TOS](http://bit.ly/ArthurTOS) . [Invite](https://discordapp.com/oauth2/authorize?client_id=329085343800229889&permissions=34683526&scope=bot) . [Trello](https://trello.com/b/wt7ptHpC/arthur)
 [![Discord Bots](https://discordbots.org/api/widget/status/329085343800229889.svg)](https://discordbots.org/bot/329085343800229889) [![Discord Bots](https://discordbots.org/api/widget/servers/329085343800229889.svg)](https://discordbots.org/bot/329085343800229889) [![Discord Bots](https://discordbots.org/api/widget/upvotes/329085343800229889.svg)](https://discordbots.org/bot/329085343800229889)
 
 ---

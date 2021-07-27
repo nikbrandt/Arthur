@@ -1163,9 +1163,9 @@
 		"humongoji": {
 			"meta": {
 				"command": "humongoji",
-				"aliases": [ 
-					"wumbowumboji", 
-					"bigmoji", 
+				"aliases": [
+					"wumbowumboji",
+					"bigmoji",
 					"hugemoji"
 				],
 				"name": "Toggle Humongoji",

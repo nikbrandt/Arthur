@@ -12,13 +12,13 @@ const YTRegex = /^(https?:\/\/)?(www\.|m\.|music\.)?(youtube\.com\/watch\?v=|you
 
 async function youtube(id, message, msg, client) {
 	let info;
-	
+
 	try {
 		info = await ytdl.getInfo(id);
 	} catch (e) {
 		return msg.edit(message.__('song_not_found')).catch(() => {});
 	}
-	
+
 	if (!info) return msg.edit(message.__('song_not_found')).catch(() => {});
 
 	if (info.videoDetails.isLiveContent) return msg.edit(message.__('livestream')).catch(() => {});
@@ -72,7 +72,7 @@ async function finish(stream, title, length, message, msg, client, thumbnail, ur
 			request(options, (err, res, body) => {
 				if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
 				client.processing.splice(index, 1);
-				
+
 				if (err) {
 					console.log(err);
 					console.log(body);

@@ -37,7 +37,7 @@ exports.run = (message, args, suffix, client) => {
 			},
 			files: message.attachments.map(a => {return { attachment: a.url, name: a.name }})
 		};
-		
+
 		client.broadcastEval(`let channel = this.channels.cache.get('${config.trello.channel}');
 		if (channel) channel.send(${JSON.stringify(messageOptions)}).then(() => true);`).catch(client.errorLog.simple);
 

@@ -14,11 +14,11 @@ let validUserOptions;
 let ipcObject = client => {
 	ipc.connectTo('ipcServer', () => {
 		ipcClient = ipc.of.ipcServer;
-		
+
 		ipcClient.on('connect', () => {
 			console.log('Connected to IPC server.');
 			ipcClient.emit('hello', { id: 'bot' });
-			
+
 			setInterval(async () => {
 				ipcClient.emit('data', {
 					type: 'stats',
@@ -49,14 +49,14 @@ let ipcObject = client => {
 				})
 			}, 1000);
 		});
-		
+
 		ipcClient.on('get', async data => {
 			const { type, id, request } = data;
-			
+
 			let output = undefined;
 			let error = undefined;
 			let time = undefined;
-			
+
 			switch (type) {
 				case 'guild': {
 					let guild = client.guilds.cache.get(id);
@@ -65,17 +65,17 @@ let ipcObject = client => {
 						error = 'Could not find guild with ID provided';
 						break;
 					}
-					
+
 					if (!guild.available) {
 						error = 'Guild is not available';
 						break;
 					}
-					
+
 					if (guild.deleted) {
 						error = 'Bot is no longer in guild';
 						break;
 					}
-					
+
 					await sql.run('INSERT OR IGNORE INTO guildOptions (guildID) VALUES (?)', [id]);
 					let [options, blacklist] = await Promise.all([
 						sql.get(`SELECT * FROM guildOptions WHERE guildID = '${id}'`),
@@ -94,17 +94,17 @@ let ipcObject = client => {
 
 					break;
 				}
-				
+
 				case 'music': {
 					let guild = client.guilds.cache.get('id');
-					
+
 					if (!guild) {
 						error = 'Could not find guild with ID provided';
 						break;
 					}
-					
+
 					let music = guild.music;
-					
+
 					if (!music || music.playing === undefined) {
 						error = 'Guild is not playing music';
 						break;
@@ -116,7 +116,7 @@ let ipcObject = client => {
 						textChannel: deconstructChannel(music.textChannel),
 						queue: music.queue.map(obj => {
 							let { type, id, meta, person } = obj;
-							
+
 							return {
 								type, id,
 								meta: {
@@ -130,41 +130,41 @@ let ipcObject = client => {
 
 					break;
 				}
-				
+
 				case 'stats': {
 					error = 'Stats should be sent through an interval and retrieved from the server cache';
 					break;
 				}
-				
+
 				case 'locale': {
 					let locale = i18n.getLocale(id);
-					
+
 					if (!locale) {
 						error = 'Locale not found';
 						break;
 					}
-					
+
 					time = 60 * 10;
 					output = locale;
-					
+
 					break;
 				}
-				
+
 				case 'commands': {
 					time = 60 * 60 * 6;
 					output = client.commands.map((command, commandName) => {
 						let config = JSON.parse(JSON.stringify(command.config));
 						config.name = commandName;
-						
+
 						return config;
 					});
-					
+
 					break;
 				}
-				
+
 				case 'user': {
 					let user = await client.users.fetch(id);
-					
+
 					if (!user) {
 						error = 'Could not find user with ID provided';
 						break;
@@ -175,88 +175,88 @@ let ipcObject = client => {
 						sql.get(`SELECT * FROM userOptions WHERE userID = '${id}'`),
 						sql.all(`SELECT * FROM xp WHERE userID = '${id}'`)
 					]);
-					
+
 					let partialUser = deconstructUser(user);
 					partialUser.options = options;
 					if (xp) partialUser.xp = xp;
 
 					output = partialUser;
-					
+
 					time = 30;
 					break;
 				}
-				
+
 				case 'guildXP': {
 					if (!client.guilds.cache.has(id)) {
 						error = 'Could not find guild with ID provided';
 						break;
 					}
 
-					time = 15;					
+					time = 15;
 					output = await sql.all(`SELECT * FROM xp WHERE guildID = '${id}'`);
 
 					break;
 				}
-				
+
 				default: {
 					error = 'Unrecognized type';
 					break;
 				}
 			}
-			
+
 			if (error) return ipcClient.emit('response', { request, error });
 			if (!output) return ipcClient.emit('response', { request, error: 'Could not get data.' });
-			
+
 			ipcClient.emit('response', {
 				request,
 				data: output,
 				time
 			})
 		});
-		
+
 		ipcClient.on('post', async data => {
 			let { request, type, action, id, params } = data;
 			let error;
-			
+
 			switch (type) {
 				case 'guild': {
 					if (!params) {
 						error = 'No params specified';
 						break;
 					}
-					
+
 					let guild = client.guilds.cache.get(id);
 					if (!guild) {
 						error = 'Invalid guild ID';
 						break;
 					}
-					
+
 					switch (action) {
 						case 'updateOptions': {
 							if (!validGuildOptions) validGuildOptions = (await sql.all('PRAGMA table_info(guildOptions)')).map(opt => opt.name);
 							let options = Object.keys(params);
 							let vals = Object.values(params);
-							
+
 							if (options.some(option => !validGuildOptions.includes(option))) {
 								error = 'Invalid option supplied';
 								break;
 							}
-							
+
 							let questionArray = [];
 							let inputArray = [];
-							
+
 							options.forEach((option, i) => {
 								questionArray.push('? = ?');
 								inputArray.push(option, vals[i]);
 							});
-							
+
 							try {
 								await sql.run(`UPDATE guildOptions SET ${questionArray.join(', ')} WHERE guildID = ${id}`, inputArray);
 							} catch (e) {
 								console.error('Sqlite error while updating guildOptions in IPC module:\n', e);
 								error = 'Sqlite error'
 							}
-							
+
 							break;
 						}
 						case 'blacklistUser': { // TODO: Add (un)blacklistRole functions
@@ -269,7 +269,7 @@ let ipcObject = client => {
 							// TODO: make this more efficient (using sql.all and then users.some??)
 							let users = await sql.all(`SELECT ID FROM guildBlacklist WHERE guildID = '${id}'`);
 							if (!users.some(obj => obj.userID === params.userID)) await sql.run(`INSERT INTO guildBlacklist (guildID, ID) VALUES (?, ?)`, [ id, params.userID ]);
-							
+
 							break;
 						}
 						case 'unblacklistUser': {
@@ -278,16 +278,16 @@ let ipcObject = client => {
 								error = 'User is not blacklsited';
 								break;
 							}
-							
+
 							await sql.run(`DELETE FROM guildBlacklist WHERE ID = ? AND guildID = ?`, [ params.userID, id ]);
-							
+
 							break;
 						}
 						default:
 							error = 'Invalid action';
 							break;
 					}
-					
+
 					break;
 				}
 				case 'music': {
@@ -301,12 +301,12 @@ let ipcObject = client => {
 						error = 'Invalid guild ID';
 						break;
 					}
-					
+
 					if (!params.userID) {
 						error = 'No user ID specified';
 						break;
 					}
-					
+
 					let member;
 					try {
 						member = await guild.members.fetch(params.userID);
@@ -315,20 +315,20 @@ let ipcObject = client => {
 						error = 'Invalid user ID';
 						break;
 					}
-					
+
 					if (!guild.music || !guild.music.queue || !guild.voice || !guild.voice.connection) {
 						error = 'No music is playing in guild';
 						break;
 					} // TODO: Implement the rest of the actions
 					// TODO: On every music action, send a message to the music textChannel (music.textChannel) with the action performed and who performed it
-					
+
 					switch (action) {
 						case 'togglePausePlay': {
 							if (guild.music.playing) guild.voice.connection.dispatcher.pause(true);
 							else guild.voice.connection.dispatcher.resume();
-							
+
 							guild.music.playing = !guild.music.playing;
-							
+
 							break;
 						}
 						case 'addToQueue': {
@@ -336,7 +336,7 @@ let ipcObject = client => {
 								error = 'No song provided to add';
 								break;
 							}
-							
+
 							let fakeMessage = {
 								attachments: { size: 0 },
 								author: { id: params.userID },
@@ -346,30 +346,30 @@ let ipcObject = client => {
 								},
 								guild: guild
 							};
-							
+
 							let args = params.song.split(/ +/g);
 							let out; // returns a 1 if successful, otherwise an error message
-							
+
 							try {
 								out = await client.commands.get('play').run(fakeMessage, args, params.song, client, client.permLevel(fakeMessage), 'asdf', true);
 							} catch (err) {
 								error = err;
 								break;
 							}
-							
+
 							if (out !== 1) error = out;
-							
+
 							break;
 						}
 						case 'stop': {
 							guild.voice.connection.disconnect();
 							guild.music = {};
-							
+
 							break;
 						}
 						case 'skip': {
 							guild.voice.connection.dispatcher.end();
-							
+
 							break;
 						}
 						case 'likeToggle': {
@@ -378,7 +378,7 @@ let ipcObject = client => {
 							let songMeta = message.guild.music.queue[0].meta;
 
 							let songCheck = await sql.get(`SELECT count(1) FROM musicLikes WHERE userID = '${message.author.id}' AND id = '${songID}'`);
-							
+
 							if (songCheck['count(1)']) sql.run(`DELETE FROM musicLikes WHERE userID = '${message.author.id}' AND id = '${rows[num - 1].id}'`);
 							else sql.run(`INSERT INTO musicLikes (userID, type, id, url, title, queueName) VALUES (?, ?, ?, ?, ?, ?)`, [message.author.id, songType, songID, songMeta.url, songMeta.title, songMeta.queueName]);
 
@@ -386,7 +386,7 @@ let ipcObject = client => {
 						}
 						case 'loop': {
 							guild.music.loop = !guild.music.loop;
-							
+
 							break;
 						}
 						case 'remove': {
@@ -394,14 +394,14 @@ let ipcObject = client => {
 								error = 'Invalid or no queue number provided';
 								break;
 							}
-							
+
 							if (params.number === 1) {
 								error = 'Use skip instead of remove for current song';
 								break;
 							}
-							
+
 							guild.music.queue.splice(num - 1, 1);
-							
+
 							break;
 						}
 						case 'shuffle': {
@@ -414,9 +414,9 @@ let ipcObject = client => {
 							let first = queue.shift();
 							let shuffled = shuffle(queue);
 							shuffled.unshift(first);
-							
+
 							guild.music.queue = shuffled;
-							
+
 							break;
 						}
 						case 'move': {
@@ -424,24 +424,24 @@ let ipcObject = client => {
 								error = 'Number or position not provided';
 								break;
 							}
-							
+
 							if (params.number < 1 || params.number > guild.music.queue.length || params.position < 1 || params.position > guild.music.queue.length) {
 								error = 'Number or position out of possible range';
 								break;
 							}
-							
+
 							if (params.number === params.position) break;
-							
+
 							let item = guild.music.queue.splice(params.number - 1, 1);
 							guild.music.queue.splice(params.position - 1, 0, item[0]);
-							
+
 							break;
 						}
 						default:
 							error = 'Invalid action';
 							break;
 					}
-					
+
 					break;
 				}
 				case 'user': {
@@ -477,17 +477,17 @@ let ipcObject = client => {
 							error = 'Invalid action';
 							break;
 					}
-					
+
 					break;
 				}
 				default:
 					error = 'Type provided does not have actions';
 					break;
 			}
-			
+
 			let out = { request };
 			if (error) out.error = error;
-			
+
 			ipcClient.emit('postResponse', out);
 		});
 	});
@@ -495,7 +495,7 @@ let ipcObject = client => {
 
 function deconstructChannel(channel) {
 	let { id, name, type, parent, parentID } = channel;
-	
+
 	let out = { id, name, type };
 
 	if (parent) out.parent = {
@@ -510,7 +510,7 @@ function deconstructChannel(channel) {
 function deconstructUser(user) {
 	let { id, username, discriminator } = user;
 	let displayAvatarURL = user.displayAvatarURL();
-	
+
 	return { displayAvatarURL, id, username, discriminator };
 }
 

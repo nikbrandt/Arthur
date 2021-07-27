@@ -20,7 +20,7 @@ exports.run = async (message, args) => {
 	else if (args[0].length === 32) uuid = args[0];
 	else if (args[0].length <= 16) uuid = await getUUID(args[0]);
 	else return message.channel.send(i18n.get('commands.mchistory.long_name', message));
-	
+
 	if (!uuid) {
 		fake = true;
 		uuid = randos[Math.floor(Math.random() * randos.length)];

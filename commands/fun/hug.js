@@ -16,7 +16,7 @@ exports.run = async (message, args, suffix, client) => {
 		loadImage(message.author.displayAvatarURL({ format: 'png' })),
 		loadImage('../media/images/hug.png')
 	]);
-	
+
 	ctx.drawImage(backgroundImage, 0, 0);
 
 	ctx.save();
@@ -24,7 +24,7 @@ exports.run = async (message, args, suffix, client) => {
 	ctx.rotate(-8 * Math.PI / 180);
 	ctx.drawImage(receiverImage, 0, 0, 110, 110);
 	ctx.restore();
-	
+
 	ctx.translate(155, 15);
 	ctx.rotate(-352 * Math.PI / 180);
 	ctx.drawImage(giverImage, 0, 0, 110, 110);

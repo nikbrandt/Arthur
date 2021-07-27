@@ -4,7 +4,7 @@ First off, thank you for having an interest in translating Arthur into your lang
 
 I have plans to make the translation process easier with a website, but I realize that it may be a while until that happens and I might as well have proper documentation of the current translation process. **Please read this whole document if you would like to translate Arthur.** It isn't too long (especially in comparison to the actual translation :eyes:), and I'd like to ensure that the translation process is as smooth as possible, both for you and me.
 
-Thanks again!  
+Thanks again!
  \- Gymnophoria
 
 ## Setup
@@ -18,7 +18,7 @@ Please follow steps 1 and 2. I'll happily setup a file for you, though (meaning 
 3. Make a JSON file for your language and open it in your editor.
 
     i. Name the file in the format `<locale code> <language name in English>.json`. For example, the US English file is named `en-US English, US.json`, with the locale code `en-US` and the language name `English, US`. Note that `US` was added on to the locale code and language name; if your translation is specific to a country, add that (in two letters) to the code and (in full) to the language name (e.g. `es-ES Español, España`, more examples of just the codes [here](https://www.ge.com/digital/documentation/predix-services/c_custom_locale_support.html)). Please use the [ISO 639-1 code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) for your language (first column). The language/country should be in your language, not English. Ask me if you have any questions about this step (or any step!).
-    
+
     ii. Copy and paste the following into the document:
 ```JSON
 {
@@ -28,7 +28,7 @@ Please follow steps 1 and 2. I'll happily setup a file for you, though (meaning 
 		],
 		"flag": "SEE INSTRUCTIONS",
 		"translations": {
-		
+
 		}
 	}
 }
@@ -46,7 +46,7 @@ Please follow steps 1 and 2. I'll happily setup a file for you, though (meaning 
 
 - When filling out the `"meta"` section, keep the following in mind:
    - Please do override the English versions of commands. Arthur will try to find the command in your language, but will fall back to the English version if it can't.
-   - Not all aliases need to be translated if they don't all make sense. You can also add more if it is logical, necessary, or a good play on words/joke (that still makes sense to be an alias). 
+   - Not all aliases need to be translated if they don't all make sense. You can also add more if it is logical, necessary, or a good play on words/joke (that still makes sense to be an alias).
    - Please keep the square brackets (`[]`) and angle brackets (`<>`) in the `usage` section (but translate the text inside of them).
 
 - Understand how Discord markdown works: `*asterisks*` make *italics*, `**double asterisks**` make **bold**, `***triple asterisks***` do ***both***, `__double underlines__` make <ins>underlined text</ins> and can be combined with any of the previous formatting. Please keep formatting where appropriate.
@@ -73,7 +73,7 @@ Please follow steps 1 and 2. I'll happily setup a file for you, though (meaning 
 - Save often! I've already seen two people lose a fair bit of progress because of computer restarts/accidentally closing windows/etc. If your editor doesn't auto save, consider saving after every command or some other often interval to avoid this frustration.
 
 - Please ask questions about anything if you're confused! Join the [support server](https://discord.gg/2SDdyF7) if you haven't already to ask questions, or if you prefer message me at Gymnophoria#8146.
- 
+
  ## Finished translating?
- 
+
  If you know how to use GitHub, feel free to submit a PR with your locale file added to the locales folder. Otherwise, send it to me over Discord and I'll add it to Arthur after confirming it works and looking it over. Thank you so much!

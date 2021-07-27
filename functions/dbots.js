@@ -8,11 +8,11 @@ let prevShards;
 
 exports.post = async () => {
 	let shards = await broadcastEval('this.guilds.cache.size');
-	
+
 	let totalGuilds = shards.reduce((prev, cur) => prev + cur, 0);
 	if (guilds === totalGuilds) return;
 	guilds = totalGuilds;
-	
+
 	let orgOpts = {
 		url: `https://top.gg/api/bots/${config.website.client_id}/stats`,
 		method: 'POST',
@@ -25,7 +25,7 @@ exports.post = async () => {
 			shard_count: shards.length
 		}
 	};
-	
+
 	try {
 		request(orgOpts);
 	} catch (e) {}
