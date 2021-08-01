@@ -3,20 +3,20 @@ const XP = require('../../struct/xp.js');
 exports.run = async (message, args, suffix, client) => {
 	let guildRow = await sql.get(`SELECT * FROM guildOptions WHERE guildID = '${message.guild.id}'`);
 	if (!guildRow || guildRow.levels === 'false') return;
-	
+
 	let memObj = client.findMember(message, suffix);
 	let mem;
 	if (!memObj) mem = message.member;
 	else mem = memObj.member;
-	
+
 	let xpObj = await XP.memberXP(mem);
 	let nextLevel = client.config.xp.levelOne * Math.pow(client.config.xp.mult, xpObj.level);
 	let neededXP = Math.floor((nextLevel) - xpObj.current) * 10 / 10;
 	let percent = Math.round(xpObj.current / nextLevel * 1000) / 10;
-	
+
 	let gRank = await XP.globalRank(mem.user);
 	let rank = await XP.guildRank(mem);
-	
+
 	message.channel.send({embed: {
 		author: {
 			name: mem.displayName + '\'s XP',
@@ -27,7 +27,7 @@ exports.run = async (message, args, suffix, client) => {
 		fields: [
 			{
 				name: message.__('guild_xp'),
-				value: message.__('current_xp', { 
+				value: message.__('current_xp', {
 					current: xpObj.current,
 					total: xpObj.current === xpObj.total ? '' : ', ' + message.__('total') + `: **${xpObj.total}**`,
 					level: xpObj.level,

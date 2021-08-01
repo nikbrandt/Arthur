@@ -15,10 +15,10 @@ const errorLog = (shortError, error, noConsole) => {
 		console.error(shortError);
 		console.error(error.stack ? error.stack : error);
 	}
-	
+
 	let { stack, code} = error;
 	if (!stack) stack = error;
-	
+
 	if (process.argv[2] && process.argv[2] === 'test') {
 		if (process.env['ARTHUR_ERRORLOG'] !== 'true') return;
 		code += ' | Testbot error';
@@ -66,16 +66,16 @@ exports.load = client => {
 
 	console.log();
 	console.log(`Loaded ${events.length} events in ${Date.now() - start} ms.\n`);
-	
+
 	client.on('raw', async event => {
 		if (!rawEvents.hasOwnProperty(event.t)) return;
-		
+
 		const { d: data } = event;
 		const user = await client.users.fetch(data.user_id);
 		const channel = client.channels.cache.get(data.channel_id); // || await user.createDM(); if using DM reactions
-		
+
 		if (!channel || channel.messages.cache.has(data.message_id)) return;
-		
+
 		const message = await channel.messages.fetch(data.message_id).catch(() => {});
 		if (!message) return;
 
@@ -89,18 +89,18 @@ exports.load = client => {
 
 	client.on('debug', d => {
 		if (d.startsWith('[VOICE')) return;
-		
+
 		if (d.includes('Session invalidated')) statusUpdate({
 			title: 'Session Invalidated',
 			timestamp: new Date().toISOString(),
 			color: 0xf47742,
 		});
-		
+
 		if (d.includes('eartbeat')) {
 			lastHeartbeat = Date.now();
 			return;
 		}
-		
+
 		console.log(d);
 	});
 

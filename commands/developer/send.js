@@ -9,20 +9,20 @@ exports.run = async (message, args, suffix, client) => {
 
 	let channel = client.users.cache.get(Object.keys(client.recentMessages)[Object.values(client.recentMessages).indexOf(args[0])])
 		||(await client.broadcastEval(`this.users.cache.get(Object.keys(this.recentMessages)[Object.values(this.recentMessages).indexOf('${args[0]}')])`)).filter(item => !!item)[0];
-	
+
 	if (!channel) channel = client.users.cache.get(args[0])
 		|| (await client.broadcastEval(`this.users.cache.get('${args[0]}')`)).filter(item => !!item)[0];
-	
+
 	if (!channel) {
 		channel = client.channels.cache.get(args[0])
 			|| (await client.broadcastEval(`this.channels.cache.get('${args[0]}')`)).filter(item => !!item)[0];
-		
+
 		if (!channel) return message.channel.send('That\'s not a valid ID, sorry.');
 		name = `${channel.name} in ${channel.guild.name}`
 	} else name = channel.tag;
-	
+
 	let text = suffix.slice(args[0].length + 1);
-	
+
 	if (channel.client) {
 		channel.send(suffix.slice(args[0].length + 1), { files: message.attachments.size ? message.attachments.array().map(f => f.url) : [] }).then(() => {
 			if (message.channel.id === MESSAGE_CHANNEL_ID) successMessage(client, message, name, text);
@@ -39,9 +39,9 @@ exports.run = async (message, args, suffix, client) => {
 				resolve(false);
 			});
 		});`)).filter(item => item !== null)[0];
-		
+
 		if (message.channel.id !== MESSAGE_CHANNEL_ID) return;
-		
+
 		if (success === true) successMessage(client, message, name, text);
 		else failureMessage(client, name, text);
 	}
@@ -70,7 +70,7 @@ function failureMessage(client, name, text) {
 
 function finalMessage(client, messageOptions) {
 	if (client.channels.cache.has(MESSAGE_CHANNEL_ID)) return client.channels.cache.get(MESSAGE_CHANNEL_ID).send(messageOptions).catch(() => {});
-	
+
 	client.broadcastEval(`if (!this.channels.cache.has('${MESSAGE_CHANNEL_ID}') return;
 	this.channels.cache.get('${MESSAGE_CHANNEL_ID}').send(${JSON.stringify(messageOptions)}).catch(() => {})`).catch(() => {});
 }

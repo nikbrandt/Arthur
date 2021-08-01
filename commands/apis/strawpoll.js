@@ -47,7 +47,7 @@ exports.run = async (message, args, suffix) => {
 		color: 0x007c29,
 		footer
 	};
-	
+
 	if (!args[0]) return message.channel.send(message.__('no_title'));
 	if (!args[1]) return message.channel.send(message.__('no_options'));
 
@@ -59,7 +59,7 @@ exports.run = async (message, args, suffix) => {
 		lastPoll.uses = 1;
 	}
 	if (lastPoll.uses >= 100) return message.channel.send(message.__('too_many_polls'));
-	
+
 	let title;
 	let options;
 	let advanced = false;
@@ -67,7 +67,7 @@ exports.run = async (message, args, suffix) => {
 	let dupcheck = 'normal';
 	let captcha = false;
 	let editMessage = undefined;
-	
+
 	if (quoteRegex.test(suffix)) {
 		let matchedString = suffix.match(quoteRegex);
 		title = matchedString[1];
@@ -77,19 +77,19 @@ exports.run = async (message, args, suffix) => {
 		title = args[0];
 		suffix = suffix.slice(args[0].length + 1);
 	}
-	
+
 	if (suffix.includes(`--${message.__('advanced')}`) || suffix.includes(`--${message.__('advanced_abbreviation')}`)) {
 		advanced = true;
 		suffix = suffix.replace(new RegExp(` *--${message.__('advanced_abbreviation')}(${message.__('advanced_abbreviation_ending')})? *`, 'g'), '');// / *--adv(anced)? */g, '');
 	}
-	
+
 	options = suffix.split('|');
 	if (options.length < 2) return message.channel.send(message.__('not_enough_options'));
 	if (options.length > 30) return message.channel.send(message.__('too_many_options'));
 	options.forEach((op, i) => {
 		options[i] = op.replace(/^ *(.*) *$/, '$1');
 	});
-	
+
 	if (advanced) {
 		try {
 			let multiObject = await askWithCondition(message.channel, multiEmbed, message.author.id, undefined, 1, undefined, isYesNo, 15000);
@@ -103,7 +103,7 @@ exports.run = async (message, args, suffix) => {
 			return e;
 		}
 	}
-	
+
 	let response;
 	try {
 		response = await requestPromise({
@@ -121,13 +121,13 @@ exports.run = async (message, args, suffix) => {
 			? editMessage.edit(message.__('error', { err }), {embed: {}}).catch(() => {})
 			: message.channel.send(message.__('error', { err }));
 	}
-	
+
 	let embed = {
 		title: message.__('poll_created'),
 		description: message.__('it_can_be_accessed_here', { id: response.id }),
 		color: 0x00c140
 	};
-	
+
 	editMessage
 		? editMessage.edit('', { embed })
 		: message.channel.send({ embed });

@@ -26,15 +26,15 @@ function getInfo (url, localeResolvable) {
 	return new Promise(async (resolve, reject) => {
 		if (!soundcloudRegex.test(url)) return reject(i18n.get('struct.soundcloud.invalid_url', localeResolvable));
 		if (url.indexOf('?') > 0) url = url.substring(0, url.indexOf('?'));
-		
+
 		if (cache.has(url)) return resolve(cache.get(url));
-		
+
 		let { body } = await needle('get', `https://api-v2.soundcloud.com/resolve?url=${encodeURIComponent(url)}&client_id=${clientID}`, { json: true }).catch(err => {
 			reject(err);
 		});
-		
+
 		if (!body) return;
-			
+
 		if (body.errors && body.errors[1].error_message.includes('404')) return reject(i18n.get('struct.soundcloud.sound_nonexistant', localeResolvable));
 		if (body.kind !== 'track' && body.kind !== 'playlist') return reject(i18n.get('struct.soundcloud.invalid_type', localeResolvable, { type: body.kind }));
 
@@ -57,7 +57,7 @@ function search (term, localeResolvable) {
 		});
 
 		if (!body) return reject(i18n.get('struct.soundcloud.no_search_results', localeResolvable));
-			
+
 		if (!body.collection || body.collection.length === 0) return reject(i18n.get('struct.soundcloud.no_search_results', localeResolvable));
 
 		addToCache(body.collection[0]);

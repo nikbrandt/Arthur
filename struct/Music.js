@@ -113,7 +113,7 @@ const Music = {
 			}
 
 			console.log(`In guild ${guild.id} playing type ${music.queue[0].type} with id ${music.queue[0].id}`);
-			
+
 			if (notify && music.queue[0].embed && !first) {
 				let embed = music.queue[0].embed;
 				if (!embed.author) embed.author = {};
@@ -131,31 +131,31 @@ const Music = {
 					&& music.textChannel.lastMessage.embeds[0].description === music.queue[0].embed.description) music.textChannel.lastMessage.edit({ embed }).then(messageCallback);
 				else music.textChannel.send({ embed }).then(messageCallback);
 			}
-			
+
 			switch (music.queue[0].type) {
 				case 1: { // youtube
 					let stream = ytdl(music.queue[0].id, { quality: 'highestaudio', highWaterMark: 1 << 23, requestOptions: { maxRedirects: 10 } });
-	
+
 					if (!guild.voice || !guild.voice.connection) {
 						guild.music = {};
 						return;
 					}
-					
+
 					let dispatcher = guild.voice.connection.play(stream, streamOptions);
-	
+
 					dispatcher.once('finish', () => {
 						Music.next(guild);
 					});
-	
+
 					dispatcher.once('start', () => {
 						guild.voice.connection.player.streamingData.pausedTime = 0;
 						guild.music.startTime = Date.now();
 					});
-	
+
 					dispatcher.on('error', err => {
 						let toString = err.toString();
 						console.log('music log error toString: ' + toString);
-						
+
 						if ((toString.includes('input stream: Too many redirects')
 						|| toString.includes('input stream: Error parsing config: Unexpected token')
 						|| toString.includes('input stream: Error parsing info: Unexpected token')
@@ -179,7 +179,7 @@ const Music = {
 							music.textChannel.send(i18n.get('struct.music.no_audio_track', guild, { video: music.queue[0].meta.title.split(' (').slice(0, -1).join(' (') }));
 							return Music.next(guild);
 						}
-						
+
 						if (toString.includes('This video is unavailable')
 						|| toString.includes('Video unavailable')) {
 							music.textChannel.send(i18n.get('struct.music.video_unavailable', guild, { video: music.queue[0].meta.title.split(' (').slice(0, -1).join(' (') }));
@@ -193,7 +193,7 @@ const Music = {
 
 						Music.next(guild);
 					});
-					
+
 					break;
 				}
 				case 4: { // from URL
@@ -212,27 +212,27 @@ const Music = {
 						guild.client.errorLog("Error playing music from URL", { stack: err.stack ? err.stack : err, code: `After ${Math.round(dispatcher.totalStreamTime / 1000)} seconds, URL:` + music.queue[0].id });
 						Music.next(guild);
 					});
-					
+
 					break;
 				}
 				case 3: { // local file
 					const stream = fs.createReadStream(`../media/sounds/${music.queue[0].id}.mp3`);
 					let dispatcher = guild.voice.connection.play(stream, streamOptions);
-	
+
 					dispatcher.once('finish', () => {
 						Music.next(guild);
 					});
-	
+
 					dispatcher.once('start', () => {
 						guild.voice.connection.player.streamingData.pausedTime = 0;
 						guild.music.startTime = Date.now();
 					});
-	
+
 					dispatcher.on('error', err => {
 						guild.client.errorLog("Error playing music from local file", { stack: err.stack ? err.stack : err, code: `File ${music.queue[0].id} after ${Math.round(dispatcher.totalStreamTime / 1000)} seconds` });
 						Music.next(guild);
 					});
-					
+
 					break;
 				}
 				case 5: { // soundcloud
@@ -417,7 +417,7 @@ const Music = {
 					let result = await soundcloud.search(term).catch(err => {
 						return reject(err);
 					});
-					
+
 					if (!result) return reject(message._('no_results'));
 
 					return resolve ( {
@@ -621,35 +621,35 @@ const Music = {
 					fakeMessage.__ = (string, variables) => {
 						return i18n.get('commands.like.' + string, message, variables);
 					};
-					
+
 					client.commands.get('like').run(fakeMessage, [], '', client);
 					break;
 				case '⏩':
 					fakeMessage.__ = (string, variables) => {
 						return i18n.get('commands.skip.' + string, message, variables);
 					};
-					
+
 					client.commands.get('skip').run(fakeMessage, [], '', 'ded', permLevel);
 					break;
 				case '⏹':
 					fakeMessage.__ = (string, variables) => {
 						return i18n.get('commands.stop.' + string, message, variables);
 					};
-					
+
 					client.commands.get('stop').run(fakeMessage, [], '', 'hi mom', permLevel);
 					break;
 				case '🔁':
 					fakeMessage.__ = (string, variables) => {
 						return i18n.get('commands.loop.' + string, message, variables);
 					};
-					
+
 					client.commands.get('loop').run(fakeMessage, [], '', '', permLevel);
 					break;
 				case '🎶':
 					fakeMessage.__ = (string, variables) => {
 						return i18n.get('commands.queue.' + string, message, variables);
 					};
-					
+
 					client.commands.get('queue').run(fakeMessage, []);
 					break;
 			}

@@ -3,8 +3,8 @@ const discordEmojiRegex = /^\s*<?(a)?:?(\w{2,32}):(\d{17,19})>?\s*$/;
 
 exports.run = (message, args) => {
 	let emoji = ':regional_indicator_l:';
-	if (args[0] && (unicodeEmojis.includes(args[0]) || discordEmojiRegex.test(args[0]))) emoji = args[0]; 
-	
+	if (args[0] && (unicodeEmojis.includes(args[0]) || discordEmojiRegex.test(args[0]))) emoji = args[0];
+
 	message.channel.send(`${emoji}\n${emoji}\n${emoji}\n${emoji}${emoji}${emoji}`);
 };
 

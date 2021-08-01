@@ -61,13 +61,13 @@ client.init().catch(errorLog.simple);
 const clientEval = (function(script) {
 	return new Promise(async (resolve, reject) => {
 		let res;
-		
+
 		try {
 			res = await eval(script);
 		} catch (e) {
 			return reject(e);
 		}
-		
+
 		resolve(res);
 	})
 }).bind(client);
@@ -78,7 +78,7 @@ process.on('message', message => {
 		if (message.retries > 200) return;
 		process.emit('message', message);
 	}, 100); // retry later if client not instantiated yet
-	
+
 	switch (message.action) {
 		case 'uptime': {
 			client.shard.uptimeStart = message.uptime;

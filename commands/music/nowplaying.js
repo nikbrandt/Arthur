@@ -15,7 +15,7 @@ exports.run = (message, args, s, client, permLevel) => {
 
 	const locale = i18n.getLocaleCode(message);
 	const queueItem = message.guild.music.queue[0];
-	
+
 	if (queueItem.type === 1) { // YouTube video
 		const ellapsedTime = Music.calculateEllapsedTime(message.guild);
 		const embed = queueItem.embed;

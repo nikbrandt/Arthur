@@ -7,7 +7,7 @@ function spacify(text) {
 		if (array[i] === ' ') out += '   ';
 		else out += array[i] + ' ';
 	}
-	
+
 	out += array[n - 1];
 
 	return out;
@@ -15,7 +15,7 @@ function spacify(text) {
 
 exports.run = (message, args, suffix) => {
 	if (!args[0]) return message.channel.send(message.__('no_args'));
-	
+
 	let desc = '```' + spacify(suffix) + '```';
 	if (desc.length > 2048) return message.channel.send(message.__('too_big'));
 

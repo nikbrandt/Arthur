@@ -39,9 +39,9 @@ function requestStats(type, id, client, arg) {
 			type: type,
 			id: id
 		};
-		
+
 		if (arg) obj.arg = arg;
-		
+
 		client.shardQueue.set(id, resolve);
 		client.shard.send(obj).catch(() => {
 			resolve(null);
@@ -60,7 +60,7 @@ exports.run = async (message, args, suffix, client) => {
 		if (!object) return message.channel.send('Not enough commands have been used, apparently');
 	} else {
 		let stats = await requestStats('commands', message.id, client);
-		
+
 		let keys = Object.keys(stats);
 		let values = Object.values(stats);
 		let temp = {};
@@ -115,10 +115,10 @@ exports.run = async (message, args, suffix, client) => {
 
 		curWidth += barWidth + 4;
 	}
-	
+
 	let guilds = (await client.broadcastEval('this.guilds.cache.size')).reduce((prev, cur) => prev + cur, 0).toString();
 	let users = (await client.broadcastEval('this.users.cache.size')).reduce((prev, cur) => prev + cur, 0).toString();
-	
+
 	curWidth = 100; // show guild/user amounts
 	ctx.font = '50px RobotoMedium';
 	ctx.fillText(guilds, curWidth, 70);

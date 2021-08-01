@@ -5,7 +5,7 @@ exports.run = (message) => {
 	request('http://thecatapi.com/api/images/get?format=xml', (err, response, body) => {
 		if (err) return message.channel.send(message.__('error'));
 		let json;
-		
+
 		try {
 			json = JSON.parse(toJson(body));
 		} catch (e) {

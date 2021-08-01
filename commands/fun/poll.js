@@ -45,7 +45,7 @@ async function addReactions (message, number) {
 
 function watch (message, options, endDate, client, embed) {
 	const locale = i18n.getLocaleCode(message.guild);
-	
+
 	client.reactionCollectors.set(message.id, {
 		message: message,
 		number: options.length,
@@ -54,7 +54,7 @@ function watch (message, options, endDate, client, embed) {
 		locale: locale,
 		finish: finishThisInstance
 	});
-	
+
 	function finishThisInstance() {
 		finish(message.id, client, locale);
 	}
@@ -67,7 +67,7 @@ function watch (message, options, endDate, client, embed) {
 async function finish (messageID, client, locale) {
 	let obj = client.reactionCollectors.get(messageID);
 	if (!obj) return;
-	
+
 	let theseEmojis = emojis.slice(0, obj.options.length);
 	let emojiObject = {};
 	let { embed } = obj;
@@ -137,8 +137,8 @@ exports.run = async (message, a, s, client) => {
 		color: 0x008e2e,
 		footer: footer
 	};
-	
-	
+
+
 	let title;
 	let options;
 	let time;
@@ -156,7 +156,7 @@ exports.run = async (message, a, s, client) => {
 	} catch (e) {
 		err = e;
 	}
-	
+
 	if (err) return;
 
 	options = options.split('|');

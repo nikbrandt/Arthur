@@ -6,7 +6,7 @@ const { calculateQueueLength, calculateEllapsedTime } = require('../../struct/Mu
 
 let add = async (message, id, type, client, first, loadMessage, ipc, playlistQuery) => {
 	const nowPlayingMessage= i18n.get('struct.music.now_playing', message);
-	
+
 	let title = first
 		? nowPlayingMessage
 		: i18n.get('struct.music.added_to_queue', message);
@@ -33,11 +33,11 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 		queueObj = obj[0];
 	} else queueObj = { type: type, person: message.author, id: id, meta: obj.meta, embed: obj.embed };
 
-	if (!message.guild.music || !message.guild.music.queue) { // Recheck first after having to await the info 
+	if (!message.guild.music || !message.guild.music.queue) { // Recheck first after having to await the info
 		first = true;
 		if (queueObj.embed) queueObj.embed.author.name = nowPlayingMessage;
 	}
-	
+
 	let footerStore = queueObj.embed ? queueObj.embed.footer.text : null;
 	if (!first && footerStore) queueObj.embed.footer.text += ' | ' + message.__('footer_extra', {
 		position: message.playnext ? 2 : message.guild.music.queue.length + 1,
@@ -49,7 +49,7 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 			let notify = await sql.get(`SELECT npNotify FROM guildOptions WHERE guildID = '${guild.id}'`);
 			if (!notify) notify = false;
 			else notify = notify.npNotify === 'true';
-			
+
 			if (notify) {
 				if (first || !playlist) {
 					loadMessage = await message.channel.send({embed: queueObj.embed}).then(() => {
@@ -102,17 +102,17 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 		});
 		else {
 			const playlistMessage = await message.channel.send(message.__('detected_playlist') + ' ' + i18n.get('booleans.yesno.prompt', message));
-			
+
 			let starts = [
 				i18n.get('booleans.yesno.abbreviations.yes', message),
 				i18n.get('booleans.yesno.abbreviations.no', message)
 			];
-			
+
 			starts.push(starts[0] + i18n.get('booleans.yesno.abbreviations.yes_end', message));
 			starts.push(starts[1] + i18n.get('booleans.yesno.abbreviations.no_end', message));
-			
+
 			const filter = msg => message.author.id === msg.author.id && starts.some(start => msg.content.toLowerCase().startsWith(start));
-			
+
 			message.channel.awaitMessages(filter, { max: 1, time: 1000 * 60, errors: [ 'time' ]}).then(collected => {
 				if (!collected.first().content.toLowerCase().startsWith(starts[0])) return playlistMessage.edit(i18n.get('struct.message.confirmation', message));
 
@@ -122,7 +122,7 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 			});
 		}
 	} */
-	
+
 	return 1; // for IPC
 };
 
@@ -141,7 +141,7 @@ exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 			message.__ = (string, variables) => {
 				return i18n.get('commands.resume.' + string, message, variables);
 			};
-			
+
 			return ipc ? 'No song provided to add' : client.commands.get('resume').run(message, 'yes', 'no', 'die', perms);
 		}
 		return ipc ? 'No song provided to add' : message.channel.send(message.__('no_song_specified'));
@@ -201,7 +201,7 @@ exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 
 	let first = !message.guild.music || !message.guild.music.queue;
 	let resumePlayback = !first && (!message.guild.voice || !message.guild.voice.connection);
-	
+
 	if (first || resumePlayback) {
 		if (!message.member.voice.channel.joinable) return ipc ? message.__('cant_join_channel') : loadMessage.edit(message.__('cant_join_channel'));
 

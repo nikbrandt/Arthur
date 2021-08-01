@@ -4,7 +4,7 @@ exports.run = async message => {
 	let resp = await needle('get', 'https://icanhazdadjoke.com/', { headers: { Accept: 'text/plain' } }).catch(() => {
 		message.channel.send('Dad jokes failed. rip.');
 	});
-	
+
 	if (resp) message.channel.send(resp.body);
 };
 

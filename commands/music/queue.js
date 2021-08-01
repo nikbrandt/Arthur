@@ -10,8 +10,8 @@ exports.run = async (message, args) => {
 		if (!parsed) return message.channel.send(i18n.get('commands.liked.invalid_page', message));
 		if (parsed < 1) return message.channel.send(i18n.get('commands.liked.negative_page', message));
 		parsed = Math.floor(parsed);
-		if ((parsed - 1) * 10 > message.guild.music.queue.length) return message.channel.send(message.guild.music.queue.length < 11 
-				? message.__('only_one_page') 
+		if ((parsed - 1) * 10 > message.guild.music.queue.length) return message.channel.send(message.guild.music.queue.length < 11
+				? message.__('only_one_page')
 				: message.__('only_multiple_pages', { pages: Math.ceil(message.guild.music.queue.length / 10) }));
 		i = (parsed - 1) * 10 + 1;
 	}
@@ -33,7 +33,7 @@ exports.run = async (message, args) => {
 			description: songArray.join('\n'),
 			color: 0x427df4,
 			footer: {
-				text: message.guild.music.queue.length === 1 
+				text: message.guild.music.queue.length === 1
 					? message.__('footer', { page: Math.ceil(pars / 10),
 						maxPage: Math.ceil(message.guild.music.queue.length / 10),
 						length: timeString(calculateQueueLength(message.guild), message),

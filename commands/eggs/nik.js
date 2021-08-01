@@ -35,9 +35,9 @@ async function start() {
 	curDuck = obj['MAX(duckID'];
 
 	Canvas.registerFont('../media/fonts/Impact.ttf', { family: 'Impact' });
-	
+
 	pastLeaderboard = await sql.all(`SELECT userID, coins FROM duckEconomy ORDER BY coins DESC LIMIT 11`);
-	
+
 	setInterval(sendLedger, 1000 * 60 * 10);
 
 	init = true;
@@ -156,9 +156,9 @@ async function sendLedger() {
 			embeds[embed].description += '\n' + string;
 		}
 	}
-	
+
 	await ledgerWebhook.send({ embeds });
-	
+
 	ledger = [];
 }
 
@@ -173,13 +173,13 @@ function getLedgerString(ledgerObject) {
 
 async function checkLeaderboardChange(client) {
 	let curLeaderboard = await sql.all(`SELECT userID, coins FROM duckEconomy ORDER BY coins DESC LIMIT 11`);
-	
+
 	for (let i = 0; i < 10; i++) {
 		if (!pastLeaderboard[i]) break;
 		if (pastLeaderboard[i].userID === curLeaderboard[i].userID) continue;
-		
+
 		let newPos = curLeaderboard.findIndex(obj => obj.userID === pastLeaderboard[i].userID);
-		
+
 		ledger.push({
 			type: 'leaderboard',
 			user: (await client.users.fetch(pastLeaderboard[i].userID)).username,
@@ -187,7 +187,7 @@ async function checkLeaderboardChange(client) {
 			to: newPos + 1
 		})
 	}
-	
+
 	pastLeaderboard = curLeaderboard;
 }
 
@@ -198,7 +198,7 @@ async function checkLeaderboardChange(client) {
 function help(message) {
 	if (message.args[0] && (meta[message.args[0].toLowerCase()] || aliases[message.args[0].toLowerCase()])) {
 		let arg = meta[message.args[0].toLowerCase()] || aliases[message.args[0].toLowerCase()];
-		
+
 		message.channel.send({ embed: {
 			color: THEME_COLOR,
 			author: {
@@ -229,15 +229,15 @@ function help(message) {
 
 async function balance(message) {
 	let member = message.member;
-	
+
 	if (message.args[0]) {
 		let obj = message.client.findMember(message, message.suffix);
 		if (obj) member = obj.member;
 	}
-	
+
 	let coins = await getUser(member.id);
 	coins = coins.coins;
-	
+
 	message.channel.send({ embed: {
 		title: `${member.displayName}'s Balance`,
 		description: `${COIN_EMOJI} ${coins}`,
@@ -248,34 +248,34 @@ async function balance(message) {
 async function transfer(message) {
 	if (!message.args[0]) return message.channel.send('Please provide a sum to transfer (see `help transfer`).');
 	if (!message.args[1]) return message.channel.send('Please provide a user to transfer to (see `help transfer`).');
-	
+
 	let obj = findMember(message, message.suffix.slice(message.args[0].length + 1));
 	if (!obj) return message.channel.send('Could not find provided user.');
 	if (obj.user.id === message.author.id) return message.channel.send('Circular transfers aren\'t that helpful, unfortunately.');
-	
+
 	let [ user ] = await Promise.all([
 		sql.get('SELECT coins FROM duckEconomy WHERE userID = ?', [ message.author.id ]),
 		sql.run('INSERT OR IGNORE INTO duckEconomy (userID) VALUES (?)', [ message.author.id ]),
 		sql.run('INSERT OR IGNORE INTO duckEconomy (userID) VALUES (?)', [ obj.user.id ])
 	]);
 	if (!user) user = { coins: 0 };
-	
+
 	let num = parseInt(message.args[0]);
 	if (!num) return message.channel.send('Invalid transfer amount provided (see `help transfer`).');
 	if (num < 0) return message.channel.send('Heh. Nice try.');
 	if (num === 0) return message.channel.send('Zero coins successfully transfered. Dweeb.');
 	if (num > user.coins) return message.channel.send('You can\'t afford that transfer.');
-	
+
 	await Promise.all([
 		sql.run('UPDATE duckEconomy SET coins = coins - ? WHERE userID = ?', [ num, message.author.id ]),
 		sql.run('UPDATE duckEconomy SET coins = coins + ? WHERE userID = ?', [ num, obj.user.id ])
 	]);
-	
+
 	message.channel.send({embed: {
 		description: `${message.member.displayName}, you've transfered ${COIN_EMOJI}${num} to ${obj.member.displayName}.`,
 		color: THEME_COLOR
 	}});
-	
+
 	ledger.push({
 		type: 'transfer',
 		from: message.author.username,
@@ -284,43 +284,43 @@ async function transfer(message) {
 		senderBal: user.coins - num,
 		receiverBal: (await sql.get('SELECT coins FROM duckEconomy WHERE userID = ?', [ obj.user.id ])).coins
 	});
-	
+
 	checkLeaderboardChange(message.client).catch(errorLog.simple);
 }
 
 async function daily(message) {
 	let user = await getUser(message.author.id);
 	let { coins } = user;
-	
+
 	let today = moment().format('M-DD');
 	if (user.lastDaily && user.lastDaily === today) return message.channel.send('You already claimed your daily DuckCoin. Nerd.');
-	
+
 	let out = '';
 	let base = Math.round(Math.random() * 40) + 30;
 	let modifier = 1; // TODO: Implement duck(s) happiness modifier
-	
+
 	let day = moment().format('M-D');
 	if (day === '1-18') {
 		out += '\nIt\'s national duck day! Coins multiplied by 10.';
 		modifier *= 10;
 	}
-	
+
 	if (day === '2-24') {
 		out += '\nIt\'s our overlord\'s birthday! Coins multiplied by 100.';
 		modifier *= 100;
 	}
-	
+
 	let add = base * modifier;
 	coins += add;
-	
+
 	message.channel.send({embed: {
 		title: 'Daily DuckCoins!',
 		color: THEME_COLOR,
 		description: `${add} DuckCoins added for a total of ${COIN_EMOJI} ${coins}${out}`
 	}});
-	
+
 	await sql.run('UPDATE duckEconomy SET coins = ?, lastDaily = ? WHERE userID = ?', [ coins, today, message.author.id ]);
-	
+
 	checkLeaderboardChange(message.client).catch(errorLog.simple);
 }
 
@@ -332,23 +332,23 @@ const numberToEmoji = num => {
 };
 async function leaderboard(message) {
 	let page = 1;
-	
+
 	if (message.args[0]) {
 		page = parseInt(message.args[0]);
 		if (!page) return message.channel.send('Invalid page number.');
-		if (page < 1) return message.channel.send('Please choose a page number of at least 1.');	
+		if (page < 1) return message.channel.send('Please choose a page number of at least 1.');
 	}
-	
+
 	let entries = await sql.all(`SELECT userID, coins FROM duckEconomy`);
-	
+
 	let maxPage = Math.ceil(entries.length / ENTRIES_PER_PAGE);
 	if (page > maxPage) return message.channel.send(`Please choose a page number within the page range (max of ${maxPage} at current)`);
 
 	entries = entries.sort((a, b) => a.coins < b.coins ? 1 : -1);
-	
+
 	let userLocation = entries.findIndex(entry => entry.userID === message.author.id);
 	let userPage = Math.floor(userLocation / ENTRIES_PER_PAGE);
-	
+
 	entries = entries.slice(page * ENTRIES_PER_PAGE - ENTRIES_PER_PAGE, page * ENTRIES_PER_PAGE);
 	let num = page * ENTRIES_PER_PAGE - ENTRIES_PER_PAGE + 1;
 
@@ -359,7 +359,7 @@ async function leaderboard(message) {
 		formattedEntries.push(numberToEmoji(num) + ' ' + name);
 		num++;
 	}
-	
+
 	message.channel.send({ embed: {
 		title: `${COIN_EMOJI} DuckCoin Leaderboard`,
 		description: formattedEntries.join('\n'),
@@ -488,7 +488,7 @@ async function quote(message) {
 exports.run = (message, args, suffix, client, perms, prefix) => {
 	if (!init) return message.channel.send(':duck: Duck still initializing. Please try again.');
 	if (!args[0]) return message.channel.send(`:duck: Duck v${VERSION} operational.\nUse the \`help\` argument to get started.`);
-	
+
 	let func = meta[args[0].toLowerCase()] || aliases[args[0].toLowerCase()];
 	if (!func) return message.channel.send(`Invalid command. For help, use the \`help\` argument.`);
 	func = func.run;
@@ -497,7 +497,7 @@ exports.run = (message, args, suffix, client, perms, prefix) => {
 	message.args = args.slice(1);
 	message.perms = perms;
 	message.prefix = prefix;
-	
+
 	func(message);
 };
 

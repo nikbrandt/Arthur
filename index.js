@@ -48,7 +48,7 @@ let queueID = 0;
 
 manager.on('shardCreate', shard => {
 	console.log(`Launched shard ${shard.id}`);
-	
+
 	shard.on('ready', () => {
 		shard.send({
 			action: 'uptime',
@@ -56,7 +56,7 @@ manager.on('shardCreate', shard => {
 			id: shard.id
 		}).catch(errorLog.simple);
 	});
-	
+
 	shard.on('message', message => {
 		switch (message.action) {
 			case 'sql': {
@@ -177,7 +177,7 @@ manager.on('shardCreate', shard => {
 						shard.send({ action: 'stats', id: message.id, value: weeklyStatsObject[message.arg] }).catch(errorLog.simple);
 						break;
 				}
-				
+
 				break;
 			}
 
@@ -191,7 +191,7 @@ manager.on('shardCreate', shard => {
 
 function sendWhenReady(shard, message, error, retry = 0) {
 	if (retry > 20) return error();
-	
+
 	if (shard.ready) shard.send(message);
 	else setTimeout(() => {
 		sendWhenReady(shard, message, error, ++retry);
@@ -235,7 +235,7 @@ function sqlCatch(shard, id, error, timeline) {
 function handleSQLTimeline(timeline) {
 	timeline.finished = Date.now() - timeline.start;
 	if (timeline.finished < 1000) return;
-	
+
 	sqlog.write(`SQL rec at ${timeline.start}, finished ${timeline.sqlFinished} ms later, sent off ${timeline.finished - timeline.sqlFinished} ms later, total ${timeline.finished} ms.\n`);
 }
 
@@ -243,13 +243,13 @@ function handleSQLTimeline(timeline) {
 function broadcastEval(script) {
 	return new Promise((resolve, reject) => {
 		let id = queueID++;
-		
+
 		queue.set(id, {
 			shards: 0,
 			results: {},
 			internal: { resolve, reject }
 		});
-		
+
 		manager.shards.forEach(shard => {
 			shard.send({
 				action: 'eval',

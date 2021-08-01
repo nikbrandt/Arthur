@@ -7,10 +7,10 @@ let i = -1;
 
 const loadCmd = (path, command, client, reload) => {
 	let commandPath = `${__dirname}/../commands/${path}`;
-	
+
 	if (reload) delete require.cache[require.resolve(commandPath)];
 	let file = require(commandPath);
-	
+
 	client.commands.set(command.replace(/.js/g, ''), file);
 	count++;
 	i++;
@@ -31,7 +31,7 @@ const soundEffects = (client) => {
 				message.__ = (string, variables) => {
 					return i18n.get('commands.play.' + string, message, variables);
 				};
-				
+
 				client.commands.get('play').run(message, ['file', basename], suffix, client);
 			},
 			config: {
@@ -56,7 +56,7 @@ module.exports = (client, reload) => {
 	count = 0;
 
 	const files = fs.readdirSync(`${__dirname}/../commands`);
-	
+
 	files.forEach(f => {
 		try {
 			if (fs.statSync(`${__dirname}/../commands/${f}`).isDirectory()) {
@@ -67,7 +67,7 @@ module.exports = (client, reload) => {
 					} catch (err) {
 						errorLog(`Error loading ${f}/${dF}`, err);
 					}
-					
+
 				});
 			} else {
 				if (f !== '.DS_Store') loadCmd(f, f, client);

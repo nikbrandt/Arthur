@@ -33,7 +33,7 @@ exports.run = async (message, args, s, client) => {
 		if (del) m.delete();
 		else msg = m;
 	});
-	
+
 	setTimeout(function () {
 		if (!sent) {
 			message.channel.send(message.__('timed_out'));
@@ -41,7 +41,7 @@ exports.run = async (message, args, s, client) => {
 			client.processing.splice(index, 1);
 		}
 	}, 35000); // if webshot not complete in 35 seconds, cancel operation.
-	
+
 	let err = false;
 
 	if (!args[0].startsWith('http')) args[0] = 'https://' + args[0];

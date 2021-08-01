@@ -38,7 +38,7 @@ exports.run = async (message, a, suffix) => {
 	if (message.guild && !message.channel.nsfw) return message.channel.send(message.__('nsfw'));
 	request(`http://api.urbandictionary.com/v0/${suffix ? `define?term=${encodeURIComponent(suffix)}` : 'random'}`, async (err, resp, body) => {
 		if (err) return message.channel.send(message.__('not_connected'));
-	
+
 		let hotBod;
 		try {
 			hotBod = JSON.parse(body);
@@ -49,21 +49,21 @@ exports.run = async (message, a, suffix) => {
 		const theChosenOne = hotBod.list[0];
 
 	    if (!theChosenOne) return message.channel.send(message.__('no_results'));
-	    
+
 	    let definition = theChosenOne.definition;
 	    let defMatches = definition.match(linkRegex);
 	    if (defMatches) await asyncForEach(defMatches, async match => {
 	    	let subDefinition = await getDefinition(encodeURIComponent(match.slice(1).slice(0, -1)));
 	    	definition = definition.replace(match, `${match}(https://www.urbandictionary.com/define.php?term=${encodeURIComponent(match.slice(1).slice(0, -1))} "${subDefinition}")`);
 	    });
-	    
+
 	    let example = theChosenOne.example;
 	    let exampleMatches = example.match(linkRegex);
 	    if (exampleMatches) await asyncForEach(exampleMatches, async match => {
 	    	let subDefinition = await getDefinition(encodeURIComponent(match.slice(1).slice(0, -1)));
 	    	example = example.replace(match, `${match}(https://www.urbandictionary.com/define.php?term=${encodeURIComponent(match.slice(1).slice(0, -1))} "${subDefinition}")`);
 	    });
-	    
+
         message.channel.send({embed: {
             color: 0x0095d1,
             title: theChosenOne.word,

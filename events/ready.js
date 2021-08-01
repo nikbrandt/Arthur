@@ -57,15 +57,15 @@ function cleanProcesses(client) {
 			|| !connection.channel.guild.music.queue
 		) {
 			if (connection.channel.guild && connection.channel.guild.music) connection.channel.guild.music = {};
-			
+
 			connection.disconnect();
 			connection.channel.leave();
 		}
 	});
-	
+
 	client.processing.forEach((item, i) => {
 		if (typeof item !== 'string') return;
-		
+
 		let start = moment(item.split(' - ')[0], 'h:mm:ss A').valueOf();
 		if (Date.now() - start > 600000) client.processing.splice(i, 1); // 600000 ms = 10 minutes
 	});

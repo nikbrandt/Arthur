@@ -4,7 +4,7 @@ let folders = [''];
 exports.run = (message, args, suffix, client) => {
 	if (!args[0]) return message.channel.send('I can\'t reload nothing <:thonk:281211813494915083>');
 	let cmd = args[0];
-	
+
 	let isAlias = false;
 	let isNotCommand = false;
 	let comm = client.commands.get(cmd);
@@ -16,7 +16,7 @@ exports.run = (message, args, suffix, client) => {
 		if (fs.existsSync(`${__basedir}/${suffix}`)) isNotCommand = true;
 		else return message.channel.send(`\`${cmd}\` is not a command nor is \`${suffix}\` a file. (try using ./)`);
 	}
-	
+
 	if (!isNotCommand) {
 		fs.readdirSync(`${__dirname}/../`).filter(f => fs.statSync(`${__dirname}/../${f}`).isDirectory()).forEach(d => folders.push(d));
 
@@ -49,7 +49,7 @@ exports.run = (message, args, suffix, client) => {
 		} catch (e) {
 			return message.channel.send(`Could not reload - \`${e.name}\``);
 		}
-		
+
 		message.channel.send(`Successfully reloaded \`${suffix}\``);
 	}
 };

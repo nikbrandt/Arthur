@@ -26,7 +26,7 @@ module.exports = async (client, message) => {
 		await message.react(CAT_EMOJIS[Math.floor(Math.random() * CAT_EMOJIS.length)]).catch(() => {});
 		message.react(CAT_EMOJIS[Math.floor(Math.random() * CAT_EMOJIS.length)]).catch(() => {});
 	}
-	
+
 	let shouldIStayOrShouldIGo = await client.checkHardBlacklist(message.author.id) || await client.checkHardBlacklist(message.guild ? message.guild.id : 'x');
 	if (shouldIStayOrShouldIGo && !config.owners.includes(message.author.id)) return;
 
@@ -36,10 +36,10 @@ module.exports = async (client, message) => {
 		if (blacklist.includes(message.author.id)) return;
 		if (message.member.roles.cache.some(role => blacklist.includes(role.id))) return;
 	}
-	
+
 	// easter egg bs
 	if (message.author.melon === true) message.react('🍉').catch(() => {});
-	
+
 	// alright, resume normal code
 	let prefix;
 	let humongoji = false;
@@ -49,7 +49,7 @@ module.exports = async (client, message) => {
 		command = i18n.getCommandFileName(command, message) || command;
 		return i18n.get('commands.' + command + '.' + string, message, variables);
 	};
-	
+
 	if (client.test) {
 		prefix = config.testPrefix;
 		humongoji = false;
@@ -80,7 +80,7 @@ module.exports = async (client, message) => {
 				client.recentMessages[message.author.id] = authorID.toString();
 				client.lastRecentMessageID += 1;
 			}
-			
+
 			let messageObject = {
 				embed: {
 					author: {
@@ -92,7 +92,7 @@ module.exports = async (client, message) => {
 				},
 				files: message.attachments.array().map(a => a ? a.url : '')
 			};
-			
+
 			client.broadcastEval(`let channel = this.channels.cache.get('${config.messageLogChannel}');
 			if (channel) channel.send(${JSON.stringify(messageObject)}).then(() => {});`).catch(errorLog.simple);
 
@@ -106,32 +106,32 @@ module.exports = async (client, message) => {
 		}
 
 		if (message.channel.type !== 'text') return;
-		
+
 		const extractedEmojis = message.content.match(emojiRegex);
-		
+
 		if (humongoji && botPerms.has('ATTACH_FILES') && extractedEmojis && message.guild) {
 			let text = '';
-			
+
 			if (botPerms.has('MANAGE_MESSAGES')) text = `\`${extractedEmojis[2]}\` ${i18n.get('commands.nowplaying.by', message).toLowerCase()} \`${message.member.displayName}\``;
-			
+
 			let options = {
 				method: 'HEAD',
 				host: 'cdn.discordapp.com',
 				port: 443,
 				path: `/emojis/${extractedEmojis[3]}`
 			};
-			
+
 			let req = https.request(options, res => {
 				let filetype = res.headers['content-type'].match(/image\/([a-z]+)/)[1];
-				
+
 				message.channel.send(text, { files: [ `https://cdn.discordapp.com/emojis/${extractedEmojis[3]}.${filetype}` ] }).then(() => {
 					if (!!text) message.delete().catch(() => {});
 				});
 			});
-			
+
 			req.end();
 		}
-		
+
 		let alexaStringLower = message.content.toLowerCase();
 		let alexaString = Array.from(alexaStringLower);
 		alexaString = alexaString.filter(character => character.toLowerCase() !== character.toUpperCase());
@@ -199,7 +199,7 @@ module.exports = async (client, message) => {
 	command = i18n.getCommandFileName(command, message) || command;
 
 	message.timeline.ready = Date.now() - message.timeline.received;
-	
+
 	if (cmdFile.config.queued) {
 		if (queueObj[command] && queueObj[command].length) await Promise.all(queueObj[command]);
 		if (!queueObj[command]) queueObj[command] = [];
@@ -208,7 +208,7 @@ module.exports = async (client, message) => {
 			message.timeline.resolve = resolve;
 		}));
 	}
-	
+
 	try {
 		console.log(`${moment().format('MM-DD H:mm:ss')} - Command ${command} being run, user id ${message.author.id}${message.guild ? `, guild id ${message.guild.id}` : ''}`);
 		errorLog.lastCommand = command;
@@ -216,12 +216,12 @@ module.exports = async (client, message) => {
 	} catch (err) {
 		errorLog(`Error while running ${command} | ${err.message}`, err);
 	}
-	
+
 	if (cmdFile.config.queued) {
 		message.timeline.resolve();
 		queueObj[command].splice(message.timeline.index, 1);
 	}
-	
+
 	message.timeline.complete = Date.now() - message.timeline.received;
 
 	if (message.author.id !== client.ownerID) {

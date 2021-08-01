@@ -15,9 +15,9 @@ exports.run = async (message, args) => {
 	else args[0] = args[0].toLowerCase();
 
 	args[0] = args[0].trim();
-	
+
 	let locales = i18n.getLocales();
-	
+
 	if (!locales.includes(args[0])) return message.channel.send(i18n.get('commands.guildlanguage.invalid_locale', message, { locales: locales.map(locale => '`' + locale + '`').join(', ') }));
 
 	await i18n.setUserLocale(message.author.id, args[0]);

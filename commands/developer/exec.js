@@ -10,9 +10,9 @@ function successMessage(channel, text) {
 	let sliceAmount = 0;
 	if (text.length > 1800) sliceAmount = text.length - 1800;
 	text = text.replace(/`/g, '\\`');
-	
+
 	let successContent = `**Input above.** \n\n🎉 Success\n\`\`\`js\n${sliceAmount ? text.slice(0, -sliceAmount) : text}\n\`\`\`${sliceAmount ? `\n*Trimmed ${sliceAmount.toString().length > 20 ? 'a lot of' : sliceAmount.toString()} characters*` : ''}`;
-	
+
 	channel.send(successContent);
 }
 
