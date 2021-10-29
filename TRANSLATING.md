@@ -5,7 +5,7 @@ First off, thank you for having an interest in translating Arthur into your lang
 I have plans to make the translation process easier with a website, but I realize that it may be a while until that happens and I might as well have proper documentation of the current translation process. **Please read this whole document if you would like to translate Arthur.** It isn't too long (especially in comparison to the actual translation :eyes:), and I'd like to ensure that the translation process is as smooth as possible, both for you and me.
 
 Thanks again!
- \- Gymnophoria
+ \- Nik Brandt
 
 ## Setup
 
@@ -72,7 +72,7 @@ Please follow steps 1 and 2. I'll happily setup a file for you, though (meaning 
 
 - Save often! I've already seen two people lose a fair bit of progress because of computer restarts/accidentally closing windows/etc. If your editor doesn't auto save, consider saving after every command or some other often interval to avoid this frustration.
 
-- Please ask questions about anything if you're confused! Join the [support server](https://discord.gg/2SDdyF7) if you haven't already to ask questions, or if you prefer message me at Gymnophoria#8146.
+- Please ask questions about anything if you're confused! Join the [support server](https://discord.gg/2SDdyF7) if you haven't already to ask questions, or if you prefer message me at Gymno#4741.
 
  ## Finished translating?
 

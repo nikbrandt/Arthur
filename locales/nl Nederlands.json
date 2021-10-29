@@ -273,7 +273,7 @@
 		},
 		"guildlanguage": {
 			"current_language": "De taal hier is gezet naar $locale",
-			"list": "Talen die momenteel worden ondersteund:\n$locales\nAls je wil helpen met het vertalen van Arthur, neem dan contact op met Gymnophoria in de support server.",
+			"list": "Talen die momenteel worden ondersteund:\n$locales\nAls je wil helpen met het vertalen van Arthur, neem dan contact op met Gymno#4741 in de support server.",
 			"invalid_locale": "Ongeldige invoer. Kies uit deze dinkies: $locales. hoofdletter-GEVOELIG.",
 			"locale_set": "Server taal ingesteld."
 		},
@@ -458,7 +458,7 @@
 				"invite": "Uitnodiging",
 				"support_server": "Support Server",
 				"tos": "TOS",
-				"description": "Gemaakt door Gymnophoria#8146\nWanneer je een command gebruikt, <> staat vor een verplicht onderdeel en [] staat voor een optioneel onderdeel. (Je moet deze symbolen niet daadwerkelijk typen.)",
+				"description": "Gemaakt door Gymno#4741\nWanneer je een command gebruikt, <> staat vor een verplicht onderdeel en [] staat voor een optioneel onderdeel. (Je moet deze symbolen niet daadwerkelijk typen.)",
 				"footer": "Type $prefix\u200bhelp <command> voor een gedetaileerde omschrijving van de command"
 			},
 			"check_dms": "Kijk in je privéberichten :mailbox_with_mail:",

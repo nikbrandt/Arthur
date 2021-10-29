@@ -17,7 +17,7 @@ exports.run = async (message, args, asdf, client) => {
 		fields: [
 			{
 				name: message.__('author'),
-				value: 'Gymnophoria#8146',
+				value: 'Gymno#4741',
 				inline: true
 			},
 			{

@@ -15,4 +15,4 @@ Eh, we're going back to using an MIT license, I feel weird having contributors b
 
 PRs, issues, complaints, whatever, all welcome. You can also complain in the support server above.
 
-Gymnophoria
+Nik Brandt
