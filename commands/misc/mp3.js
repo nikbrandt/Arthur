@@ -57,7 +57,7 @@ async function finish(stream, title, length, message, msg, client, thumbnail, ur
 				url: 'https://file.io',
 				method: 'POST',
 				headers: {
-					'User-Agent': 'Arthur Discord Bot (github.com/Gymnophoria/Arthur)'
+					'User-Agent': 'Arthur Discord Bot (github.com/nikbrandt/Arthur)'
 				},
 				formData: {
 					file: {

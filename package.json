@@ -16,7 +16,7 @@
 	"author": "Gymnophoria",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Gymnophoria/Arthur.git"
+		"url": "https://github.com/nikbrandt/Arthur.git"
 	},
 	"license": "MIT",
 	"dependencies": {

@@ -13,7 +13,7 @@ Please follow steps 1 and 2. I'll happily setup a file for you, though (meaning 
 
 1. Get a good code editor. You could do this all in TextEdit or Notepad, but it'll be harder and more time consuming. I highly recommend [Visual Studio Code](https://code.visualstudio.com/Download), but any editor that supports JSON syntax highlighting and code indentation will do. A big plus if it'll catch JSON errors for you.
 
-2. Open up Arthur's [en-US locale file](https://github.com/Gymnophoria/Arthur/blob/master/locales/en-US%20English%2C%20US.json) for reference. If you'd like to view it locally instead of in your browser, click the "Raw" button and then right click -> `Save as...`.
+2. Open up Arthur's [en-US locale file](https://github.com/nikbrandt/Arthur/blob/master/locales/en-US%20English%2C%20US.json) for reference. If you'd like to view it locally instead of in your browser, click the "Raw" button and then right click -> `Save as...`.
 
 3. Make a JSON file for your language and open it in your editor.
 
@@ -66,7 +66,7 @@ Please follow steps 1 and 2. I'll happily setup a file for you, though (meaning 
 ## Tips and Tricks
 
  - Try to reference the en-US file that I had you open in the setup if you're confused about JSON syntax.
-   - To see a working example translation, look at the [Dutch locale file](https://github.com/Gymnophoria/Arthur/blob/master/locales/nl%20Nederlands.json). It's no longer complete (as I've added many commands/translation features since it was completed), but it is still relevant.
+   - To see a working example translation, look at the [Dutch locale file](https://github.com/nikbrandt/Arthur/blob/master/locales/nl%20Nederlands.json). It's no longer complete (as I've added many commands/translation features since it was completed), but it is still relevant.
 
 - The en-US file is huge. Take your time, you can translate in steps. If you only feel like translating part of it, that's also fine; a partial translation is better than nothing, and I'll gladly add it to Arthur.
 
