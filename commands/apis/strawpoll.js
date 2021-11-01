@@ -110,7 +110,7 @@ exports.run = async (message, args, suffix) => {
 			method: 'POST',
 			uri: 'https://www.strawpoll.me/api/v2/polls',
 			headers: {
-				'User-Agent': 'Arthur Discord Bot (https://github.com/Gymnophoria/Arthur)'
+				'User-Agent': 'Arthur Discord Bot (https://github.com/nikbrandt/Arthur)'
 			},
 			body: { title, options, multi, dupcheck, captcha },
 			json: true

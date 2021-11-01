@@ -532,7 +532,7 @@ const Music = {
 						meta: {
 							title: `${message._('sound_effect')} - ${id}`,
 							queueName: `${message._('sound_effect')} - ${id}`,
-							url: 'https://github.com/Gymnophoria/Arthur',
+							url: 'https://github.com/nikbrandt/Arthur',
 							length: soundEffectLengths[id.toLowerCase()]
 						},
 						ms: 30000

@@ -13,10 +13,10 @@
 		"arthur",
 		"marvin"
 	],
-	"author": "Gymnophoria",
+	"author": "Nikolas Brandt",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Gymnophoria/Arthur.git"
+		"url": "https://github.com/nikbrandt/Arthur.git"
 	},
 	"license": "MIT",
 	"dependencies": {

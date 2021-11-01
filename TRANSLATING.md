@@ -5,7 +5,7 @@ First off, thank you for having an interest in translating Arthur into your lang
 I have plans to make the translation process easier with a website, but I realize that it may be a while until that happens and I might as well have proper documentation of the current translation process. **Please read this whole document if you would like to translate Arthur.** It isn't too long (especially in comparison to the actual translation :eyes:), and I'd like to ensure that the translation process is as smooth as possible, both for you and me.
 
 Thanks again!
- \- Gymnophoria
+ \- Nik Brandt
 
 ## Setup
 
@@ -13,7 +13,7 @@ Please follow steps 1 and 2. I'll happily setup a file for you, though (meaning 
 
 1. Get a good code editor. You could do this all in TextEdit or Notepad, but it'll be harder and more time consuming. I highly recommend [Visual Studio Code](https://code.visualstudio.com/Download), but any editor that supports JSON syntax highlighting and code indentation will do. A big plus if it'll catch JSON errors for you.
 
-2. Open up Arthur's [en-US locale file](https://github.com/Gymnophoria/Arthur/blob/master/locales/en-US%20English%2C%20US.json) for reference. If you'd like to view it locally instead of in your browser, click the "Raw" button and then right click -> `Save as...`.
+2. Open up Arthur's [en-US locale file](https://github.com/nikbrandt/Arthur/blob/master/locales/en-US%20English%2C%20US.json) for reference. If you'd like to view it locally instead of in your browser, click the "Raw" button and then right click -> `Save as...`.
 
 3. Make a JSON file for your language and open it in your editor.
 
@@ -66,13 +66,13 @@ Please follow steps 1 and 2. I'll happily setup a file for you, though (meaning 
 ## Tips and Tricks
 
  - Try to reference the en-US file that I had you open in the setup if you're confused about JSON syntax.
-   - To see a working example translation, look at the [Dutch locale file](https://github.com/Gymnophoria/Arthur/blob/master/locales/nl%20Nederlands.json). It's no longer complete (as I've added many commands/translation features since it was completed), but it is still relevant.
+   - To see a working example translation, look at the [Dutch locale file](https://github.com/nikbrandt/Arthur/blob/master/locales/nl%20Nederlands.json). It's no longer complete (as I've added many commands/translation features since it was completed), but it is still relevant.
 
 - The en-US file is huge. Take your time, you can translate in steps. If you only feel like translating part of it, that's also fine; a partial translation is better than nothing, and I'll gladly add it to Arthur.
 
 - Save often! I've already seen two people lose a fair bit of progress because of computer restarts/accidentally closing windows/etc. If your editor doesn't auto save, consider saving after every command or some other often interval to avoid this frustration.
 
-- Please ask questions about anything if you're confused! Join the [support server](https://discord.gg/2SDdyF7) if you haven't already to ask questions, or if you prefer message me at Gymnophoria#8146.
+- Please ask questions about anything if you're confused! Join the [support server](https://discord.gg/2SDdyF7) if you haven't already to ask questions, or if you prefer message me at Gymno#4741.
 
  ## Finished translating?
 

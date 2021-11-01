@@ -1,7 +1,7 @@
 {
 	"meta": {
 		"authors": [
-		  "Gymnophoria#8146",
+		  "Gymno#4741",
 		  "Technocoder#9418",
 		  "GlitchMasta47",
 		  "JRoy"
@@ -582,7 +582,7 @@
 				"name": "Server Language",
 				"description": "Set the language of Arthur for your server. User settings overwrite.",
 				"usage": "[locale]",
-				"help": "Set the language of Arthur for your server. User settings will overwrite if present. To get a list of languages, use the `@@languages` command. If a language is incomplete, it will use text from English for missing translations. To help translate Arthur, ask Gymnophoria in the support server (available in the info or help commands)."
+				"help": "Set the language of Arthur for your server. User settings will overwrite if present. To get a list of languages, use the `@@languages` command. If a language is incomplete, it will use text from English for missing translations. To help translate Arthur, ask Gymno#4741 in the support server (available in the info or help commands)."
 
 			},
 			"current_language": "This server's language is $locale",
@@ -1058,7 +1058,7 @@
 				"invite": "Invite",
 				"support_server": "Support Server",
 				"tos": "TOS",
-				"description": "Made by Gymnophoria#8146\nWhen using commands, <> indicates a required argument and [] indicates an optional requirement. (Do not actually type these symbols.)",
+				"description": "Made by Gymno#4741\nWhen using commands, <> indicates a required argument and [] indicates an optional requirement. (Do not actually type these symbols.)",
 				"footer": "Type $prefix@@help <command> for a detailed description of the command"
 			},
 			"check_dms": "Check your DM's :mailbox_with_mail:",
