@@ -1,0 +1,1492 @@
+{
+  "meta": {
+    "authors": [
+      "laneGL#6084"
+    ],
+    "flag": "id",
+    "translations": {
+      "cs": "Bahasa Ceko",
+      "en-US": "Bahasa Inggris, Amerika Serikat",
+      "es-ES": "Bahasa Spanyol, Spanyol",
+      "id": "Bahasa Indonesia",
+      "nl": "Bahasa Belanda",
+      "pl": "Bahasa Polandia",
+      "pt": "Bahasa Portugis",
+      "pt-BR": "Bahasa Portugis, Brasil",
+      "ro": "Bahasa Rumania"
+    }
+  },
+  "commands": {
+    "8ball": {
+      "meta": {
+        "command": "8ball",
+        "aliases": [
+          "9ball",
+          "7ball",
+          "ball",
+          "eightball"
+        ],
+        "name": "Eight Ball",
+        "description": "Mengajukan pertanyaan kepada *eight ball ajaib*.",
+        "usage": "[pertanyaan]",
+        "help": "Mengajukan pertanyaan kepada *eight ball ajaib*. Sederhana aja."
+      },
+      "answer": [
+        "Sudah pasti.",
+        "Jelas demikian.",
+        "Tidak diragukan lagi.",
+        "Ya - pastinya.",
+        "Kamu boleh percaya.",
+        "Seperti yang ku pahami, ya.",
+        "Kemungkinan besar.",
+        "Pandangan yang bagus.",
+        "Ya.",
+        "Tanda mengarah ke ya.",
+        "Balasan samar-samar, coba lagi.",
+        "Tanya lagi nanti.",
+        "Sebaiknya tidak aku beritahu kepadamu sekarang.",
+        "Tidak bisa memprediksi sekarang.",
+        "Berkonsentrasilah dan tanya lagi.",
+        "Jangan mempercayakannya.",
+        "Jawaban dariku adalah tidak.",
+        "Sumberku mengatakan tidak.",
+        "Pandangan yang tidak begitu bagus.",
+        "Sangat meragukan."
+      ]
+    },
+    "cat": {
+      "meta": {
+        "command": "cat",
+        "aliases": [
+          "kitty",
+          "kat",
+          "kitten"
+        ],
+        "name": "Cat",
+        "description": "Get a cat picture.",
+        "help": "Get a cat picture from [The Cat API](http://thecatapi.com/)."
+      },
+      "error": "There was an error connecting to The Cat API. Join the support server if you need your cats ASAP.",
+      "embed_description": "Original image [here]($url)."
+    },
+    "dog": {
+      "meta": {
+        "command": "dog",
+        "aliases": [
+          "doggo",
+          "pupper",
+          "puppy",
+          "pup",
+          "woof",
+          "bark",
+          "doge"
+        ],
+        "name": "Dog",
+        "description": "Get a free dog photo.",
+        "help": "Get a photo of a dog."
+      },
+      "error": "An error occurred.. ;-;. Join the support server if you\u0027re in dire need of floofs ASAP.",
+      "embed_description": "Original image [here]($url)."
+    },
+    "math": {
+      "meta": {
+        "command": "math",
+        "aliases": [
+          "calc"
+        ],
+        "name": "Math",
+        "description": "Evaluate math expressions and conversions.",
+        "usage": "\u003cexpression\u003e",
+        "help": "Evaluate math expressions or conversions."
+      },
+      "no_args": [
+        "Seriously? You expect me to evaluate nothing? :clap:",
+        "Nothing? Nothing at all? I don\u0027t think I can evaluate that, sorry."
+      ],
+      "long_equation": "your equation is too long; please chill, rethink, and make an equation shorter than 256 characters.",
+      "error": "Your equation is invalid. Rude."
+    },
+    "mchistory": {
+      "meta": {
+        "command": "mchistory",
+        "name": "Minecraft Name History",
+        "description": "View all the previous names of a Minecraft user.",
+        "usage": "\u003cname/UUID\u003e [page]",
+        "help": "View the previous names of a Minecraft user, by username or UUID."
+      },
+      "no_args": [
+        "Alright, so here\u0027s your name history:\n3. You_need\n2. To_provide\n1. Me_with_a_name",
+        "Gimme a name. Please.",
+        "I\u0027ll uh.. I\u0027ll need a name to get history for that user."
+      ],
+      "long_name": [
+        "If only usernames could be that long..",
+        "Names that long don\u0027t exist. Sorry."
+      ],
+      "invalid_name": [
+        "Yeah, that\u0027s not a name.",
+        "Not sure I know that guy...",
+        "Who\u0027s that?"
+      ],
+      "invalid_page": "That\u0027s really not a valid page number, I\u0027m sorry.",
+      "negative_page": "Negative pages? Really?",
+      "no_body": "Something broke. You sure you spelt that correctly?",
+      "page_too_high": "This person hasn\u0027t quite changed their name enough to generate page $page. rip.",
+      "no_name_changes": "Nothin\u0027 to see here, carry on.",
+      "embed_title": "Name history of $name",
+      "name": "Name",
+      "date_changed": "Date Changed (GMT)",
+      "embed_footer": "Page $page of $maxPage | Original username was $name"
+    },
+    "mcserver": {
+      "meta": {
+        "command": "mcserver",
+        "aliases": [
+          "mcs",
+          "server",
+          "minecraftserver"
+        ],
+        "name": "Minecraft Server",
+        "description": "Get information about a Minecraft server",
+        "usage": "\u003cserver IP\u003e[:server port]",
+        "help": "Get information such as players and MOTD from a Minecraft server."
+      },
+      "failed": {
+        "title": "Server offline or invalid",
+        "description": "Sorry ¯\\_(ツ)_/¯",
+        "footer": "If the server is actually online, try setting enable-query to true in server.properties."
+      },
+      "no_args": [
+        "Please tell me which server to query.",
+        "You\u0027re gonna have to tell me which server to query.",
+        "Really, it\u0027s impossible to get the status of a server if you don\u0027t give me the server."
+      ],
+      "processing": "Processing..",
+      "embed": {
+        "title": "$hostname is online.",
+        "footer": "Port $port | Protocol $protocol",
+        "players": "Players",
+        "version": "Version"
+      }
+    },
+    "mcskin": {
+      "meta": {
+        "command": "mcskin",
+        "aliases": [
+          "minecraftskin",
+          "skin",
+          "mskin"
+        ],
+        "name": "Minecraft Skin",
+        "description": "Get the skin of a Minecraft player",
+        "usage": "\u003cusername/UUID\u003e",
+        "help": "Get the skin of a Minecraft player."
+      },
+      "some_rando": [
+        "some rando",
+        "guy I found on the side of the road"
+      ],
+      "embed": {
+        "title": "$user\u0027s Skin (click for namemc link)",
+        "footer": "Render courtesy of Visage."
+      }
+    },
+    "meme": {
+      "meta": {
+        "command": "meme",
+        "aliases": [
+          "meemee",
+          "maymay",
+          "meem"
+        ],
+        "name": "Meme",
+        "description": "Get a random meme.",
+        "help": "Get a random picture from random meme subreddits."
+      },
+      "error": "There was an error connecting to Reddit. Join the support server if you need your memes ASAP."
+    },
+    "strawpoll": {
+      "meta": {
+        "command": "strawpoll",
+        "aliases": [
+          "sp",
+          "straw"
+        ],
+        "name": "Strawpoll",
+        "description": "Create a strawpoll.",
+        "usage": "\u003c\"title\"\u003e \u003coption one|option two|etc..\u003e [--@@commands.strawpoll.advanced_abbreviation or --@@commands.strawpoll.advanced]",
+        "help": "Create a strawpoll on strawpoll.me.\nUsing the --@@commands.strawpoll.advanced_abbreviation flag allows configuration of advanced options:\nmultiple votes (default false)\nduplication checking (default IP checking)\ncaptcha (default false)"
+      },
+      "default_footer": "Command will be canceled in 15 seconds. Type \"cancel\" to cancel now. Attempt 1 of 5.",
+      "multiple_votes": "Multiple votes",
+      "multiple_votes_description": "Should users be able to submit multiple votes? @@booleans.yesno.prompt",
+      "duplication_checking": "Duplication checking",
+      "duplication_checking_description": "How should duplication checking be handled?\n`normal` for IP checking, `permissive` for browser cookie checking, `disabled` for no checking.",
+      "captcha_description": "Should the poll include a captcha? @@booleans.yesno.prompt",
+      "no_title": [
+        "You\u0027ll uh.. you\u0027ll need a title for that poll there.",
+        "It\u0027s pretty hard to make a poll without a title.",
+        "You gonna ask a question? Polls aren\u0027t very useful without questions."
+      ],
+      "no_options": [
+        "You probably want some options with that poll, right?",
+        "Polls are *extremely* difficult to conduct if people can\u0027t answer them. You just get no data. You\u0027re sad. People are sad. We\u0027re all sad."
+      ],
+      "too_many_polls": "I\u0027ve created too many polls this hour. Try again later. Sorry \u0027bout that.",
+      "advanced": "advanced",
+      "advanced_abbreviation": "adv",
+      "advanced_abbreviation_ending": "anced",
+      "not_enough_options": "Minimum two options. Seriously, what\u0027s the point in one option? What?",
+      "too_many_options": "Are you actually insane? Why do you need more than 30 options? Anyways, strollpoll.me won\u0027t take it, so I won\u0027t take it.",
+      "error": "Error while creating poll: $err\nPlease report this in the support server if you\u0027d like it fixed.",
+      "poll_created": "Poll created",
+      "it_can_be_accessed_here": "It can be accessed [here](https://www.strawpoll.me/$id)"
+    },
+    "ud": {
+      "meta": {
+        "command": "ud",
+        "aliases": [
+          "urbandictionary",
+          "urbandict"
+        ],
+        "name": "Urban Dictionary",
+        "description": "Define a word or phrase using the glorious urban dictionary",
+        "usage": "\u003cphrase\u003e",
+        "help": "Define any word or phrase you so desire using the glorious power of the internet."
+      },
+      "nsfw": "Apparently the urban dictionary is NSFW. I know, it\u0027s annoying, just tryin\u0027 to keep this bot afloat. (You can only use this command in NSFW channels)",
+      "not_connected": "Urban Dictionary is broken right now, dunno why, riperoni in pepperoni.",
+      "no_results": [
+        "sir/ma\u0027am, the urban dictionary does not have a definition for your messed up word.",
+        "You word.. whatever it is.. is not on the urban dictionary.",
+        "Nope. Not even the *urban dictionary* has your word.",
+        "No results. None. Nada. Rip."
+      ],
+      "definition": "Definition",
+      "example": "Example",
+      "footer": "Authored by $author | Ratings: +$thumbsup, -$thumbsdown | Hover over links for definitions",
+      "catch": "The definition was probably too long to fit in a message, sorry, can\u0027t send it."
+    },
+    "webshot": {
+      "meta": {
+        "command": "webshot",
+        "aliases": [
+          "screenshot",
+          "ss"
+        ],
+        "name": "Webshot",
+        "description": "Take a picture of a website.",
+        "usage": "\u003cwebsite\u003e",
+        "help": "Take a picture of a website."
+      },
+      "no_args": [
+        "You have to tell me what to take a picture of..",
+        "Try as I might, it\u0027s *really* hard to take a photo of *nothing at all*."
+      ],
+      "blacklisted_website": [
+        "please..",
+        "n.. no.",
+        "im not taking a picture of that.. im just not..",
+        "go there yourself."
+      ],
+      "loading": [
+        "Loading..",
+        "Loading...",
+        "lOaDIng.."
+      ],
+      "timed_out": [
+        "That website is too powerful! It\u0027s taken me more than 30 seconds to render, so I\u0027m canceling the render. Sorry!",
+        "Your website is too powerful for me; it\u0027s taken over 30 seconds to render it. Nop."
+      ],
+      "unknown_error": "Unknown error: `$err`",
+      "invalid_url": "Hey, you gotta provide me with a *valid* url, okay? Your trickery caused you a 10 second cooldown, mister.",
+      "embed": {
+        "title": "Render of $url",
+        "description": "Website can be found [here]($url)\nI am not responsible for the content of this website.",
+        "footer": "Requested by $name"
+      },
+      "invalid_certificate": "This website\u0027s certificate is invalid; essentially, it\u0027s too insecure to connect to.",
+      "dns_failed": "The DNS query for this website failed. Try again later if you know this site works."
+    },
+    "xkcd": {
+      "meta": {
+        "command": "xkcd",
+        "name": "xkcd",
+        "description": "Get a random, chosen, or latest xkcd comic.",
+        "usage": "[random/latest/number]",
+        "help": "Get a random, chosen, or the latest xkcd comic."
+      },
+      "latest": "latest",
+      "random": "random",
+      "negative_number": "Right, because there are negative comics.",
+      "comic_not_created": "That comic hasn\u0027t been created.. yet."
+    },
+    "eval": {
+      "meta": {
+        "dev": true,
+        "command": "eval",
+        "name": "Eval",
+        "description": "Evaluate a thing. Confuse everyone.",
+        "usage": "\u003cstatement\u003e",
+        "help": "C\u0027mon, you know how to use this."
+      }
+    },
+    "exec": {
+      "meta": {
+        "dev": true,
+        "command": "exec",
+        "name": "Exec",
+        "description": "Execute a command on the command line.",
+        "usage": "\u003cstatement\u003e",
+        "help": "Working directory is ~/arthur/bot"
+      }
+    },
+    "broadcasteval": {
+      "meta": {
+        "dev": true,
+        "command": "broadcasteval",
+        "name": "Broadcast Eval",
+        "description": "Evaluate a thing on all shards. Confuse everyone.",
+        "usage": "\u003cstatement\u003e",
+        "aliases": [
+          "beval"
+        ],
+        "help": "ye."
+      }
+    },
+    "hardblacklist": {
+      "meta": {
+        "dev": true,
+        "command": "hardblacklist",
+        "aliases": [
+          "fuckoff",
+          "hardbl",
+          "hbl"
+        ],
+        "name": "Hard Blacklist",
+        "description": "Blacklist a user or guild from using Arthur altogether.",
+        "usage": "\u003cuser/guild ID\u003e",
+        "help": "Blacklist a user or guild from using Arthur altogether. THE BAN HAMMER HAS SPOKEN.\nAll messages will get a missingpermissions x lul"
+      }
+    },
+    "id": {
+      "meta": {
+        "command": "id",
+        "name": "ID",
+        "description": "Get a user\u0027s Discord Snowflake ID",
+        "usage": "\u003cpartial or full Discord tag\u003e",
+        "help": "Get a user\u0027s Discord Snowflake ID."
+      },
+      "user_does_not_exist": "I don\u0027t have access to that user or they don\u0027t exist.. Sorry.",
+      "id_of": "ID of $name"
+    },
+    "load": {
+      "meta": {
+        "dev": true,
+        "command": "load",
+        "aliases": [
+          "loadcmds"
+        ],
+        "name": "Load Commands",
+        "description": "Reloads all commands into memory.",
+        "usage": "\u003ccommand\u003e",
+        "help": "Loads all commands into memory. "
+      }
+    },
+    "pull": {
+      "meta": {
+        "dev": true,
+        "command": "pull",
+        "aliases": [
+          "gitpull"
+        ],
+        "name": "Git Pull",
+        "description": "Pull from GitHub and, optionally, reload commands.",
+        "usage": "[-k] [-m] [-c]",
+        "help": "Pull from GitHub and, if `-r` is specified, reload commands."
+      }
+    },
+    "reject": {
+      "meta": {
+        "dev": true,
+        "command": "reject",
+        "name": "Reject Suggestion",
+        "description": "Reject a suggestion by message ID",
+        "usage": "\u003cmessage ID\u003e [message]",
+        "help": "Reject a suggestion by message ID, and add a message if wanted."
+      }
+    },
+    "reload": {
+      "meta": {
+        "dev": true,
+        "command": "reload",
+        "name": "Reload Command",
+        "description": "Reload a command from Arthur.",
+        "usage": "\u003ccommand\u003e",
+        "help": "Seriously, you\u0027re just reloading a command.."
+      }
+    },
+    "reply": {
+      "meta": {
+        "dev": true,
+        "command": "reply",
+        "name": "Reply",
+        "description": "Reply to the previous message sent to the bot",
+        "usage": "\u003cmessage\u003e",
+        "help": "Reply to the previous message sent to the bot."
+      }
+    },
+    "restart": {
+      "meta": {
+        "dev": true,
+        "command": "reload",
+        "aliases": [
+          "kys"
+        ],
+        "name": "Restart",
+        "description": "Restart the bot",
+        "help": "Restarts the bot.\n-f forces restart.\n-m restarts the manager, not just the shards.\n-c checks whether restart is possible, but does not actually do it.\n-s restarts the bot as soon as possible."
+      }
+    },
+    "send": {
+      "meta": {
+        "dev": true,
+        "command": "send",
+        "aliases": [
+          "sendmessage"
+        ],
+        "name": "Send Message",
+        "description": "Send a message to someone by ID",
+        "usage": "\u003cid\u003e \u003cmessage\u003e",
+        "help": "Send a message to someone through Arthur, by ID"
+      }
+    },
+    "stats": {
+      "meta": {
+        "dev": true,
+        "command": "stats",
+        "name": "Command Stats",
+        "description": "View command stats of the bot.",
+        "usage": "[total/weekly/daily]",
+        "help": "View statistics on commands used, defaults to total."
+      }
+    },
+    "reverse": {
+      "meta": {
+        "command": "reverse",
+        "aliases": [
+          "flip"
+        ],
+        "name": "Reverse",
+        "description": "Reverse some text",
+        "usage": "\u003ctext\u003e",
+        "help": "Reverse some text. Might be entertaining, likely won\u0027t be."
+      },
+      "no_args": [
+        "You\u0027ve gotta provide me with something to reverse, lul",
+        "What do you think I\u0027m supposed to esrever?"
+      ]
+    },
+    "spacify": {
+      "meta": {
+        "command": "spacify",
+        "name": "Spacify",
+        "description": "A d d   s o m e   s p a c e",
+        "usage": "\u003ctext\u003e",
+        "help": "Add some space to text. Y o u   k n o w."
+      },
+      "no_args": "Y o u   t h i n k   I   c a n   s p a c i f y   n o t h i n g ?",
+      "too_big": "Unfortunately, the implication of the colossal text you\u0027ve provided with me is that... I can\u0027t send a message with your text spaced out. Try a little smaller of a text, perhaps?"
+    },
+    "spongebob": {
+      "meta": {
+        "command": "spongebob",
+        "aliases": [
+          "spongebobify",
+          "alternatecaps"
+        ],
+        "name": "Spongebob-ify",
+        "description": "It\u0027S tImE tO sPoNgEbOb SoMe TeXt",
+        "usage": "\u003ctext\u003e",
+        "help": "Spongebob-ify some text. yOu KnOw."
+      },
+      "no_args": "I need something to spongebob-ify :("
+    },
+    "stopwatch": {
+      "meta": {
+        "command": "stopwatch",
+        "name": "Stopwatch",
+        "description": "Time something with your dandy stopwatch",
+        "help": "Start or stop your stopwatch."
+      },
+      "stopwatch_started": "Stopwatch started.",
+      "stopwatch_stopped": "Stopwatch stopped. $time."
+    },
+    "leaderboard": {
+      "meta": {
+        "command": "leaderboard",
+        "aliases": [
+          "lb",
+          "lead",
+          "top"
+        ],
+        "name": "Leaderboard",
+        "description": "Show the leaderboard for the current server or global.",
+        "usage": "[__g__lobal/server] [page]",
+        "help": "Show either server or global leaderboard for XP. Select a page, if necessary."
+      },
+      "server": "server",
+      "guild": "guild",
+      "server_abbreviation": "s",
+      "global": "global",
+      "global_abbreviation": "g",
+      "invalid_page": "`$page` is not a valid page number.",
+      "negative_or_zero_page": "There is no page 0 or negative page.",
+      "not_enough_people": "Not enough people have talked to generate page $page.",
+      "footer": "Viewing page $page of $maxPage$end",
+      "footer_rank": "You are rank $rank on page $page",
+      "global_leaderboard": "Global Leaderboard"
+    },
+    "levels": {
+      "meta": {
+        "command": "levels",
+        "aliases": [
+          "leveling"
+        ],
+        "name": "Leveling Toggle",
+        "description": "Enable or disable leveling for a server.",
+        "help": "Simply a toggle for leveling on a server, including all leveling commands. Leveling is disabled by default."
+      },
+      "leveling_enabled": "Leveling has been enabled.",
+      "leveling_disabled": "Leveling has been disabled."
+    },
+    "xp": {
+      "meta": {
+        "command": "xp",
+        "aliases": [
+          "rank",
+          "level"
+        ],
+        "name": "XP",
+        "description": "Show your current XP and level",
+        "help": "Show current, total, and global XP, your current level, and how close you are to leveling up."
+      },
+      "description": "**$xp** global XP$end",
+      "rank_on_page": "Rank **$rank**, on page **$page**.",
+      "guild_xp": "Server XP",
+      "current_xp": "Current: **$current**$total\nLevel **$level**$rank",
+      "total": "Total",
+      "rank": "Rank",
+      "page": "Page",
+      "xp_to_level": "XP to level"
+    },
+    "xpinfo": {
+      "meta": {
+        "command": "xpinfo",
+        "aliases": [
+          "xi",
+          "xpi"
+        ],
+        "name": "XP Info",
+        "description": "Gives information about Arthur\u0027s leveling system.",
+        "help": "Receive information on Arthur\u0027s leveling system, including whether or not it is disabled in the current server and its current settings."
+      },
+      "leveling_system": "Leveling System",
+      "description": "Arthur has a leveling system that will give you XP and eventually level you up while you type messages. This is $levels for this server and can be toggled by a server manager with `$prefix@@levels`.",
+      "enabled": "enabled",
+      "disabled": "disabled",
+      "current_settings": "Current Settings",
+      "settings_message": "XP revolves around **$base**, for a range of **$min** to **$max** XP per message.\nXP is added every **$seconds** seconds.\nTo achieve level one, you need **$levelOne** XP.\nEach level requires **$mult**x as much XP as the previous.\nThe maximum XP will be multiplied for activity is **$maxMult**x."
+    },
+    "blacklist": {
+      "meta": {
+        "command": "blacklist",
+        "aliases": [
+          "bl"
+        ],
+        "name": "Blacklist User or Role",
+        "description": "Blacklist a user or role from using Arthur in your server.",
+        "usage": "\u003cuser or role resolvable\u003e",
+        "help": "Blacklist a user or role from using Arthur on your server. Give me a user/role ID, mention, tag (username#0000), or role name.\nArthur will not interact with this user in any way, other than like.. notice that they\u0027re in a voice channel"
+      },
+      "no_args": "Please tell me which user or role to blacklist.",
+      "invalid": "That user or role doesn\u0027t, uh, exist. Sorry.",
+      "self_blacklist": [
+        "Hey. I\u0027m not blacklisting you from me. Thanks, but no thanks.",
+        "You can\u0027t.. you can\u0027t do that. At least, I won\u0027t let you do that.",
+        "Seriously, you don\u0027t like me that much? Wow. Alright. I see how it is. Why don\u0027t you just kick me then, if that\u0027s how it\u0027s going to be?",
+        "lol. no."
+      ],
+      "self_role_blacklist": "You can\u0027t blacklist a role you have. I hope you know why.",
+      "already_blacklisted": "This person or role is already blacklisted.\nGo ahead and run `@@unblacklist $id` if you don\u0027t want them/it blacklisted anymore. Thanks.",
+      "blacklisted": "**$tag** has been blacklisted from usage of Arthur in this server. Riperoni in pepperoni.\nShould you want to unblacklist, run `@@unblacklist $id`."
+    },
+    "levelmessages": {
+      "meta": {
+        "command": "levelmessages",
+        "aliases": [
+          "levelmessage",
+          "levelingmessages",
+          "levelingmessage",
+          "lm",
+          "levelupmessage",
+          "levelupmessages"
+        ],
+        "name": "Leveling Messages",
+        "description": "Toggle level up messages for your server.",
+        "help": "Toggle level up messages for your server. By default, level up messages are enabled. Without this command, people will only know of their level in the server using the `@@leaderboard` or `@@xp` commands."
+      },
+      "enabled": "Level up messages have been enabled for your server.",
+      "disabled": "Those pesky level up messages have been disabled for your server."
+    },
+    "guildlanguage": {
+      "meta": {
+        "command": "guildlanguage",
+        "aliases": [
+          "serverlanguage",
+          "serverlocale",
+          "serverlang",
+          "guildlang",
+          "guildlocale"
+        ],
+        "name": "Server Language",
+        "description": "Set the language of Arthur for your server. User settings overwrite.",
+        "usage": "[locale]",
+        "help": "Set the language of Arthur for your server. User settings will overwrite if present. To get a list of languages, use the `@@languages` command. If a language is incomplete, it will use text from English for missing translations. To help translate Arthur, ask Gymno#4741 in the support server (available in the info or help commands)."
+      },
+      "current_language": "This server\u0027s language is $locale",
+      "invalid_locale": "Invalid locale string. Must be one of $locales. For a list of all languages, use the `@@languages` command.",
+      "locale_set": "Server locale set."
+    },
+    "prefix": {
+      "meta": {
+        "command": "prefix",
+        "aliases": [
+          "setprefix"
+        ],
+        "name": "Prefix",
+        "description": "Set or view the server\u0027s prefix.",
+        "usage": "[prefix]",
+        "help": "Set or view the server\u0027s current prefix for the bot.\nYou need **Manage Server** or **Administrator** permission to change the prefix."
+      },
+      "current": "This server\u0027s prefix is `$prefix`.",
+      "too_long": [
+        "That prefix is just a bit too long..",
+        "That\u0027s a bit too long for me. ~~That\u0027s what she said~~. No more than 10 characters.",
+        "That\u0027s gonna need to be shorter. No sexual reference intended."
+      ],
+      "updated": "Server prefix updated to `$prefix`."
+    },
+    "unblacklist": {
+      "meta": {
+        "command": "unblacklist",
+        "aliases": [
+          "ubl"
+        ],
+        "name": "Unblacklist",
+        "description": "Unblacklist someone previously blacklisted from Arthur.",
+        "usage": "\u003cuser resolvable\u003e",
+        "help": "Unblacklist someone previously blacklisted from Arthur. User ID, tag, nickname, whatever."
+      },
+      "no_args": [
+        "Well? You gonna choose who you want to unblacklist? Or just ~~stand~~ sit there?",
+        "I\u0027m on it. I\u0027ll unblacklist ` ` right away."
+      ],
+      "not_blacklisted": "That person or role isn\u0027t blacklisted. How nice of you, looking out for those who are doing just fine.",
+      "unblacklisted": "Like magic, **$tag** can interact with me again. :tada:"
+    },
+    "language": {
+      "meta": {
+        "command": "language",
+        "aliases": [
+          "locale",
+          "lang"
+        ],
+        "name": "Language",
+        "description": "Change the language of Arthur for yourself. Overrides server language.",
+        "usage": "[locale or \"@@commands.language.none\"]",
+        "help": "Changes the language of Arthur for yourself. Will override server language. The `@@languages` command will provide a list of languages. An incomplete language will use English where there is no translation. To help translate, join the support server and ask about translating."
+      },
+      "none": "none",
+      "current": "Your language is currently $locale",
+      "removed": "Locale removed. Defaulting to server locale if set, or English.",
+      "locale_set": "Locale set."
+    },
+    "languages": {
+      "meta": {
+        "command": "languages",
+        "aliases": [
+          "listlanguages",
+          "locales",
+          "langs"
+        ],
+        "name": "List Languages",
+        "description": "List all languages that Arthur has available.",
+        "help": "Lists all languages that Arthur has available, in addition to how completely translated the language is. Languages that are not completely translated will use English where there is no available translation. Help translate Arthur by asking in the support server."
+      },
+      "percent_complete": "$percent% complete.",
+      "languages": "Languages",
+      "description": "Languages that have not been fully translated will use English where translations are missing. To help translate, join the support server. For more info about a language, use the `@@langinfo` command."
+    },
+    "langinfo": {
+      "meta": {
+        "command": "langinfo",
+        "aliases": [
+          "languageinfo"
+        ],
+        "usage": "\u003clanguage code or name\u003e",
+        "name": "Language Info",
+        "description": "Get detailed information about a language.",
+        "help": "Get detailed information about a language that Arthur has. Use a locale code (e.g. `en-US`). Get a list of all languages, with less detail, with the `@@languages` command."
+      },
+      "no_language_specified": "I can\u0027t really get information about a specific language if you don\u0027t provide me with said specific language. You can get a list of the available languages with the `@@languages` command. Cheers.",
+      "locale_not_found": "I couldn\u0027t find the locale you specified. Make sure you\u0027re using the language code (e.g. `en-US`), not the full language name. For a list of languages, use the `@@languages` command.",
+      "description": "**Author(s)**: $authors\n**Complete**: $percent%\n**Language code**: `$code`"
+    },
+    "mp3": {
+      "meta": {
+        "command": "mp3",
+        "name": "Mp3",
+        "description": "Get an mp3 file of a YouTube video or Soundcloud song",
+        "usage": "\u003csearch term or url\u003e",
+        "help": "Get an mp3 file of the audio from a YouTube video or a Soundcloud song. Without a direct YouTube or Soundcloud URL, this command will search for the song on YouTube."
+      },
+      "downloading": "Downloading..",
+      "livestream": "Ah right, you expect me to download a livestream. Just no, thanks.",
+      "too_long": "I\u0027ve set a limit of $minutes minutes on songs; my CPU is limited and so is your time.",
+      "downloading_with_time": "Downloading... This should take about **$seconds** seconds to convert..",
+      "song_converted": "$user, your song is converted.",
+      "description": "Song is [here]($url).\nOriginal song [here]($songURL).\n$length",
+      "footer": "Requested by $tag | File will be deleted after first download.",
+      "no_args": [
+        "I can\u0027t download nothing..",
+        "It is *exceedingly* hard to download nothing at all and send it to you.",
+        "Convert *what* to mp3?"
+      ],
+      "no_results": "The video you searched for does not exist.. rip",
+      "error": "Error converting song: `$err`\nPlease try again later.",
+      "song_not_found": "Unfortunately, I couldn\u0027t find that song. You sure it exists?"
+    },
+    "poll": {
+      "meta": {
+        "command": "poll",
+        "aliases": [
+          "startpoll",
+          "createpoll",
+          "newpoll",
+          "ask",
+          "askquestion",
+          "multiplechoice",
+          "multiplechoicepoll"
+        ],
+        "name": "Poll",
+        "description": "Start a poll",
+        "help": "Start a poll. "
+      },
+      "footer": "Command will cancel in 60 seconds. Type \"cancel\" to cancel now. Attempt 1 of 5.",
+      "title": {
+        "title": "Poll title",
+        "description": "What would you like the poll title to be?"
+      },
+      "options": {
+        "title": "Poll options",
+        "description": "What poll options would you like?\nSeparate each option with a `|` character (below the backspace key).\nMaximum 10 options."
+      },
+      "time": {
+        "title": "Poll time",
+        "description": "How long would you like the poll to run for?\ne.g. `2d 8h 3m 14s` (maximum time of one week)"
+      },
+      "ended": "Ended",
+      "finished": "Poll finished: ",
+      "ends": "Ends"
+    },
+    "suggest": {
+      "meta": {
+        "command": "suggest",
+        "aliases": [
+          "suggestion",
+          "iwant"
+        ],
+        "name": "Suggest",
+        "description": "Suggest a command or feature to be added to Arthur.",
+        "usage": "\u003csuggestion\u003e",
+        "help": "Suggest something to be added to Arthur, preferably in English."
+      },
+      "no_args": "So you want to suggest nothing? Nothing at all? Really? No.",
+      "success": "Thanks, your suggestion might be added someday :thumbsup:$extra",
+      "check_support_server": "Check the support server - $link - to see if your suggestion gets accepted.",
+      "error": "I couldn\u0027t add the card to trello for some reason.. Heck man, that\u0027s weird, could your report this on my support server? - $link\n```\n$err\n```"
+    },
+    "forceskip": {
+      "meta": {
+        "command": "forceskip",
+        "aliases": [
+          "fs"
+        ],
+        "name": "Fore skip",
+        "description": "Force skip the current song",
+        "help": "Force skip the current song. (Same as `skip -f`) Requires \"@@struct.music.dj\" or \"@@struct.music.music\" role (or the below permisssions) or that you are the person who queued the song"
+      }
+    },
+    "like": {
+      "meta": {
+        "command": "like",
+        "aliases": [
+          "goodshit",
+          "ilovethisfuckingsong",
+          "dudethissongishot",
+          "nicesong",
+          "godlysong",
+          "amazingsong"
+        ],
+        "name": "Like Song",
+        "description": "Like the currently playing song",
+        "help": "Likes the currently playing song. View all your likes with the `likes` command."
+      },
+      "no_song_specified": "Alright so if there\u0027s no music playing *how am I gonna like the currently playing song*? Eh? You see how that doesn\u0027t work?",
+      "song_already_liked": [
+        "Mhm, you think I\u0027m gonna let you like a song twice. No. I don\u0027t care how good it is, go get your ~~alt~~ friend to like it.",
+        "Bud, you\u0027ve already liked this song. Ya can\u0027t like it twice.",
+        "You\u0027ve already liked that song. Go away.",
+        "Must be a nifty song. Regardless of how nifty it is, you can\u0027t like it twice, sorry."
+      ],
+      "song_liked": "Song Liked",
+      "song_is_playlist": "You can\u0027t like a whole playlist, sorry."
+    },
+    "liked": {
+      "meta": {
+        "command": "liked",
+        "aliases": [
+          "likedsongs",
+          "songlikes",
+          "likeslist",
+          "whatwasthatonesong",
+          "likes"
+        ],
+        "name": "Liked Songs",
+        "description": "View all your liked songs",
+        "usage": "[page]",
+        "help": "View all your previously liked songs. Play liked songs with `play liked \u003cnumber\u003e`."
+      },
+      "no_likes": [
+        "You don\u0027t have any likes tho..",
+        "You\u0027re gonna need to like some songs if ya want me to display some liked songs.",
+        "You uh.. You haven\u0027t liked a song yet.."
+      ],
+      "invalid_page": [
+        "Eyy that\u0027s not a page number, I\u0027d love it if you\u0027d supply me with a *real* page number, thanks.",
+        "That\u0027s, uh, not a page number. Give me a real one, perhaps?",
+        "You\u0027ll need to supply me with a valid page number before I\u0027ll supply you with a valid page."
+      ],
+      "negative_page": [
+        "Negative pages don\u0027t exist, okay? Think of a book. Does said book have a page -3? I didn\u0027t think so.",
+        "We\u0027re still living in three dimensions, as far as I know. I can\u0027t generate negative pages."
+      ],
+      "nonexistent_page": [
+        "That page doesn\u0027t exist yet. Go like a ton of songs, make that page, I believe in you!",
+        "You have supplied me with a page that doesn\u0027t exist, unfortunately. Perhaps give me one that does? Thanks.",
+        "That page, well, it doesn\u0027t exist, as sad as that is. Would you be willing to supply me with one that does? Thanks.",
+        "The page number you\u0027ve supplied leads to no page at all. However, if you\u0027re dedicated enough, that page could exist one day."
+      ],
+      "liked_songs": "$name$s Liked Songs",
+      "footer": "Page $page of $maxPage | Play a liked song with @@play @@commands.likedlb.liked \u003cnumber\u003e"
+    },
+    "likedlb": {
+      "meta": {
+        "command": "likedlb",
+        "aliases": [
+          "likedleaderboard",
+          "likeslb",
+          "likelb",
+          "likeleaderboard",
+          "likesleaderboard",
+          "topsongs",
+          "songlb",
+          "songleaderboard",
+          "topliked",
+          "liketop",
+          "likedtop",
+          "likestop"
+        ],
+        "name": "Likes Leaderboard",
+        "description": "Get a list of the top liked songs.",
+        "usage": "[page]",
+        "help": "View the top liked songs of the bot."
+      },
+      "like": "like",
+      "likes": "likes",
+      "liked": "liked",
+      "top_liked_songs": "Top Liked Songs",
+      "footer": "Page $page of $maxPage | Play a top song with @@play @@struct.music.top \u003cnumber\u003e"
+    },
+    "loop": {
+      "meta": {
+        "command": "loop",
+        "name": "Loop",
+        "description": "Loops the current queue of music indefinitely.",
+        "help": "Toggles looping the music queue"
+      },
+      "no_music_playing": "Ah yes, I\u0027ll make sure to loop the nonexistent music. (play some music thanks)",
+      "no_permissions": "hey you don\u0027t have permission to loop the music, weirdo",
+      "off": "A\u0027ight $name, loops off, as you wish.",
+      "on": "Loops on, $name, have fun listening to the same song(s) *forever*"
+    },
+    "move": {
+      "meta": {
+        "command": "move",
+        "name": "Move",
+        "description": "Moves a song at position *a* to position *b*.",
+        "help": "Moves a song from one position to another. The first position is the song to move, the second position is where to move it to (it will bump the song it replaces up a position).",
+        "usage": "\u003cqueue number of song to move\u003e \u003cposition to move to\u003e"
+      },
+      "no_music_playing": "There\u0027s no music playing right now, so I can\u0027t really move songs around.",
+      "no_permissions": "You need higher permissions or the `@@struct.music.dj` or `@@struct.music.music` role to do this.",
+      "missing_song": "Please provide a song queue number to move.",
+      "missing_position": "Please provide a position to move the song to.",
+      "invalid_song_or_position": "The song and/or position provided is invalid; please provide numbers.",
+      "song_or_position_too_low": "You can\u0027t move around songs that low in the queue. I won\u0027t let ya.",
+      "song_and_position_same": "Tada. Nothing changed.",
+      "song_or_position_too_high": "One or more of those queue number(s) is like, out of this world (too big).",
+      "success": "Moved song at position $song to position $pos. Nice."
+    },
+    "nowplaying": {
+      "meta": {
+        "command": "nowplaying",
+        "aliases": [
+          "playing",
+          "np"
+        ],
+        "name": "Now Playing",
+        "description": "See what song is currently playing",
+        "help": "Get information about the currently playing song."
+      },
+      "notify": "notify",
+      "notify_abbreviation": "n",
+      "nothing_playing": [
+        "Now playing: The sound of silence",
+        "There\u0027s nothing playing. Nothing at all. Okay?",
+        "Now playing: The voices in your head.",
+        "Nothing is playing. Go play something. I believe in you."
+      ],
+      "by": "By",
+      "of": "of",
+      "footer": "Requested by $tag"
+    },
+    "npnotify": {
+      "meta": {
+        "command": "npnotify",
+        "aliases": [
+          "npn",
+          "nowplayingn",
+          "nowplayingnotify",
+          "npnotify"
+        ],
+        "name": "Now Playing Notify",
+        "description": "Send a message when a new song starts",
+        "help": "Send a message in the chat where `a.play` was used last showing the currently playing song at the beginning of each song. Toggle with this command or `a.nowplaying notify`."
+      },
+      "enabled": "enabled",
+      "disabled": "disabled",
+      "message": "Now playing notifications have been $status."
+    },
+    "pause": {
+      "meta": {
+        "command": "pause",
+        "name": "Pause",
+        "description": "Pause the currently playing song",
+        "help": "Pause the current song. Requires \"@@struct.music.dj\" or \"@@struct.music.music\" role (or the below permissions)"
+      },
+      "no_music_playing": "There is no music playing.",
+      "already_paused": "The music is already paused. Use `@@resume` to resume playback.",
+      "paused": "Music paused."
+    },
+    "play": {
+      "meta": {
+        "command": "play",
+        "aliases": [
+          "p"
+        ],
+        "name": "Play",
+        "description": "Play a song or add it to the queue",
+        "usage": "\u003csong name/youtube or soundcloud url/file url/file/top/liked\u003e [extra params]",
+        "help": "Play a song or add one to the queue. Only supports songs playable in the US."
+      },
+      "error_getting_info": "I\u0027m havin\u0027 trouble gettin\u0027 info for that video - `$err`\nreport this to my support server if you want it fixed. Or don\u0027t. I\u0027m not the boss of you.",
+      "not_in_channel": [
+        "Hey man, I can\u0027t just play music through your speakers magically. Could you like.. connect to a voice channel?",
+        "You\u0027ll have to connect to a voice channel before I can play music, my dude.",
+        "Play music where? Likely in a voice channel, right? Right. Now connect to one, so I can play you some music.",
+        "You\u0027re not connected to a voice channel, so how do I know which voice channel to connect to?"
+      ],
+      "no_song_specified": [
+        "What? Do you want me to just play some random song? You seriously think I\u0027d do that? No. Choose your song.",
+        "Play... what? Choose a song, I believe in you. The internet is a vast and wild place.",
+        "Throughout this crazy thing we call the \"Internet\" there are many, many songs. Now choose one to play, please."
+      ],
+      "cant_join_channel": "I can\u0027t join the channel you\u0027re in. Rude. I wanted to join you, and play you some tunes. The channel I wanted to join wasn\u0027t joinable. Do you see this conflict of interests?",
+      "could_not_connect": "Could not connect to voice channel - `$err`\nTry again, if you will. Or go complain in the support server.",
+      "adding_song_error": "An unknown error has occured while adding that song (or songs). The error has been logged and should be resolved soon. Join the support server for more information.",
+      "footer_extra": "Position in queue: $position | Song will play in about $time",
+      "detected_playlist": "I detected a playlist in the link you sent. Would you like to queue all songs from the playlist?",
+      "playnext_playlist": "You cannot use the @@playnext command with a playlist, sorry."
+    },
+    "playnext": {
+      "meta": {
+        "command": "playnext",
+        "name": "Play next",
+        "description": "Queue a song next in queue",
+        "help": "Queue a song next in queue, as opposed to added to the end of the queue. See @@play command for proper usage."
+      }
+    },
+    "queue": {
+      "meta": {
+        "command": "queue",
+        "aliases": [
+          "queueueue",
+          "queueue",
+          "que",
+          "qu",
+          "q"
+        ],
+        "name": "Queue",
+        "description": "View the current queue",
+        "usage": "\u003cpage\u003e",
+        "help": "View the current queue. View a different page if there are more than 10 songs."
+      },
+      "no_music_queued": "There is no music queued. Add some with the `@@play` command.",
+      "only_multiple_pages": "There are only $pages pages in the queue.",
+      "only_one_page": "There is only one page in the queue.",
+      "footer": "Page $page of $maxPage | 1 Song Total | Estimated Queue Length: $length | Requested by $name",
+      "footer_plural": "Page $page of $maxPage | $songs songs total | Estimated queue length: $length | Requested by $name"
+    },
+    "remove": {
+      "meta": {
+        "command": "remove",
+        "aliases": [
+          "removesong"
+        ],
+        "name": "Remove",
+        "description": "Remove a song from the queue",
+        "usage": "\u003csong number\u003e",
+        "help": "Remove a song from the queue by it\u0027s number. You need \"@@struct.music.dj\", \"@@struct.music.music\", the below permissions, or to have added the song yourself to be able remove it."
+      },
+      "nothing_playing": "I can\u0027t remove something from nothing, that breaks some rule of physics.. (There is no music playing)",
+      "no_args": "Y\u0027all need to specify which song to remove (gimme a number thanks).",
+      "not_a_number": "Hey.. that\u0027s not a number.. (or you chose zero. my point still stands.)",
+      "negative_number": "there is no negative queue tho \u003c:crazyeyes:359106555314044939\u003e",
+      "current_song": "hey, use `@@skip`, don\u0027t remove the current song, that breaks things..",
+      "does_not_exist_yet": "C\u0027mon, there aren\u0027t that many songs in the queue.. yet.",
+      "success": "Success! Song #$num has been removed from the queue.\n*someone might have wanted to hear that song, #Blame$name*"
+    },
+    "resume": {
+      "meta": {
+        "command": "resume",
+        "aliases": [
+          "go",
+          "continue"
+        ],
+        "name": "Resume",
+        "description": "Resume the currently playing song",
+        "help": "Resume the current song. Requires \"@@struct.music.dj\" or \"@@struct.music.music\" role (or the below permissions)"
+      },
+      "nothing_playing": "There is no music playing. How would I resume playback of nothing? :thinking:",
+      "already_playing": "Music is already playing. Use `@@pause` to pause playback.",
+      "resumed": "Music resumed."
+    },
+    "shuffle": {
+      "meta": {
+        "command": "shuffle",
+        "name": "Shuffle",
+        "description": "Shuffle the current music queue",
+        "help": "Shuffle the current music queue - cannot be undone."
+      },
+      "no_queue": "You want to shuffle the queue, but there is no queue! Queue some music with the `@@play` command.",
+      "too_small": "There\u0027s no point in shuffling a one or two song queue - it won\u0027t change the order at all. lul.",
+      "shuffled": "Music queue shuffled."
+    },
+    "skip": {
+      "meta": {
+        "command": "skip",
+        "aliases": [
+          "next",
+          "s"
+        ],
+        "name": "Skip",
+        "description": "Skip the current song.",
+        "help": "Skip the current song. Requires \"@@struct.music.dj\" or \"@@struct.music.music\" role (or the below permisssions)"
+      },
+      "skipped": [
+        "Song skipped. #Blame$user",
+        "Song skipped. blame $user.",
+        "Song skipped. dammit, $user!",
+        "$user, you\u0027ve skipped the song. Nice, I guess."
+      ],
+      "no_music": "There\u0027s no music playing, so how exactly would I skip the current song? Are you insane?",
+      "force_command_flag": "-f",
+      "vote_skip_removed": "$user, Vote to skip removed.",
+      "vote_skip_registered": "$user, Vote registered. $votes more vote(s) until the song is skipped. ($part/$whole)$forceMessage",
+      "force_message": "*To force skip, add `@@commands.skip.force_command_flag` to the end of the command*"
+    },
+    "stop": {
+      "meta": {
+        "command": "stop",
+        "aliases": [
+          "stfu",
+          "leave",
+          "gtfo"
+        ],
+        "name": "Stop",
+        "description": "Stop all music and leave the channel.",
+        "help": "Stop all currently playing music and leave the channel. Requires \"@@struct.music.dj\" or \"@@struct.music.music\" role (or the below permissions)"
+      },
+      "no_music": "I have successfully stopped the nonexistent music.. What were you trying to do?",
+      "stopped": [
+        "Music stopped. #Blame$user",
+        "Thanks to $user, music has stopped playback.",
+        "Music has been stopped. *thanks to $user, smh*"
+      ]
+    },
+    "unlike": {
+      "meta": {
+        "command": "unlike",
+        "aliases": [
+          "dislike"
+        ],
+        "name": "Unlike Song",
+        "description": "Unlike that one song you liked",
+        "usage": "\u003csong number\u003e",
+        "help": "Unlike that one song you liked a while ago because you now realize it\u0027s not as good as you thought it was."
+      },
+      "no_likes": "If you haven\u0027t liked any songs yet, it\u0027s quite challenging for me to unlike a song.",
+      "no_args": "Yes, I\u0027ll just pick the song you want. Y\u0027know, because I have telepathic powers. (tell me which song to remove)",
+      "invalid_number": "Hey.. that\u0027s not a number.. (or you chose zero, my point still stands.)",
+      "negative_number": "There are no negative songs tho \u003c:crazyeyes:359106555314044939\u003e",
+      "too_high_number": "I\u0027m sorry, but you just haven\u0027t liked that many songs yet.",
+      "no_voice_connection": "You have to tell me which song to unlike, lul.",
+      "song_not_liked": "Ey bud you haven\u0027t even liked this song yet - how would you unlike it?",
+      "song_unliked": "Song Unliked"
+    },
+    "help": {
+      "meta": {
+        "command": "help",
+        "aliases": [
+          "h",
+          "halp",
+          "commands",
+          "helpme",
+          "helpmeimlosingbraincells",
+          "helpmeiamlosingbraincells"
+        ],
+        "name": "Help",
+        "description": "View the help menu.",
+        "usage": "[command]",
+        "help": "View the entire help menu or just help for one command."
+      },
+      "chat_flag": "-chat",
+      "arthur_help": "Arthur Help",
+      "large_embed": {
+        "invite": "Invite",
+        "support_server": "Support Server",
+        "tos": "TOS",
+        "description": "Made by Gymno#4741\nWhen using commands, \u003c\u003e indicates a required argument and [] indicates an optional requirement. (Do not actually type these symbols.)",
+        "footer": "Type $prefix@@help \u003ccommand\u003e for a detailed description of the command"
+      },
+      "check_dms": "Check your DM\u0027s :mailbox_with_mail:",
+      "send_failed": "Message send failed. If you\u0027d like to see the help in this channel, type `$prefix@@help @@commands.help.chat_flag`.",
+      "invalid_command": "I do not have a(n) `$command` command.",
+      "small_embed": {
+        "usage": "**Usage**:",
+        "aliases": "**Aliases**:",
+        "advanced": "Advanced",
+        "cooldown": "cooldown",
+        "server_cooldown": "server cooldown",
+        "requires_bot_perms": "Requires **bot perms**: ",
+        "requires_member_perms": "Requires additional **member perms**: ",
+        "footer": "Category: $category | \u003c\u003e is required, [] is optional"
+      },
+      "categories": {
+        "apis": "APIs",
+        "other": "Other",
+        "fun": "Fun",
+        "levels": "Leveling",
+        "server_management": "Server Management",
+        "music": "Music",
+        "developer": "Developer",
+        "eggs": "Eggs",
+        "sound_effects": "Sound Effects",
+        "i18n": "Internationalization"
+      },
+      "sound_effects": {
+        "description": "Alias for `@@play @@struct.music.file $name`",
+        "help": "Alias for `@@play @@struct.music.file $name`. Plays the $name sound effect."
+      }
+    },
+    "info": {
+      "meta": {
+        "command": "info",
+        "aliases": [
+          "bot"
+        ],
+        "name": "Info",
+        "description": "View information about Arthur.",
+        "help": "View information about Arthur."
+      },
+      "title": "Arthur - Yet another Discord bot",
+      "description": "Just a bot with tons of.. average features.",
+      "author": "Author",
+      "help": "Help",
+      "info": "Info",
+      "info_value": "Language - Javascript\nNode $nodeVersion\nDiscord.js v$discordVersion\nShard uptime of $uptime (shard $shard)\nShard manager uptime of $managerUptime"
+    },
+    "invite": {
+      "meta": {
+        "command": "invite",
+        "aliases": [
+          "inv"
+        ],
+        "name": "Invite",
+        "description": "Invite Arthur to your server.",
+        "help": "Get an invite link for Arthur."
+      },
+      "description": "Arthur can be invited with [this link]($invite). You need to have @@permissions.MANAGE_SERVER or @@permissions.ADMINISTRATOR permission to add the bot to a server."
+    },
+    "dice": {
+      "meta": {
+        "command": "dice",
+        "aliases": [
+          "roll",
+          "die"
+        ],
+        "name": "Dice",
+        "description": "Rolls a dice",
+        "usage": "[number of sides]",
+        "help": "Ask Arthur to roll an arbitrarily sized dice"
+      },
+      "invalid_number": "Hey.. that\u0027s not a number..",
+      "invalid_sides": "Hey.. that\u0027s not a number.. (or you think zero sided dice exist.)",
+      "negative_number": "The number provided is the same as the number of brain cells you possess.",
+      "excessive_rolls": "I can\u0027t roll that many dice and neither can you!",
+      "success_roll": "I rolled a **$result**.",
+      "success_roll_multiple": "I rolled\n\u003e $roll\nresulting in a **$result**."
+    },
+    "endpoll": {
+      "meta": {
+        "command": "endpoll",
+        "name": "End poll",
+        "description": "End a currently started poll early",
+        "usage": "\u003cpoll message ID\u003e",
+        "help": "End a currently started poll early using the poll message ID.\nIf you want to start a poll, use the `@@poll` command.\nTo get the poll message ID, turn on developer mode in your discord settings (in the appearance pane), go to the message of the poll (the one Arthur sent with reactions), open the message settings (right click, the three dots, or a long tap depending on platform) and choose \"Copy ID.\" Use this ID in conjunction with this command to end a poll early."
+      },
+      "no_args": "You\u0027re gonna have to provide me with the message ID of the poll you\u0027d like to send. Alright? Use `@@help @@endpoll` for details.",
+      "invalid_args": "Please provide a valid message ID. Use `@@help @@endpoll` for further details.",
+      "invalid_poll": "You provided an ID of a poll that no longer exists or never existed, unfortunately. Can\u0027t end it. Sorry.",
+      "wrong_guild": "You want to stop a poll in another server? Really? That\u0027s like *high* level mischief. N.. no, sorry.",
+      "finished": "You\u0027ve successfully ended the poll early. Nice."
+    },
+    "hug": {
+      "meta": {
+        "command": "hug",
+        "name": "Hug",
+        "description": "Hug Arthur (or someone else)",
+        "usage": "[person]",
+        "help": "Hug someone, whether it be Arthur or that guy that wants a hug."
+      }
+    },
+    "humongoji": {
+      "meta": {
+        "command": "humongoji",
+        "aliases": [
+          "wumbowumboji",
+          "bigmoji",
+          "hugemoji"
+        ],
+        "name": "Toggle Humongoji",
+        "description": "Enable or disable humongojis in a server. They\u0027re wumbojis, but better.",
+        "help": "Wumbojis are bigger emojis that appear when an emoji is in a message by itself. See the [changelog](https://blog.discordapp.com/2016-4-29-change-log-a6451dfbaac8) for when they were added. Humongojis (this feature) are even *bigger* emojis that will appear in the same scenario, where Arthur will show the emoji image in full glorious HD.\nIf Arthur has the MANAGE_MESSAGES permission, the original message will also be deleted. Humongojis are disabled by default."
+      },
+      "enabled": "Humongojis have been enabled for this server. Enjoy.",
+      "disabled": "As sad as it is for the users of your server, humongojis have been disabled. Riperoni."
+    },
+    "l": {
+      "meta": {
+        "command": "l",
+        "name": "L",
+        "description": "L",
+        "usage": "[emoji]",
+        "help": "Post an L of Ls, or any other emoji"
+      }
+    },
+    "lenny": {
+      "meta": {
+        "command": "lenny",
+        "name": "Lenny",
+        "usage": "[text]",
+        "description": "( ͡° ͜ʖ ͡°)",
+        "help": "( ͡° ͜ʖ ͡°) ( ͡° ͜ʖ ͡°)"
+      }
+    },
+    "owoify": {
+      "meta": {
+        "command": "owoify",
+        "aliases": [
+          "owo",
+          "uwu",
+          "uwuify"
+        ],
+        "name": "Owoify",
+        "description": "Owoify some text",
+        "usage": "\u003ctext\u003e",
+        "help": "Owoify some text. Yeah. What even.",
+        "category": "Fun"
+      },
+      "no_text": "I can\u0027t owoify nothing! Give me some text."
+    }
+  },
+  "struct": {
+    "xp": {
+      "no_one_talked_yet": "Belum ada seorang pun di server ini yang berbicara.",
+      "level_up": "Kerja bagus, $mention, kamu telah mencapai level **$level**!"
+    },
+    "music": {
+      "now_playing": "Now Playing",
+      "added_to_queue": "Added to Queue",
+      "length": "Length",
+      "dj": "DJ",
+      "music": "Music",
+      "random": "random",
+      "top": "top",
+      "file": "file",
+      "sound_effect": "Sound effect",
+      "invalid_file_type": "I currently only support playback of the filetypes $filetypes. Feel free to suggest more file types if you need \u0027em.",
+      "file_too_small": [
+        "Your file isn\u0027t powerful enough! I need one bigger than 25 KB, thanks.",
+        "That file is, hear me out, too small. Really. I\u0027ll need something greater than 25 KB. Thanks."
+      ],
+      "no_liked_songs": "If you haven\u0027t liked a song yet, it\u0027s quite challenging for me to play a liked song.",
+      "no_song_specified": [
+        "Yeah, I\u0027ll just pick the song you want. Y\u0027know, because I have telepathic powers. (tell me which song to play)",
+        "You didn\u0027t specify a song. You realize that, right? I can\u0027t play a song if you don\u0027t specify one."
+      ],
+      "negative_number": "there is no negative song tho \u003c:crazyeyes:359106555314044939\u003e",
+      "number_too_large": "I\u0027m sorry, but you just haven\u0027t liked that many songs yet. Go do that.",
+      "number_too_large_lb": "There really aren\u0027t that many liked songs yet. You could change that if you wanted..",
+      "could_not_find_song": "Not sure why, but I simply couldn\u0027t find that song. Huh.",
+      "no_file_specified": "Hey man, you have to tell me what file to play.. The current options are: $files",
+      "separator": ",",
+      "invalid_file": "That file uh.. doesn\u0027t exist. Feel free to suggest to add it. What you *can* play are as follows: $files",
+      "invalid_url": "Please provide a valid URL (that links to a valid file type).",
+      "invalid_playlist": "The given playlist is invalid or inaccessible. Uh.. sorry.",
+      "error_loading_playlist_songs": "Could not load any songs from given playlist. Wack.",
+      "playlist_too_long": "Sorry, but over 200 songs is too many. Please use a shorter playlist.",
+      "added_playlist": "Successfully added $num songs from playlist.",
+      "no_results": [
+        "The song you searched for could not be found.. rip",
+        "No results found. Silly goose.",
+        "Uhh.. Couldn\u0027t find anything by that term, sorry.",
+        "You sure that\u0027s a real song? ..or video?",
+        "Yeah. No. Couldn\u0027t find it. Sorry."
+      ],
+      "could_not_get_info": [
+        "There seems to have been an error retrieving info for that video. Contact support if the issue persists.",
+        "I couldn\u0027t get info for that song. Odd. Try again? I dunno."
+      ],
+      "song_too_short": [
+        "Your video isn\u0027t powerful enough! I need one longer than 5 seconds, thanks.",
+        "That video is, hear me out, too short. Really. I\u0027ll need one longer than 5 seconds. Thanks."
+      ],
+      "livestream": "Trying to play a livestream, eh? Well, no, sorry.",
+      "video_requires_payment": "The video `$video` requires payment to watch. I ain\u0027t buyin\u0027 that for ya. Skipping.",
+      "no_audio_track": "The video `$video` has no public audio track on YouTube; it\u0027s either a paid video or supremely broken. Can\u0027t play it for ya.",
+      "video_unavailable": "Video `$video` tidak tersedia. Bisa jadi diblokir oleh hak cipta, batasan usia, diblokir oleh negara, atau cuma YouTube aja yang bertingkah keji. Maaf ya.",
+      "music_premium": "Video `$video` hanya tersedia untuk pelanggan YouTube Music Premium. Itu bukanlah aku. Meloncati.",
+      "file_footer": "Ditambahkan oleh $tag. | URL yang tidak valid akan diloncati."
+    },
+    "message": {
+      "dm_help": "Prefiks-ku adalah `a.`; jalankan `a.help` untuk mendapatkan bantuan.",
+      "invite_help": "Untuk mengundang Arthur ke server-mu, gunakan perintah `a.invite`. Sayangnya, bot tidak bisa menggunakan tautan undangan.",
+      "command_disabled": "Saat ini perintah ini dinonaktifkan. Bergabunglah dengan server dukungan untuk informasi lebih lanjut.",
+      "bot_missing_perms": "Aku tidak memiliki perizinan yang diperlukan untuk menjalankan perintah ini: $perms",
+      "user_missing_perms_emoji": ":missingpermissions:407054344874229760",
+      "user_cooldown": [
+        "Waduh, kamu terlalu cepat untukku. Bisakah kamu santai aja? Tunggu $time detik lagi, ya?",
+        "Agak terlalu cepat bagiku. Bisakah kamu menunggu $time detik, dan mencobanya lagi?",
+        "Santai aja, gan. Coba lagi dalam $time detik.",
+        "Sudah cukup. Terlalu cepat. Ayolah. Pelan-pelan aja. Tunggu $time detik, oke? Harusnya gak susah, kok."
+      ],
+      "guild_cooldown": [
+        "Bung, server ini terlalu cepat. Beberapa orang benar-benar perlu bersantai.. Tunggu $time detik lagi, ya?",
+        "Beri tahu rekan-rekan anggota server-mu (atau mungkin dirimu sendiri) untuk pelan-pelan, oke? $time detik lagi sebelum kamu bisa menggunakan perintah ini, oke?",
+        "Perlu $time detik lagi sebelum server ini bisa menggunakan perintah ini lagi, maaf ya.",
+        "Kalian semua terlalu cepat. Coba lagi dalam $time detik, terima kasih."
+      ],
+      "confirmation": [
+        "Okelah",
+        "Baiklah.",
+        "Y.",
+        "Keren."
+      ]
+    },
+    "askQuestion": {
+      "command_canceled": "Perintah dibatalkan",
+      "did_not_respond_in_time": "Kamu tidak menjawab tepat waktu.",
+      "you_cancelled": "Kamu membatalkan perintah.",
+      "too_many_attempts": "Kamu mengambil terlalu banyak upaya.",
+      "loser_abbreviation": "L."
+    },
+    "i18n": {
+      "response_not_found": "Respons tidak ditemukan. Akan diperbaiki secepat mungkin, coba lagi nanti. Nama string, untuk referensi: `$string`."
+    },
+    "soundcloud": {
+      "invalid_url": "URL tidak valid.",
+      "sound_nonexistant": "Berkas suara tidak ada.",
+      "invalid_type": "URL bukan berkas suara, melainkan $type.",
+      "no_search_results": "Aku tidak bisa menemukan lagu apa pun berdasarkan nama tersebut."
+    }
+  },
+  "time": {
+    "abbreviations": {
+      "hours": "j",
+      "minutes": "mnt",
+      "seconds": "dtk"
+    },
+    "moment": {
+      "precise": "dd MMMM yyyy [pukul] HH:mm",
+      "time_only": "HH:mm:ss",
+      "date_only_nice": "dd/MM/yyyy"
+    }
+  },
+  "booleans": {
+    "yesno": {
+      "prompt": "\u003c__Y__a/__T__idak\u003e",
+      "abbreviations": {
+        "yes": "y",
+        "no": "t",
+        "yes_end": "a",
+        "no_end": "idak"
+      }
+    }
+  },
+  "parsing": {
+    "invalid_number": "Itu bukanlah nomor yang valid."
+  },
+  "permissions": {
+    "MANAGE_SERVER": "Kelola server",
+    "ADMINISTRATOR": "Administrator",
+    "EMBED_LINKS": "Tanamkan tautan",
+    "ATTACH_FILES": "Lampirkan berkas",
+    "ADD_REACTIONS": "Tambahkan reaksi",
+    "SPEAK": "Bicara",
+    "CONNECT": "Menghubung"
+  },
+  "perm_levels": {
+    "0": "**Siapa saja** bisa menggunakan perintah ini melalui JAPRI atau di dalam server.",
+    "1": "**Siapa saja** bisa menggunakan perintah ini melalui JAPRI atau di dalam server.",
+    "2": "Perintah ini bisa digunakan oleh **siapa saja di dalam server**",
+    "3": "Hanya orang-orang yang memiliki **Role Mod** atau yang lebih tinggi yang bisa menggunakan perintah ini.",
+    "4": "Hanya orang-orang yang memiliki **Role Admin** atau yang memiliki **Perizinan Admin** yang bisa menggunakan perintah ini.",
+    "5": "Hanya orang-orang yang memiliki **Perizinan Kelola Server** atau yang lebih tinggi yang bisa menggunakan perintah ini.",
+    "6": "Hanya **pemilik server** yang bisa menggunakan perintah ini.",
+    "9": "Hanya **para pengembang bot** yang bisa menggunakan perintah ini",
+    "10": "Hanya **pengembang bot utama** yang bisa menggunakan perintah ini."
+  }
+}
