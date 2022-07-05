@@ -20,7 +20,7 @@
 	},
 	"license": "MIT",
 	"dependencies": {
-		"@discordjs/opus": "^0.3.3",
+		"@discordjs/opus": "^0.8.0",
 		"bufferutil": "^4.0.3",
 		"canvas": "^2.8.0",
 		"capture-website": "^1.4.0",
