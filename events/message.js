@@ -15,6 +15,9 @@ const emojiRegex = /^\s*<?(a)?:?(\w{2,32}):(\d{17,19})>?\s*$/;
 const CAT_EMOJIS = [ '😿', '😻', '😹', '😽', '😾', '🙀', '😸', '😺', '😼' ];
 
 module.exports = async (client, message) => {
+	// The Sep 1 bot massacre
+	if (message.channel.type !== 'dm' && !message.content) return;
+
 	if (message.author.bot) return;
 	const botPerms = message.guild ? message.channel.permissionsFor(message.guild.me) : null;
 	if (message.guild && botPerms && !botPerms.has('SEND_MESSAGES')) return;

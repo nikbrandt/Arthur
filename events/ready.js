@@ -80,10 +80,13 @@ module.exports = client => {
 	client.recentMessages = {};
 	client.lastRecentMessageID = 0;
 
-	game(client);
-	client.setInterval(() => {
-		game(client);
-	}, 1000 * 60 * 5);
+	client.user.setActivity('RIP Arthur. See below.');
+
+	// TODO: uncomment if/when Arthur is alive again
+	// game(client);
+	// client.setInterval(() => {
+	// 	game(client);
+	// }, 1000 * 60 * 5);
 
 	client.setInterval(() => {
 		cleanProcesses(client);

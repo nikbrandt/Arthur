@@ -15,7 +15,6 @@ const client = new ArthurClient({
 		intents: [
 			'GUILDS',
 			'GUILD_VOICE_STATES',
-			'GUILD_MESSAGES',
 			'GUILD_MESSAGE_REACTIONS',
 			'DIRECT_MESSAGES'
 		]
