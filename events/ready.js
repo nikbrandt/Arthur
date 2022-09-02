@@ -80,7 +80,7 @@ module.exports = client => {
 	client.recentMessages = {};
 	client.lastRecentMessageID = 0;
 
-	client.user.setActivity('RIP Arthur. See below.');
+	client.user.setActivity('Nevermind! See below.');
 
 	// TODO: uncomment if/when Arthur is alive again
 	// game(client);
