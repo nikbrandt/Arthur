@@ -49,7 +49,7 @@ function sendStats(client) {
 }
 
 function cleanProcesses(client) {
-	client.voice.connections.forEach(connection => {
+	/* client.voice.connections.forEach(connection => {
 		if (!connection.channel
 			|| connection.channel.members.size < 2
 			|| !connection.channel.guild
@@ -61,7 +61,7 @@ function cleanProcesses(client) {
 			connection.disconnect();
 			connection.channel.leave();
 		}
-	});
+	}); */ // wooh what even is voice
 
 	client.processing.forEach((item, i) => {
 		if (typeof item !== 'string') return;
