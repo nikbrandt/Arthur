@@ -2,7 +2,7 @@ const { getSubredditMeme } = require('../fun/meme');
 
 exports.run = message => {
 	getSubredditMeme('ANormalDayInRussia').then(meme => {
-		message.channel.send({ embed: {
+		message.channel.send({ embeds: [{
 			author: {
 				icon_url: 'https://cdn.discordapp.com/emojis/585296471880892461.png?v=1',
 				name: meme.title
@@ -11,7 +11,7 @@ exports.run = message => {
 				url: `https://i.imgur.com/${meme.hash}${meme.ext}`
 			},
 			color: 0xff0019
-		}});
+		}]});
 	}).catch(() => {
 		message.channel.send('didn\'t work, sorry. :(');
 	})

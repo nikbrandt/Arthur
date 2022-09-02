@@ -4,7 +4,7 @@ exports.run = (message, a, s, d, permLevel) => {
 
 	if (message.guild.music.playing === true) return message.channel.send(message.__('already_playing'));
 
-	message.guild.voice.connection.dispatcher.resume();
+	message.guild.me.voice.connection.dispatcher.resume();
 	message.guild.music.playing = true;
 	message.guild.music.startTime += Date.now() - message.guild.music.pauseTime;
 	message.guild.music.pauseTime = null;

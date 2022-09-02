@@ -2,7 +2,7 @@ exports.run = async (message, ar, sui, client) => {
 	let levels = await sql.get(`SELECT levels FROM guildOptions WHERE guildID = '${message.guild.id}'`);
 	levels = !(!levels || levels.levels === 'false');
 
-	message.channel.send({embed: {
+	message.channel.send({embeds: [{
 		color: 0x8356ff,
 		fields: [
 			{
@@ -14,7 +14,7 @@ exports.run = async (message, ar, sui, client) => {
 				value: message.__('settings_message', { base: client.config.xp.base, min: client.config.xp.base - client.config.xp.min, max: client.config.xp.base + client.config.xp.max, seconds: client.config.xp.xpAdd / 1000, levelOne: client.config.xp.levelOne, mult: client.config.xp.mult, maxMult: client.config.xp.maxMult })
 			}
 		]
-	}});
+	}]});
 };
 
 exports.config = {

@@ -36,14 +36,14 @@ exports.run = async (message, args, suffix, client) => {
 	sql.run(`INSERT INTO musicLikes (userID, type, id, url, title, queueName) VALUES (?, ?, ?, ?, ?, ?)`, [message.author.id, type, id, meta.url, meta.title, meta.queueName]);
 
 	message.channel.send({
-		embed: {
+		embeds: [{
 			author: {
 				name: `${message.author.username} - ${message.__('song_liked')}`
 			},
 			url: meta.url,
 			color: 0x427df4,
 			description: meta.queueName
-		}
+		}]
 	});
 };
 

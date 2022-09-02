@@ -23,7 +23,7 @@ let ipcObject = client => {
 				ipcClient.emit('data', {
 					type: 'stats',
 					data: {
-						music: client.guilds.cache.filter(g => g.voice && g.voice.connection && g.music && g.music.queue).map(g => {
+						music: client.guilds.cache.filter(g => g.me.voice && g.me.voice.connection && g.music && g.music.queue).map(g => {
 							return {
 								id: g.id,
 								name: g.name,
@@ -31,7 +31,7 @@ let ipcObject = client => {
 								queueLength: g.music.queue.length,
 								playing: g.music.playing,
 								loop: !!g.music.loop,
-								channelSize: g.voice.connection.channel.members.size
+								channelSize: g.me.voice.connection.channel.members.size
 							}
 						}),
 						cpu: os.loadavg(),
@@ -316,7 +316,7 @@ let ipcObject = client => {
 						break;
 					}
 
-					if (!guild.music || !guild.music.queue || !guild.voice || !guild.voice.connection) {
+					if (!guild.music || !guild.music.queue || !guild.me.voice || !guild.me.voice.connection) {
 						error = 'No music is playing in guild';
 						break;
 					} // TODO: Implement the rest of the actions
@@ -324,8 +324,8 @@ let ipcObject = client => {
 
 					switch (action) {
 						case 'togglePausePlay': {
-							if (guild.music.playing) guild.voice.connection.dispatcher.pause(true);
-							else guild.voice.connection.dispatcher.resume();
+							if (guild.music.playing) guild.me.voice.connection.dispatcher.pause(true);
+							else guild.me.voice.connection.dispatcher.resume();
 
 							guild.music.playing = !guild.music.playing;
 
@@ -362,13 +362,13 @@ let ipcObject = client => {
 							break;
 						}
 						case 'stop': {
-							guild.voice.connection.disconnect();
+							guild.me.voice.connection.disconnect();
 							guild.music = {};
 
 							break;
 						}
 						case 'skip': {
-							guild.voice.connection.dispatcher.end();
+							guild.me.voice.connection.dispatcher.end();
 
 							break;
 						}

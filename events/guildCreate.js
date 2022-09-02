@@ -15,7 +15,7 @@ module.exports = (client, guild) => {
 				'To change the server\'s language, use `serverlanguage`, and to change your own, use `language`. (If you know a non-English language, help translate! Ask in the support server.)\n' +
 				'For more help, use `a.help`.\n' +
 				'If you have any problems, feel free to join the support server (in the help commmand).\n' +
-				'By using this bot, you agree to the short TOS available at http://bit.ly/ArthurTOS\n\n' +
+				'By using this bot, you agree to the TOS and Privacy Policy linked on https://arthur.wumpler.com' +
 				'Enjoy!'
 			).catch(() => {});
 		})

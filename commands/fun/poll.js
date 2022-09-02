@@ -87,7 +87,7 @@ async function finish (messageID, client, locale) {
 	embed.title = i18n.getString('commands.poll.finished', locale) + embed.title;
 	embed.color = 0x42f4a1;
 
-	obj.message.channel.send({ embed: obj.embed });
+	obj.message.channel.send({ embeds: [ obj.embed ] });
 	obj.message.delete().catch(() => {});
 	sql.run('DELETE FROM pollReactionCollectors WHERE messageID = ?', [obj.message.id]).catch(console.log);
 	client.reactionCollectors.delete(messageID);
@@ -175,7 +175,7 @@ exports.run = async (message, a, s, client) => {
 		color: 0x00c140
 	};
 
-	embedMessage.edit({ embed });
+	embedMessage.edit({ embeds: [ embed ] });
 
 	await addReactions(embedMessage, options.length).catch(() => {});
 

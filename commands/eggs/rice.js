@@ -81,12 +81,12 @@ exports.run = (message) => {
 		? humanyRice[Math.floor(Math.random() * humanyRice.length)]
 		: grainyRice[Math.floor(Math.random() * grainyRice.length)];
 
-	message.channel.send({ embed: {
+	message.channel.send({ embeds: [{
 		color: 0x00c140,
 		image: {
 			url: file
 		}
-	} });
+	}] });
 };
 
 exports.config = {

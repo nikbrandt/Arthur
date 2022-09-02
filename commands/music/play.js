@@ -18,7 +18,7 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 	try {
 		obj = await Music.getInfo(type, id, message, client, title);
 	} catch (err) {
-		if (!message.guild.music.queue && message.guild.voice) message.guild.voice.connection.disconnect();
+		if (!message.guild.music.queue && message.guild.me.voice) message.guild.me.voice.connection.disconnect();
 		if (err instanceof Error) err = message.__('error_getting_info', { err });
 		return ipc ? err : loadMessage.edit(err);
 	}
@@ -52,7 +52,7 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 
 			if (notify) {
 				if (first || !playlist) {
-					loadMessage = await message.channel.send({embed: queueObj.embed}).then(() => {
+					loadMessage = await message.channel.send({ embeds: [ queueObj.embed ] }).then(() => {
 						queueObj.embed.footer.text = footerStore;
 					});
 				}
@@ -61,7 +61,7 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 				if (playlist) message.channel.send(i18n.get('struct.music.added_playlist', message, { num: obj.length }));
 			} else queueObj.embed.footer.text = footerStore;
 		} else if (first || !playlist) {
-			loadMessage.edit(playlist ? i18n.get('struct.music.added_playlist', message, { num: obj.length }) : '', { embed: queueObj.embed }).then(() => {
+			loadMessage.edit(playlist ? i18n.get('struct.music.added_playlist', message, { num: obj.length }) : { content: '', embeds: [ queueObj.embed ] }).then(() => {
 				queueObj.embed.footer.text = footerStore;
 			});
 		} else {
@@ -85,7 +85,7 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 		if (message.channel.permissionsFor(message.guild.me).has('ADD_REACTIONS')) message.channel.send(message.__('detected_playlist')).then(async msg => {
 			const filter = (reaction, user) => ([ '706749501842522112', '706749501947510805' ].includes(reaction.emoji.id) || [ '️️️️✔️', '✖️' ].includes(reaction.emoji.name)) && user.id === message.author.id;
 
-			msg.awaitReactions(filter, { time: 1000 * 60, max: 1}).then(reactions => {
+			msg.awaitReactions({ filter, time: 1000 * 60, max: 1}).then(reactions => {
 				if (!reactions || !reactions.size) return;
 				if (reactions.first().emoji.id === '706749501947510805' || reactions.first().emoji.name === '✖️') return msg.edit(i18n.get('struct.message.confirmation', message));
 
@@ -113,7 +113,7 @@ let add = async (message, id, type, client, first, loadMessage, ipc, playlistQue
 
 			const filter = msg => message.author.id === msg.author.id && starts.some(start => msg.content.toLowerCase().startsWith(start));
 
-			message.channel.awaitMessages(filter, { max: 1, time: 1000 * 60, errors: [ 'time' ]}).then(collected => {
+			message.channel.awaitMessages({ filter, max: 1, time: 1000 * 60, errors: [ 'time' ]}).then(collected => {
 				if (!collected.first().content.toLowerCase().startsWith(starts[0])) return playlistMessage.edit(i18n.get('struct.message.confirmation', message));
 
 				finishPlaylistQuery(client, message, ipc, type, playlistQuery);
@@ -188,7 +188,7 @@ exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 	try {
 		object = await Music.parseMessage(message, args, suffix, client);
 	} catch (err) {
-		if (message.guild.voice && message.guild.voice.connection && (!message.guild.music || !message.guild.music.queue[0])) message.guild.voice.connection.disconnect().catch(() => {});
+		if (message.guild.me.voice && message.guild.me.voice.connection && (!message.guild.music || !message.guild.music.queue[0])) message.guild.me.voice.connection.disconnect().catch(() => {});
 		return ipc ? err : loadMessage.edit(err.toString());
 	}
 
@@ -200,7 +200,7 @@ exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 	if (message.playnext && (type === 1.5 || type === 5.5)) return message.channel.send(message.__('playnext_playlist'));
 
 	let first = !message.guild.music || !message.guild.music.queue;
-	let resumePlayback = !first && (!message.guild.voice || !message.guild.voice.connection);
+	let resumePlayback = !first && (!message.guild.me.voice || !message.guild.me.voice.connection);
 
 	if (first || resumePlayback) {
 		if (!message.member.voice.channel.joinable) return ipc ? message.__('cant_join_channel') : loadMessage.edit(message.__('cant_join_channel'));
@@ -210,9 +210,9 @@ exports.run = async (message, args, suffix, client, perms, prefix, ipc) => {
 
 		try {
 			let errorInterval = setInterval(() => {
-				if (message.guild.voice && message.guild.voice.connection) {
+				if (message.guild.me.voice && message.guild.me.voice.connection) {
 					clearInterval(errorInterval);
-					message.guild.voice.connection.on('error', err => {
+					message.guild.me.voice.connection.on('error', err => {
 						if (!ipc) loadMessage.edit(message.__('could_not_connect', { err }));
 						stop = err;
 					});

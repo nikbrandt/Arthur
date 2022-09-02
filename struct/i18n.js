@@ -117,7 +117,7 @@ class i18n {
 	}
 
 	getLocales() {
-		return this._localeNames.keyArray();
+		return [...this._localeNames.keys()];
 	}
 
 	getLocaleNames() {
@@ -128,7 +128,7 @@ class i18n {
 	getAllLocaleMeta() {
 		let output = new Collection();
 
-		this._localeNames.keyArray().forEach(code => {
+		[...this._localeNames.keys()].forEach(code => {
 			let { meta } = this._locales.get(code);
 			output.set(code, meta);
 		});

@@ -118,7 +118,7 @@ exports.run = async (message, args, suffix) => {
 	} catch (err) {
 		err = err.stack ? err.stack.split('\n')[0] : err;
 		return editMessage
-			? editMessage.edit(message.__('error', { err }), {embed: {}}).catch(() => {})
+			? editMessage.edit({ content: message.__('error', { err }), embeds: [{}] }).catch(() => {})
 			: message.channel.send(message.__('error', { err }));
 	}
 
@@ -129,8 +129,8 @@ exports.run = async (message, args, suffix) => {
 	};
 
 	editMessage
-		? editMessage.edit('', { embed })
-		: message.channel.send({ embed });
+		? editMessage.edit({ content: '', embeds: [ embed ]  })
+		: message.channel.send({  embeds: [ embed ]  });
 };
 
 exports.config = {

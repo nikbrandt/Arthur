@@ -21,7 +21,7 @@ class ArthurClient extends Client {
 		this.weeklyStatsObject = {};
 
 		this.config = config;
-		this.ownerID = config.owners[0];
+		this.ownerId = config.owners[0];
 		this.commands = new Collection();
 		this.aliases = new Collection();
 		this.reactionCollectors = new Collection();

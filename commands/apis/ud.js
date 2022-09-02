@@ -64,7 +64,7 @@ exports.run = async (message, a, suffix) => {
 	    	example = example.replace(match, `${match}(https://www.urbandictionary.com/define.php?term=${encodeURIComponent(match.slice(1).slice(0, -1))} "${subDefinition}")`);
 	    });
 
-        message.channel.send({embed: {
+        message.channel.send({embeds: [{
             color: 0x0095d1,
             title: theChosenOne.word,
             url: theChosenOne.permalink,
@@ -81,7 +81,7 @@ exports.run = async (message, a, suffix) => {
             footer: {
                 text: message.__('footer', { author: theChosenOne.author, thumbsup: theChosenOne.thumbs_up, thumbsdown: theChosenOne.thumbs_down })
             }
-        }}).catch(e => { console.log(e); message.channel.send(message.__('catch')) });
+        }]}).catch(e => { console.log(e); message.channel.send(message.__('catch')) });
     });
 };
 

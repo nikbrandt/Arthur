@@ -27,7 +27,7 @@ exports.run = async (message, args) => {
 
 		i++;
 		if (i <= pars + 9 && i <= queue.length) iterate();
-		else message.channel.send('', {embed: {
+		else message.channel.send({ embeds: [{
 			title: i18n.get('struct.music.now_playing', message) + ' ' + queue[0].meta.title,
 			url: queue[0].meta.url,
 			description: songArray.join('\n'),
@@ -44,7 +44,7 @@ exports.run = async (message, args) => {
 						length: timeString(calculateQueueLength(message.guild), message),
 						name: message.member.displayName })
 			}
-		}});
+		}]});
 	}
 
 	iterate();

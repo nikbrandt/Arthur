@@ -21,7 +21,7 @@ exports.run = async (message, args, suffix, client) => {
 		if (!list) return message.channel.send(message.__('not_enough_people', { page }));
 		let guild = client.guilds.cache.get(guildID);
 
-		message.channel.send({embed: {
+		message.channel.send({embeds: [{
 			color: 0x8356ff,
 			author: {
 				name: guild.name,
@@ -29,7 +29,7 @@ exports.run = async (message, args, suffix, client) => {
 			},
 			footer: { text: message.__('footer', { page, maxPage: list.max, end: !!rank ? ' | ' + message.__('footer_rank', { rank: rank.rank, page: rank.page }) : '' }) },
 			description: list.array.join('\n')
-		}});
+		}]});
 	}
 
 	if (args[0] === message.__('global') || args[0] === message.__('global_abbreviation')) {
@@ -45,7 +45,7 @@ exports.run = async (message, args, suffix, client) => {
 		let gList = await XP.globalLeaderboard(pg, client);
 		if (!gList) return message.channel.send(message.__('not_enough_people', { page: pg }));
 
-		message.channel.send({embed: {
+		message.channel.send({embeds: [{
 			author: {
 				name: message.__('global_leaderboard'),
 				icon_url: client.user.displayAvatarURL()
@@ -53,7 +53,7 @@ exports.run = async (message, args, suffix, client) => {
 			color: 0x8356ff,
 			footer: { text: message.__('footer', { page: pg, maxPage: gList.max, end: !!gRank ? ' | ' + message.__('footer_rank', { rank: gRank.rank, page: gRank.page }) : '' })},
 			description: gList.array.join('\n')
-		}});
+		}]});
 	}
 };
 

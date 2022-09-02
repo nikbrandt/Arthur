@@ -20,14 +20,14 @@ exports.run = async (message, args) => {
 
 	songArray = songArray.slice(page * 10 - 10, page * 10);
 
-	message.channel.send({embed: {
+	message.channel.send({embeds: [{
 		title: message.__('liked_songs', { name: message.member.displayName, s: message.member.displayName.endsWith('s') ? '\'' : '\'s' }),
 		description: songArray.join('\n'),
 		color: 0x427df4,
 		footer: {
 			text: message.__('footer', { page, maxPage })
 		}
-	}})
+	}]})
 };
 
 exports.config = {

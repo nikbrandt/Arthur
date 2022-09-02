@@ -23,29 +23,29 @@ exports.run = (message, args, s, client, permLevel) => {
 		embed.author.name = i18n.getString('struct.music.now_playing', locale);
 		embed.description = embed.description.split('\n').slice(0, -1).join('\n') + `\n${timeString(ellapsedTime, locale)} ${message.__('of')} ${timeString(queueItem.meta.length, locale)}`;
 
-		message.channel.send({ embed }).then(msg => {
+		message.channel.send({ embeds: [ embed ] }).then(msg => {
 			Music.addReactionCollector(msg, client, ellapsedTime * 1000);
 		});
 	} else if (queueItem.type === 5) { // soundcloud
-		let elapsedTime = Math.round(message.guild.voice.connection.dispatcher.totalStreamTime / 1000);
+		let elapsedTime = Math.round(message.guild.me.voice.connection.dispatcher.totalStreamTime / 1000);
 
 		let embed = queueItem.embed;
 		embed.author.name = i18n.getString('struct.music.now_playing', locale);
 		embed.description = embed.description.replace(i18n.getString('struct.music.length', locale) + ': ', `**${timeString(elapsedTime, locale)}** ${message.__('of')} `);
 
-		message.channel.send({embed}).then(msg => {
+		message.channel.send({ embeds: [ embed ] }).then(msg => {
 			Music.addReactionCollector(msg, client, elapsedTime * 1000);
 		});
 	} else if (queueItem.type >= 2) { // User-provided file
 		message.channel.send({
-			embed: {
+			embeds: [{
 				author: {
 					name: i18n.getString('struct.music.now_playing', locale)
 				},
 				url: queueItem.meta.url,
 				color: 0x7289DA,
 				description: queueItem.meta.title
-			}
+			}]
 		}).then(msg => {
 			Music.addReactionCollector(msg, client);
 		});

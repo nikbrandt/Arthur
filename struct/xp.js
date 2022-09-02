@@ -28,7 +28,7 @@ class XP {
 	}
 
 	static async addXP (message, guildRow) {
-		if (message.channel.type !== 'text') return;
+		if (message.channel.type !== 'GUILD_TEXT') return;
 		if (message.channel.id === '304429222477299712') return;
 
 		if (!guildRow || guildRow.levels === 'false') return;

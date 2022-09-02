@@ -25,7 +25,7 @@ exports.run = (message, args, suffix, client) => {
 		config.trello.board
 	).then(card => {
 		let messageOptions = {
-			embed: {
+			embeds: [{
 				title: splitified[0],
 				url: card.shortUrl,
 				description: splitified[1] ? splitified.slice(1).join('\n') : undefined,
@@ -34,7 +34,7 @@ exports.run = (message, args, suffix, client) => {
 					icon_url: message.author.displayAvatarURL()
 				},
 				color: 0x00c140
-			},
+			}],
 			files: message.attachments.map(a => {return { attachment: a.url, name: a.name }})
 		};
 

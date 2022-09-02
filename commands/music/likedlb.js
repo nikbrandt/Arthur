@@ -22,14 +22,14 @@ exports.run = async (message, args) => {
 		startNum++;
 	}
 
-	message.channel.send({embed: {
+	message.channel.send({embeds: [{
 		title: message.__('top_liked_songs'),
 		description: final.join('\n'),
 		color: 0x427df4,
 		footer: {
 			text: message.__('footer', { page, maxPage })
 		}
-	}});
+	}]});
 };
 
 exports.config = {

@@ -1,10 +1,10 @@
 exports.run = async (message, args, suffix, client) => {
-	let invite = await client.generateInvite(client.config.info.invitePerms);
+	let invite = await client.generateInvite({ scopes: [ 'bot', 'applications.commands' ], permissions: BigInt(client.config.info.invitePerms) });
 
-	message.channel.send({embed: {
+	message.channel.send({embeds: [{
 		description: message.__('description', { invite }),
 		color: 0x00c140
-	}})
+	}]});
 };
 
 exports.config = {

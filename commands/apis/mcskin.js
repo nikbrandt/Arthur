@@ -26,7 +26,7 @@ exports.run = async (message, args) => {
 		uuid = randos[Math.floor(Math.random() * randos.length)];
 	}
 
-	message.channel.send({embed: {
+	message.channel.send({embeds: [{
 		title: message.__('embed.title', { user: fake ? message.__('some_rando') : args[0] }),
 		url: `https://namemc.com/profile/${uuid}`,
 		footer: {
@@ -36,7 +36,7 @@ exports.run = async (message, args) => {
 			url: `https://visage.surgeplay.com/full/512/${uuid}.png`
 		},
 		color: 0x00c140
-	}});
+	}]});
 };
 
 exports.config = {

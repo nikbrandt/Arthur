@@ -64,7 +64,7 @@ exports.run = async (message, args) => {
 
 	if (!nameArray.length) nameArray = [ message.__('no_name_changes') ];
 
-	message.channel.send({embed: {
+	message.channel.send({embeds: [{
 		author: {
 			name: message.__('embed_title', { name: rever[0].name }),
 			icon_url: `https://visage.surgeplay.com/face/256/${uuid}.png`,
@@ -86,7 +86,7 @@ exports.run = async (message, args) => {
 		footer: {
 			text: message.__('embed_footer', { page, maxPage, name: json[0].name })
 		}
-	}});
+	}]});
 };
 
 exports.config = {

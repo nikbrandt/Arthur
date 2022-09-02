@@ -17,7 +17,7 @@ exports.run = async (message, args, suffix, client) => {
 	let gRank = await XP.globalRank(mem.user);
 	let rank = await XP.guildRank(mem);
 
-	message.channel.send({embed: {
+	message.channel.send({embeds: [{
 		author: {
 			name: mem.displayName + '\'s XP',
 			icon_url: mem.user.displayAvatarURL()
@@ -41,7 +41,7 @@ exports.run = async (message, args, suffix, client) => {
 				inline: true
 			}
 		]
-	}});
+	}]});
 };
 
 exports.config = {

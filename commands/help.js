@@ -43,7 +43,7 @@ exports.run = async (message, args, suffix, client, perms, prefix) => {
 			});
 		});
 
-		const invite = await client.generateInvite(client.config.info.invitePerms);
+		const invite = await client.generateInvite({ scopes: [ 'bot', 'applications.commands' ], permissions: BigInt(client.config.info.invitePerms) });
 		let embed = {
 			color: 0x00c140,
 			author: {
@@ -58,14 +58,14 @@ exports.run = async (message, args, suffix, client, perms, prefix) => {
 		};
 
 		if (message.guild) {
-			if (args[0] === message.__('chat_flag')) message.channel.send({embed});
+			if (args[0] === message.__('chat_flag')) message.channel.send({ embeds: [ embed ] });
 			else {
 				let msg = await message.channel.send(message.__('check_dms'));
-				message.author.send({embed}).catch(() => {
+				message.author.send({ embeds: [ embed ] }).catch(() => {
 					if (msg) msg.edit(message.__('send_failed', { prefix }));
 				});
 			}
-		} else message.author.send({embed}).catch(() => {});
+		} else message.author.send({ embeds: [ embed ] }).catch(() => {});
 	} else {
 		let name = i18n.getCommandFileName(args[0], message) || args[0];
 		let command = client.commands.get(name);
@@ -86,7 +86,7 @@ exports.run = async (message, args, suffix, client, perms, prefix) => {
 
 		if (!meta) return message.channel.send(message.__('invalid_command', { command: args[0] }));
 
-		message.channel.send({embed: {
+		message.channel.send({embeds: [{
 			color: 0x00c140,
 			fields: [
 				{
@@ -101,7 +101,7 @@ exports.run = async (message, args, suffix, client, perms, prefix) => {
 				}
 			],
 			footer: {text: message.__('small_embed.footer', { category: message.__(`categories.${command.config.category}`) }) }
-		}});
+		}]});
 	}
 };
 

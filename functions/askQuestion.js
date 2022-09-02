@@ -70,23 +70,23 @@ function askWithCondition (channel, embed, authorID, message, attempt, errorEmbe
 function askQuestion (channel, embed, authorID, message, attempt, errorEmbed, time) {
 	return new Promise(async (resolve, reject) => {
 		if (attempt > 5) {
-			message ? await message.edit('', { embed: defaultAttemptEmbed }).catch(() => {}) : await channel.send({ embed: defaultAttemptEmbed });
+			message ? await message.edit({ content: '', embeds: [ defaultAttemptEmbed ] }).catch(() => {}) : await channel.send({ embeds: [ defaultAttemptEmbed ] });
 			return reject('attempts');
 		}
 
 		embed.footer.text = embed.footer.text.replace(/Attempt [1-5]/g, `Attempt ${attempt}`);
-		const embedMessage = message ? await message.edit('', {embed}).catch(() => {}) : await channel.send({embed});
+		const embedMessage = message ? await message.edit({ content: '', embeds: [ embed ] }).catch(() => {}) : await channel.send({ embeds: [ embed ] });
 
 		const filter = m => m.author.id === authorID;
 
-		channel.awaitMessages(filter, { max: 1, time: time ? time : 60000, errors: [ 'time' ] })
+		channel.awaitMessages({ filter, max: 1, time: time ? time : 60000, errors: [ 'time' ] })
 			.then(async collected => {
 				let message = collected.first();
 
 				message.delete().catch(() => {});
 
 				if (message.content.toLowerCase() === 'cancel') {
-					await embedMessage.edit('', {embed: defaultCancelEmbed}).catch(() => {});
+					await embedMessage.edit({ content: '', embeds: [ defaultCancelEmbed ] }).catch(() => {});
 					return reject('cancel');
 				}
 
@@ -96,7 +96,7 @@ function askQuestion (channel, embed, authorID, message, attempt, errorEmbed, ti
 					attempt: attempt + 1
 				});
 			}).catch(() => {
-				embedMessage.edit({ embed: errorEmbed ? errorEmbed : defaultErrorEmbed }).catch(() => {});
+				embedMessage.edit({ embeds: [ errorEmbed ? errorEmbed : defaultErrorEmbed ] }).catch(() => {});
 				reject('response');
 			});
 	});

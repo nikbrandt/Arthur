@@ -16,7 +16,7 @@ const CAT_EMOJIS = [ '😿', '😻', '😹', '😽', '😾', '🙀', '😸', '�
 
 module.exports = async (client, message) => {
 	// The Sep 1 bot massacre
-	if (message.channel.type !== 'dm' && !message.content) return;
+	if (message.channel.type !== 'DM' && !message.content) return;
 
 	if (message.author.bot) return;
 	const botPerms = message.guild ? message.channel.permissionsFor(message.guild.me) : null;
@@ -70,7 +70,7 @@ module.exports = async (client, message) => {
 	message.timeline.sqlComplete = Date.now() - message.timeline.received;
 
 	if (!message.content.toLowerCase().startsWith(prefix) && !message.content.startsWith(`<@${client.user.id}>`) && !message.content.startsWith(`<@!${client.user.id}>`)) {
-		if (message.channel.type === 'dm') {
+		if (message.channel.type === 'DM') {
 			if (/^[^ ]*help$/i.test(message.content)) return message.channel.send(i18n.get('struct.message.dm_help', message));
 			if (/^(?:https:\/\/)?discord.gg\/[A-Za-z0-9]+$/.test(message.content)) return message.channel.send(i18n.get('struct.message.invite_help', message));
 			if (/^idol\s|\sidol\s|\sidol$|idol/g.test(message.content)) return message.channel.send('Arthur is not a Survivor ORG bot. You won\'t find whatever an "idol" is here. Thanks.');
@@ -93,7 +93,7 @@ module.exports = async (client, message) => {
 					color: 0x418cf4,
 					description: message.content
 				},
-				files: message.attachments.array().map(a => a ? a.url : '')
+				files: [...message.attachments.values()].map(a => a ? a.url : '')
 			};
 
 			client.broadcastEval(`let channel = this.channels.cache.get('${config.messageLogChannel}');
@@ -108,7 +108,7 @@ module.exports = async (client, message) => {
 			})
 		}
 
-		if (message.channel.type !== 'text') return;
+		if (message.channel.type !== 'GUILD_TEXT') return;
 
 		const extractedEmojis = message.content.match(emojiRegex);
 
@@ -127,7 +127,7 @@ module.exports = async (client, message) => {
 			let req = https.request(options, res => {
 				let filetype = res.headers['content-type'].match(/image\/([a-z]+)/)[1];
 
-				message.channel.send(text, { files: [ `https://cdn.discordapp.com/emojis/${extractedEmojis[3]}.${filetype}` ] }).then(() => {
+				message.channel.send({ content: text, files: [ `https://cdn.discordapp.com/emojis/${extractedEmojis[3]}.${filetype}` ] }).then(() => {
 					if (!!text) message.delete().catch(() => {});
 				});
 			});
@@ -227,7 +227,7 @@ module.exports = async (client, message) => {
 
 	message.timeline.complete = Date.now() - message.timeline.received;
 
-	if (message.author.id !== client.ownerID) {
+	if (message.author.id !== client.ownerId) {
 		if (!client.commandStatsObject[command]) client.commandStatsObject[command] = { uses: 1 };
 		else client.commandStatsObject[command].uses++;
 

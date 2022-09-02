@@ -84,7 +84,7 @@ const Music = {
 		let music = guild.music;
 
 		if (!music.queue) {
-			if (guild.voice && guild.voice.connection) guild.voice.connection.disconnect();
+			if (guild.me.voice && guild.me.voice.connection) guild.me.voice.connection.disconnect();
 			return;
 		}
 
@@ -99,7 +99,7 @@ const Music = {
 		}
 
 		if (music.queue.length === 0) {
-			if (guild.voice && guild.voice.connection) guild.voice.connection.disconnect();
+			if (guild.me.voice && guild.me.voice.connection) guild.me.voice.connection.disconnect();
 			guild.music = {};
 			return;
 		}
@@ -107,7 +107,7 @@ const Music = {
 		guild.music = music;
 
 		setTimeout(async () => {
-			if (!guild.voice || !guild.voice.connection) {
+			if (!guild.me.voice || !guild.me.voice.connection) {
 				guild.music = {};
 				return;
 			}
@@ -128,27 +128,27 @@ const Music = {
 					&& music.textChannel.lastMessage.author.id === guild.client.user.id
 					&& music.textChannel.lastMessage.embeds.length
 					&& music.textChannel.lastMessage.embeds[0].description
-					&& music.textChannel.lastMessage.embeds[0].description === music.queue[0].embed.description) music.textChannel.lastMessage.edit({ embed }).then(messageCallback);
-				else music.textChannel.send({ embed }).then(messageCallback);
+					&& music.textChannel.lastMessage.embeds[0].description === music.queue[0].embed.description) music.textChannel.lastMessage.edit({ embeds: [ embed ] }).then(messageCallback);
+				else music.textChannel.send({ embeds: [ embed ] }).then(messageCallback);
 			}
 
 			switch (music.queue[0].type) {
 				case 1: { // youtube
 					let stream = ytdl(music.queue[0].id, { quality: 'highestaudio', highWaterMark: 1 << 23, requestOptions: { maxRedirects: 10 } });
 
-					if (!guild.voice || !guild.voice.connection) {
+					if (!guild.me.voice || !guild.me.voice.connection) {
 						guild.music = {};
 						return;
 					}
 
-					let dispatcher = guild.voice.connection.play(stream, streamOptions);
+					let dispatcher = guild.me.voice.connection.play(stream, streamOptions);
 
 					dispatcher.once('finish', () => {
 						Music.next(guild);
 					});
 
 					dispatcher.once('start', () => {
-						guild.voice.connection.player.streamingData.pausedTime = 0;
+						guild.me.voice.connection.player.streamingData.pausedTime = 0;
 						guild.music.startTime = Date.now();
 					});
 
@@ -197,14 +197,14 @@ const Music = {
 					break;
 				}
 				case 4: { // from URL
-					let dispatcher = guild.voice.connection.play(music.queue[0].id, fileStreamOptions);
+					let dispatcher = guild.me.voice.connection.play(music.queue[0].id, fileStreamOptions);
 
 					dispatcher.once('finish', () => {
 						Music.next(guild);
 					});
 
 					dispatcher.once('start', () => {
-						guild.voice.connection.player.streamingData.pausedTime = 0;
+						guild.me.voice.connection.player.streamingData.pausedTime = 0;
 						guild.music.startTime = Date.now();
 					});
 
@@ -217,14 +217,14 @@ const Music = {
 				}
 				case 3: { // local file
 					const stream = fs.createReadStream(`../media/sounds/${music.queue[0].id}.mp3`);
-					let dispatcher = guild.voice.connection.play(stream, streamOptions);
+					let dispatcher = guild.me.voice.connection.play(stream, streamOptions);
 
 					dispatcher.once('finish', () => {
 						Music.next(guild);
 					});
 
 					dispatcher.once('start', () => {
-						guild.voice.connection.player.streamingData.pausedTime = 0;
+						guild.me.voice.connection.player.streamingData.pausedTime = 0;
 						guild.music.startTime = Date.now();
 					});
 
@@ -238,18 +238,18 @@ const Music = {
 				case 5: { // soundcloud
 					let url = await soundcloud(music.queue[0].meta.id);
 
-					if (!guild.voice) return;
-					let dispatcher = guild.voice.connection.play(url, streamOptions);
+					if (!guild.me.voice) return;
+					let dispatcher = guild.me.voice.connection.play(url, streamOptions);
 
 					dispatcher.once('finish', () => {
 						Music.next(guild);
 						setTimeout(() => {
-							if (guild.voice && guild.voice.connection && !guild.voice.connection.dispatcher) Music.next(guild);
+							if (guild.me.voice && guild.me.voice.connection && !guild.me.voice.connection.dispatcher) Music.next(guild);
 						}, 10000);
 					});
 
 					dispatcher.once('start', () => {
-						guild.voice.connection.player.streamingData.pausedTime = 0;
+						guild.me.voice.connection.player.streamingData.pausedTime = 0;
 						guild.music.startTime = Date.now();
 					});
 
@@ -604,7 +604,7 @@ const Music = {
 		if (!message) return;
 		if (!message.channel.permissionsFor(message.guild.me).has('MANAGE_MESSAGES')) return;
 
-		const collector = message.createReactionCollector(reactionFilter, { time: time ? time + 10000 : 600000 });
+		const collector = message.createReactionCollector({ filter: reactionFilter, time: time ? time + 10000 : 600000 });
 
 		collector.on('collect', async reaction => {
 			let user = reaction.users.cache.filter(user => user.id !== client.user.id).first();

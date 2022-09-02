@@ -9,16 +9,21 @@ let sqlErrorQueue = new Map();
 let sqlCount = 0;
 
 const client = new ArthurClient({
-	disableMentions: 'everyone',
+	allowedMentions: {
+		parse: [ 'roles', 'users' ],
+		repliedUser: false
+	},
 	messageCacheMaxSize: 10,
-	ws: {
-		intents: [
-			'GUILDS',
-			'GUILD_VOICE_STATES',
-			'GUILD_MESSAGE_REACTIONS',
-			'DIRECT_MESSAGES'
-		]
-	}
+	intents: [
+		'GUILDS',
+		'GUILD_VOICE_STATES',
+		'GUILD_MESSAGE_REACTIONS',
+		'GUILD_MESSAGES',
+		'DIRECT_MESSAGES'
+	],
+	partials: [
+		'CHANNEL'
+	]
 });
 
 

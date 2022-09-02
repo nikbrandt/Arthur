@@ -27,7 +27,7 @@ exports.run = async (message, args, suffix) => {
 
 		suggestionMsg.embeds[0].color = 0xf56942;
 		suggestionMsg.embeds[0].title = 'Rejected: ' + suggestionMsg.embeds[0].title;
-		suggestionMsg.edit({ embed: suggestionMsg.embeds[0] }).catch(() => {});
+		suggestionMsg.edit({ embeds: [ suggestionMsg.embeds[0] ] }).catch(() => {});
 
 		message.client.commands.get('send').run(message, [ suggesterID, 'aa'], suggesterID + ' ' + rejectionMessage, message.client).then(() => {
 			message.channel.send('Suggestion rejected.');

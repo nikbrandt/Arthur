@@ -7,17 +7,17 @@ exports.run = (message, args, suffix) => {
 	request(`http://api.mathjs.org/v1/?expr=${encodeURIComponent(suffix)}&precision=3`, (err, response, body) => {
 		if (err) return message.channel.send(message.__('error'));
 		if (body.toLowerCase().startsWith('error')) {
-			message.channel.send({embed: {
+			message.channel.send({embeds: [{
 				title: suffix,
 				description: `\`\`\`js\n${body}\n\`\`\``,
 				color: 0xff3d3d
-			}});
+			}]});
 		} else {
-			message.channel.send({embed: {
+			message.channel.send({embeds: [{
 				title: suffix,
 				description: `\`\`\`js\n${body}\n\`\`\``,
 				color: 0x70ff3d
-			}});
+			}]});
 		}
 	});
 };

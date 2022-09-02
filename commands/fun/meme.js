@@ -56,7 +56,7 @@ exports.run = (message, args) => {
 		: subreddits[Math.floor(Math.random() * subreddits.length)];
 
 	getSubredditMeme(subreddit).then(meme => {
-		message.channel.send({embed: {
+		message.channel.send({embeds: [{
 				title: meme.title,
 				url: 'https://reddit.com' + meme.reddit,
 				image: {
@@ -66,7 +66,7 @@ exports.run = (message, args) => {
 				footer: {
 					text: `Posted by u/${meme.author} on r/${subreddit}`
 				}
-			}})
+			}]})
 	}).catch(() => {
 		message.channel.send(message.__('error'));
 	});

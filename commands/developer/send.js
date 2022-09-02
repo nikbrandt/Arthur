@@ -24,7 +24,7 @@ exports.run = async (message, args, suffix, client) => {
 	let text = suffix.slice(args[0].length + 1);
 
 	if (channel.client) {
-		channel.send(suffix.slice(args[0].length + 1), { files: message.attachments.size ? message.attachments.array().map(f => f.url) : [] }).then(() => {
+		channel.send(suffix.slice(args[0].length + 1), { files: message.attachments.size ? [...message.attachments.values()].map(f => f.url) : [] }).then(() => {
 			if (message.channel.id === MESSAGE_CHANNEL_ID) successMessage(client, message, name, text);
 		}).catch(e => {
 			if (message.channel.id === MESSAGE_CHANNEL_ID) failureMessage(client, name, text);
@@ -49,22 +49,22 @@ exports.run = async (message, args, suffix, client) => {
 
 function successMessage(client, message, name, text) {
 	finalMessage(client, {
-		embed: {
+		embeds: [{
 			title: `Message to ${name}`,
 			description: text,
 			color: 0x00c140
-		},
-		files: message.attachments.size ? message.attachments.array().map(f => f.url) : []
+		}],
+		files: message.attachments.size ? [...message.attachments.values()].map(f => f.url) : []
 	});
 }
 
 function failureMessage(client, name, text) {
 	finalMessage(client, {
-		embed: {
+		embeds: [{
 			title: `Message to ${name} failed to send`,
 			description: text,
 			color: 0xff0000
-		}
+		}]
 	})
 }
 

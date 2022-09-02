@@ -14,13 +14,13 @@ exports.run = (message) => {
 
 		if (!json || !json.response || !json.response.data) return message.channel.send(message.__('error'));
 
-		message.channel.send({embed: {
+		message.channel.send({embeds: [{
 			description: message.__('embed_description', { url: json.response.data.images.image.source_url }),
 			image: {
 				url: json.response.data.images.image.url
 			},
 			color: 0x00c140
-		}})
+		}]})
 	});
 };
 

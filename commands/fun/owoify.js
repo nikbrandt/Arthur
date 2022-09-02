@@ -8,10 +8,10 @@ function owoify(text) {
 
 exports.run = (message, args, suffix) => {
 	if (!args[0]) return message.channel.send(message.__('no_text'));
-	message.channel.send({embed: {
+	message.channel.send({embeds: [{
 		description: owoify(suffix),
 		color: 0x00c140
-	}});
+	}]});
 };
 
 exports.config = {

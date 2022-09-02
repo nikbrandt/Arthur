@@ -7,7 +7,7 @@ let nonobad = [ 'data:', 'file://', 'doom3.zoy.org', 'goatse', 'porn', 'redtube'
 
 exports.run = async (message, args, s, client) => {
 	if (!args[0]) return message.channel.send(message.__('no_args'));
-	if (nonobad.some(i => args[0].toLowerCase().includes(i)) && message.author.id !== client.ownerID) return message.channel.send(message.__('blacklisted_website'));
+	if (nonobad.some(i => args[0].toLowerCase().includes(i)) && message.author.id !== client.ownerId) return message.channel.send(message.__('blacklisted_website'));
 	let index = client.processing.length;
 	client.processing.push(moment().format('h:mm:ss A') + ' - Webshot');
 	let date = Date.now();
@@ -67,14 +67,13 @@ exports.run = async (message, args, s, client) => {
 			return;
 		}
 
-		message.channel.send({embed: new Discord.MessageEmbed()
+		message.channel.send({embeds: [ new Discord.MessageEmbed()
 			.setTitle(message.__('embed.title', { url: args[0].length > 245 ? args[0].slice(0, -(args[0].length - 245)) : args[0] }))
 			.setDescription(message.__('embed.description', { url: args[0].startsWith('https://') || args[0].startsWith('http://') ? args[0] : 'https://' + args[0] }))
-			.attachFiles([`../media/temp/${date}-${message.author.id}.png`])
 			.setImage(`attachment://${date}-${message.author.id}.png`)
-			.setFooter(message.__('embed.footer', { name: message.author.tag }))
+			.setFooter({ text: message.__('embed.footer', { name: message.author.tag }) })
 			.setColor(0x00c140)
-		}).then(() => {
+		], files: [ new Discord.MessageAttachment(`../media/temp/${date}-${message.author.id}.png`, `${date}-${message.author.id}.png`) ] }).then(() => {
 			sent = true;
 			if (msg) msg.delete();
 			else del = true;

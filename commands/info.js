@@ -2,12 +2,12 @@ const Discord = require('discord.js');
 const moment = require('moment');
 
 exports.run = async (message, args, asdf, client) => {
-	const invite = await client.generateInvite(client.config.info.invitePerms);
+	const invite = await client.generateInvite({ scopes: [ 'bot', 'applications.commands' ], permissions: BigInt(client.config.info.invitePerms) });
 
 	let locale = i18n.getLocaleCode(message);
 	if (locale === 'en-US') locale = 'en';
 
-	message.channel.send({embed: {
+	message.channel.send({embeds: [{
 		author: {
 			name: message.__('title'),
 			icon_url: 'https://cdn.discordapp.com/attachments/219218693928910848/361405047608705025/arthur_but_hot.png'
@@ -36,7 +36,7 @@ exports.run = async (message, args, asdf, client) => {
 				})
 			}
 		]
-	}});
+	}]});
 };
 
 exports.config = {

@@ -7,7 +7,7 @@ function send (message, json) {
 
 	let timeString = moment(`${json.month}-${json.day}-${json.year}`, 'M-D-YYYY').locale(locale).format(i18n.get('time.moment.date_only_nice', message));
 
-	message.channel.send({embed: {
+	message.channel.send({embeds: [{
 		title: json.title,
 		url: `https://xkcd.com/${json.num}`,
 		description: json.alt,
@@ -18,7 +18,7 @@ function send (message, json) {
 			text: `#${json.num} | ${timeString}`
 		},
 		color: 0xffffff
-	}});
+	}]});
 }
 
 exports.run = async (message, args) => {

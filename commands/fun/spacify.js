@@ -20,10 +20,10 @@ exports.run = (message, args, suffix) => {
 	if (desc.length > 2048) return message.channel.send(message.__('too_big'));
 
 	message.channel.send({
-		embed: {
+		embeds: [{
 			description: '```' + spacify(suffix) + '```',
 			color: 0x00c140
-		}
+		}]
 	});
 };
 

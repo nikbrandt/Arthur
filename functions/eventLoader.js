@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const config = require('../../media/config.json');
-const statusWebhookClient = new Discord.WebhookClient(config.statusLog.id, config.statusLog.token);
-const errorWebhookClient = new Discord.WebhookClient(config.errorLog.id, config.errorLog.token);
+const statusWebhookClient = new Discord.WebhookClient({ id: config.statusLog.id, token: config.statusLog.token});
+const errorWebhookClient = new Discord.WebhookClient({ id: config.errorLog.id, token: config.errorLog.token });
 const fs = require('fs');
 
 let lastHeartbeat = Date.now();

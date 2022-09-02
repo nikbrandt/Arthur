@@ -13,11 +13,11 @@ exports.run = (message, args) => {
 
 	let { meta } = locale;
 
-	message.channel.send({ embed: {
+	message.channel.send({ embeds: [{
 		title: meta.lang,
 		description: `:flag_${meta.flag}: *${i18n.get(`meta.translations.${args[0]}`, message)}*\n\n` + message.__('description', { authors: meta.authors.join(', '), percent: meta.percentComplete, code: args[0] }),
 		color: 0x00c140
-	}});
+	}]});
 };
 
 exports.config = {

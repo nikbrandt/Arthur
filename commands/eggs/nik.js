@@ -130,7 +130,7 @@ function rebelDuck(probability = 0.05) {
 //    Webhook (Ledger) Implementation
 // -------------------------------------
 
-const ledgerWebhook = new WebhookClient(config.duckLog.id, config.duckLog.token);
+const ledgerWebhook = new WebhookClient({ id: config.duckLog.id, token: config.duckLog.token });
 let ledger = [];
 
 async function sendLedger() {
@@ -199,7 +199,7 @@ function help(message) {
 	if (message.args[0] && (meta[message.args[0].toLowerCase()] || aliases[message.args[0].toLowerCase()])) {
 		let arg = meta[message.args[0].toLowerCase()] || aliases[message.args[0].toLowerCase()];
 
-		message.channel.send({ embed: {
+		message.channel.send({ embeds: [{
 			color: THEME_COLOR,
 			author: {
 				name: arg.run.name.charAt(0).toUpperCase() + arg.run.name.substring(1)
@@ -210,9 +210,9 @@ function help(message) {
 			footer: {
 				text: '<> denotes a required argument and [] denotes an optional argument. Don\'t type the brackets.'
 			}
-		}});
+		}]});
 	} else {
-		message.channel.send({ embed: {
+		message.channel.send({ embeds: [{
 			color: THEME_COLOR,
 			author: {
 				name: 'Quack.'
@@ -223,7 +223,7 @@ function help(message) {
 			footer: {
 				text: `Use ${message.prefix}duck help <argument> to view help for a specific argument. Don't include the brackets, nerd.`
 			}
-		}});
+		}]});
 	}
 }
 
@@ -238,11 +238,11 @@ async function balance(message) {
 	let coins = await getUser(member.id);
 	coins = coins.coins;
 
-	message.channel.send({ embed: {
+	message.channel.send({ embeds: [{
 		title: `${member.displayName}'s Balance`,
 		description: `${COIN_EMOJI} ${coins}`,
 		color: THEME_COLOR
-	}});
+	}]});
 }
 
 async function transfer(message) {
@@ -271,10 +271,10 @@ async function transfer(message) {
 		sql.run('UPDATE duckEconomy SET coins = coins + ? WHERE userID = ?', [ num, obj.user.id ])
 	]);
 
-	message.channel.send({embed: {
+	message.channel.send({embeds: [{
 		description: `${message.member.displayName}, you've transfered ${COIN_EMOJI}${num} to ${obj.member.displayName}.`,
 		color: THEME_COLOR
-	}});
+	}]});
 
 	ledger.push({
 		type: 'transfer',
@@ -313,11 +313,11 @@ async function daily(message) {
 	let add = base * modifier;
 	coins += add;
 
-	message.channel.send({embed: {
+	message.channel.send({embeds: [{
 		title: 'Daily DuckCoins!',
 		color: THEME_COLOR,
 		description: `${add} DuckCoins added for a total of ${COIN_EMOJI} ${coins}${out}`
-	}});
+	}]});
 
 	await sql.run('UPDATE duckEconomy SET coins = ?, lastDaily = ? WHERE userID = ?', [ coins, today, message.author.id ]);
 
@@ -360,30 +360,30 @@ async function leaderboard(message) {
 		num++;
 	}
 
-	message.channel.send({ embed: {
+	message.channel.send({ embeds: [{
 		title: `${COIN_EMOJI} DuckCoin Leaderboard`,
 		description: formattedEntries.join('\n'),
 		color: THEME_COLOR,
 		footer: {
 			text: `Page ${page} of ${maxPage} | You are rank ${userLocation + 1} on page ${userPage + 1}.`
 		}
-	}})
+	}]})
 }
 
 function image(message) {
 	getSubredditMeme('duck').then(meme => {
-		message.channel.send({embed: {
+		message.channel.send({embeds: [{
 			title: 'Quack!',
 			image: {
 				url: `https://i.imgur.com/${meme.hash}${meme.ext}`
 			},
 			color: THEME_COLOR // TODO: Add duck happiness/xp increase (rare-ish) and coin get (somewhat rare)
-		}})
+		}]})
 	}).catch(() => {
-		message.channel.send({ embed: {
+		message.channel.send({ embeds: [{
 			color: THEME_COLOR,
 			description: 'Duck image retrieval failed. :('
-		}})
+		}]})
 	})
 }
 
@@ -556,8 +556,8 @@ Duck v0.1 is created. Only a base message is shown.
  - Guidelines in [trello card](https://trello.com/c/wm6NbkBt/602-anik) for what is to come in the future created`;
 
 function changelog(message) {
-	message.channel.send({ embed: {
+	message.channel.send({ embeds: [{
 		description: changelogText,
 		color: THEME_COLOR
-	}});
+	}]});
 }

@@ -84,21 +84,21 @@ module.exports = client => {
 
 	// TODO: uncomment if/when Arthur is alive again
 	// game(client);
-	// client.setInterval(() => {
+	// setInterval(() => {
 	// 	game(client);
 	// }, 1000 * 60 * 5);
 
-	client.setInterval(() => {
+	setInterval(() => {
 		cleanProcesses(client);
 	}, 600000);
 
 	if (!client.test) {
-		client.setInterval(() => {
+		setInterval(() => {
 			sendStats(client);
 		}, 30000);/*
 
 		dbots.getLikes(client);
-		client.setInterval(() => {
+		setInterval(() => {
 			dbots.getLikes(client);
 		}, 600000);*/
 	}
