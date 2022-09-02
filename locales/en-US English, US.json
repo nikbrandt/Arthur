@@ -1058,6 +1058,7 @@
 				"invite": "Invite",
 				"support_server": "Support Server",
 				"tos": "TOS",
+				"privacy_policy": "Privacy Policy",
 				"description": "Made by Gymno#4741\nWhen using commands, <> indicates a required argument and [] indicates an optional requirement. (Do not actually type these symbols.)",
 				"footer": "Type $prefix@@help <command> for a detailed description of the command"
 			},

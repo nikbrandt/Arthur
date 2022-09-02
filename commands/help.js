@@ -50,7 +50,7 @@ exports.run = async (message, args, suffix, client, perms, prefix) => {
 				name: message.__('arthur_help'),
 				icon_url: 'https://cdn.discordapp.com/attachments/219218693928910848/361405047608705025/arthur_but_hot.png'
 			},
-			description: `[${message.__('large_embed.invite')}](${invite}) | [GitHub](https://github.com/nikbrandt/Arthur) | [${message.__('large_embed.support_server')}](${client.config.info.guildLink}) | [Trello](https://trello.com/b/wt7ptHpC/arthur) | [${message.__('large_embed.tos')}](https://docs.google.com/document/d/1kbGlTbG-SDcO5AiN2mWbhJNr7AyOZi26n3Nt9duI95w/edit?usp=sharing)\n${message.__('large_embed.description')}`,
+			description: `[${message.__('large_embed.invite')}](${invite}) | [GitHub](https://github.com/nikbrandt/Arthur) | [${message.__('large_embed.support_server')}](${client.config.info.guildLink}) | [Trello](https://trello.com/b/wt7ptHpC/arthur) | [${message.__('large_embed.tos')}](https://arthur.wumpler.com/tos) | [${message.__('large_embed.privacy_policy')}](https://arthur.wumpler.com/privacy)\n${message.__('large_embed.description')}`,
 			fields,
 			footer: {
 				text: message.__('large_embed.footer', { prefix })
