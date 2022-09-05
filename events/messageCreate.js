@@ -85,14 +85,14 @@ module.exports = async (client, message) => {
 			}
 
 			let messageObject = {
-				embed: {
+				embeds: [ {
 					author: {
 						name: `Message from ${message.author.tag} | ID ${authorID}`,
 						icon_url: message.author.displayAvatarURL()
 					},
 					color: 0x418cf4,
 					description: message.content
-				},
+				} ],
 				files: [...message.attachments.values()].map(a => a ? a.url : '')
 			};
 
