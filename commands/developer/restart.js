@@ -11,7 +11,7 @@ exports.run = async (message, args, suffix, client) => {
 
 	if (check && (force || manager)) return message.channel.send('Incompatible arguments: -c and any other');
 
-	let voice = (await client.broadcastEval('this.voice.connections.size')).reduce((prev, count) => prev + count, 0);
+	let voice = 0; // (await client.broadcastEval('this.voice.connections.size')).reduce((prev, count) => prev + count, 0);
 	let processing = (await client.broadcastEval('this.processing')).reduce((prev, processing) => {
 		processing.forEach(item => {
 			prev.push(item);
