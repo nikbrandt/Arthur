@@ -39,7 +39,7 @@
 		"request": "^2.88.2",
 		"request-promise": "^4.2.6",
 		"sqlite": "^4.0.23",
-		"sqlite3": "^5.0.2",
+		"sqlite3": "^5.1.5",
 		"trello": "^0.10.0",
 		"utf-8-validate": "^5.0.5",
 		"xml2json": "^0.11.2",
